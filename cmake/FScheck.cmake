@@ -21,7 +21,7 @@ endif()
 
 endif()
 
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.25 AND HAVE_Fortran_FILESYSTEM)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.25 AND HAVE_Fortran_FILESYSTEM AND NOT DEFINED HAVE_CXX_TRYCATCH)
 
 message(CHECK_START "checking that C++ exception handling works")
 try_compile(exception_compile
