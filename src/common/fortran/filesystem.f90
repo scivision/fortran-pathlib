@@ -112,7 +112,7 @@ character(*), intent(in) :: path
 character(:), allocatable :: r
 end function
 
-module function relative_to(a, b)
+module function relative_to(a, b) result (r)
 !! returns b relative to a
 !! if b is not a subpath of a, returns "" empty string
 !!
@@ -120,7 +120,7 @@ module function relative_to(a, b)
 !! https://en.cppreference.com/w/cpp/filesystem/relative
 
 character(*), intent(in) :: a, b
-character(:), allocatable :: relative_to
+character(:), allocatable :: r
 end function
 
 module function which(name) result(r)
@@ -129,33 +129,33 @@ character(*), intent(in) :: name
 character(:), allocatable :: r
 end function
 
-module function file_name(path)
+module function file_name(path) result (r)
 !! returns file name without path
 character(*), intent(in) :: path
-character(:), allocatable :: file_name
+character(:), allocatable :: r
 end function
 
-module function stem(path)
+module function stem(path) result (r)
 character(*), intent(in) :: path
-character(:), allocatable :: stem
+character(:), allocatable :: r
 end function
 
-module function suffix(path)
+module function suffix(path) result (r)
 !! extracts path suffix, including the final "." dot
 character(*), intent(in) :: path
-character(:), allocatable :: suffix
+character(:), allocatable :: r
 end function
 
-module function normal(path)
+module function normal(path) result (r)
 !! lexically normalize path
 character(*), intent(in) :: path
-character(:), allocatable :: normal
+character(:), allocatable :: r
 end function
 
-module function with_suffix(path, new)
+module function with_suffix(path, new) result(r)
 !! replace file suffix with new suffix
 character(*), intent(in) :: path,new
-character(:), allocatable :: with_suffix
+character(:), allocatable :: r
 end function
 
 module logical function same_file(path1, path2)
@@ -180,31 +180,31 @@ module logical function is_subdir(subdir, dir)
 character(*), intent(in) :: subdir, dir
 end function
 
-module function make_absolute(path, base)
+module function make_absolute(path, base) result(r)
 !! if path is absolute, return expanded path
 !! if path is relative, base / path
 !!
 !! idempotent iff base is absolute
 
-character(:), allocatable :: make_absolute
+character(:), allocatable :: r
 character(*), intent(in) :: path, base
 end function
 
-module function get_homedir()
+module function get_homedir() result (r)
 !! returns home directory, or empty string if not found
 !!
 !! https://en.wikipedia.org/wiki/Home_directory#Default_home_directory_per_operating_system
-character(:), allocatable :: get_homedir
+character(:), allocatable :: r
 end function
 
-module function canonical(path, strict)
-character(:), allocatable :: canonical
+module function canonical(path, strict) result (r)
+character(:), allocatable :: r
 character(*), intent(in) :: path
 logical, intent(in), optional :: strict
 end function
 
-module function resolve(path, strict)
-character(:), allocatable :: resolve
+module function resolve(path, strict) result(r)
+character(:), allocatable :: r
 character(*), intent(in) :: path
 logical, intent(in), optional :: strict
 end function
@@ -233,10 +233,10 @@ module logical function is_absolute(path)
 character(*), intent(in) :: path
 end function
 
-module function root(path)
+module function root(path) result (r)
 !! returns root of path
 character(*), intent(in) :: path
-character(:), allocatable :: root
+character(:), allocatable :: r
 end function
 
 
@@ -295,11 +295,11 @@ logical(C_BOOL) function is_unix() bind(C, name="fs_is_unix")
 import C_BOOL
 end function
 
-module function join(path, other)
+module function join(path, other) result (r)
 !! Join path with other path string using posix separators.
 !! The paths are treated like strings.
 !! Mo path resolution is used, so non-sensical paths are possible for non-sensical input.
-character(:), allocatable :: join
+character(:), allocatable :: r
 character(*), intent(in) :: path, other
 end function
 
@@ -349,9 +349,9 @@ module logical function is_writable(path)
 character(*), intent(in) :: path
 end function
 
-module function get_cwd()
+module function get_cwd() result (r)
 !! get current working directory
-character(:), allocatable :: get_cwd
+character(:), allocatable :: r
 end function
 
 module logical function set_cwd(path)
@@ -382,14 +382,14 @@ module function compiler_c() result(r)
 character(:), allocatable :: r
 end function
 
-module function exe_path()
+module function exe_path() result (r)
 !! get full path of main executable
-character(:), allocatable :: exe_path
+character(:), allocatable :: r
 end function
 
-module function lib_path()
+module function lib_path() result (r)
 !! get full path of shared library. Empty if not shared library.
-character(:), allocatable :: lib_path
+character(:), allocatable :: r
 end function
 
 module logical function exists(path)
@@ -402,9 +402,9 @@ module subroutine remove(path)
 character(*), intent(in) :: path
 end subroutine
 
-module function get_tempdir()
+module function get_tempdir() result (r)
 !! get system temporary directory
-character(:), allocatable :: get_tempdir
+character(:), allocatable :: r
 end function
 
 module subroutine set_permissions(path, readable, writable, executable, ok)

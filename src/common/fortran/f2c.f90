@@ -324,36 +324,21 @@ r = cbuf(:N)
 end procedure
 
 module procedure compiler_c
-character(kind=C_CHAR, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_compiler(cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: r)
-r = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_compiler(cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure canonical
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-logical(c_bool) :: s
-allocate(character(max_path()) :: cbuf)
-s = .false.
-if(present(strict)) s = strict
-N = fs_canonical(trim(path) // C_NULL_CHAR, s, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: canonical)
-canonical = cbuf(:N)
+include "ifc1a.inc"
+associate (fun => fs_canonical(trim(path) // C_NULL_CHAR, s, cbuf, N))
+include "ifc0b.inc"
 end procedure canonical
 
 module procedure resolve
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-logical(c_bool) :: s
-allocate(character(max_path()) :: cbuf)
-s = .false.
-if(present(strict)) s = strict
-N = fs_resolve(trim(path) // C_NULL_CHAR, s, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: resolve)
-resolve = cbuf(:N)
+include "ifc1a.inc"
+associate (fun => fs_resolve(trim(path) // C_NULL_CHAR, s, cbuf, N))
+include "ifc0b.inc"
 end procedure resolve
 
 module procedure set_permissions
@@ -425,12 +410,9 @@ end procedure mkdir
 
 
 module procedure read_symlink
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_read_symlink(trim(path) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: r)
-r = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_read_symlink(trim(path) // C_NULL_CHAR, cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 
@@ -452,21 +434,15 @@ exists = fs_exists(trim(path) // C_NULL_CHAR)
 end procedure
 
 module procedure expanduser
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_expanduser(trim(path) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: r)
-r = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_expanduser(trim(path) // C_NULL_CHAR, cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure file_name
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_file_name(trim(path) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: file_name)
-file_name = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_file_name(trim(path) // C_NULL_CHAR, cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure is_safe_name
@@ -482,12 +458,9 @@ space_available = fs_space_available(trim(path) // C_NULL_CHAR)
 end procedure
 
 module procedure get_cwd
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_get_cwd(cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: get_cwd)
-get_cwd = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_get_cwd(cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure set_cwd
@@ -495,21 +468,15 @@ set_cwd = fs_set_cwd(trim(path) // C_NULL_CHAR)
 end procedure
 
 module procedure get_homedir
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_get_homedir(cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: get_homedir)
-get_homedir = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_get_homedir(cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure get_tempdir
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_get_tempdir(cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: get_tempdir)
-get_tempdir = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_get_tempdir(cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure is_absolute
@@ -550,12 +517,9 @@ is_symlink = fs_is_symlink(trim(path) // C_NULL_CHAR)
 end procedure
 
 module procedure join
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_join(trim(path) // C_NULL_CHAR, trim(other) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: join)
-join = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_join(trim(path) // C_NULL_CHAR, trim(other) // C_NULL_CHAR, cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure is_subdir
@@ -563,48 +527,33 @@ is_subdir = fs_is_subdir(trim(subdir) // C_NULL_CHAR, trim(dir) // C_NULL_CHAR)
 end procedure
 
 module procedure make_absolute
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_make_absolute(trim(path) // C_NULL_CHAR, trim(base) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: make_absolute)
-make_absolute = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_make_absolute(trim(path) // C_NULL_CHAR, trim(base) // C_NULL_CHAR, cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure parent
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_parent(trim(path) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: r)
-r = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_parent(trim(path) // C_NULL_CHAR, cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure normal
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_normal(trim(path) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: normal)
-normal = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_normal(trim(path) // C_NULL_CHAR, cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure relative_to
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_relative_to(trim(a) // C_NULL_CHAR, trim(b) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: relative_to)
-relative_to = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_relative_to(trim(a) // C_NULL_CHAR, trim(b) // C_NULL_CHAR, cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure which
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_which(trim(name) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: r)
-r = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_which(trim(name) // C_NULL_CHAR, cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure remove
@@ -614,12 +563,9 @@ if (.not. e) write(stderr, '(a)') "ERROR:ffilesystem:remove: " // trim(path) // 
 end procedure
 
 module procedure root
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_root(trim(path) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: root)
-root = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_root(trim(path) // C_NULL_CHAR, cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure same_file
@@ -627,21 +573,15 @@ same_file = fs_equivalent(trim(path1) // C_NULL_CHAR, trim(path2) // C_NULL_CHAR
 end procedure
 
 module procedure stem
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_stem(trim(path) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: stem)
-stem = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_stem(trim(path) // C_NULL_CHAR, cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure suffix
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_suffix(trim(path) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: suffix)
-suffix = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_suffix(trim(path) // C_NULL_CHAR, cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure touch
@@ -651,40 +591,28 @@ end if
 end procedure
 
 module procedure with_suffix
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_with_suffix(trim(path) // C_NULL_CHAR, trim(new) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: with_suffix)
-with_suffix = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_with_suffix(trim(path) // C_NULL_CHAR, trim(new) // C_NULL_CHAR, cbuf, N))
+include "ifc0b.inc"
 end procedure with_suffix
 
 module procedure make_tempdir
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_make_tempdir(cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: r)
-r = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_make_tempdir(cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 
 module procedure shortname
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_shortname(trim(path) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: r)
-r = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_shortname(trim(path) // C_NULL_CHAR, cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure longname
-character(kind=c_char, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_longname(trim(path) // C_NULL_CHAR, cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: r)
-r = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_longname(trim(path) // C_NULL_CHAR, cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 
@@ -701,21 +629,15 @@ endif
 end procedure
 
 module procedure exe_path
-character(kind=C_CHAR, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_exe_path(cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: exe_path)
-exe_path = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_exe_path(cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 module procedure lib_path
-character(kind=C_CHAR, len=:), allocatable :: cbuf
-integer(C_SIZE_T) :: N
-allocate(character(max_path()) :: cbuf)
-N = fs_lib_path(cbuf, len(cbuf, kind=C_SIZE_T))
-allocate(character(N) :: lib_path)
-lib_path = cbuf(:N)
+include "ifc0a.inc"
+associate (fun => fs_lib_path(cbuf, N))
+include "ifc0b.inc"
 end procedure
 
 
