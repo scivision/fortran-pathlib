@@ -1075,10 +1075,11 @@ size_t fs_get_homedir(char* path, size_t buffer_size)
     return 0;
   }
 
-  strncpy(path, h, L);
+  strncpy(path, h, buffer_size);
   return L;
 #endif
 }
+
 
 size_t fs_get_tempdir(char* path, size_t buffer_size)
 {
