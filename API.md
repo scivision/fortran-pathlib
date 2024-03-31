@@ -530,6 +530,10 @@ Get path relative to other path.
 This is a string operation and does not resolve or expand paths.
 
 ```fortran
+relative_to(base, other)
+character(*), intent(in) :: base, other
+
+
 relative_to("/a/b/c", "/a/b")  !< "c"
 
 p = path_t("/a/b/c")

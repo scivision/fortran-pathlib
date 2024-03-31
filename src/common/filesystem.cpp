@@ -806,27 +806,27 @@ bool Ffs::copy_file(std::string_view source, std::string_view dest, bool overwri
 }
 
 
-size_t fs_relative_to(const char* to, const char* from, char* result, size_t buffer_size)
+size_t fs_relative_to(const char* base, const char* other, char* result, size_t buffer_size)
 {
-  return fs_str2char(Ffs::relative_to(to, from), result, buffer_size);
+  return fs_str2char(Ffs::relative_to(base, other), result, buffer_size);
 }
 
-std::string Ffs::relative_to(std::string_view to, std::string_view from)
+std::string Ffs::relative_to(std::string_view base, std::string_view other)
 {
   // fs::relative resolves symlinks and normalizes both paths first
 
   // undefined case, avoid bugs with MacOS
-  if (to.empty() || from.empty()) UNLIKELY
+  if (base.empty() || other.empty()) UNLIKELY
     return {};
 
-  fs::path tp(to);
-  fs::path fp(from);
+  fs::path basep(base);
+  fs::path otherp(other);
   // cannot be relative, avoid bugs with MacOS
-  if(tp.is_absolute() != fp.is_absolute())
+  if(basep.is_absolute() != otherp.is_absolute())
     return {};
 
   std::error_code ec;
-  auto r = fs::relative(tp, fp, ec);
+  auto r = fs::relative(otherp, basep, ec);
   if(ec) UNLIKELY
   {
     std::cerr << "ERROR:ffilesystem:relative_to: " << ec.message() << "\n";

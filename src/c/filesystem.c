@@ -427,20 +427,23 @@ bool fs_set_cwd(const char* path){
 }
 
 
-size_t fs_relative_to(const char* to, const char* from, char* result, size_t buffer_size)
+size_t fs_relative_to(const char* base, const char* other, char* result, size_t buffer_size)
 {
-  if((strlen(to) == 0) || (strlen(from) == 0))
+  if((strlen(base) == 0) || (strlen(other) == 0))
     return 0;
 
   /* cannot be relative, avoid bugs with MacOS */
-  if(fs_is_absolute(to) != fs_is_absolute(from))
+  if(fs_is_absolute(base) != fs_is_absolute(other))
     return 0;
 
+  // need this or separators are not handled correctly
   cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
 
-  cwk_path_get_relative(from, to, result, buffer_size);
+  cwk_path_get_relative(base, other, result, buffer_size);
 
-  return fs_normal(result, result, buffer_size);
+  fs_as_posix(result);
+
+  return strlen(result);
 }
 
 

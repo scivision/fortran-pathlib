@@ -984,16 +984,16 @@ r%path_str = normal(self%path_str)
 end function
 
 
-function relative_to(a, b) result (r)
-!! returns b relative to a
-!! if b is not a subpath of a, returns "" empty string
+function relative_to(base, other) result (r)
+!! returns other relative to base
+!! if other is not a subpath of base, returns "" empty string
 !!
 !! reference: C++ filesystem relative
 !! https://en.cppreference.com/w/cpp/filesystem/relative
-character(*), intent(in) :: a, b
+character(*), intent(in) :: base, other
 
 include "ifc0a.inc"
-N = fs_relative_to(trim(a) // C_NULL_CHAR, trim(b) // C_NULL_CHAR, cbuf, N)
+N = fs_relative_to(trim(base) // C_NULL_CHAR, trim(other) // C_NULL_CHAR, cbuf, N)
 include "ifc0b.inc"
 end function
 
