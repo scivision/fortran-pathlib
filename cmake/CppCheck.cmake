@@ -44,19 +44,13 @@ endif()
 if(${PROJECT_NAME}_trace)
   check_cxx_symbol_exists(__cpp_lib_starts_ends_with "string" cpp20_string_ends_with)
   check_cxx_symbol_exists(__cpp_using_enum "" cpp20_using_enum)
-endif()
 
-if(${PROJECT_NAME}_bench)
   check_cxx_source_compiles("#if !__has_cpp_attribute(likely)
   #error \"no likely attribute\"
   #endif
   int main(){ return 0; }"
   cpp20_likely
   )
-  if(NOT cpp20_likely)
-    message(FATAL_ERROR "Ffilesystem benchmarks require C++20 likely attribute.
-    Set 'cmake -Dffilesystem_bench=OFF' to disable.")
-  endif()
 endif()
 
 endfunction()

@@ -59,12 +59,12 @@ else if (ssb.contains(fname))
   L = ssb[fname](path.data(), strict, buf.get(), Lp);
 else if (s_s.contains(fname))
   L = s_s[fname](path.data(), buf.get(), Lp);
-else [[unlikely]]
+else
   {
     std::cerr << "Error: unknown function " << fname << "\n";
     return t;
   }
-if(L == 0) [[unlikely]]
+if(L == 0)
   return t;
 
 w = buf.get();
@@ -161,13 +161,13 @@ else if (ssb.contains(fname))
   h = ssb[fname](path, strict);
 else if (s_s.contains(fname))
   h = s_s[fname](path);
-else [[unlikely]]
+else
   {
     std::cerr << "Error: unknown function " << fname << "\n";
     return t;
   }
 
-if(h.empty()) [[unlikely]]
+if(h.empty())
 {
     std::cerr << "Error: " << fname << "(" << path << ") is empty\n";
     return t;
