@@ -342,6 +342,12 @@ allocate(character(max_path()) :: r)
 
 if(is_dir("")) error stop "is_dir empty should be false"
 
+r = get_cwd()
+if(.not. is_dir(r)) then
+  write(stderr, '(a)') "is_dir(get_cwd()) failed on " // r
+  error stop
+endif
+
 if(is_windows()) then
   r = root(get_cwd())
   print '(3A,i0)', "root(get_cwd()) = ", r, " length = ", len_trim(r)

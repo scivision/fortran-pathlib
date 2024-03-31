@@ -210,7 +210,7 @@ if(L)
   std::cout << buf.get() << "\n";
 
 
-for (std::set<std::string_view, std::less<>> funcs = {"canonical", "resolve", "which", "expanduser", "normal", "homedir"};
+for (std::set<std::string_view, std::less<>> funcs = {"canonical", "resolve", "which", "expanduser", "normal", "cwd", "homedir"};
       std::string_view func : funcs) {
 
   std::set <std::string_view, std::less<>> tildef = {"canonical", "resolve", "normal", "expanduser"};

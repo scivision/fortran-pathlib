@@ -1008,12 +1008,11 @@ size_t fs_get_cwd(char* path, size_t buffer_size)
 std::string Ffs::get_cwd()
 {
   std::error_code ec;
+
   auto s = fs::current_path(ec);
   if (ec) UNLIKELY
-  {
-    std::cerr << "ERROR:ffilesystem:get_cwd: " << ec.message() << "\n";
     return {};
-  }
+
   return s.generic_string();
 }
 

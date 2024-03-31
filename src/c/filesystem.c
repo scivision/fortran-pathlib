@@ -1041,7 +1041,9 @@ size_t fs_get_cwd(char* path, size_t buffer_size)
     return 0;
   }
 
-  return fs_normal(path, path, buffer_size);
+  fs_as_posix(path);
+
+  return strlen(path);
 }
 
 size_t fs_get_homedir(char* path, size_t buffer_size)

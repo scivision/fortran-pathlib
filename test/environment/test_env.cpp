@@ -34,6 +34,9 @@ std::cout << "current working dir " << fpath << "\n";
 if(!Ffs::exists(fpath))
   err("current working dir " + fpath + " does not exist");
 
+if(!Ffs::is_dir(fpath))
+  err("current working dir " + fpath + " is not a directory");
+
 std::string cpath = std::filesystem::current_path().string();
 
 if (std::string s = Ffs::normal(cpath); fpath != s)
