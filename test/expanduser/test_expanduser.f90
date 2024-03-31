@@ -50,9 +50,16 @@ if (s1 /= s2) error stop "expanduser trailing separator failed: " // s1 // " /= 
 if (expanduser("~//") /= s2) error stop "expanduser double separator failed: " // &
    expanduser("~//") // " /= " // s2
 
+!> the C code is drastically simpler by using CWalk join that normalizes
+if(fs_cpp()) then
+  s1 = get_homedir() // "/.."
+else
+  s1 = parent(get_homedir())
+endif
+
 !> double dot
 s2 = expanduser("~/..")
-s1 = get_homedir() // "/.."
+
 if (s2 /= s1) error stop "expanduser(~/..) failed: " // s2 // " /= " // s1
 
 s2 = expanduser("~/../")

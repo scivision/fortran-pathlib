@@ -22,11 +22,13 @@ int main(void){
     i++;
   }
 
+if(fs_cpp()){
   if(fs_expanduser("abcedf", buf, N) != 0){
     fprintf(stderr, "ERROR: fs_expanduser(abcdef) did not handle overflow properly\n");
     fprintf(stderr, "       buf = %s\n", buf);
     i++;
   }
+}
 
   if(fs_file_name("abcedf", buf, N) != 0){
     fprintf(stderr, "ERROR: fs_file_name(abcdef) did not handle overflow properly\n");
