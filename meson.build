@@ -8,7 +8,7 @@ if fortran
   add_languages('fortran', native: false, required: true)
 endif
 
-fsrcs = fortran ? files('src/common/fortran/f2c.f90', 'src/common/fortran/filesystem.f90') : []
+fsrcs = fortran ? files('src/common/fortran/filesystem.f90') : []
 csrcs = files('src/common/common.c')
 cppsrcs = files('src/common/filesystem.cpp')
 

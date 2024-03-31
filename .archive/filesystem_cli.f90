@@ -16,7 +16,7 @@ valgrind: block
 
 character(:), allocatable :: buf, buf2
 
-allocate(character(get_max_path()) :: buf, buf2)
+allocate(character(max_path()) :: buf, buf2)
 
 
 argc = command_argument_count()
@@ -170,7 +170,7 @@ case ("tempdir")
 case ("with_suffix")
   print '(A)', with_suffix(buf, buf2)
 case ("max_path")
-  print '(i0)', get_max_path()
+  print '(i0)', max_path()
 case ('shortname')
   print '(A)', shortname(buf)
 case ('longname')

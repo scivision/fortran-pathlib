@@ -9,7 +9,7 @@ implicit none
 integer :: i
 character(:), allocatable :: buf
 
-allocate(character(get_max_path()) :: buf)
+allocate(character(max_path()) :: buf)
 
 if(command_argument_count() < 1) error stop "please specify path to chdir"
 call get_command_argument(1, buf, status=i)

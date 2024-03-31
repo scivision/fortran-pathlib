@@ -90,7 +90,7 @@ endif()
 
 add_library(ffilesystem src/common/common.c
 "$<IF:$<BOOL:${HAVE_CXX_FILESYSTEM}>,src/common/filesystem.cpp,src/c/filesystem.c;${cwalk_SOURCE_DIR}/src/cwalk.c>"
-"$<$<BOOL:${HAVE_Fortran_FILESYSTEM}>:src/common/fortran/filesystem.f90;src/common/fortran/f2c.f90>"
+"$<$<BOOL:${HAVE_Fortran_FILESYSTEM}>:src/common/fortran/filesystem.f90>"
 )
 target_include_directories(ffilesystem PRIVATE
 ${PROJECT_SOURCE_DIR}/include

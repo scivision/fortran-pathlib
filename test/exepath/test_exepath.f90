@@ -23,7 +23,7 @@ call get_command_argument(1, exe_name, length=L, status=i)
 if(i/=0) error stop "ERROR:test_binpath:test_exe_path: get_command_argument failed"
 if(L<1) error stop "ERROR:test_binpath: expected exe_name as second argument"
 
-allocate(character(get_max_path()) :: binpath)
+allocate(character(max_path()) :: binpath)
 
 binpath = exe_path()
 

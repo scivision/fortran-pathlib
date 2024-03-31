@@ -14,7 +14,7 @@ logical :: ok
 
 character(:), allocatable :: tgt, rtgt, cmake_link, link, linko, tgt_dir, link_dir, buf
 
-allocate(character(get_max_path()) :: buf)
+allocate(character(max_path()) :: buf)
 
 if(is_symlink("not-exist-file")) error stop "is_symlink() should be false for non-existant file"
 if(is_symlink("")) error stop "is_symlink('') should be false"

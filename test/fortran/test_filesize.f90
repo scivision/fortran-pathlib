@@ -1,6 +1,6 @@
 program test_filesize
 
-use filesystem, only : path_t, file_size, get_max_path, space_available
+use filesystem
 
 implicit none
 
@@ -16,7 +16,7 @@ subroutine test_space_available()
 
 integer :: ierr
 character(:), allocatable :: buf
-allocate(character(len=get_max_path()) :: buf)
+allocate(character(len=max_path()) :: buf)
 
 
 if(command_argument_count() > 0) then
@@ -42,7 +42,7 @@ integer :: u, d(10), ierr
 type(path_t) :: p1
 
 character(:), allocatable :: fn
-allocate(character(len=get_max_path()) :: fn)
+allocate(character(len=max_path()) :: fn)
 
 
 if(command_argument_count() > 0) then

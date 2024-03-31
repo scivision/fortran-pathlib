@@ -305,7 +305,7 @@ character(:), allocatable :: r
 
 if(root("") /= "") error stop "root empty"
 
-allocate(character(get_max_path()) :: r)
+allocate(character(max_path()) :: r)
 
 if(is_windows()) then
   r = root("/etc")
@@ -337,7 +337,7 @@ character(:), allocatable :: r
 integer :: i
 type(path_t) :: p1,p2
 
-allocate(character(get_max_path()) :: r)
+allocate(character(max_path()) :: r)
 
 
 if(is_dir("")) error stop "is_dir empty should be false"

@@ -1,4 +1,4 @@
-# show that for Fortran, we only need filesystem.cpp, common.c, filesystem.f90, f2c.f90
+# show that for Fortran, we only need filesystem.cpp, common.c, filesystem.f90
 
 cmake_minimum_required(VERSION 3.14)
 
@@ -12,7 +12,7 @@ set(CMAKE_C_STANDARD 99)
 
 
 add_library(ffilesystem ../../src/common/filesystem.cpp ../../src/common/common.c
-../../src/common/fortran/filesystem.f90 ../../src/common/fortran/f2c.f90
+../../src/common/fortran/filesystem.f90
 )
 
 target_include_directories(ffilesystem PRIVATE ../../include)

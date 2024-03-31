@@ -24,11 +24,11 @@ p%path(2) !< character index 2:end
 In all the examples, we assume "p" is path_t.
 
 C++17 filesystem is used extensively within Ffilesystem to implement functions in a platform-agnostic and robust way.
-For the interchange of character strings between Fortran and C++, the buffer length is determined at compile time and is available in `fs_get_max_path()` (C, C++) or `get_max_path()` (Fortran).
+For the interchange of character strings between Fortran and C++, the buffer length is determined at compile time and is available in `fs_get_max_path()` (C, C++) or `max_path()` (Fortran).
 
 ```fortran
 integer :: m
-m = get_max_path()
+m = max_path()
 ```
 
 ## System capabilities
