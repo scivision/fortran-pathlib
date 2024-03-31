@@ -458,6 +458,7 @@ Get parent directory of path.
 The parent of the top-most relative path is ".".
 We define the parent of a path as the directory above the specified path.
 Trailing slashes are gobbled.
+The path is not normalized.
 
 ```fortran
 p%parent()

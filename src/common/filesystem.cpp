@@ -145,6 +145,17 @@ static size_t fs_str2char(std::string_view s, char* result, size_t buffer_size)
 }
 
 
+static inline std::string fs_drop_slash(std::string_view sv)
+{
+  std::string s(sv);
+
+  if (s.length() > 1 && s.back() == '/')
+    s.pop_back();
+
+  return s;
+}
+
+
 static bool fs_is_safe_char(const char c)
 {
   std::set<char, std::less<>> safe = {'_', '-', '.', '~', '@', '#', '$', '%', '^', '&', '(', ')', '[', ']', '{', '}', '+', '=', ',', '!'};
@@ -235,10 +246,8 @@ size_t fs_normal(const char* path, char* result, size_t buffer_size)
 std::string Ffs::normal(std::string_view path)
 {
   std::string s = fs::path(path).lexically_normal().generic_string();
-  // remove trailing slash
-  if (s.length() > 1 && s.back() == '/')
-    s.pop_back();
-  return s;
+
+  return fs_drop_slash(s);
 }
 
 std::string Ffs::lexically_normal(std::string_view path)
@@ -295,7 +304,23 @@ size_t fs_parent(const char* path, char* result, size_t buffer_size)
 
 std::string Ffs::parent(std::string_view path)
 {
-  return fs::path(Ffs::normal(path)).parent_path().generic_string();
+
+  if (path.empty())
+    return {};
+
+  std::string p = fs::path(fs_drop_slash(path)).parent_path().generic_string();
+
+  if(FS_TRACE) std::cout << "TRACE:parent(" << path << ") => " << p << "\n";
+
+  // handle "/" and other no parent cases
+  if (p.empty()){
+    if (path.front() == '/')
+      return "/";
+    else
+      return ".";
+  }
+
+  return p;
 }
 
 

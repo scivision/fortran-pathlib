@@ -169,7 +169,7 @@ else [[unlikely]]
 
 if(h.empty()) [[unlikely]]
 {
-    std::cerr << "Error: empty\n";
+    std::cerr << "Error: " << fname << "(" << path << ") is empty\n";
     return t;
 }
 
@@ -210,10 +210,10 @@ if(L)
   std::cout << buf.get() << "\n";
 
 
-for (std::set<std::string_view, std::less<>> funcs = {"canonical", "resolve", "which", "expanduser", "normal", "cwd", "homedir"};
+for (std::set<std::string_view, std::less<>> funcs = {"canonical", "resolve", "which", "expanduser", "normal", "cwd", "homedir", "parent"};
       std::string_view func : funcs) {
 
-  std::set <std::string_view, std::less<>> tildef = {"canonical", "resolve", "normal", "expanduser"};
+  std::set <std::string_view, std::less<>> tildef = {"canonical", "resolve", "normal", "expanduser", "parent"};
 
   if (argc > 2)
     path = std::string_view(argv[2]);

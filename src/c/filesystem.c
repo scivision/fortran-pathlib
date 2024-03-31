@@ -219,30 +219,38 @@ size_t fs_join(const char* path, const char* other, char* result, size_t buffer_
 
 size_t fs_parent(const char* path, char* result, size_t buffer_size)
 {
-  char* buf = (char*) malloc(buffer_size);
-  if(!buf) return 0;
-  if(!fs_normal(path, buf, buffer_size)){
-    free(buf);
-    return 0;
-  }
 
-  size_t L;
-
-  cwk_path_get_dirname(buf, &L);
-  if(L == 0){
-    free(buf);
+  size_t L = strlen(path);
+  if(L == 0 || buffer_size < 2)
     return 0;
-  }
+
+  cwk_path_get_dirname(path, &L);
 
   if (L >= buffer_size){
-    fprintf(stderr, "ERROR:ffilesystem:fs_parent: buffer_size too small for string\n");
-    free(buf);
+    fprintf(stderr, "ERROR:Ffilesystem:fs_parent: buffer_size %zu too small\n", buffer_size);
     return 0;
   }
-  L--; // remove trailing slash
-  strncpy(result, buf, L);
-  result[L] = '\0';
-  free(buf);
+
+  // handle "/" and other no parent cases
+  if(L == 0){
+    if(path[0] == '/' || (fs_is_windows() && path[0] == '\\'))
+      result[0] = '/';
+    else
+      result[0] = '.';
+
+    result[1] = '\0';
+    return 1;
+  }
+
+  // drop trailing slashes
+  while(L > 1 && (path[L-1] == '/' || (fs_is_windows() && path[L-1] == '\\')))
+    L--;
+
+  if(FS_TRACE) printf("TRACE: parent %s L=%zu\n", path, L);
+
+  strncpy(result, path, L);
+
+  fs_as_posix(result);
 
   return L;
 }

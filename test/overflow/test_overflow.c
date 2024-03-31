@@ -40,7 +40,7 @@ int main(void){
     i++;
   }
 
-  if(fs_parent("abcedf", buf, N) != 0){
+  if(fs_parent("abcedf/a", buf, N) != 0){
     fprintf(stderr, "ERROR: fs_parent(abcdef) did not handle overflow properly\n");
     fprintf(stderr, "       buf = %s\n", buf);
     i++;
