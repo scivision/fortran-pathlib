@@ -985,8 +985,14 @@ size_t fs_make_tempdir(char* result, size_t buffer_size)
     fprintf(stderr, "ERROR:filesystem:fs_make_tempdir:mkdtemp: could not create temporary directory %s\n", strerror(errno));
     return 0;
   }
+  size_t L = strlen(tmp);
+  if (L >= buffer_size){
+    fprintf(stderr, "ERROR:ffilesystem:fs_make_tempdir: buffer_size %zu too small\n", buffer_size);
+    return 0;
+  }
 
-  return fs_normal(tmp, result, buffer_size);
+  strncpy(result, tmp, buffer_size);
+  return L;
 #endif
 }
 
