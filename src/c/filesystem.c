@@ -447,6 +447,17 @@ size_t fs_relative_to(const char* base, const char* other, char* result, size_t 
 }
 
 
+size_t fs_proximate_to(const char* base, const char* other, char* result, size_t buffer_size)
+{
+  (void) base;
+  (void) other;
+  (void) result;
+  (void) buffer_size;
+  fprintf(stderr, "ERROR:ffilesystem:proximate_to: not implemented for non-C++\n");
+  return 0;
+}
+
+
 size_t fs_which(const char* name, char* result, size_t buffer_size)
 {
   if(strlen(name) == 0)

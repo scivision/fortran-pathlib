@@ -97,6 +97,8 @@ public:
 
   static std::string join(std::string_view, std::string_view);
   static std::string relative_to(std::string_view, std::string_view);
+  static std::string proximate_to(std::string_view, std::string_view);
+
   static std::string with_suffix(std::string_view, std::string_view);
   static std::string make_absolute(std::string_view, std::string_view);
 
@@ -189,7 +191,10 @@ size_t fs_resolve(const char*, bool, char*, size_t);
 
 bool fs_equivalent(const char*, const char*);
 bool fs_copy_file(const char*, const char*, bool);
+
 size_t fs_relative_to(const char*, const char*, char*, size_t);
+size_t fs_proximate_to(const char*, const char*, char*, size_t);
+
 bool fs_touch(const char*);
 
 size_t fs_get_cwd(char*, size_t);

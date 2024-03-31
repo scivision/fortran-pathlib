@@ -836,6 +836,40 @@ std::string Ffs::relative_to(std::string_view base, std::string_view other)
 }
 
 
+size_t fs_proximate_to(const char* base, const char* other, char* result, size_t buffer_size)
+{
+  return fs_str2char(Ffs::proximate_to(base, other), result, buffer_size);
+}
+
+std::string Ffs::proximate_to(std::string_view base, std::string_view other)
+{
+  // fs::proximate resolves symlinks and normalizes both paths first
+
+  // undefined case, avoid bugs with MacOS
+  if(other.empty())
+    return {};
+
+  // undefined case, avoid bugs with MacOS and Windows
+  if (base.empty())
+      return std::string(other);
+
+  fs::path basep(base);
+  fs::path otherp(other);
+  // cannot be relative, avoid bugs with AppleClang
+  if(basep.is_absolute() != otherp.is_absolute())
+    return otherp.generic_string();
+
+  std::error_code ec;
+  auto r = fs::proximate(otherp, basep, ec);
+  if(ec) UNLIKELY
+  {
+    std::cerr << "ERROR:ffilesystem:proximate_to: " << ec.message() << "\n";
+    return {};
+  }
+  return r.generic_string();
+}
+
+
 size_t fs_getenv(const char* name, char* result, size_t buffer_size)
 {
   return fs_str2char(Ffs::get_env(std::string_view(name)), result, buffer_size);

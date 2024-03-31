@@ -13,7 +13,8 @@ is_symlink, read_symlink, &
 exists, &
 join, &
 copy_file, mkdir, &
-relative_to, root, same_file, file_size, space_available, &
+relative_to, proximate_to, &
+root, same_file, file_size, space_available, &
 file_name, parent, stem, suffix, with_suffix, &
 make_absolute, &
 assert_is_file, assert_is_dir, &
@@ -45,6 +46,7 @@ procedure, public :: length
 procedure, public :: as_posix=>m_as_posix
 procedure, public :: join=>m_join
 procedure, public :: relative_to=>m_relative_to
+procedure, public :: proximate_to=>m_proximate_to
 procedure, public :: normal=>m_normal
 procedure, public :: exists=>m_exists
 procedure, public :: is_char_device=>m_is_char_device
@@ -360,9 +362,16 @@ character(kind=C_CHAR), intent(out) :: result(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
 
-integer(C_SIZE_T) function fs_relative_to(path, base, result, buffer_size) bind(C)
+integer(C_SIZE_T) function fs_relative_to(base, other, result, buffer_size) bind(C)
 import
-character(kind=c_char), intent(in) :: path(*), base(*)
+character(kind=c_char), intent(in) :: base(*), other(*)
+character(kind=c_char), intent(out) :: result(*)
+integer(C_SIZE_T), intent(in), value :: buffer_size
+end function
+
+integer(C_SIZE_T) function fs_proximate_to(base, other, result, buffer_size) bind(C)
+import
+character(kind=c_char), intent(in) :: base(*), other(*)
 character(kind=c_char), intent(out) :: result(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
@@ -1004,6 +1013,29 @@ character(*), intent(in) :: other
 character(:), allocatable :: r
 
 r = relative_to(self%path_str, other)
+end function
+
+
+function proximate_to(base, other) result (r)
+!! returns other proximate to base
+!! if other is not a subpath of base, returns "" empty string
+!!
+!! reference: C++ filesystem proximate
+!! https://en.cppreference.com/w/cpp/filesystem/proximate
+character(*), intent(in) :: base, other
+
+include "ifc0a.inc"
+N = fs_proximate_to(trim(base) // C_NULL_CHAR, trim(other) // C_NULL_CHAR, cbuf, N)
+include "ifc0b.inc"
+end function
+
+function m_proximate_to(self, other) result(r)
+!! returns other proximate to self
+class(path_t), intent(in) :: self
+character(*), intent(in) :: other
+character(:), allocatable :: r
+
+r = proximate_to(self%path_str, other)
 end function
 
 

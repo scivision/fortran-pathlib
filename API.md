@@ -527,7 +527,6 @@ longname("C:/PROGRA~1")  !< "C:/Program Files"
 ```
 
 Get path relative to other path.
-This is a string operation and does not resolve or expand paths.
 
 ```fortran
 relative_to(base, other)
@@ -538,6 +537,20 @@ relative_to("/a/b/c", "/a/b")  !< "c"
 
 p = path_t("/a/b/c")
 p%relative_to("/a")  !< "b/c"
+
+p%relative_to("d")  !< ""
+```
+
+Get path proximate to other path.
+
+```fortran
+proximate_to(base, other)
+character(*), intent(in) :: base, other
+
+proximate_to("/a/b/c", "/a/b")  !< "c"
+
+p = path_t("/a/b/c")
+p%proximate_to("d")  !< "d"
 ```
 
 ## System
