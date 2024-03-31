@@ -542,7 +542,7 @@ Is Ffilesystem using C or C++ filesystem backend:
 logical :: as_cpp()
 ```
 
-Get home directory (normalized), or empty string if not found
+Get home directory, or empty string if not found.
 
 ```fortran
 character(:), allocatable :: get_homedir()

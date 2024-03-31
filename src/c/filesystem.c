@@ -1056,10 +1056,11 @@ size_t fs_get_cwd(char* path, size_t buffer_size)
 
 size_t fs_get_homedir(char* path, size_t buffer_size)
 {
-  // homedir is normalized by definition
   size_t L = fs_getenv(fs_is_windows() ? "USERPROFILE" : "HOME", path, buffer_size);
-  if (L)
-    return fs_normal(path, path, buffer_size);
+  if (L){
+    fs_as_posix(path);
+    return L;
+  }
 
 #ifdef _WIN32
   return 0;
@@ -1068,7 +1069,14 @@ size_t fs_get_homedir(char* path, size_t buffer_size)
   if (!h)
     return 0;
 
-  return fs_normal(h, path, buffer_size);
+  L = strlen(h);
+  if (L >= buffer_size){
+    fprintf(stderr, "ERROR:ffilesystem:fs_get_homedir: buffer_size %zu too small\n", buffer_size);
+    return 0;
+  }
+
+  strncpy(path, h, L);
+  return L;
 #endif
 }
 

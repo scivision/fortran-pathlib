@@ -1067,11 +1067,10 @@ size_t fs_get_homedir(char* path, size_t buffer_size)
 
 std::string Ffs::get_homedir()
 {
-  // homedir is normalized by definition
   // must be std::string to avoid dangling pointer -- GCC doesn't detect this but Clang does.
   std::string homedir = Ffs::get_env(fs_is_windows() ? "USERPROFILE" : "HOME");
   if(!homedir.empty()) LIKELY
-    return Ffs::normal(homedir);
+    return Ffs::as_posix(homedir);
 
 #ifdef _WIN32
   // works on MSYS2, MSVC, oneAPI.
@@ -1090,15 +1089,15 @@ std::string Ffs::get_homedir()
   if (!ok) UNLIKELY
     return {};
 
-  homedir = std::string_view(buf.get());
+  homedir = std::string(buf.get());
 #else
   const char *h = getpwuid(geteuid())->pw_dir;
   if (!h) UNLIKELY
     return {};
-  homedir = std::string_view(h);
+  homedir = std::string(h);
 #endif
 
-  return Ffs::normal(homedir);
+  return Ffs::as_posix(homedir);
 }
 
 size_t fs_expanduser(const char* path, char* result, size_t buffer_size)
