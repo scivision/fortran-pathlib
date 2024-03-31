@@ -28,7 +28,7 @@ longname, shortname, getenv, setenv
 
 interface get_max_path
 !! deprecated
-procedure max_path
+procedure :: max_path
 end interface
 
 

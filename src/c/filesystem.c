@@ -876,34 +876,30 @@ bool fs_touch(const char* path)
   if(strlen(path) == 0)
     return false;
 
-  if (fs_exists(path) && !fs_is_file(path)){
-    fprintf(stderr, "ERROR:ffilesystem:touch: %s exists but is not a file\n", path);
-    return false;
-  }
-
-  if(fs_is_file(path) &&
+  if(fs_exists(path)){
+    if (
 #ifdef _WIN32
     // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/utime-utime32-utime64-wutime-wutime32-wutime64
-    _utime(path, NULL)){
+    _utime(path, NULL)
 #else
-    utimes(path, NULL)){
+    utimes(path, NULL)
 #endif
-    fprintf(stderr, "ERROR:ffilesystem:touch: %s => %s\n", path, strerror(errno));
-    return false;
+    ){
+      fprintf(stderr, "ERROR:Ffilesystem:touch: %s => %s\n", path, strerror(errno));
+      return false;
+    }
+    return true;
   }
 
   FILE* fid = fopen(path, "a+b");
-  if(!fid){
-    fprintf(stderr, "ERROR:ffilesystem:touch: %s => %s\n", path, strerror(errno));
-    return false;
-  }
-  if(fclose(fid)){
-    fprintf(stderr, "ERROR:ffilesystem:touch: %s => %s\n", path, strerror(errno));
+  if(!fid || fclose(fid)){
+    fprintf(stderr, "ERROR:Ffilesystem:touch: %s => %s\n", path, strerror(errno));
     return false;
   }
 
-  return fs_is_file(path);
+  return true;
 }
+
 
 bool fs_is_subdir(const char* subdir, const char* dir)
 {

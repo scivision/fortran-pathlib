@@ -98,9 +98,7 @@ if(!fs_is_windows()){
       err("copy_file", p);
     printf("OK: copy_file(%s)\n", s);
 
-    if(fs_touch(s))
-      err("touch", p);
-    printf("OK: touch(%s)\n", ref);
+    // touch is ambiguous on reserved, so omit
 
     if(fs_file_size(s) != 0)
       err("file_size", p);

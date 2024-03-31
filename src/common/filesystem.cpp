@@ -922,18 +922,12 @@ void Ffs::touch(std::string_view path)
 
 #if defined(__cpp_using_enum)
   using enum std::filesystem::perms;
-  using enum std::errc;
 #else
   fs::perms owner_read = fs::perms::owner_read;
   fs::perms owner_write = fs::perms::owner_write;
-  std::errc no_such_file_or_directory = std::errc::no_such_file_or_directory;
 #endif
 
-
-  if (fs::exists(s) && !fs::is_regular_file(s))
-    throw fs::filesystem_error("ffilesystem:touch: exists, but is not a regular file", p, std::make_error_code(no_such_file_or_directory));
-
-  if(fs::is_regular_file(s)) {
+  if(fs::exists(s)) {
     fs::last_write_time(p, fs::file_time_type::clock::now());
     return;
   }
@@ -941,15 +935,11 @@ void Ffs::touch(std::string_view path)
   std::ofstream ost;
   ost.open(p, std::ios_base::out | std::ios_base::binary);
   if(!ost.is_open()) UNLIKELY
-    throw fs::filesystem_error("filesystem:touch: could not create", p, std::make_error_code(no_such_file_or_directory));
+    throw fs::filesystem_error("filesystem:touch: could not create", p, std::make_error_code(std::errc::no_such_file_or_directory));
   ost.close();
-
 
   // ensure user can access file, as default permissions may be mode 600 or such
   fs::permissions(p, owner_read | owner_write, fs::perm_options::add);
-
-  if(!fs::is_regular_file(p)) UNLIKELY
-    throw fs::filesystem_error("filesystem:touch: could not create", p, std::make_error_code(no_such_file_or_directory));
 }
 
 
@@ -1173,8 +1163,6 @@ void Ffs::set_permissions(std::string_view path, int readable, int writable, int
 {
 
   fs::path pth(path);
-  if(!fs::is_regular_file(pth)) UNLIKELY
-    throw fs::filesystem_error("Ffilesystem:set_permissions: not a regular file", pth, std::make_error_code(std::errc::not_supported));
 
 #if defined(__cpp_using_enum)
   using enum std::filesystem::perms;
