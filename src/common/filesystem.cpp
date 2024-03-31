@@ -701,20 +701,20 @@ size_t fs_canonical(const char* path, bool strict, char* result, size_t buffer_s
 
 std::string Ffs::canonical(std::string_view path, bool strict)
 {
-  // also expands ~
+  // also expands ~ and normalizes path
 
   if (path.empty()) UNLIKELY
     return {};
     // need this for macOS otherwise it returns the current working directory instead of empty string
 
-  auto ex = fs::path(Ffs::expanduser(path));
+  fs::path ex = fs::path(Ffs::expanduser(path));
 
   if(FS_TRACE) std::cout << "TRACE:canonical: input: " << path << " expanded: " << ex << "\n";
 
   if (!fs::exists(ex) && !ex.is_absolute())
     // handles differences in ill-defined behaviour of fs::weakly_canonical() on non-existant paths
     // canonical(path, false) is distinct from resolve(path, false) for non-existing paths.
-    return ex.generic_string();
+    return Ffs::normal(ex.generic_string());
 
   return strict
     ? fs::canonical(ex).generic_string()
@@ -1107,14 +1107,12 @@ size_t fs_expanduser(const char* path, char* result, size_t buffer_size)
 
 std::string Ffs::expanduser(std::string_view path)
 {
-  // The path is also normalized by defintion
-
   if(path.empty()) UNLIKELY
     return {};
   // cannot call .front() on empty string_view() (MSVC)
 
   if(path.front() != '~')
-    return Ffs::normal(path);
+    return std::string(path);
 
   std::set <char> filesep = {'/', fs::path::preferred_separator};
 
@@ -1126,7 +1124,7 @@ std::string Ffs::expanduser(std::string_view path)
   filesep.find(path[1]) == filesep.end()
 #endif
   )
-    return Ffs::normal(path);
+    return std::string(path);
 
 
   std::string h = Ffs::get_homedir();
@@ -1135,22 +1133,24 @@ std::string Ffs::expanduser(std::string_view path)
     std::cerr << "ERROR:ffilesystem:expanduser: could not get home directory\n";
     return {};
   }
-  if (path.length() < 3)
+
+  std::string p = fs_drop_slash(path);
+
+  if (p.length() < 3)
     return h;
 
 // handle initial duplicated file separators. NOT .lexical_normal to handle "~/.."
   size_t i = 2;
-  while(i < path.length() &&
+  while(i < p.length() &&
 #if __cplusplus >= 202002L
-  filesep.contains(path[i])
+  filesep.contains(p[i])
 #else
-  filesep.find(path[i]) != filesep.end()
+  filesep.find(p[i]) != filesep.end()
 #endif
   )
     i++;
 
-  // The path is also normalized by definition
-  return Ffs::normal((fs::path(h) / path.substr(i)).generic_string());
+  return (fs::path(h) / p.substr(i)).generic_string();
 }
 
 

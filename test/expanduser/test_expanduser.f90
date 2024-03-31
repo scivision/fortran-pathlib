@@ -14,12 +14,12 @@ if(expanduser("~P") /= "~P") error stop "expanduser ~P failed: " // expanduser("
 valgrind: block
 
 type(path_t) :: p2, p3
-character(:), allocatable :: s1, s2, s3
+character(:), allocatable :: s1, s2
 
 !> does expanduser() get homedir correctly
 s1 = expanduser("~")
 if(s1 /= get_homedir()) then
-   write(stderr, '(a)') "expanduser ~ failed: " // s1 // " /= " // get_homedir()
+   write(stderr, '(a)') "expanduser(~) failed: " // s1 // " /= " // get_homedir()
    error stop
 endif
 
@@ -52,16 +52,15 @@ if (expanduser("~//") /= s2) error stop "expanduser double separator failed: " /
 
 !> double dot
 s2 = expanduser("~/..")
-s3 = parent(s1)
-if (s2 /= s3) error stop "expanduser ~/.. failed: " // s2 // " /= " // s3
+s1 = get_homedir() // "/.."
+if (s2 /= s1) error stop "expanduser(~/..) failed: " // s2 // " /= " // s1
 
 s2 = expanduser("~/../")
-s3 = parent(s1)
-if (s2 /= s3) error stop "expanduser ~/../ failed: " // s2 // " /= " // s3
+if (s2 /= s1) error stop "expanduser(~/../) failed: " // s2 // " /= " // s1
 
 !> double dot separator
 s2 = expanduser("~//..")
-if(s2 /= s3) error stop "expanduser ~//.. failed: " // s2 // " /= " // s3
+if(s2 /= s1) error stop "expanduser ~//.. failed: " // s2 // " /= " // s1
 
 
 end block valgrind

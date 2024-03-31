@@ -44,7 +44,7 @@ print *, "OK: home dir = ", p1%path()
 p2 = path_t(p1%parent())
 L1 = p2%length()
 if (L1 >= p1%length()) error stop "parent home " // p2%path()
-print *, "OK: parent home = ", p2%path()
+print *, "OK: parent(resolve(~)) = ", p2%path()
 
 
 ! -- relative dir
@@ -53,7 +53,7 @@ par = par%resolve()
 
 L2 = par%length()
 if (L2 /= L1) then
-  write(stderr,*) 'ERROR:resolve:relative: up dir not resolved: ~/.. => ' // par%path()
+  write(stderr,*) 'ERROR:resolve:relative: up dir not resolved: ~/.. => ' // par%path(), L1, L2
   error stop
 endif
 print *, 'OK: canon_dir = ', par%path()
