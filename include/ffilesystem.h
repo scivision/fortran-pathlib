@@ -24,6 +24,8 @@
 #include <cstdlib>
 #include <algorithm> // std::min
 #include <string>
+#include <ctime> // time_t
+
 #include <filesystem>
 
 #ifdef __cpp_lib_filesystem
@@ -72,6 +74,7 @@ public:
   static std::string which(std::string_view);
 
   static void touch(std::string_view);
+  static fs::file_time_type get_modtime(std::string_view);
 
   static std::string canonical(std::string_view, bool);
   static std::string resolve(std::string_view, bool);
@@ -124,6 +127,7 @@ extern "C" {
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <time.h>
 
 #endif
 
@@ -196,6 +200,8 @@ size_t fs_relative_to(const char*, const char*, char*, size_t);
 size_t fs_proximate_to(const char*, const char*, char*, size_t);
 
 bool fs_touch(const char*);
+
+time_t fs_get_modtime(const char*);
 
 size_t fs_get_cwd(char*, size_t);
 bool fs_set_cwd(const char*);

@@ -12,9 +12,12 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <sys/stat.h>
+
+// preferred import order for stat()
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <errno.h>
+
 #include <ctype.h> // isalnum
 
 #ifdef _WIN32
@@ -508,6 +511,7 @@ uintmax_t fs_file_size(const char* path)
   return 0;
 }
 
+
 uintmax_t fs_space_available(const char* path)
 {
 #ifdef _WIN32
@@ -920,6 +924,16 @@ bool fs_touch(const char* path)
   }
 
   return true;
+}
+
+
+time_t fs_get_modtime(const char* path)
+{
+  struct stat s;
+
+  if (fs_exists(path) && !stat(path, &s))
+    return s.st_mtime;
+  return 0;
 }
 
 

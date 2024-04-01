@@ -27,6 +27,12 @@ target_link_libraries(fortran_same PRIVATE ffilesystem)
 add_test(NAME Fortran_same COMMAND ${CMAKE_COMMAND} -E env $<TARGET_FILE:fortran_same>)
 set_property(TEST Fortran_same PROPERTY FIXTURES_REQUIRED mkdir_fxt)
 
+add_executable(test_touch test_touch.f90)
+target_link_libraries(test_touch PRIVATE ffilesystem)
+target_compile_options(test_touch PRIVATE ${${PROJECT_NAME}_fortran_test_flags})
+add_test(NAME Fortran_touch COMMAND test_touch)
+set_property(TEST Fortran_touch PROPERTY SKIP_REGULAR_EXPRESSION "C\\+\\+20 required")
+
 # --- props
 
 set_property(TEST Fortran_fileop Fortran_same PROPERTY
@@ -35,4 +41,4 @@ SKIP_REGULAR_EXPRESSION "not implemented;not available;SIGABRT;[aA]bort")
 set_property(TEST Fortran_copyfile Fortran_fileop Fortran_mkdir Fortran_same PROPERTY LABELS "Fortran")
 
 # Intel needs linker_language Fortran else error "undefined reference to `main'"
-set_property(TARGET test_fileop test_copyfile test_mkdir fortran_same PROPERTY LINKER_LANGUAGE Fortran)
+set_property(TARGET test_fileop test_copyfile test_mkdir fortran_same test_touch PROPERTY LINKER_LANGUAGE Fortran)

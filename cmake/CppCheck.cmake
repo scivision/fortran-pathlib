@@ -37,9 +37,39 @@ endif()
 # i.e. benchmarking may reveal miniscule benefit.
 # check_cxx_symbol_exists(__cpp_lib_smart_ptr_for_overwrite "memory" cpp20_smart_ptr_for_overwrite)
 
+# for Ffs::get_modtime
+check_cxx_source_compiles("
+#include <chrono>
+#include <filesystem>
+
+int main(){
+
+std::filesystem::file_time_type t_fs;
+auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs);
+return 0;
+}"
+${PROJECT_NAME}_HAVE_CLOCK_CAST
+)
+
 if(${PROJECT_NAME}_cli)
-  check_cxx_symbol_exists(__cpp_lib_ranges "algorithm" cpp20_ranges)
+  check_cxx_source_compiles("
+  #include <iostream>
+  #include <chrono>
+  #include <format>
+  #include <filesystem>
+
+  int main(){
+  std::filesystem::file_time_type t;
+  t = std::filesystem::file_time_type::clock::now();
+  std::cout << t << std::endl;
+  return 0;
+  }"
+  ${PROJECT_NAME}_format
+  )
+
+  check_cxx_symbol_exists(__cpp_lib_ranges "algorithm" ${PROJECT_NAME}_cpp20_ranges)
 endif()
+
 
 if(${PROJECT_NAME}_trace)
   check_cxx_symbol_exists(__cpp_lib_starts_ends_with "string" cpp20_string_ends_with)

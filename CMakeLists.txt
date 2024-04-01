@@ -101,6 +101,7 @@ target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:C>,$<NOT:$<BOOL:${HAVE_CXX_FILESYSTEM}>>>:CWK_EXPORTS>"
 "$<$<AND:$<COMPILE_LANGUAGE:C>,$<BOOL:${HAVE_UTSNAME_H}>>:HAVE_UTSNAME_H>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${${PROJECT_NAME}_WIN32_SYMLINK}>>:WIN32_SYMLINK>"
+"$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${${PROJECT_NAME}_HAVE_CLOCK_CAST}>>:HAVE_CLOCK_CAST>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${HAVE_DLADDR}>>:HAVE_DLADDR>"
 "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${ffilesystem_trace}>>:FS_TRACE=1>"
 )
@@ -149,7 +150,7 @@ endif()
 # --- CLI
 
 if(ffilesystem_cli)
-  if(HAVE_CXX_FILESYSTEM AND cpp20_ranges)
+  if(HAVE_CXX_FILESYSTEM AND ${PROJECT_NAME}_format AND ${PROJECT_NAME}_cpp20_ranges)
     add_executable(fs_cli app/main.cpp)
     target_link_libraries(fs_cli PRIVATE ffilesystem)
 

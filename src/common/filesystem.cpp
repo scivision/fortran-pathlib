@@ -38,6 +38,18 @@
 #include <cstdlib>
 #include <system_error>
 #include <cctype> // std::isalnum
+
+// preferred import order for stat()
+#include <sys/types.h>
+#include <sys/stat.h>
+
+#ifdef HAVE_CLOCK_CAST
+// this include can break even when functions not used if C++ ABI problem e.g. Clang 14 with GCC 13
+#include <chrono>
+#endif
+
+#include <ctime> // std::time_t
+
 #include <filesystem>
 
 #if __has_include(<format>)
@@ -666,7 +678,7 @@ bool Ffs::is_reserved(std::string_view path)
   return reserved.contains(s);
 
 #else
-  std::cout << "WARNING:ffilesystem:is_reserved: C++20 required for reserved names check\n";
+  std::cerr << "ERROR:ffilesystem:is_reserved: C++20 required for reserved names check\n";
   return false;
 #endif
 }
@@ -999,6 +1011,39 @@ void Ffs::touch(std::string_view path)
 
   // ensure user can access file, as default permissions may be mode 600 or such
   fs::permissions(p, owner_read | owner_write, fs::perm_options::add);
+}
+
+
+std::time_t fs_get_modtime(const char* path)
+{
+
+  std::time_t t_int = 0;
+
+#ifdef HAVE_CLOCK_CAST
+  auto t_fs = Ffs::get_modtime(std::string_view(path));
+  auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs);
+  t_int = std::chrono::system_clock::to_time_t(t_sys);
+#else
+  struct stat s;
+  if (fs_exists(path) && !stat(path, &s))
+    return s.st_mtime;
+#endif
+
+  return t_int;
+}
+
+fs::file_time_type Ffs::get_modtime(std::string_view path)
+{
+  std::error_code ec;
+
+  fs::file_time_type t_fs = fs::last_write_time(path, ec);
+  if(ec) UNLIKELY
+  {
+    std::cerr << "ERROR:ffilesystem:get_modtime: " << ec.message() << "\n";
+    return {};
+  }
+
+  return t_fs;
 }
 
 

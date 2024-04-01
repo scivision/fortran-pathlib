@@ -110,6 +110,16 @@ call p%touch()
 call touch("myfile.ext")
 ```
 
+Get last modified time of path.
+
+```fortran
+use, intrinsic :: iso_c_binding, only : C_LONG
+integer(C_LONG) :: mtime
+
+mtime = get_modtime("my/file.txt")
+```
+
+
 Delete file, empty directory, or symbolic link (the target of a symbolic link is not deleted).
 
 ```fortran

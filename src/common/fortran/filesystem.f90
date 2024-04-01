@@ -1,6 +1,6 @@
 module filesystem
 
-use, intrinsic:: iso_c_binding, only: C_BOOL, C_CHAR, C_INT, C_LONG, C_SIZE_T, C_NULL_CHAR
+use, intrinsic:: iso_c_binding, only: C_BOOL, C_CHAR, C_INT, C_LONG, C_LONG_LONG, C_SIZE_T, C_NULL_CHAR
 use, intrinsic:: iso_fortran_env, only: int64, compiler_version, stderr=>error_unit
 
 implicit none
@@ -9,7 +9,7 @@ public :: path_t  !< base class
 public :: get_homedir, canonical, resolve, get_cwd, set_cwd, make_tempdir, which !< utility procedures
 public :: normal, expanduser, as_posix, &
 is_absolute, is_char_device, is_dir, is_file, is_exe, is_subdir, is_readable, is_writable, is_reserved, &
-is_symlink, read_symlink, &
+is_symlink, read_symlink, create_symlink, &
 exists, &
 join, &
 copy_file, mkdir, &
@@ -18,7 +18,7 @@ root, same_file, file_size, space_available, &
 file_name, parent, stem, suffix, with_suffix, &
 make_absolute, &
 assert_is_file, assert_is_dir, &
-touch, create_symlink, &
+touch, get_modtime, &
 remove, get_tempdir, &
 set_permissions, get_permissions, &
 fs_cpp, fs_lang, pathsep, is_safe_name, &
@@ -65,6 +65,7 @@ procedure, public :: create_symlink=>m_create_symlink
 procedure, public :: copy_file=>m_copy_file
 procedure, public :: mkdir=>m_mkdir
 procedure, public :: touch=>m_touch
+procedure, public :: modtime=>m_get_modtime
 procedure, public :: parent=>m_parent
 procedure, public :: file_name=>m_file_name
 procedure, public :: stem=>m_stem
@@ -407,6 +408,11 @@ end function
 logical(c_bool) function fs_touch(path) bind(C)
 import
 character(kind=c_char), intent(in) :: path(*)
+end function
+
+integer(C_LONG_LONG) function fs_get_modtime(path) bind(C)
+import
+character(kind=C_CHAR), intent(in) :: path(*)
 end function
 
 integer(C_SIZE_T) function fs_with_suffix(path, new_suffix, result, buffer_size) bind(C)
@@ -1113,6 +1119,20 @@ subroutine m_touch(self)
 class(path_t), intent(in) :: self
 call touch(self%path_str)
 end subroutine
+
+
+integer(C_LONG_LONG) function get_modtime(path) result(r)
+!! get file modification time as Unix epoch time
+character(*), intent(in) :: path
+
+r = fs_get_modtime(trim(path) // C_NULL_CHAR)
+end function
+
+integer(C_LONG_LONG) function m_get_modtime(self) result(r)
+class(path_t), intent(in) :: self
+r = get_modtime(self%path_str)
+end function
+
 
 function with_suffix(path, new) result(r)
 !! replace file suffix with new suffix

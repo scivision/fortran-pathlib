@@ -5,6 +5,12 @@
 #include <functional>
 #include <map>
 
+#include <chrono> // needed to std::format() fs::file_time_type
+
+#if __has_include(<format>)
+#include <format>
+#endif
+
 #include <filesystem>
 
 #ifdef _MSC_VER
@@ -139,7 +145,12 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << mmax[fun](a1) << "\n";
   else if (mvoid.contains(fun))
     mvoid[fun](a1);
-  else if (fun == "chdir" || fun == "set_cwd") {
+  else if (fun == "modtime"){
+#if defined(__cpp_lib_format)
+    auto t = Ffs::get_modtime(a1);
+    std::cout << std::format("{}\n", t);
+#endif
+  } else if (fun == "chdir" || fun == "set_cwd") {
     std::cout << "cwd: " << Ffs::get_cwd() << "\n";
     try {
       Ffs::chdir(a1);
