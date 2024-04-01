@@ -301,7 +301,7 @@ size_t fs_with_suffix(const char* path, const char* suffix,
   cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
   cwk_path_change_extension(path, suffix, result, buffer_size);
 
-  return fs_normal(result, result, buffer_size);
+  return strlen(result);
 }
 
 
