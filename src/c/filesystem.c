@@ -966,24 +966,16 @@ time_t fs_get_modtime(const char* path)
 
 bool fs_is_subdir(const char* subdir, const char* dir)
 {
-  // is subdir a subdirectory of dir -- lexical operation
+  // is subdir a subdirectory of dir
   const size_t m = fs_get_max_path();
 
-  char* buf1 = (char*) malloc(m);
-  if(!buf1) return false;
-  char* buf2 = (char*) malloc(m);
-  if(!buf2) {
-    free(buf1);
-    return false;
-  }
+  char* buf = (char*) malloc(m);
+  if(!buf) return false;
 
-  size_t Ls = fs_normal(subdir, buf1, m);
-  size_t Ld = fs_normal(dir, buf2, m);
+  size_t L = fs_relative_to(dir, subdir, buf, m);
+  bool yes = L > 0 && buf[0] != '.';
 
-  bool yes = Ls > Ld && strncmp(buf1, buf2, Ld) == 0;
-
-  free(buf1);
-  free(buf2);
+  free(buf);
 
   return yes;
 

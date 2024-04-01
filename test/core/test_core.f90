@@ -445,6 +445,13 @@ if (is_subdir("/a/b", "c")) error stop "c is not subdir of /a/b"
 if (is_subdir("a/b", "/c")) error stop "/c is not subdir of a/b"
 if (is_subdir("b", "a/b")) error stop "a/b is not subdir of b"
 
+if (is_subdir("/a/b", "/c")) error stop "/c is not subdir of /a/b"
+if (is_subdir("/a/b", "/a/b")) error stop "/a/b is not subdir of /a/b"
+if (is_subdir("/a/b", "/a/b/")) error stop "/a/b/ is not subdir of /a/b"
+if (is_subdir("/a/b/", "/a/b")) error stop "/a/b is not subdir of /a/b/"
+if (is_subdir("/a/b", "b")) error stop "b is not subdir of /a/b"
+if (is_subdir("/a/b", "a/b")) error stop "a/b is not subdir of /a/b"
+
 end subroutine test_is_subdir
 
 
