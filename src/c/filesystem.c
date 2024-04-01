@@ -47,20 +47,6 @@
 #include <cwalk.h>
 
 
-size_t fs_get_max_path(){
-
-#if defined(PATH_MAX)
-  return PATH_MAX;
-#elif defined (_MAX_PATH)
-  return _MAX_PATH;
-#elif defined (_POSIX_PATH_MAX)
-  return _POSIX_PATH_MAX;
-#else
-  return 256;
-#endif
-
- }
-
 bool fs_cpp(){
 // tell if fs core is C or C++
   return false;

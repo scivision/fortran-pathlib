@@ -5,7 +5,7 @@
 #include <functional>
 #include <map>
 
-#include <chrono> // needed to std::format() fs::file_time_type
+#include <chrono> // needed to std::format() std::filesystem::file_time_type
 
 #if __has_include(<format>)
 #include <format>
@@ -160,7 +160,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
     }
   } else if (fun == "ls") {
     for (auto const& dir_entry : std::filesystem::directory_iterator{Ffs::expanduser(a1)}){
-      fs::path p = dir_entry.path();
+      std::filesystem::path p = dir_entry.path();
       std::cout << p;
       if (Ffs::is_file(p.generic_string()))
         std::cout << " " << Ffs::file_size(p.generic_string());

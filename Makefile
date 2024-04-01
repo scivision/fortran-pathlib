@@ -13,7 +13,7 @@ CFLAGS := -Wall $(INC)
 FFLAGS := -Wall
 
 cdir = src/common/
-SRCS = $(cdir)common.c $(cdir)filesystem.cpp
+SRCS = $(cdir)common.c $(cdir)filesystem.cpp $(cdir)dynamic.cpp $(cdir)inquire.cpp $(cdir)pure.cpp $(cdir)platform.cpp $(cdir)resolve.cpp $(cdir)symlink.cpp $(cdir)windows.cpp
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 
 fdir = $(cdir)fortran/

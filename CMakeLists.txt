@@ -89,9 +89,22 @@ endif()
 
 
 add_library(ffilesystem src/common/common.c
-"$<IF:$<BOOL:${HAVE_CXX_FILESYSTEM}>,src/common/filesystem.cpp,src/c/filesystem.c;${cwalk_SOURCE_DIR}/src/cwalk.c>"
 "$<$<BOOL:${HAVE_Fortran_FILESYSTEM}>:src/common/fortran/filesystem.f90>"
 )
+if(HAVE_CXX_FILESYSTEM)
+  target_sources(ffilesystem PRIVATE
+    src/common/filesystem.cpp
+    src/common/dynamic.cpp
+    src/common/inquire.cpp
+    src/common/pure.cpp
+    src/common/platform.cpp
+    src/common/resolve.cpp
+    src/common/symlink.cpp
+    src/common/windows.cpp
+    )
+else()
+  target_sources(ffilesystem PRIVATE src/c/filesystem.c ${cwalk_SOURCE_DIR}/src/cwalk.c)
+endif()
 target_include_directories(ffilesystem PRIVATE
 ${PROJECT_SOURCE_DIR}/include
 $<$<NOT:$<BOOL:${HAVE_CXX_FILESYSTEM}>>:${cwalk_SOURCE_DIR}/include>

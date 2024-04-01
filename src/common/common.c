@@ -1,6 +1,13 @@
 #include <stdbool.h>
-#include <string.h>
-#include <stdio.h>
+#include <stdio.h>  // snprintf
+
+// maximum path length
+#if defined (__APPLE__)
+#include <sys/syslimits.h>
+#elif !defined (_MSC_VER)
+#include <limits.h>
+#endif
+// end maximum path length
 
 #if defined(__unix__) || !defined(__APPLE__) && defined(__MACH__)
 // https://web.archive.org/web/20191012035921/http://nadeausoftware.com/articles/2012/01/c_c_tip_how_use_compiler_predefined_macros_detect_operating_system
@@ -9,12 +16,25 @@
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include <Windows.h>  // GetTokenInformation
 #else
-// geteuid
-#include <unistd.h>
-#include <sys/types.h>
+#include <unistd.h>  // geteuid
+#include <sys/types.h>  // geteuid
 #endif
+
+size_t fs_get_max_path(){
+
+  size_t m = 256;
+#if defined(PATH_MAX)
+  m = PATH_MAX;
+#elif defined (_MAX_PATH)
+  m = _MAX_PATH;
+#elif defined (_POSIX_PATH_MAX)
+  m = _POSIX_PATH_MAX;
+#endif
+  return (m < 4096) ? m : 4096; // arbitrary absolute maximum
+
+}
 
 
 bool fs_is_macos(){

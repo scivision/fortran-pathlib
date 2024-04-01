@@ -5,20 +5,20 @@
 #define FS_TRACE 0
 #endif
 
-// maximum path length
-#if defined (__APPLE__)
-#include <sys/syslimits.h>
-#elif !defined (_MSC_VER)
-#ifdef __cplusplus
-#include <climits>
-#else
-#include <limits.h>
-#endif
-#endif
-// end maximum path length
-
 
 #ifdef __cplusplus
+
+// GCC itself does it this way https://github.com/gcc-mirror/gcc/blob/78b56a12dd028b9b4051422c6bad6260055e4465/libcpp/system.h#L426
+#ifdef __has_cpp_attribute
+#if __has_cpp_attribute(unlikely)
+#define FFS_UNLIKELY [[unlikely]]
+#define FFS_LIKELY [[likely]]
+#endif
+#endif
+#ifndef FFS_UNLIKELY
+#define FFS_UNLIKELY
+#define FFS_LIKELY
+#endif
 
 #include <cstdint>
 #include <cstdlib>
@@ -29,8 +29,6 @@
 #include <filesystem>
 
 #ifdef __cpp_lib_filesystem
-
-namespace fs = std::filesystem;
 
 class Ffs
 {
@@ -74,7 +72,7 @@ public:
   static std::string which(std::string_view);
 
   static void touch(std::string_view);
-  static fs::file_time_type get_modtime(std::string_view);
+  static std::filesystem::file_time_type get_modtime(std::string_view);
 
   static std::string canonical(std::string_view, bool);
   static std::string resolve(std::string_view, bool);
@@ -115,6 +113,9 @@ public:
   // Disallow creating an instance of this object
   Ffs() = delete;
 };
+
+size_t fs_str2char(std::string_view, char*, size_t);
+std::string fs_drop_slash(std::string_view);
 
 
 #endif // __cpp_lib_filesystem

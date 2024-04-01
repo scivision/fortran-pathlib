@@ -10,7 +10,16 @@ endif
 
 fsrcs = fortran ? files('src/common/fortran/filesystem.f90') : []
 csrcs = files('src/common/common.c')
-cppsrcs = files('src/common/filesystem.cpp')
+cppsrcs = files(
+'src/common/filesystem.cpp',
+'src/common/dynamic.cpp',
+'src/common/inquire.cpp',
+'src/common/pure.cpp',
+'src/common/platform.cpp',
+'src/common/resolve.cpp',
+'src/common/symlink.cpp',
+'src/common/windows.cpp'
+)
 
 inc = include_directories('include')
 
