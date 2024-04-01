@@ -305,7 +305,7 @@ std::string Ffs::join(std::string_view path, std::string_view other)
   if (other.empty()) UNLIKELY
     return std::string(path);
 
-  return Ffs::normal((fs::path(path) / other).generic_string());
+  return (fs::path(path) / fs_drop_slash(other)).generic_string();
 }
 
 
