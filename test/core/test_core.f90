@@ -132,13 +132,31 @@ subroutine test_join()
 
 type(path_t) :: p1,p2
 
-if(join("", "") /= "") error stop "join empty: " // join("", "")
+character(:), allocatable :: p
 
-if(join("a", "") /= "a") error stop "join a: " // join("a", "")
+p = join("", "")
+if(p /= "") error stop "join empty: " // p
 
-if(join("", "b") /= "b") error stop "join b: " // join("", "b")
+p = join("a", "")
+if(p /= "a") error stop "join a: " // p
 
-if(join("a/b/" , "c/") /= "a/b/c") error stop "join a/b c/: " // join("a/b/", "c/")
+p = join("", "b")
+if(p /= "b") error stop "join b: " // p
+
+p = join("a/b/" , "c/")
+if(p /= "a/b/c") error stop "join(a/b, c/): " // p
+
+p = join("/", "")
+if(p /= "/") error stop "join(/,): " // p
+
+p = join("", "/")
+if(p /= "/") error stop "join('',/): " // p
+
+p = join("a", "b//")
+if(p /= "a/b") error stop "join(a, b//): " // p
+
+p = join("a//", "b//")
+if(p /= "a/b") error stop "join(a//, b//): " // p
 
 
 p1 = path_t("a/b")
@@ -146,7 +164,8 @@ p1 = path_t("a/b")
 p2 = p1%join("c/d")
 if (p2%path() /= "a/b/c/d") error stop "%join c/d: " // p2%path()
 
-if (join("a/b", "c/d") /= "a/b/c/d") error stop "join(c/d): " // join("a/b", "c/d")
+p = join("a/b", "c/d")
+if (p /= "a/b/c/d") error stop "join(c/d): " // p
 
 end subroutine test_join
 

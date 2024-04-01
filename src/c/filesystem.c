@@ -215,6 +215,30 @@ size_t fs_stem(const char* path, char* result, size_t buffer_size)
 
 size_t fs_join(const char* path, const char* other, char* result, size_t buffer_size)
 {
+  size_t L1 = strlen(path);
+  size_t L2 = strlen(other);
+
+  if(L1 == 0 && L2 == 0)
+    return 0;
+
+  if(L1 == 0){
+    if(L2 >= buffer_size){
+      fprintf(stderr, "ERROR:ffilesystem:fs_join: buffer_size %zu too small\n", buffer_size);
+      return 0;
+    }
+    strncpy(result, other, buffer_size);
+    return L2;
+  }
+
+  if(L2 == 0){
+    if(L1 >= buffer_size){
+      fprintf(stderr, "ERROR:ffilesystem:fs_join: buffer_size %zu too small\n", buffer_size);
+      return 0;
+    }
+    strncpy(result, path, buffer_size);
+    return L1;
+  }
+
   cwk_path_set_style(CWK_STYLE_UNIX);
   return cwk_path_join(path, other, result, buffer_size);
 }
