@@ -471,6 +471,20 @@ end subroutine destructor
 
 !> non-functional API
 
+integer function max_path()
+!! returns dynamic MAX_PATH for this computer
+!! Maximum path length is dynamically determined for this computer.
+!! A fixed length eases sending data to/from C/C++.
+!!
+!! Physical filesystem maximum filename and path lengths are OS and config dependent.
+!! Notional limits:
+!! MacOS: 1024 from sys/syslimits.h PATH_MAX
+!! Linux: 4096 from https://www.ibm.com/docs/en/spectrum-protect/8.1.13?topic=parameters-file-specification-syntax
+!! Windows: 32767 from https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=cmd
+max_path = int(fs_get_max_path())
+end function
+
+
 type(path_t) function set_path(path)
 character(*), intent(in) :: path
 
@@ -495,20 +509,6 @@ if(present(iend))   i2 = iend
 get_path = self%path_str(i1:i2)
 
 end function get_path
-
-
-integer function max_path()
-!! returns dynamic MAX_PATH for this computer
-!! Maximum path length is dynamically determined for this computer.
-!! A fixed length eases sending data to/from C/C++.
-!!
-!! Physical filesystem maximum filename and path lengths are OS and config dependent.
-!! Notional limits:
-!! MacOS: 1024 from sys/syslimits.h PATH_MAX
-!! Linux: 4096 from https://www.ibm.com/docs/en/spectrum-protect/8.1.13?topic=parameters-file-specification-syntax
-!! Windows: 32767 from https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=cmd
-max_path = int(fs_get_max_path())
-end function
 
 
 function as_posix(path) result(r)
