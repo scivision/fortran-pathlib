@@ -421,6 +421,11 @@ p1 = path_t("a/b/c/d/..")
 
 if (.not. p1%is_subdir("a/b/")) error stop "a/b/c/d/.. is subdir of a/b/"
 
+if (is_subdir("a/b", "c")) error stop "c is not subdir of a/b"
+if (is_subdir("/a/b", "c")) error stop "c is not subdir of /a/b"
+if (is_subdir("a/b", "/c")) error stop "/c is not subdir of a/b"
+if (is_subdir("b", "a/b")) error stop "a/b is not subdir of b"
+
 end subroutine test_is_subdir
 
 

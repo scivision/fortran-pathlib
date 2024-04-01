@@ -1240,12 +1240,10 @@ bool fs_is_subdir(const char* subdir, const char* dir)
 
 bool Ffs::is_subdir(std::string_view subdir, std::string_view dir)
 {
-  // subdir is a subdirectory of dir -- lexical operation
 
-  std::string s = Ffs::normal(subdir);
-  std::string d = Ffs::normal(dir);
+  auto r = fs::relative(subdir, dir);
 
-  return (s.length() > d.length()) && s.compare(0, d.length(), d) == 0;
+  return !r.empty() && r.native().front() != '.';
 }
 
 
