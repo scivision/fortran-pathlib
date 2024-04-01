@@ -592,8 +592,7 @@ bool fs_equivalent(const char* path1, const char* path2)
     return false;
   }
 
-  if((!fs_canonical(path1, true, buf1, m) || !fs_canonical(path2, true, buf2, m) ||
-      fs_is_char_device(path1) || fs_is_char_device(path2)) ||
+  if(!fs_canonical(path1, true, buf1, m) || !fs_canonical(path2, true, buf2, m) ||
     !(fs_is_dir(buf1) || fs_is_dir(buf2) || fs_is_file(buf1) || fs_is_file(buf2))){
 
       free(buf1);
