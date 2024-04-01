@@ -1,7 +1,7 @@
 project('ffilesystem', ['c', 'cpp'],
 version: '5.6.0',
 default_options: ['cpp_std=c++20'],
-meson_version : '>=0.57.0')
+meson_version : '>=1.3.0')
 
 fortran = get_option('fortran')
 if fortran
@@ -33,13 +33,37 @@ return 0;
 }'''
 
 cpp = meson.get_compiler('cpp')
-if not cpp.links(fs_check, name: 'fs_check')
+if not cpp.links(fs_check, name: 'C++ filesystem')
   error('No C++ filesystem support')
+endif
+
+if not cpp.has_define('__cpp_lib_make_unique', prefix : '#include <memory>')
+  error('C++14 make_unique support missing')
+endif
+
+chrono_src = '''
+#include <chrono>
+#include <filesystem>
+
+int main(){
+
+std::filesystem::file_time_type t_fs;
+auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs);
+return 0;
+}
+'''
+if cpp.links(chrono_src, name: 'C++20 chrono')
+  chrono_def = '-DHAVE_CLOCK_CAST'
+else
+  chrono_def = []
 endif
 
 filesystem = library('filessystem',
 sources: [fsrcs, csrcs, cppsrcs],
-include_directories: inc)
+include_directories: inc,
+install: true,
+cpp_args: chrono_def,
+)
 
 executable('fs_cli', sources: 'app/main.cpp', link_with: filesystem,
 include_directories: inc, install: true)
@@ -52,14 +76,15 @@ executable('filesystem_cli',
 endif
 
 if not meson.is_subproject()
-    test_core_cpp = executable('core_cpp', 'test/core/test_core.cpp', link_with: filesystem, include_directories: inc)
-    test('core_cpp', test_core_cpp)
+  foreach t : ['core', 'expanduser', 'permissions']
+    tec = executable(t + '_cpp', 'test/' + t + '/test_' + t + '.cpp', link_with: filesystem, include_directories: inc)
+    test(t + '_cpp', tec, suite: 'cpp')
+  endforeach
 
-    if fortran
-    test_core_fortran = executable('core_fortran', 'test/core/test_core.f90', link_with: filesystem)
-    test('core_fortran', test_core_fortran)
-
-    test_mkdtemp = executable('test_mkdtemp', 'test/mkdtemp/test_mkdtemp.f90', link_with: filesystem)
-    test('test_mkdtemp', test_mkdtemp)
-    endif
+  if fortran
+    foreach t : ['core', 'expanduser', 'mkdtemp', 'permissions']
+    tef = executable(t + '_fortran', 'test/' + t + '/test_' + t + '.f90', link_with: filesystem)
+    test(t + '_fortran', tef, suite: 'fortran')
+    endforeach
+  endif
 endif
