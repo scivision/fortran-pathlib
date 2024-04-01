@@ -377,6 +377,12 @@ size_t fs_canonical(const char* path, bool strict, char* result, size_t buffer_s
   }
   free(buf);
 
+  if(strlen(buf2) >= buffer_size){
+    fprintf(stderr, "ERROR:ffilesystem:canonical: buffer_size %zu too small\n", buffer_size);
+    free(buf2);
+    return 0;
+  }
+
   strncpy(result, buf2, buffer_size);
   free(buf2);
   fs_as_posix(result);
@@ -433,6 +439,12 @@ size_t fs_resolve(const char* path, bool strict, char* result, size_t buffer_siz
     return 0;
   }
   free(buf);
+
+  if(strlen(buf2) >= buffer_size){
+    fprintf(stderr, "ERROR:ffilesystem:resolve: buffer_size %zu too small\n", buffer_size);
+    free(buf2);
+    return 0;
+  }
 
   strncpy(result, buf2, buffer_size);
   free(buf2);
@@ -493,6 +505,11 @@ size_t fs_which(const char* name, char* result, size_t buffer_size)
   if(L == 0)
     return 0;
 
+  if(L >= buffer_size){
+    fprintf(stderr, "ERROR:ffilesystem:which: buffer_size %zu too small\n", buffer_size);
+    return 0;
+  }
+
   if(fs_is_absolute(name)){
     if(fs_is_exe(name)){
       strncpy(result, name, buffer_size);
@@ -518,6 +535,11 @@ size_t fs_which(const char* name, char* result, size_t buffer_size)
     fs_join(p, name, buf, buffer_size);
 
     if(fs_is_exe(buf)){
+      if(strlen(buf) >= buffer_size){
+        fprintf(stderr, "ERROR:ffilesystem:which: buffer_size %zu too small\n", buffer_size);
+        free(buf);
+        return 0;
+      }
       strncpy(result, buf, buffer_size);
       free(buf);
       return strlen(result);
