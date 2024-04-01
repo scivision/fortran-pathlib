@@ -353,9 +353,10 @@ size_t fs_canonical(const char* path, bool strict, char* result, size_t buffer_s
   }
   free(buf);
 
-  L = fs_normal(buf2, result, buffer_size);
+  strncpy(result, buf2, buffer_size);
   free(buf2);
-  return L;
+  fs_as_posix(result);
+  return strlen(result);
 }
 
 
@@ -409,9 +410,10 @@ size_t fs_resolve(const char* path, bool strict, char* result, size_t buffer_siz
   }
   free(buf);
 
-  L = fs_normal(buf2, result, buffer_size);
+  strncpy(result, buf2, buffer_size);
   free(buf2);
-  return L;
+  fs_as_posix(result);
+  return strlen(result);
 }
 
 
