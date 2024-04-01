@@ -463,13 +463,15 @@ size_t fs_proximate_to(const char* base, const char* other, char* result, size_t
 
 size_t fs_which(const char* name, char* result, size_t buffer_size)
 {
-  if(strlen(name) == 0)
+  size_t L = strlen(name);
+  if(L == 0)
     return 0;
 
   if(fs_is_absolute(name)){
-    if(fs_is_exe(name))
-      return fs_normal(name, result, buffer_size);
-    else
+    if(fs_is_exe(name)){
+      strncpy(result, name, buffer_size);
+      return L;
+    } else
       return 0;
   }
 
@@ -490,9 +492,9 @@ size_t fs_which(const char* name, char* result, size_t buffer_size)
     fs_join(p, name, buf, buffer_size);
 
     if(fs_is_exe(buf)){
-      size_t L = fs_normal(buf, result, buffer_size);
+      strncpy(result, buf, buffer_size);
       free(buf);
-      return L;
+      return strlen(result);
     }
     p = strtok(NULL, sep);  // NOSONAR
   }

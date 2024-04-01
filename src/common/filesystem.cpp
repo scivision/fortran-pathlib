@@ -937,7 +937,7 @@ std::string Ffs::which(std::string_view name)
   std::string n(name);
 
   if (Ffs::is_absolute(n))
-    return Ffs::is_exe(n) ? Ffs::normal(n) : std::string();
+    return Ffs::is_exe(n) ? n : std::string();
 
   const char pathsep = fs_pathsep();
 
@@ -960,7 +960,7 @@ std::string Ffs::which(std::string_view name)
     p = path.substr(start, end - start) + "/" + n;
     if (FS_TRACE) std::cout << "TRACE:ffilesystem:which: " << p << "\n";
     if (Ffs::is_exe(p))
-      return Ffs::normal(p);
+      return p;
 
     start = end + 1;
     end = path.find_first_of(pathsep, start);
@@ -968,7 +968,7 @@ std::string Ffs::which(std::string_view name)
 
   p = path.substr(start) + "/" + n;
   if(Ffs::is_exe(p))
-    return Ffs::normal(p);
+    return p;
 
   return {};
 }
