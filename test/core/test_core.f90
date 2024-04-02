@@ -5,13 +5,17 @@ use filesystem
 
 implicit none
 
-integer :: c = 0
+logical :: ok = .true.
 
 call test_setter_getter()
 print '(a)', "OK: getter setter"
 
-call test_separator(c)
-print '(a)', "OK: filesystem: separator"
+if (test_separator() /= 0) then
+  write(stderr,'(a)') "ERROR: filesystem: separator"
+  ok = .false.
+else
+  print '(a)', "OK: filesystem: separator"
+endif
 
 call test_normal()
 print '(a)', "OK: filesystem: normal"
@@ -25,8 +29,12 @@ print '(a)', "OK: filesystem: filename"
 call test_stem()
 print '(a)', "OK: filesystem: stem"
 
-call test_parent()
-print '(a)', "OK: filesystem: parent"
+if(test_parent() /= 0) then
+  write(stderr,'(a)') "ERROR: Parent tests failed"
+  ok = .false.
+else
+  print '(a)', "OK: filesystem: parent"
+endif
 
 call test_suffix()
 print '(a)', "OK: filesystem: suffix"
@@ -46,10 +54,9 @@ print '(a)', "OK: filesystem: is_subdir"
 call test_absolute()
 print '(a)', "OK: filesystem: absolute"
 
-if (c>0) then
-  write(stderr,'(a,i0,a)') "ERROR: test_core total of ", c, " errors"
-  error stop
-endif
+if (.not. ok) error stop "Core tests failed"
+
+print '(a)', "PASS: Ffilesystem core tests"
 
 contains
 
@@ -67,14 +74,15 @@ if (p1%path(2) /= "/b/c") error stop "getter start only"
 end subroutine
 
 
-subroutine test_separator(c)
+integer function test_separator() result (c)
 
-integer, intent(inout) :: c
 type(path_t) :: p
 
 character(:), allocatable :: b
 
 character :: sep
+
+c = 0
 
 sep = pathsep()
 
@@ -94,7 +102,7 @@ if (b /= "") then
   c = c+1
 endif
 
-if(is_windows()) then
+if(.not. is_windows()) return
 
 b = as_posix("a" // char(92) // "b")
 if (b /= "a/b") then
@@ -110,19 +118,45 @@ if (b /= "a/b") then
   c = c+1
 endif
 
-endif
-
-if (c>0) write(stderr,'(a,i0,a)') "test_separator ", c, " errors"
-
-end subroutine
+end function
 
 
 subroutine test_normal()
 
-!> trailing separator
-if(normal("a/b/") /= "a/b") error stop "normal a/b/: " // normal("a/b/")
+character(:), allocatable :: p
 
-if(normal("a/b/.") /= "a/b") error stop "normal a/b/.: " // normal("a/b/.")
+p = normal("")
+if(p /= "") error stop "normal empty: " // p
+
+p = normal("a")
+if(p /= "a") error stop "normal a: " // p
+
+p = normal("a/")
+if(p /= "a") error stop "normal a/: " // p
+
+p = normal("a//")
+if(p /= "a") error stop "normal a//: " // p
+
+p = normal("./a")
+if(p /= "a") error stop "normal ./a: " // p
+
+p = normal("./a/")
+if(p /= "a") error stop "normal ./a/: " // p
+
+p = normal("../a")
+if(p /= "../a") error stop "normal ../a: " // p
+
+p = normal("a/b/")
+if(p /= "a/b") error stop "normal(a/b/): " // p
+
+p = normal("a/b/.")
+if(p /= "a/b") error stop "normal(a/b/.): " // p
+
+p = normal("a/b/..")
+if(p /= "a") error stop "normal(a/b/..): " // p
+
+p = normal("a/b/../")
+if(p /= "a") error stop "normal(a/b/../): " // p
 
 
 end subroutine test_normal
@@ -157,6 +191,9 @@ if(p /= "a/b") error stop "join(a, b//): " // p
 
 p = join("a//", "b//")
 if(p /= "a/b") error stop "join(a//, b//): " // p
+
+p = join("a/b/../", "c")
+if(p /= "a/c") error stop "join(a/b/../, c): " // p
 
 
 p1 = path_t("a/b")
@@ -255,66 +292,117 @@ endif
 end subroutine test_stem
 
 
-subroutine test_parent()
+integer function test_parent() result (i)
 
 type(path_t) :: p1, p2
 character(:), allocatable :: p
 
+i = 0
+
 p = parent("")
 if(p /= "") then
   write(stderr, *) "ERROR: parent empty: " // p, len(p)
-  error stop
+  i = i+1
 endif
 
 p = parent("/")
-if (p /= "/") error stop "parent(/): " // p
-
-p = parent("a")
-if(p /= ".") error stop "parent(a): " // p
-
-p = parent("a/")
-if(p /= ".") error stop "parent(a/): " // p
+if (p /= "/") then
+  write(stderr, '(a)') "parent(/) idempotent failed: " // p
+  i = i+1
+endif
 
 p = parent(".")
-if(p /= ".") error stop "parent(.): " // p
+if(p /= ".") then
+  write(stderr, '(a)') "parent(.) idempotent failed: " // p
+  i = i+1
+endif
+
+p = parent("a")
+if(p /= ".") then
+  i = i + 1
+  write(stderr, '(a)') "parent(a): " // p
+endif
+
+p = parent("a/")
+if(p /= ".") then
+  i = i + 1
+  write(stderr, '(a)') "parent(a/): " // p
+endif
+
+p = parent(".")
+if(p /= ".") then
+  i = i + 1
+  write(stderr, '(a)') "parent(.): " // p
+endif
 
 p = parent("./")
-if(p /= ".") error stop "parent(./): " // p
+if(p /= ".") then
+  i = i + 1
+  write(stderr, '(a)') "parent(./): " // p
+endif
 
 p = parent("..")
-if(p /= ".") error stop "parent(..): " // p
+if(p /= ".") then
+  i = i + 1
+  write(stderr, '(a)') "parent(..): " // p
+endif
 
 p = parent("../")
-if(p /= ".") error stop "parent(../): " // p
+if(p /= ".") then
+  i = i + 1
+  write(stderr, '(a)') "parent(../): " // p
+endif
 
 p1 = path_t("a/b/c")
 p = p1%parent()
 if (len_trim(p) /= 3 .or. p /= "a/b") then
   write(stderr, '(a,i0)') "parent failed: " // trim(p) // " expected a/b length: ", len_trim(p)
-  error stop
+  i = i+1
 endif
 p2 = path_t(p1%parent())
-if (p2%parent() /= "a") error stop "parent nest failed" // p2%parent()
+if (p2%parent() /= "a") then
+  i = i + 1
+  write(stderr, '(a)') "parent nest failed: " // p2%parent()
+endif
 p2 = path_t("a")
-if (p2%parent() /= ".") error stop "parent idempotent failed. Expected '.', but got: " // p2%parent()
+if (p2%parent() /= ".") then
+  i = i + 1
+  write(stderr, '(a)') "parent idempotent failed. Expected '.', but got: " // p2%parent()
+endif
 
-if(parent("ab/.parent") /= "ab") error stop "parent leading dot filename cwd: " // parent("./.parent")
-if(parent("ab/.parent.txt") /= "ab") error stop "parent leading dot filename w/ext"
-if(parent("a/b/../.parent.txt") /= "a/b/..") then
-  write(stderr,*) "parent leading dot filename w/ext up ",  parent("a/b/../.parent.txt")
-  error stop
+p = parent("ab/.parent")
+if(p /= "ab") then
+  i = i + 1
+  write(stderr, '(a)') "parent leading dot filename cwd: " // p
+endif
+
+p = parent("ab/.parent.txt")
+if(p /= "ab") then
+  i = i + 1
+  write(stderr, '(a)') "parent leading dot filename w/ext: " // p
+endif
+
+p = parent("a/b/../.parent.txt")
+if(p /= "a/b/..") then
+  write(stderr,*) "parent leading dot filename w/ext up ",  p
+  i = i+1
 endif
 
 if(is_windows()) then
-  if(parent("c:\a\b\..\.parent.txt") /= "c:/a/b/..") then
-    write(stderr,*) "parent leading dot filename w/ext up ",  parent("c:\a\b\..\.parent.txt")
-    error stop
+  p = parent("c:\a\b\..\.parent.txt")
+  if(p /= "c:/a/b/..") then
+    write(stderr, '(a)') "parent leading dot filename w/ext up " // p
+    i = i+1
   endif
 
-  if(parent("x:/") /= "x:/") error stop "parent x:/"
+  p = parent("x:/")
+  if(p /= "x:/") then
+    write(stderr, '(a)') "parent(x:/): " // p
+    i = i+1
+  endif
 endif
 
-end subroutine test_parent
+end function
 
 
 subroutine test_with_suffix()
