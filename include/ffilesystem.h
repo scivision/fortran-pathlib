@@ -73,6 +73,7 @@ public:
 
   static void touch(std::string_view);
   static std::filesystem::file_time_type get_modtime(std::string_view);
+  static bool set_modtime(std::string_view);
 
   static std::string canonical(std::string_view, bool);
   static std::string resolve(std::string_view, bool);
@@ -205,6 +206,7 @@ size_t fs_proximate_to(const char*, const char*, char*, size_t);
 bool fs_touch(const char*);
 
 time_t fs_get_modtime(const char*);
+bool fs_set_modtime(const char*);
 
 size_t fs_get_cwd(char*, size_t);
 bool fs_set_cwd(const char*);

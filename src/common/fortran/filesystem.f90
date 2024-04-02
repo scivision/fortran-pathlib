@@ -18,7 +18,7 @@ root, same_file, file_size, space_available, &
 file_name, parent, stem, suffix, with_suffix, &
 make_absolute, &
 assert_is_file, assert_is_dir, &
-touch, get_modtime, &
+touch, get_modtime, set_modtime, &
 remove, get_tempdir, &
 set_permissions, get_permissions, &
 fs_cpp, fs_lang, pathsep, is_safe_name, &
@@ -66,6 +66,7 @@ procedure, public :: copy_file=>m_copy_file
 procedure, public :: mkdir=>m_mkdir
 procedure, public :: touch=>m_touch
 procedure, public :: modtime=>m_get_modtime
+procedure, public :: set_modtime=>m_set_modtime
 procedure, public :: parent=>m_parent
 procedure, public :: file_name=>m_file_name
 procedure, public :: stem=>m_stem
@@ -405,12 +406,17 @@ character(kind=C_CHAR), intent(out) :: result(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
 
-logical(c_bool) function fs_touch(path) bind(C)
+logical(C_BOOL) function fs_touch(path) bind(C)
 import
 character(kind=c_char), intent(in) :: path(*)
 end function
 
 integer(C_LONG_LONG) function fs_get_modtime(path) bind(C)
+import
+character(kind=C_CHAR), intent(in) :: path(*)
+end function
+
+logical(C_BOOL) function fs_set_modtime(path) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: path(*)
 end function
@@ -1131,6 +1137,19 @@ end function
 integer(C_LONG_LONG) function m_get_modtime(self) result(r)
 class(path_t), intent(in) :: self
 r = get_modtime(self%path_str)
+end function
+
+
+logical function set_modtime(path) result(r)
+!! get file modification time as Unix epoch time
+character(*), intent(in) :: path
+
+r = fs_set_modtime(trim(path) // C_NULL_CHAR)
+end function
+
+logical function m_set_modtime(self) result(r)
+class(path_t), intent(in) :: self
+r = set_modtime(self%path_str)
 end function
 
 

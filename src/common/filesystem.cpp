@@ -80,13 +80,14 @@ bool fs_remove(const char* path)
 bool Ffs::remove(std::string_view path)
 {
   std::error_code ec;
-  auto b = std::filesystem::remove(path, ec);
-  if (ec) FFS_UNLIKELY
+
+  if(!std::filesystem::remove(path, ec) || ec) FFS_UNLIKELY
   {
     std::cerr << "ERROR:ffilesystem:remove: " << ec.message() << "\n";
     return false;
   }
-  return b;
+
+  return true;
 }
 
 
@@ -121,6 +122,35 @@ bool Ffs::copy_file(std::string_view source, std::string_view dest, bool overwri
     std::cerr << "ERROR:Ffs::copy_file: could not remove existing destination file: " << d << "\n";
 
   return std::filesystem::copy_file(s, d);
+}
+
+
+bool fs_set_modtime(const char* path)
+{
+  return Ffs::set_modtime(std::string_view(path));
+}
+
+bool Ffs::set_modtime(std::string_view path)
+{
+  std::filesystem::path p(path);
+
+  std::error_code ec;
+  if(!std::filesystem::exists(p, ec) || ec) FFS_UNLIKELY
+  {
+    std::cerr << "ERROR:ffilesystem:set_modtime: file does not exist: " << p << "\n";
+    return false;
+  }
+
+
+  std::filesystem::last_write_time(p, std::filesystem::file_time_type::clock::now(), ec);
+  // techinically IWYU <chrono> but that can break some compilers, and it works without the include.
+  if(ec) FFS_UNLIKELY
+  {
+    std::cerr << "ERROR:ffilesystem:set_modtime: " << ec.message() << "\n";
+    return false;
+  }
+
+  return true;
 }
 
 

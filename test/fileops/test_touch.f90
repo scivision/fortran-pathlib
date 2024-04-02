@@ -5,7 +5,7 @@ use filesystem
 
 implicit none
 
-integer(C_LONG_LONG) :: t0
+integer(C_LONG_LONG) :: t0, t1
 
 valgrind : block
 
@@ -29,6 +29,13 @@ call assert_is_file(p%path())
 
 if(t0 < 0) error stop "Could not get modtime - is negative integer"
 if(t0 == 0) error stop "Could not get modtime - integer 0 value"
+
+if(.not. set_modtime(fn)) error stop "Could not set modtime"
+t1 = get_modtime(fn)
+
+if(t1 < t0) error stop "get_modtime: Could not set modtime"
+
+if(set_modtime('not-exist-tile')) error stop "set_modtime: Could set modtime for non-existing file"
 
 end block valgrind
 

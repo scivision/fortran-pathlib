@@ -119,6 +119,14 @@ integer(C_LONG) :: mtime
 mtime = get_modtime("my/file.txt")
 ```
 
+Set modified time of path to current time.
+
+```fortran
+logical :: ok
+
+ok = set_modtime("my/file.txt")
+```
+
 
 Delete file, empty directory, or symbolic link (the target of a symbolic link is not deleted).
 

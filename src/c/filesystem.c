@@ -27,7 +27,7 @@
 #include <sys/utime.h>
 #else
 #include <unistd.h>
-#include <sys/time.h>
+#include <sys/time.h> // utimes
 #endif
 
 
@@ -215,13 +215,9 @@ bool fs_copy_file(const char* source, const char* dest, bool overwrite) {
 }
 
 
-bool fs_touch(const char* path)
+bool fs_set_modtime(const char* path)
 {
-  if(strlen(path) == 0)
-    return false;
-
-  if(fs_exists(path)){
-    if (
+  if (
 #ifdef _WIN32
     // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/utime-utime32-utime64-wutime-wutime32-wutime64
     _utime(path, NULL)
@@ -229,19 +225,28 @@ bool fs_touch(const char* path)
     utimes(path, NULL)
 #endif
     ){
-      fprintf(stderr, "ERROR:Ffilesystem:touch: %s => %s\n", path, strerror(errno));
+      fprintf(stderr, "ERROR:Ffilesystem:set_modtime: %s => %s\n", path, strerror(errno));
       return false;
     }
-    return true;
-  }
-
-  FILE* fid = fopen(path, "a+b");
-  if(!fid || fclose(fid)){
-    fprintf(stderr, "ERROR:Ffilesystem:touch: %s => %s\n", path, strerror(errno));
-    return false;
-  }
 
   return true;
+}
+
+
+bool fs_touch(const char* path)
+{
+  if(strlen(path) == 0)
+    return false;
+
+  if(fs_exists(path))
+    return fs_set_modtime(path);
+
+  FILE* fid = fopen(path, "a+b");
+  if(fid && fclose(fid) == 0)
+    return true;
+
+  fprintf(stderr, "ERROR:Ffilesystem:touch: %s => %s\n", path, strerror(errno));
+  return false;
 }
 
 
