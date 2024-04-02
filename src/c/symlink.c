@@ -34,21 +34,25 @@ bool fs_is_symlink(const char* path)
 
 size_t fs_read_symlink(const char* path, char* result, size_t buffer_size)
 {
-  if(!fs_is_symlink(path)){
-    fprintf(stderr, "ERROR:ffilesystem:read_symlink: %s is not a symlink\n", path);
-    return 0;
-  }
+
 #ifdef _WIN32
   (void) result;
   (void) buffer_size;
   fprintf(stderr, "ERROR:ffilesystem:read_symlink: not implemented for non-C++\n");
   return 0;
 #else
-  ssize_t L = readlink(path, result, buffer_size);
-  if (L < 0){
+  // https://www.man7.org/linux/man-pages/man2/readlink.2.html
+  ssize_t Lr = readlink(path, result, buffer_size);
+  if (Lr < 0){
     fprintf(stderr, "ERROR:ffilesystem:read_symlink: %s => %s\n", path, strerror(errno));
     return 0;
   }
+  size_t L = (size_t) Lr;
+  if (L == buffer_size) {
+    fprintf(stderr, "ERROR:ffilesystem:read_symlink: truncation occurred %s\n", path);
+    return 0;
+  }
+  // readlink() does not null-terminate the result
   result[L] = '\0';
   return L;
 #endif
