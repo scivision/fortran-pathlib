@@ -5,7 +5,6 @@
 #include <errno.h>
 #include <string.h>
 #include <stddef.h> // size_t
-#include <unistd.h> // readlink(), symlink()
 
 // preferred import order for stat()
 #include <sys/types.h>
@@ -14,6 +13,8 @@
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#else
+#include <unistd.h> // readlink(), symlink()
 #endif
 
 

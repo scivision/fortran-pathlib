@@ -96,8 +96,8 @@ if(HAVE_CXX_FILESYSTEM)
     src/common/filesystem.cpp
     src/common/dynamic.cpp
     src/common/inquire.cpp
-    src/common/pure.cpp
     src/common/platform.cpp
+    src/common/pure.cpp
     src/common/resolve.cpp
     src/common/symlink.cpp
     src/common/windows.cpp
@@ -105,6 +105,9 @@ if(HAVE_CXX_FILESYSTEM)
 else()
   target_sources(ffilesystem PRIVATE
   src/c/filesystem.c
+  src/c/dynamic.c
+  src/c/inquire.c
+  src/c/platform.c
   src/c/pure.c
   src/c/resolve.c
   src/c/symlink.c

@@ -210,7 +210,7 @@ std::time_t fs_get_modtime(const char* path)
   t_int = std::chrono::system_clock::to_time_t(t_sys);
 #else
   struct stat s;
-  if (fs_exists(path) && !stat(path, &s))
+  if (!stat(path, &s))
     return s.st_mtime;
 #endif
 
