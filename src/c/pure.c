@@ -149,6 +149,8 @@ size_t fs_parent(const char* path, char* result, size_t buffer_size)
   if(L == 0 || buffer_size < 2)
     return 0;
 
+  cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
+
   cwk_path_get_dirname(path, &L);
 
   if (L >= buffer_size){
@@ -158,8 +160,10 @@ size_t fs_parent(const char* path, char* result, size_t buffer_size)
 
   // handle "/" and other no parent cases
   if(L == 0){
-    if(path[0] == '/' || (fs_is_windows() && path[0] == '\\'))
+    if (path[0] == '/' || (fs_is_windows() && path[0] == '\\'))
       result[0] = '/';
+    else if (fs_is_windows() && isalpha(path[0]) && path[1] == ':')
+      return fs_root(path, result, buffer_size);
     else
       result[0] = '.';
 

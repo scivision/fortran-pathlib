@@ -310,6 +310,8 @@ if(is_windows()) then
     write(stderr,*) "parent leading dot filename w/ext up ",  parent("c:\a\b\..\.parent.txt")
     error stop
   endif
+
+  if(parent("x:/") /= "x:/") error stop "parent x:/"
 endif
 
 end subroutine test_parent

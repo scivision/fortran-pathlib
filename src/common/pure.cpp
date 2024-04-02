@@ -140,7 +140,7 @@ std::string Ffs::parent(std::string_view path)
 
   if(FS_TRACE) std::cout << "TRACE:parent(" << path << ") => " << p << "\n";
 
-  // handle "/" and other no parent cases
+  // handle "/" and other no parent cases -- Windows is handled by std::filesystem already
   if (p.empty()){
     if (path.front() == '/')
       return "/";
