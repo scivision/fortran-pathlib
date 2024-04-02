@@ -103,7 +103,13 @@ if(HAVE_CXX_FILESYSTEM)
     src/common/windows.cpp
     )
 else()
-  target_sources(ffilesystem PRIVATE src/c/filesystem.c ${cwalk_SOURCE_DIR}/src/cwalk.c)
+  target_sources(ffilesystem PRIVATE
+  src/c/filesystem.c
+  src/c/resolve.c
+  src/c/symlink.c
+  src/c/windows.c
+  ${cwalk_SOURCE_DIR}/src/cwalk.c
+  )
 endif()
 target_include_directories(ffilesystem PRIVATE
 ${PROJECT_SOURCE_DIR}/include

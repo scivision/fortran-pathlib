@@ -133,6 +133,20 @@ void fs_as_posix(char* path)
 }
 
 
+size_t fs_strncpy(const char* path, char* result, size_t buffer_size)
+{
+// check size before copy
+  size_t L = strlen(path);
+  if(L >= buffer_size){
+    fprintf(stderr, "ERROR:Ffilesystem:strncpy: output buffer %zu too small\n", buffer_size);
+    return 0;
+  }
+
+  strncpy(result, path, buffer_size);
+  return L;
+}
+
+
 size_t fs_normal(const char* path, char* result, size_t buffer_size)
 {
 // normalize path
@@ -776,63 +790,6 @@ bool fs_is_absolute(const char* path)
 }
 
 
-bool fs_is_symlink(const char* path)
-{
-#ifdef _WIN32
-  DWORD a = GetFileAttributes(path);
-  return (a != INVALID_FILE_ATTRIBUTES) && (a & FILE_ATTRIBUTE_REPARSE_POINT);
-#else
-  struct stat buf;
-
-  return !lstat(path, &buf) && S_ISLNK(buf.st_mode);
-  // return (buf.st_mode & S_IFMT) == S_IFLNK; // equivalent
-#endif
-}
-
-size_t fs_read_symlink(const char* path, char* result, size_t buffer_size)
-{
-  if(!fs_is_symlink(path)){
-    fprintf(stderr, "ERROR:ffilesystem:read_symlink: %s is not a symlink\n", path);
-    return 0;
-  }
-#ifdef _WIN32
-  (void) result;
-  (void) buffer_size;
-  fprintf(stderr, "ERROR:ffilesystem:read_symlink: not implemented for non-C++\n");
-  return 0;
-#else
-  ssize_t L = readlink(path, result, buffer_size);
-  if (L < 0){
-    fprintf(stderr, "ERROR:ffilesystem:read_symlink: %s => %s\n", path, strerror(errno));
-    return 0;
-  }
-  result[L] = '\0';
-  return L;
-#endif
-}
-
-
-bool fs_create_symlink(const char* target, const char* link)
-{
-  if(!fs_exists(target)) {
-    fprintf(stderr, "ERROR:filesystem:create_symlink: target path does not exist\n");
-    return false;
-  }
-  if(!link || strlen(link) == 0) {
-    fprintf(stderr, "ERROR:filesystem:create_symlink: link path must not be empty\n");
-    return false;
-  }
-
-#ifdef _WIN32
-  fprintf(stderr, "ERROR:ffilesystem:create_symlink: not implemented for non-C++\n");
-  return false;
-#else
-  // <unistd.h>
-  return symlink(target, link) == 0;
-#endif
-}
-
-
 bool fs_remove(const char* path)
 {
   if (!fs_exists(path)){
@@ -972,59 +929,6 @@ time_t fs_get_modtime(const char* path)
 }
 
 
-bool fs_is_subdir(const char* subdir, const char* dir)
-{
-  // is subdir a subdirectory of dir
-  const size_t m = fs_get_max_path();
-
-  char* buf = (char*) malloc(m);
-  if(!buf) return false;
-
-  size_t L = fs_relative_to(dir, subdir, buf, m);
-  bool yes = L > 0 && buf[0] != '.';
-
-  free(buf);
-
-  return yes;
-
-}
-
-
-size_t fs_make_absolute(const char* path, const char* base,
-                        char* result, size_t buffer_size)
-{
-  size_t L1 = fs_expanduser(path, result, buffer_size);
-
-  if (fs_is_absolute(result))
-    return L1;
-
-  char* buf = (char*) malloc(buffer_size);
-  if(!buf) return 0;
-  size_t L2 = fs_expanduser(base, buf, buffer_size);
-  if(L2 == 0){
-    free(buf);
-    return L1;
-  }
-
-  char* buf2 = (char*) malloc(buffer_size);
-  if(!buf2){
-    free(buf);
-    return 0;
-  }
-  L1 = fs_join(buf, result, buf2, buffer_size);
-  if(L1 >= buffer_size){
-    fprintf(stderr, "ERROR:ffilesystem:fs_make_absolute: buffer_size %zu too small\n", buffer_size);
-    free(buf);
-    free(buf2);
-    return 0;
-  }
-  strncpy(result, buf2, buffer_size);
-  free(buf);
-  free(buf2);
-  return L1;
-}
-
-
 size_t fs_make_tempdir(char* result, size_t buffer_size)
 {
 #ifdef _WIN32
@@ -1051,18 +955,6 @@ size_t fs_make_tempdir(char* result, size_t buffer_size)
 #endif
 }
 
-
-size_t fs_longname(const char* in, char* out, size_t buffer_size){
-  (void) in; (void) out; (void) buffer_size;
-  fprintf(stderr, "ERROR:ffilesystem:fs_longname: not implemented for non-C++\n");
-  return 0;
-}
-
-size_t fs_shortname(const char* in, char* out, size_t buffer_size){
-  (void) in; (void) out; (void) buffer_size;
-  fprintf(stderr, "ERROR:ffilesystem:fs_shortname: not implemented for non-C++\n");
-  return 0;
-}
 
 /* environment variable functions */
 

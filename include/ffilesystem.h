@@ -130,6 +130,8 @@ extern "C" {
 #include <stdint.h>
 #include <time.h>
 
+size_t fs_strncpy(const char*, char*, size_t);
+
 #endif
 
 
