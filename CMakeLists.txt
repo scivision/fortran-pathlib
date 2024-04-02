@@ -105,6 +105,7 @@ if(HAVE_CXX_FILESYSTEM)
 else()
   target_sources(ffilesystem PRIVATE
   src/c/filesystem.c
+  src/c/pure.c
   src/c/resolve.c
   src/c/symlink.c
   src/c/windows.c
