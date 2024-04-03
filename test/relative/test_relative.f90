@@ -1,93 +1,62 @@
-program test
+program main
+
+use filesystem
 
 use, intrinsic :: iso_fortran_env, only : stderr=>error_unit
-use filesystem
 
 implicit none
 
-valgrind : block
+integer, parameter :: L = 21, N = 15+6
 
-type(path_t) :: p1
-character(:), allocatable :: rel
+character(L) :: in1(N) = [character(L) :: "", "",  "/", "/", "Hello", "Hello",  "/dev/null", "/a/b", "c", &
+    "/a/b", "/a/b", "/a/b/c/d", "./this/one", "/this/one", "/path/same", &
+    "c:\a\b", "c", "c:/a/b", "c:/a/b", "c:\a/b\c/d", "c:/path"]
+character(L) :: in2(N) = [character(L) :: "", "/", "",  "/", "Hello", "Hello/", "/dev/null", "c",    "/a/b", &
+    "/a/b", "/a",   "/a/b",     "./this/two", "/this/two", "/path/same/hi/..", &
+    "c", "c:/a/b", "c:/a/b", "c:/a", "c:/a\b", "d:/path"]
+character(L) :: ref(N) = [character(L) :: "", "",  "",  ".", ".",     ".",      ".",         "",     "", &
+    ".",    "..",   "../..",    "../two",     "../two", ".", &
+    "",  "",       ".",      "..",   "../.."  , ""]
 
-rel = relative_to("/", "")
-if(rel /= "") error stop "empty base should be empty: " // rel
+integer :: i, j, k
 
-rel = relative_to("", "")
-if(rel /= "") error stop "empty path and base should be empty: " // rel
+i = 0
 
-rel = relative_to("", "/")
-if(rel /= "") error stop "empty path should be empty: " // rel
+k = 15
+if(is_windows()) k = 21
 
-print '(a)', "OK: relative_to: empty"
+do j = 1, k
+  i = i + check(in1(j), in2(j), ref(j))
+end do
 
-rel = relative_to("/", "/")
-if(rel /= ".") error stop "same path '/' should be . but got: "  // rel
 
-rel = relative_to("Hello", "Hello")
-if(rel /= ".") error stop "same path 'Hello'should be . but got: "  // rel
+if(i /= 0) error stop "FAIL: relative_to()"
 
-rel = relative_to("Hello", "Hello/")
-if(rel /= ".") error stop "same path 'Hello' vs. 'Hello/' should be . but got: "  // rel
+print '(a)', "PASS: relative_to()"
 
-rel = relative_to("/dev/null", "/dev/null")
-if(rel /= ".") error stop "same path '/dev/null' should be . but got: "  // rel
+contains
 
-print '(a)', "OK: relative_to: same"
 
-if(is_windows()) then
-    rel  = relative_to("c:\a\b", "c")
-    if(rel /= "") error stop "abs path with rel base should be empty: " // rel
+integer function check(in1, in2, ref) result(i)
 
-    rel = relative_to("c", "c:/a/b")
-    if(rel /= "") error stop "rel path with abs base should be empty: " // rel
+character(*), intent(in) :: in1, in2, ref
 
-    rel = relative_to("c:/a/b", "c:/a/b")
-    if(rel /= ".") error stop "same path should be . but got: "  // rel
+character(:), allocatable :: s, s1
+type(path_t) :: p
 
-    rel = relative_to("c:/a/b", "c:/a")
-    if(rel /= "..") then
-    write(stderr,*) "ERROR: rel to parent 1: " // rel
-    ! error stop
-    endif
+i = 0
 
-    rel = relative_to("c:\a/b\c/d", "c:/a\b")
-    if(rel /= "../..") error stop "rel to parent 2: " // rel
+s = relative_to(in1, in2)
 
-    p1 = path_t("c:/a/b/c/d")
-    if (p1%relative_to("c:/a/b") /= rel) error stop " OO rel to parent"
+p = path_t(in1)
+s1 = p%relative_to(in2)
 
-    rel = relative_to("C:/path", "D:/path")
-    if (rel /= "") error stop "different drives should be empty: " // rel
-else
-    rel = relative_to("/a/b", "c")
-    if(rel /= "") error stop "abs path with rel base should be empty: " // rel
+if(s == ref .and. s1 == ref) return
 
-    rel = relative_to("c", "/a/b")
-    if(rel /= "") error stop "rel path with abs base should be empty: " // rel
+i = 1
+write(stderr, '(a)') "relative_to("// trim(in1) // ", "//trim(in2)// ") = " // s // " /= " // ref
+write(stderr, '(a)') "path_t("// trim(in1) // ")%relative(" // trim(in2)//") = " // s1 // " /= " // ref
 
-    rel = relative_to("/a/b", "/a/b")
-    if(rel /= ".") error stop "same path should be . but got: "  // rel
-
-    rel = relative_to("/a/b", "/a")
-    if(rel /= "..") error stop "rel to parent 1: " // rel
-
-    rel = relative_to("/a/b/c/d", "/a/b")
-    if(rel /= "../..") error stop "rel to parent 2: " // rel
-
-    p1 = path_t("/a/b/c/d")
-    if (p1%relative_to("/a/b") /= rel) error stop " OO rel to parent"
-endif
-
-rel = relative_to("./this/is/path_one", "./this/is/path_two")
-if(rel /= "../path_two") error stop "rel to parent dot leading: " // rel
-
-rel = relative_to("/this/is/path_one", "/this/is/path_two")
-if(rel /= "../path_two") error stop "rel to parent slash leading: " // rel
-
-rel = relative_to("/path/same", "/path/same/ho/..")
-if(rel /= ".") error stop "rel to parent double dot trail: " // rel
-
-end block valgrind
+end function
 
 end program

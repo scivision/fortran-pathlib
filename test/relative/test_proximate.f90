@@ -1,94 +1,66 @@
-program test
+program main
+
+use filesystem
 
 use, intrinsic :: iso_fortran_env, only : stderr=>error_unit
-use filesystem
 
 implicit none
 
-valgrind : block
+integer, parameter :: L = 21, N = 14+6
 
-type(path_t) :: p1
-character(:), allocatable :: rel
+character(L) :: in1(N) = [character(L) :: "", "",  "/", "/", "Hello", "Hello",  "/dev/null", "/a/b", &
+    "/a/b", "/a/b", "/a/b/c/d", "./this/one", "/this/one", "/path/same", &
+    "c:\a\b", "x", "c:/a/b", "c:/a/b", "c:\a/b\c/d", "c:/path"]
+character(L) :: in2(N) = [character(L) :: "", "/", "",  "/", "Hello", "Hello/", "/dev/null", "c", &
+    "/a/b", "/a",   "/a/b",     "./this/two", "/this/two", "/path/same/hi/..", &
+    "x",      "c:/a/b", "c:/a/b", "c:/a", "c:/a\b",   "x:/path"]
+character(L) :: ref(N) = [character(L) :: "", "/",  "",  ".", ".",     ".",      ".",        "c", &
+    ".",    "..",   "../..",    "../two",     "../two", ".", &
+    "x",      "c:/a/b",       ".",      "..",   "../..", "x:/path"]
 
-rel = proximate_to("/", "")
-if(rel /= "") error stop "empty other should be empty: " // rel
+integer :: i, j, k
 
-rel = proximate_to("", "")
-if(rel /= "") error stop "empty path and base should be empty: " // rel
+i = 0
 
-rel = proximate_to("", "/")
-if(rel /= "/") error stop "empty base should be other: " // rel
+k = 14
+if(is_windows()) k = N
 
-print '(a)', "OK: proximate_to: empty"
+do j = 1, k
+    i = i + check(in1(j), in2(j), ref(j))
+end do
 
-
-rel = proximate_to("Hello", "Hello")
-if(rel /= ".") error stop "same path relative exact should be . but got: "  // rel
-
-rel = proximate_to("/", "/")
-if(rel /= ".") error stop "same path '/' should be . but got: "  // rel
-
-rel = proximate_to("Hello", "Hello/")
-if(rel /= ".") error stop "same path 'Hello' vs. 'Hello/' should be . but got: "  // rel
-
-rel = proximate_to("/dev/null", "/dev/null")
-if(rel /= ".") error stop "same path '/dev/null' should be . but got: "  // rel
-
-print '(a)', "OK: proximate_to: same"
-
-if(is_windows()) then
-    rel = proximate_to("c:\a\b", "x")
-    if(rel /= "x") error stop "abs path with rel base should be other: " // rel
-
-    rel = proximate_to("x", "c:/a/b")
-    if(rel /= "c:/a/b") error stop "rel path with abs base should be other: " // rel
-
-    rel = proximate_to("c:/a/b", "c:/a/b")
-    if(rel /= ".") error stop "same path should be . but got: "  // rel
-
-    rel = proximate_to("c:/a/b", "c:/a")
-    if(rel /= "..") then
-    write(stderr,*) "ERROR: rel to parent 1: " // rel
-    ! error stop
-    endif
-
-    rel = proximate_to("c:\a/b\c/d", "c:/a\b")
-    if(rel /= "../..") error stop "rel to parent 2: " // rel
-
-    p1 = path_t("c:/a/b/c/d")
-    if (p1%proximate_to("c:/a/b") /= rel) error stop " OO rel to parent"
-
-    rel = proximate_to("C:/path", "D:/path")
-    if (rel /= "D:/path") error stop "different drives should be other: " // rel
-else
-    rel = proximate_to("/a/b", "c")
-    if(rel /= "c") error stop "abs base with rel other should be other: " // rel
-
-    rel = proximate_to("c", "/a/b")
-    if(rel /= "/a/b") error stop "rel base with abs other should be other: " // rel
-
-    rel = proximate_to("/a/b", "/a/b")
-    if(rel /= ".") error stop "same path should be . but got: "  // rel
-
-    rel = proximate_to("/a/b", "/a")
-    if(rel /= "..") error stop "rel to parent 1: " // rel
-
-    rel = proximate_to("/a/b/c/d", "/a/b")
-    if(rel /= "../..") error stop "rel to parent 2: " // rel
-
-    p1 = path_t("/a/b/c/d")
-    if (p1%proximate_to("/a/b") /= rel) error stop " OO rel to parent"
+if(.not. is_windows()) then
+  i = i + check("c", "/a/b", "/a/b")
 endif
 
-rel = proximate_to("./this/is/path_one", "./this/is/path_two")
-if(rel /= "../path_two") error stop "rel to parent dot leading: " // rel
 
-rel = proximate_to("/this/is/path_one", "/this/is/path_two")
-if(rel /= "../path_two") error stop "rel to parent slash leading: " // rel
+if(i /= 0) error stop "FAIL: file_name()"
 
-rel = proximate_to("/path/same", "/path/same/ho/..")
-if(rel /= ".") error stop "rel to parent double dot trail: " // rel
+print '(a)', "PASS: proximate_to()"
 
-end block valgrind
+contains
+
+
+integer function check(in1, in2, ref) result(i)
+
+character(*), intent(in) :: in1, in2, ref
+
+character(:), allocatable :: s, s1
+type(path_t) :: p
+
+i = 0
+
+s = proximate_to(in1, in2)
+
+p = path_t(in1)
+s1 = p%proximate_to(in2)
+
+if(s == ref .and. s1 == ref) return
+
+i = 1
+write(stderr, '(a)') "proximate_to("// trim(in1) // ", "//trim(in2)// ") = " // s // " /= " // ref
+write(stderr, '(a)') "path_t("// trim(in1) // ")%proximate(" // trim(in2)//") = " // s1 // " /= " // ref
+
+end function
 
 end program
