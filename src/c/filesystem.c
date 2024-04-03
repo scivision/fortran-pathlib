@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
+#include <stdio.h>  // remove()
 
 // preferred import order for stat()
 #include <sys/types.h>
@@ -138,25 +138,25 @@ bool fs_mkdir(const char* path) {
 
 bool fs_remove(const char* path)
 {
-  if (!fs_exists(path)){
-    fprintf(stderr, "ERROR:ffilesystem:remove: %s does not exist\n", path);
-    return false;
-  }
 
 #ifdef _WIN32
 // https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-removedirectorya
 // https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilea
-  bool e = fs_is_dir(path) ? RemoveDirectoryA(path) : DeleteFileA(path);
-  if (!e) {
+  bool ok = fs_is_dir(path) ? RemoveDirectoryA(path) : DeleteFileA(path);
+  if (!ok) {
     DWORD error = GetLastError();
     char *message;
     FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
 		    NULL, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (char *)&message, 0, NULL);
     fprintf(stderr, "ERROR:ffilesystem:remove: %s => %s\n", path, message);
   }
-  return e;
+  return ok;
 #else
-  return !remove(path);
+  if(remove(path) == 0)
+    return true;
+
+  fprintf(stderr, "ERROR:Ffilesystem:remove: %s => %s\n", path, strerror(errno));
+  return false;
 #endif
 }
 
