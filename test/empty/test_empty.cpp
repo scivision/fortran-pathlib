@@ -71,6 +71,9 @@ int main(){
     if(Ffs::mkdir(""))
       err("Ffs::mkdir");
 
+    if(!Ffs::which("").empty())
+      err("Ffs::which");
+
     if(!Ffs::root("").empty())
       err("Ffs::root");
 

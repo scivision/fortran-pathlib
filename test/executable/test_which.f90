@@ -22,6 +22,8 @@ if(buf /= which(buf)) error stop "ERROR:test_exe: which(absolute) failed"
 
 if(which("/not/a/path") /= "") error stop "ERROR:test_exe: which(not_a_path) failed"
 
+if(which("") /= "") error stop "ERROR:test_exe: which(empty) failed"
+
 end block valgrind
 
 print '(a)', "OK: which()"

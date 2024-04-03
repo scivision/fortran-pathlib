@@ -196,21 +196,12 @@ size_t fs_proximate_to(const char* base, const char* other, char* result, size_t
 
 size_t fs_which(const char* name, char* result, size_t buffer_size)
 {
-  size_t L = strlen(name);
-  if(L == 0)
-    return 0;
-
-  if(L >= buffer_size){
-    fprintf(stderr, "ERROR:ffilesystem:which: buffer_size %zu too small\n", buffer_size);
-    return 0;
-  }
 
   if(fs_is_absolute(name)){
-    if(fs_is_exe(name)){
-      strncpy(result, name, buffer_size);
-      return L;
-    } else
-      return 0;
+    if(fs_is_exe(name))
+      return fs_strncpy(name, result, buffer_size);
+
+    return 0;
   }
 
   char* path = getenv("PATH");
@@ -230,14 +221,9 @@ size_t fs_which(const char* name, char* result, size_t buffer_size)
     fs_join(p, name, buf, buffer_size);
 
     if(fs_is_exe(buf)){
-      if(strlen(buf) >= buffer_size){
-        fprintf(stderr, "ERROR:ffilesystem:which: buffer_size %zu too small\n", buffer_size);
-        free(buf);
-        return 0;
-      }
-      strncpy(result, buf, buffer_size);
+      size_t L = fs_strncpy(buf, result, buffer_size);
       free(buf);
-      return strlen(result);
+      return L;
     }
     p = strtok(NULL, sep);  // NOSONAR
   }

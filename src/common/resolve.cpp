@@ -160,9 +160,6 @@ size_t fs_which(const char* name, char* result, size_t buffer_size)
 std::string Ffs::which(std::string_view name)
 // find full path to executable name on Path
 {
-  if (name.empty()) FFS_UNLIKELY
-    return {};
-
   std::string n(name);
 
   if (Ffs::is_absolute(n))
