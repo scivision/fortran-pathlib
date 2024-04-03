@@ -39,7 +39,8 @@
 #include <cwalk.h>
 
 
-static inline bool _mkdir_segment(char* buf, size_t L) {
+static inline bool _mkdir_segment(char* buf, size_t L)
+{
   // use mkdir() building up directory components using strtok()
 // strtok_r, strtok_s not necessarily available, and non-C++ is fallback
   char* q = strtok(buf, "/");  // NOSONAR
@@ -79,12 +80,8 @@ static inline bool _mkdir_segment(char* buf, size_t L) {
 }
 
 
-bool fs_mkdir(const char* path) {
-
-  if(strlen(path) == 0) {
-    fprintf(stderr, "ERROR:ffilesystem:create_directories: path must not be empty\n");
-    return false;
-  }
+bool fs_mkdir(const char* path)
+{
 
   if(fs_exists(path)){
     if(fs_is_dir(path))
@@ -228,9 +225,6 @@ bool fs_set_modtime(const char* path)
 
 bool fs_touch(const char* path)
 {
-  if(strlen(path) == 0)
-    return false;
-
   if(fs_exists(path))
     return fs_set_modtime(path);
 
