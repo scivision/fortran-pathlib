@@ -47,9 +47,6 @@ int main(){
     if(!Ffs::join("", "").empty())
       err("Ffs::join");
 
-    if(!Ffs::parent("").empty())
-      err("Ffs::parent");
-
     if(!Ffs::suffix("").empty())
       err("Ffs::suffix");
 

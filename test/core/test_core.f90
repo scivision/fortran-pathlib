@@ -29,13 +29,6 @@ print '(a)', "OK: filesystem: filename"
 call test_stem()
 print '(a)', "OK: filesystem: stem"
 
-if(test_parent() /= 0) then
-  write(stderr,'(a)') "ERROR: Parent tests failed"
-  ok = .false.
-else
-  print '(a)', "OK: filesystem: parent"
-endif
-
 call test_suffix()
 print '(a)', "OK: filesystem: suffix"
 
@@ -290,120 +283,6 @@ if(stem("../.stem.txt") /= ".stem") then
 endif
 
 end subroutine test_stem
-
-
-integer function test_parent() result (i)
-
-type(path_t) :: p1, p2
-character(:), allocatable :: p
-
-i = 0
-
-p = parent("")
-if(p /= "") then
-  write(stderr, *) "ERROR: parent empty: " // p, len(p)
-  i = i+1
-endif
-
-p = parent("/")
-if (p /= "/") then
-  write(stderr, '(a)') "parent(/) idempotent failed: " // p
-  i = i+1
-endif
-
-p = parent(".")
-if(p /= ".") then
-  write(stderr, '(a)') "parent(.) idempotent failed: " // p
-  i = i+1
-endif
-
-p = parent("a")
-if(p /= ".") then
-  i = i + 1
-  write(stderr, '(a)') "parent(a): " // p
-endif
-
-p = parent("a/")
-if(p /= ".") then
-  i = i + 1
-  write(stderr, '(a)') "parent(a/): " // p
-endif
-
-p = parent(".")
-if(p /= ".") then
-  i = i + 1
-  write(stderr, '(a)') "parent(.): " // p
-endif
-
-p = parent("./")
-if(p /= ".") then
-  i = i + 1
-  write(stderr, '(a)') "parent(./): " // p
-endif
-
-p = parent("..")
-if(p /= ".") then
-  i = i + 1
-  write(stderr, '(a)') "parent(..): " // p
-endif
-
-p = parent("../")
-if(p /= ".") then
-  i = i + 1
-  write(stderr, '(a)') "parent(../): " // p
-endif
-
-p1 = path_t("a/b/c")
-p = p1%parent()
-if (len_trim(p) /= 3 .or. p /= "a/b") then
-  write(stderr, '(a,i0)') "parent failed: " // trim(p) // " expected a/b length: ", len_trim(p)
-  i = i+1
-endif
-p2 = path_t(p1%parent())
-if (p2%parent() /= "a") then
-  i = i + 1
-  write(stderr, '(a)') "parent nest failed: " // p2%parent()
-endif
-p2 = path_t("a")
-if (p2%parent() /= ".") then
-  i = i + 1
-  write(stderr, '(a)') "parent idempotent failed. Expected '.', but got: " // p2%parent()
-endif
-
-p = parent("ab/.parent")
-if(p /= "ab") then
-  i = i + 1
-  write(stderr, '(a)') "parent leading dot filename cwd: " // p
-endif
-
-p = parent("ab/.parent.txt")
-if(p /= "ab") then
-  i = i + 1
-  write(stderr, '(a)') "parent leading dot filename w/ext: " // p
-endif
-
-p = parent("a/b/../.parent.txt")
-if(p /= "a/b/..") then
-  write(stderr,*) "parent leading dot filename w/ext up ",  p
-  i = i+1
-endif
-
-if(is_windows()) then
-  p = parent("c:\a\b\..\.parent.txt")
-  if(p /= "c:/a/b/..") then
-    write(stderr, '(a)') "parent leading dot filename w/ext up " // p
-    i = i+1
-  endif
-
-  p = parent("x:/")
-  !! Python also may give either result
-  if(all(p /= [character(3) :: "x:", "x:/"])) then
-    write(stderr, '(a)') "parent(x:/): " // p
-    i = i+1
-  endif
-endif
-
-end function
 
 
 subroutine test_with_suffix()

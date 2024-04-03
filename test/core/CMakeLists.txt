@@ -1,12 +1,16 @@
 if(HAVE_Fortran_FILESYSTEM)
 
-add_executable(test_fortran_core test_core.f90)
-target_link_libraries(test_fortran_core PRIVATE ffilesystem)
-target_compile_options(test_fortran_core PRIVATE ${${PROJECT_NAME}_fortran_test_flags})
-set_property(TARGET test_fortran_core PROPERTY LINKER_LANGUAGE Fortran)
+foreach(t IN ITEMS core parent)
 
-add_test(NAME Fortran_core COMMAND test_fortran_core)
-set_property(TEST Fortran_core PROPERTY LABELS Fortran)
+add_executable(test_fortran_${t} test_${t}.f90)
+target_link_libraries(test_fortran_${t} PRIVATE ffilesystem)
+target_compile_options(test_fortran_${t} PRIVATE ${${PROJECT_NAME}_fortran_test_flags})
+set_property(TARGET test_fortran_${t} PROPERTY LINKER_LANGUAGE Fortran)
+
+add_test(NAME Fortran_${t} COMMAND test_fortran_${t})
+set_property(TEST Fortran_${t} PROPERTY LABELS Fortran)
+
+endforeach()
 
 endif()
 

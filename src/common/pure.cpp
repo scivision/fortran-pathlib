@@ -132,10 +132,6 @@ size_t fs_parent(const char* path, char* result, size_t buffer_size)
 
 std::string Ffs::parent(std::string_view path)
 {
-
-  if (path.empty()) FFS_UNLIKELY
-    return {};
-
   // have to drop_slash on input to get expected parent path
   std::string p = std::filesystem::path(fs_drop_slash(path)).parent_path().generic_string();
 

@@ -146,7 +146,7 @@ size_t fs_parent(const char* path, char* result, size_t buffer_size)
 {
 
   size_t L = strlen(path);
-  if(L == 0 || buffer_size < 2)
+  if(buffer_size < 2)
     return 0;
 
   cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
