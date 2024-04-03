@@ -161,15 +161,8 @@ bool fs_remove(const char* path)
 }
 
 
-bool fs_copy_file(const char* source, const char* dest, bool overwrite) {
-  if(!fs_is_file(source)) {
-    fprintf(stderr,"ERROR:ffilesystem:copy_file: source file does not exist %s\n", source);
-    return false;
-  }
-  if(strlen(dest) == 0) {
-    fprintf(stderr, "ERROR:ffilesystem:copy_file: destination path must not be empty\n");
-    return false;
-  }
+bool fs_copy_file(const char* source, const char* dest, bool overwrite)
+{
 
   if(overwrite && fs_is_file(dest) && !fs_remove(dest))
     fprintf(stderr, "ERROR:ffilesystem:copy_file: could not remove existing destination file %s\n", dest);

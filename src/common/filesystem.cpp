@@ -104,14 +104,8 @@ bool fs_copy_file(const char* source, const char* dest, bool overwrite)
 bool Ffs::copy_file(std::string_view source, std::string_view dest, bool overwrite)
 {
 
-  if(dest.empty()) FFS_UNLIKELY
-  {
-    std::cerr <<"Ffs::copy_file: destination path must not be empty: " << source << " => " << dest << "\n";
-    return false;
-  }
-
-  std::filesystem::path s(Ffs::canonical(source, true));
-  std::filesystem::path d(Ffs::canonical(dest, false));
+  std::filesystem::path s(source);
+  std::filesystem::path d(dest);
 
   // auto opt = std::filesystem::copy_options::none;
   // if (overwrite)

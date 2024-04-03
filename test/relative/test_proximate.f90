@@ -34,7 +34,7 @@ if(.not. is_windows()) then
 endif
 
 
-if(i /= 0) error stop "FAIL: file_name()"
+if(i /= 0) error stop "FAIL: proximate_to()"
 
 print '(a)', "PASS: proximate_to()"
 
