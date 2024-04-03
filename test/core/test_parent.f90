@@ -6,121 +6,57 @@ use filesystem
 
 implicit none
 
+integer, parameter :: L = 21, N = 14
+
+character(L) :: in(N) =  [character(L) ::  "",  "/", ".", "./", "..", "../", "a", "a/", "a/b", "a/b/", "a/b/c", &
+  "ab/.parent", "ab/.parent.txt", "a/b/../.parent.txt"]
+character(L) :: ref(N) = [character(L) ::  ".", "/", ".", ".",  ".",  ".",   ".", ".",  "a",   "a",    "a/b", &
+  "ab",         "ab",            "a/b/.."]
+
+integer :: i, j
+
 valgrind : block
 
-integer :: i
 type(path_t) :: p1, p2
 character(:), allocatable :: p
 
 i = 0
 
-p = parent("")
-!! parent("") == "." is a generally accepted definition
-if(p /= ".") then
-  write(stderr, *) "ERROR: parent empty: " // p, len(p)
-  i = i+1
-endif
-
-p = parent("/")
-if (p /= "/") then
-  write(stderr, '(a)') "ERROR: parent(/) idempotent failed: " // p
-  i = i+1
-endif
-
-p = parent(".")
-if(p /= ".") then
-  write(stderr, '(a)') "ERROR: parent(.) idempotent failed: " // p
-  i = i+1
-endif
-
-p = parent("a")
-if(p /= ".") then
-  i = i + 1
-  write(stderr, '(a)') "ERROR: parent(a): " // p
-endif
-
-p = parent("a/")
-if(p /= ".") then
-  i = i + 1
-  write(stderr, '(a)') "ERROR: parent(a/): " // p
-endif
-
-p = parent(".")
-if(p /= ".") then
-  i = i + 1
-  write(stderr, '(a)') "ERROR: parent(.): " // p
-endif
-
-p = parent("./")
-if(p /= ".") then
-  i = i + 1
-  write(stderr, '(a)') "ERROR: parent(./): " // p
-endif
-
-p = parent("..")
-if(p /= ".") then
-  i = i + 1
-  write(stderr, '(a)') "ERROR: parent(..): " // p
-endif
-
-p = parent("../")
-if(p /= ".") then
-  i = i + 1
-  write(stderr, '(a)') "ERROR: parent(../): " // p
-endif
-
-p1 = path_t("a/b/c")
-p = p1%parent()
-if (len_trim(p) /= 3 .or. p /= "a/b") then
-  write(stderr, '(a,i0)') "ERROR: parent failed: " // trim(p) // " expected a/b length: ", len_trim(p)
-  i = i+1
-endif
-p2 = path_t(p1%parent())
-if (p2%parent() /= "a") then
-  i = i + 1
-  write(stderr, '(a)') "ERROR: parent nest failed: " // p2%parent()
-endif
-p2 = path_t("a")
-if (p2%parent() /= ".") then
-  i = i + 1
-  write(stderr, '(a)') "ERROR: parent idempotent failed. Expected '.', but got: " // p2%parent()
-endif
-
-p = parent("ab/.parent")
-if(p /= "ab") then
-  i = i + 1
-  write(stderr, '(a)') "ERROR: parent leading dot filename cwd: " // p
-endif
-
-p = parent("ab/.parent.txt")
-if(p /= "ab") then
-  i = i + 1
-  write(stderr, '(a)') "ERROR: parent leading dot filename w/ext: " // p
-endif
-
-p = parent("a/b/../.parent.txt")
-if(p /= "a/b/..") then
-  write(stderr,*) "ERROR: parent leading dot filename w/ext up ",  p
-  i = i+1
-endif
+do j = 1, size(in)
+  i = i + check(in(j), ref(j))
+end do
 
 if(is_windows()) then
-  p = parent("c:\a\b\..\.parent.txt")
-  if(p /= "c:/a/b/..") then
-    write(stderr, '(a)') "ERROR: parent leading dot filename w/ext up " // p
-    i = i+1
-  endif
+  i = i + check("c:\a\b\..\.parent.txt", "c:/a/b/..")
 
-  p = parent("x:/")
-  !! Python also may give either result
-  if(all(p /= [character(3) :: "x:", "x:/"])) then
-    write(stderr, '(a)') "ERROR: parent(x:/): " // p
+  if (all([check("x:/", "x:/"), check("x:/", "x:")] == 1)) then
+    write(stderr, '(a)') "ERROR: parent(x:/)"
     i = i+1
   endif
+  !! Python also may give either result
 endif
 
 end block valgrind
 
 print '(a)', "PASS: parent()"
+
+contains
+
+
+integer function check(in, ref) result(i)
+
+character(*), intent(in) :: in, ref
+
+character(:), allocatable :: p
+
+i = 0
+p = parent(in)
+
+if(p == ref) return
+
+i = 1
+write(stderr, '(a)') "parent("// trim(in) // ") = " // p // " /= " // ref
+
+end function
 
 end program
