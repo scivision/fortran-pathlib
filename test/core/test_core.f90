@@ -396,7 +396,8 @@ if(is_windows()) then
   endif
 
   p = parent("x:/")
-  if(p /= "x:/") then
+  !! Python also may give either result
+  if(all(p /= [character(3) :: "x:", "x:/"])) then
     write(stderr, '(a)') "parent(x:/): " // p
     i = i+1
   endif
