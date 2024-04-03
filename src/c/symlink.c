@@ -61,12 +61,10 @@ size_t fs_read_symlink(const char* path, char* result, size_t buffer_size)
 
 bool fs_create_symlink(const char* target, const char* link)
 {
+
+  // necessary to avoid logic problems on macOS
   if(!fs_exists(target)) {
     fprintf(stderr, "ERROR:filesystem:create_symlink: target path does not exist\n");
-    return false;
-  }
-  if(!link || strlen(link) == 0) {
-    fprintf(stderr, "ERROR:filesystem:create_symlink: link path must not be empty\n");
     return false;
   }
 
