@@ -15,11 +15,6 @@ character(L) :: ref(N) = [character(L) ::  ".", "/", ".", ".",  ".",  ".",   "."
 
 integer :: i, j
 
-valgrind : block
-
-type(path_t) :: p1, p2
-character(:), allocatable :: p
-
 i = 0
 
 do j = 1, size(in)
@@ -36,7 +31,7 @@ if(is_windows()) then
   !! Python also may give either result
 endif
 
-end block valgrind
+if(i /= 0) error stop "FAIL: parent()"
 
 print '(a)', "PASS: parent()"
 
@@ -47,15 +42,21 @@ integer function check(in, ref) result(i)
 
 character(*), intent(in) :: in, ref
 
-character(:), allocatable :: p
+character(:), allocatable :: s, s1
+type(path_t) :: p
 
 i = 0
-p = parent(in)
 
-if(p == ref) return
+s = parent(in)
+
+p = path_t(in)
+s1 = p%parent()
+
+if(s == ref .and. s1 == ref) return
 
 i = 1
-write(stderr, '(a)') "parent("// trim(in) // ") = " // p // " /= " // ref
+write(stderr, '(a)') "parent("// trim(in) // ") = " // s // " /= " // ref
+write(stderr, '(a)') "path_t("// trim(in) // ")%parent() = " // s1 // " /= " // ref
 
 end function
 
