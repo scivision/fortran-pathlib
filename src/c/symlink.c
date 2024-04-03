@@ -59,7 +59,7 @@ size_t fs_read_symlink(const char* path, char* result, size_t buffer_size)
 }
 
 
-bool fs_create_symlink(const char* target, const char* link)
+bool fs_create_symlink(const char* target, FFS_MUNUSED_C const char* link)
 {
 
   // necessary to avoid logic problems on macOS

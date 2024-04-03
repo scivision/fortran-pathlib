@@ -1,3 +1,9 @@
+#ifdef _MSC_VER
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+#endif
+
 #include "ffilesystem.h"
 
 #ifdef HAVE_UTSNAME_H
@@ -7,7 +13,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h> // getenv, setenv
+#include <stdlib.h> // getenv, setenv, putenv
 #include <errno.h>
 
 #ifdef _WIN32
@@ -61,19 +67,28 @@ size_t fs_getenv(const char* name, char* path, size_t buffer_size)
 
 bool fs_setenv(const char* name, const char* value)
 {
-  if(strlen(name) == 0)
-    return false;
 
 #ifdef _WIN32
-  (void) value;
-  fprintf(stderr, "ERROR:ffilesystem:fs_setenv: not implemented for non-C++\n");
-#else
-  if(!setenv(name, value, 1))
-    return true;
+  // SetEnvironmentVariable set empty value despite returning success code
+  size_t L = strlen(name) + strlen(value) + 2;
+  char* buf = (char*) malloc(L);
+  if(!buf) return false;
 
-  fprintf(stderr, "ERROR:ffilesystem:fs_setenv: %s => %s\n", name, strerror(errno));
+  fs_strncpy(name, buf, L);
+  strcat(buf, "=");
+  strcat(buf, value);
+  if(putenv(buf) == 0){
+    free(buf);
+    return true;
+  }
+  free(buf);
+#else
+  // https://www.man7.org/linux/man-pages/man3/setenv.3.html
+  if(setenv(name, value, 1) == 0)
+    return true;
 #endif
 
+  fprintf(stderr, "ERROR:ffilesystem:fs_setenv: %s => %s\n", name, strerror(errno));
   return false;
 }
 

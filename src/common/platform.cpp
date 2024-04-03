@@ -1,3 +1,10 @@
+#ifdef _MSC_VER
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+#endif
+
+
 #include "ffilesystem.h"
 
 #if __has_include(<sys/utsname.h>)
@@ -19,7 +26,9 @@
 
 // for get_homedir backup method
 #ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
 #include <UserEnv.h>
+#include <Windows.h>
 #else
 #include <sys/types.h>
 #include <pwd.h>
@@ -102,23 +111,20 @@ bool fs_setenv(const char* name, const char* value)
 
 bool Ffs::set_env(std::string_view name, std::string_view value)
 {
-  if(name.empty()) FFS_UNLIKELY
-  {
-    std::cerr << "WARNING:ffilesystem:setenv: name must be non-empty\n";
-    return false;
-  }
 
+  if(
 #ifdef _WIN32
-  if(std::string v = std::string(name) + "=" + std::string(value); putenv(v.data()))
+  // SetEnvironmentVariable returned OK but set blank values
+  // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/putenv-wputenv
+  std::string v = std::string(name) + "=" + std::string(value); putenv(v.data()) == 0
 #else
-  if(setenv(name.data(), value.data(), 1))
+  // https://www.man7.org/linux/man-pages/man3/setenv.3.html
+  setenv(name.data(), value.data(), 1) == 0
 #endif
-  {
-    std::cerr << "Ffs:set_env: could not set environment variable " << name << "\n";
-    return false;
-  }
+   ) return true;
 
-  return true;
+  std::cerr << "Ffs:set_env: could not set environment variable " << name << "\n";
+  return false;
 }
 
 

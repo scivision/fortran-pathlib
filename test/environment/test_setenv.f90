@@ -1,5 +1,6 @@
 program test_setenv
 
+use, intrinsic :: iso_fortran_env, only : stderr=>error_unit
 use filesystem
 
 implicit none
@@ -13,7 +14,10 @@ v = "test_value"
 call setenv(k, v)
 buf = getenv(k)
 
-if (buf /= v) error stop "setenv/getenv failed: " // buf // " /= " // v
+if (buf /= v) then
+  write(stderr, '(a)') "ERROR: setenv/getenv failed: " // buf // " /= " // v
+  error stop
+endif
 
 end block valgrind
 
