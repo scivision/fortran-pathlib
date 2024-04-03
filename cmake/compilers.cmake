@@ -73,6 +73,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU|^Intel")
   add_compile_options(
   "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<CONFIG:Debug>>:-Wextra>"
   "$<$<COMPILE_LANGUAGE:C,CXX>:-Wall>"
+  "$<$<COMPILE_LANGUAGE:C>:-Werror=implicit-function-declaration>"
   )
 elseif(CMAKE_C_COMPILER_ID MATCHES "MSVC")
   add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:/W3;/wd4996>")
