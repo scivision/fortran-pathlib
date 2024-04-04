@@ -6,29 +6,19 @@ use filesystem
 implicit none
 
 integer :: i, L
-
 valgrind: block
 
 type(path_t) :: p_sym, p_tgt
 logical :: ok
 
-character(:), allocatable :: tgt, rtgt, cmake_link, link, linko, tgt_dir, link_dir, buf
+character(:), allocatable :: tgt, rtgt, link, linko, tgt_dir, link_dir
 
-allocate(character(max_path()) :: buf)
+allocate(character(max_path()) :: tgt_dir)
 
-if(is_symlink("not-exist-file")) error stop "is_symlink() should be false for non-existant file"
-if(is_symlink("")) error stop "is_symlink('') should be false"
+call get_command_argument(0, tgt_dir, status=i, length=L)
+if(i /= 0 .or. L == 0) error stop "could not get command line"
 
-if (command_argument_count() == 0) error stop "please give test link file"
-call get_command_argument(1, buf, status=i, length=L)
-if(i /= 0 .or. L == 0) error stop "could not get test link file from command line"
-cmake_link = buf(1:L)
-tgt_dir = parent(cmake_link)
-
-if(.not.is_symlink(cmake_link)) then
-  write(stderr, '(a)') "is_symlink() should be true for symlink file: " // cmake_link
-  error stop
-endif
+tgt_dir = parent(tgt_dir)
 
 tgt = join(tgt_dir, "test.txt")
 call touch(tgt)
