@@ -84,6 +84,12 @@ bool Ffs::create_symlink(std::string_view target, std::string_view link)
   auto s = std::filesystem::status(target);
 
 #ifdef WIN32_SYMLINK
+// https://gcc.gnu.org/onlinedocs/libstdc++/manual/status.html#iso.2017.specific
+// 30.10.2.1 [fs.conform.9945] The behavior of the filesystem library implementation
+// will depend on the target operating system. Some features will not be supported
+// on some targets.
+// Symbolic links and file permissions are not supported on Windows.
+
   DWORD p = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
 
   if(std::filesystem::is_directory(s))
