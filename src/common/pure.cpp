@@ -118,9 +118,6 @@ size_t fs_join(const char* path, const char* other, char* result, size_t buffer_
 
 std::string Ffs::join(std::string_view path, std::string_view other)
 {
-  if (other.empty()) FFS_UNLIKELY
-    return std::string(path);
-
   return fs_drop_slash((std::filesystem::path(path) / other).lexically_normal().generic_string());
 }
 
@@ -229,10 +226,8 @@ bool Ffs::is_safe_name(std::string_view filename)
   // https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file
   // we do not consider whitespaces, quotes, or ticks safe, as they can be confusing in shell scripts and command line usage
 
-  if(filename.empty()) FFS_UNLIKELY
-    return false;
-
-  if(fs_is_windows() && filename.back() == '.') FFS_UNLIKELY
+  // empty check for MSVC
+  if(fs_is_windows() && !filename.empty() && filename.back() == '.') FFS_UNLIKELY
     return false;
 
 #ifdef __cpp_lib_ranges
