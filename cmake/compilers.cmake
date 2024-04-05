@@ -30,7 +30,6 @@ if(ffilesystem_cpp)
 elseif(WIN32)
   message(WARNING "Windows without C++ is not supported, for internal development only. Some functions are not implemented.")
 else()
-  check_include_file("sys/utsname.h" HAVE_UTSNAME_H)
   unset(HAVE_CXX_FILESYSTEM CACHE)
 endif()
 

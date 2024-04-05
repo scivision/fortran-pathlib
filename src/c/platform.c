@@ -6,7 +6,7 @@
 
 #include "ffilesystem.h"
 
-#ifdef HAVE_UTSNAME_H
+#if defined(__has_include) && __has_include(<sys/utsname.h>)
 #include <sys/utsname.h>
 #endif
 
@@ -36,11 +36,12 @@ static inline bool str_ends_with(const char *s, const char *suffix) {
 #endif
 
 
-int fs_is_wsl() {
-#ifdef HAVE_UTSNAME_H
+int fs_is_wsl()
+{
+#if defined(__has_include) && __has_include(<sys/utsname.h>)
   struct utsname buf;
   if (uname(&buf) != 0)
-    return false;
+    return 0;
 
   if (strcmp(buf.sysname, "Linux") != 0)
     return 0;
