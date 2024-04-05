@@ -113,25 +113,15 @@ bool fs_set_modtime(const char* path)
 
 bool Ffs::set_modtime(std::string_view path)
 {
-  std::filesystem::path p(path);
-
   std::error_code ec;
-  if(!std::filesystem::exists(p, ec) || ec) FFS_UNLIKELY
-  {
-    std::cerr << "ERROR:ffilesystem:set_modtime: file does not exist: " << p << "\n";
-    return false;
-  }
 
-
-  std::filesystem::last_write_time(p, std::filesystem::file_time_type::clock::now(), ec);
+  std::filesystem::last_write_time(path, std::filesystem::file_time_type::clock::now(), ec);
+  if(!ec) FFS_LIKELY
+    return true;
   // techinically IWYU <chrono> but that can break some compilers, and it works without the include.
-  if(ec) FFS_UNLIKELY
-  {
-    std::cerr << "ERROR:ffilesystem:set_modtime: " << ec.message() << "\n";
-    return false;
-  }
 
-  return true;
+  std::cerr << "ERROR:ffilesystem:set_modtime: " << ec.message() << "\n";
+  return false;
 }
 
 
@@ -150,8 +140,6 @@ void Ffs::touch(std::string_view path)
 {
   std::filesystem::path p(path);
 
-  auto s = std::filesystem::status(p);
-
 #if defined(__cpp_using_enum)
   using enum std::filesystem::perms;
 #else
@@ -159,7 +147,7 @@ void Ffs::touch(std::string_view path)
   std::filesystem::perms owner_write = std::filesystem::perms::owner_write;
 #endif
 
-  if(std::filesystem::exists(s)) {
+  if(std::filesystem::exists(p)) {
     std::filesystem::last_write_time(p, std::filesystem::file_time_type::clock::now());
     // techinically IWYU <chrono> but that can break some compilers, and it works without the include.
     return;
@@ -219,34 +207,31 @@ void Ffs::set_permissions(std::string_view path, int readable, int writable, int
 // --- mkdtemp
 
 size_t fs_make_tempdir(char* result, size_t buffer_size){
-  try{
-    return fs_str2char(Ffs::mkdtemp("tmp."), result, buffer_size);
-  } catch(std::filesystem::filesystem_error& e) {
-    std::cerr << "ERROR:ffilesystem:make_tempdir: " << e.what() << "\n";
-    return 0;
-  }
+  return fs_str2char(Ffs::mkdtemp("tmp."), result, buffer_size);
 }
 
 std::string Ffs::mkdtemp(std::string_view prefix)
 {
   // make unique temporary directory starting with prefix
 
+  std::error_code ec;
   std::filesystem::path t;
   size_t Lname = 16;  // arbitrary length for random string
-  std::filesystem::path temp = std::filesystem::temp_directory_path();
+  std::filesystem::path temp = std::filesystem::temp_directory_path(ec);
 
-  do {
-    t = (temp / (prefix.data() + fs_generate_random_alphanumeric_string(Lname)));
-    if(FS_TRACE) std::cout << "TRACE:make_tempdir: " << t << "\n";
-  } while (std::filesystem::is_directory(t));
-
-  if (!std::filesystem::create_directory(t)) FFS_UNLIKELY
+  if(!ec) FFS_LIKELY
   {
-    std::cerr << "Ffs::mkdtemp:mkdir: could not create temporary directory " << t << "\n";
-    return {};
+    do {
+      t = (temp / (prefix.data() + fs_generate_random_alphanumeric_string(Lname)));
+      if(FS_TRACE) std::cout << "TRACE:make_tempdir: " << t << "\n";
+    } while (std::filesystem::is_directory(t, ec) && !ec);
+
+    if (std::filesystem::create_directory(t, ec) && !ec) FFS_LIKELY
+      return t.generic_string();
   }
 
-  return t.generic_string();
+  std::cerr << "Ffs::mkdtemp:mkdir: could not create temporary directory " << ec.message() << "\n";
+  return {};
 }
 
 // CTAD C++17 random string generator
