@@ -5,18 +5,7 @@ include(CheckCXXSourceCompiles)
 
 include(${CMAKE_CURRENT_LIST_DIR}/CppCheck.cmake)
 
-#--- is dladdr available for lib_path() optional function
 unset(CMAKE_REQUIRED_FLAGS)
-if(BUILD_SHARED_LIBS AND NOT (WIN32 OR CYGWIN))
-  set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS})
-  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(CMAKE_REQUIRED_DEFINITIONS -D_GNU_SOURCE)
-  endif()
-  check_symbol_exists(dladdr "dlfcn.h" HAVE_DLADDR)
-else()
-  unset(HAVE_DLADDR CACHE)
-endif()
-
 # --- some compilers require these manual settings
 unset(CMAKE_REQUIRED_LIBRARIES)
 unset(CMAKE_REQUIRED_DEFINITIONS)

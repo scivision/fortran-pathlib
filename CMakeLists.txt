@@ -125,7 +125,6 @@ target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:C>,$<BOOL:${HAVE_UTSNAME_H}>>:HAVE_UTSNAME_H>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${${PROJECT_NAME}_WIN32_SYMLINK}>>:WIN32_SYMLINK>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${${PROJECT_NAME}_HAVE_CLOCK_CAST}>>:HAVE_CLOCK_CAST>"
-"$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${HAVE_DLADDR}>>:HAVE_DLADDR>"
 "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${ffilesystem_trace}>>:FS_TRACE=1>"
 )
 set_target_properties(ffilesystem PROPERTIES
@@ -148,7 +147,7 @@ $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 
 target_link_libraries(ffilesystem PUBLIC
 ${GNU_stdfs}
-"$<$<BOOL:${HAVE_DLADDR}>:${CMAKE_DL_LIBS}>"
+${CMAKE_DL_LIBS}
 "$<$<BOOL:${WIN32}>:Userenv;Advapi32>"
 )
 # both Advapi32 and Userenv must be linked

@@ -8,24 +8,8 @@
 
 #include "ffilesystem.h"
 
-[[noreturn]] void err(std::string_view m){
-    std::cerr << "ERROR: " << m << "\n";
-    std::exit(EXIT_FAILURE);
-}
+#include <filesystem>
 
-
-void test_lib_path(const char* path, const char* ref){
-
-  std::string binpath = Ffs::lib_path();
-
-  if(binpath.empty())
-    err("test_binpath: lib_path should be non-empty: " + binpath);
-
-  if(binpath.find(path) == std::string::npos)
-    err("test_binpath: lib_path not found correctly: " + binpath + " does not contain " + ref);
-
-  std::cout << "OK: lib_path: " << binpath << "\n";
-}
 
 int main(int argc, char* argv[])
 {
@@ -38,15 +22,40 @@ int main(int argc, char* argv[])
   _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-  if (argc < 3) {
-    std::cerr << "ERROR: test_libpath_c: not enough arguments\n";
-    return 1;
+  int shared = 0;
+  if(argc > 1){
+    shared = std::atoi(argv[1]);
   }
 
-  if (!atoi(argv[1]))
-    err("lib_path: feature not available");
+  std::string path = Ffs::lib_path();
 
-  test_lib_path(argv[2], argv[3]);
+  if(path.empty()){
+    std::cerr << "test_binpath: lib_path should be non-empty: " << path << "\n";
+    return EXIT_FAILURE;
+  }
 
-  return EXIT_SUCCESS;
+  auto s = std::filesystem::status(path);
+
+  if(!std::filesystem::exists(s)){
+    std::cerr << "test_binpath: lib_path should exist: " << path << "\n";
+    return EXIT_FAILURE;
+  }
+
+  if(std::filesystem::is_directory(s)){
+    if(shared){
+      std::cerr << "test_binpath: lib_path should not be a directory: " << path << "\n";
+      return EXIT_FAILURE;
+    } else {
+      std::cout << path << "\n";
+      return EXIT_SUCCESS;
+    }
+  }
+
+  if(std::filesystem::is_regular_file(s)){
+    std::cout << path << "\n";
+    return EXIT_SUCCESS;
+  }
+
+  std::cerr << "test_binpath: lib_path should be a regular file: " << path << "\n";
+  return EXIT_FAILURE;
 }

@@ -5,43 +5,37 @@ use filesystem
 
 implicit none
 
-if(command_argument_count() < 1) stop "please specify command line parameters as in CMakeLists.txt"
+valgrind : block
 
-call test_lib_path()
-
-contains
-
-
-subroutine test_lib_path()
-
-character(:), allocatable :: binpath
-character(256) :: name
+character(:), allocatable :: path
 integer :: i, L
 character :: s
 logical :: shared
 
-call get_command_argument(1, s, length=L, status=i)
-if(i/=0) error stop "ERROR:test_binpath:test_lib_path: get_command_argument failed"
-if(L/=1) error stop "ERROR:test_binpath: expected argument 0 for static or 1 for shared"
-shared = s == '1'
-
-binpath = lib_path()
-
-if(.not. shared) then
-  if (len_trim(binpath) /= 0) error stop "ERROR:test_binpath: lib_path should be empty for static library: " // trim(binpath)
-  write(stderr,'(a)') "SKIPPED: lib_path not available: static library"
-  error stop 77
+shared = .false.
+if(command_argument_count() > 0) then
+  call get_command_argument(1, s, length=L, status=i)
+  if(i/=0) error stop "ERROR:test_binpath:test_lib_path: get_command_argument failed"
+  if(L/=1) error stop "ERROR:test_binpath: expected argument 0 for static or 1 for shared"
+  shared = s == '1'
 endif
 
-call get_command_argument(2, name, length=L, status=i)
-if(i/=0) error stop "ERROR:test_binpath:test_lib_path: get_command_argument failed"
-if(L<1) error stop "ERROR:test_binpath: expected lib_name as third argument"
+allocate(character(len=max_path()) :: path)
 
-i = index(binpath, trim(name))
-if (i<1) error stop "ERROR:test_binpath: lib_path not found correctly: " // trim(binpath) // ' with name ' // trim(name)
+path = lib_path()
 
-print *, "OK: lib_path: ", trim(binpath)
+if(.not. exists(path)) error stop trim(path) // " does not exist"
 
-end subroutine
+if(is_dir(path)) then
+  if(shared) error stop "test_libpath: for shared libraries a full path to the library file is expected: " // trim(path)
+  print '(a)', trim(path)
+  stop
+endif
+
+if (.not. is_file(path)) error stop trim(path) // " is neither a file nor a directory"
+
+print '(a)', trim(path)
+
+end block valgrind
 
 end program
