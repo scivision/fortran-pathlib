@@ -52,23 +52,16 @@ bool fs_mkdir(const char* path)
 bool Ffs::mkdir(std::string_view path)
 {
 
-  std::filesystem::path p(path);
-
-  std::error_code ec;
-  auto s = std::filesystem::is_directory(p, ec);
-  if (!ec && s)
+  if (Ffs::is_dir(path))
     return true;
 
-  std::filesystem::create_directories(p, ec);
+  std::error_code ec;
   // old MacOS return false even if directory was created
-  if (ec) FFS_UNLIKELY
-  {
-    std::cerr << "ERROR:ffilesystem:mkdir: " << ec.message() << "\n";
-    return false;
-  }
+  if (std::filesystem::create_directories(path, ec) && !ec && Ffs::is_dir(path)) FFS_LIKELY
+    return true;
 
-  s = std::filesystem::is_directory(p, ec);
-  return !ec && s;
+  std::cerr << "ERROR:ffilesystem:mkdir: " << ec.message() << "\n";
+  return false;
 }
 
 
@@ -91,29 +84,25 @@ bool Ffs::remove(std::string_view path)
 
 bool fs_copy_file(const char* source, const char* dest, bool overwrite)
 {
-  try{
-    return Ffs::copy_file(std::string_view(source), std::string_view(dest), overwrite);
-  } catch(std::filesystem::filesystem_error& e){
-    std::cerr << "ERROR:ffilesystem:copy_file: " << e.what() << "\n";
-    return false;
-  }
+  return Ffs::copy_file(std::string_view(source), std::string_view(dest), overwrite);
 }
 
 bool Ffs::copy_file(std::string_view source, std::string_view dest, bool overwrite)
 {
-
-  std::filesystem::path s(source);
-  std::filesystem::path d(dest);
-
-  // auto opt = std::filesystem::copy_options::none;
-  // if (overwrite)
-  //   opt = std::filesystem::copy_options::overwrite_existing;
+  auto opt = std::filesystem::copy_options::none;
+  if (overwrite)
+    opt = std::filesystem::copy_options::overwrite_existing;
 // WORKAROUND: Windows MinGW GCC 11..13, Intel oneAPI Linux: bug with overwrite_existing failing on overwrite
 
-  if(overwrite && std::filesystem::is_regular_file(d) && !std::filesystem::remove(d)) FFS_UNLIKELY
-    std::cerr << "ERROR:Ffs::copy_file: could not remove existing destination file: " << d << "\n";
+  if(overwrite && Ffs::is_file(dest) && !Ffs::remove(dest)) FFS_UNLIKELY
+    std::cerr << "ERROR:Ffs::copy_file: could not remove existing destination file: " << dest << "\n";
 
-  return std::filesystem::copy_file(s, d);
+  std::error_code ec;
+  if(std::filesystem::copy_file(source, dest, opt, ec) && !ec) FFS_LIKELY
+    return true;
+
+  std::cerr << "ERROR:ffilesystem:copy_file: " << ec.message() << "\n";
+  return false;
 }
 
 
