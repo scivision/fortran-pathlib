@@ -19,7 +19,7 @@ add_executable(test_is_symlink test_is_symlink.f90)
 add_test(NAME Fortran_is_symlink COMMAND test_is_symlink ${test_symlink_file})
 
 add_executable(test_symlink test_symlink.f90)
-add_test(NAME Fortran_symlink COMMAND test_symlink ${test_symlink_file})
+add_test(NAME Fortran_symlink COMMAND test_symlink $<BOOL:${ffilesystem_WIN32_SYMLINK}>)
 
 foreach(t IN ITEMS is_symlink symlink)
   target_link_libraries(test_${t} PRIVATE ffilesystem)

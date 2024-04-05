@@ -6,6 +6,9 @@ use filesystem
 implicit none
 
 integer :: i, L
+character :: s
+logical :: win32_symlink
+
 valgrind: block
 
 type(path_t) :: p_sym, p_tgt
@@ -16,7 +19,14 @@ character(:), allocatable :: tgt, rtgt, link, linko, tgt_dir, link_dir
 allocate(character(max_path()) :: tgt_dir)
 
 call get_command_argument(0, tgt_dir, status=i, length=L)
-if(i /= 0 .or. L == 0) error stop "could not get command line"
+if(i /= 0 .or. L == 0) error stop "could not get command line arg 0"
+
+win32_symlink = .false.
+if(command_argument_count() > 0) then
+  call get_command_argument(1, s, status=i)
+  if(i /= 0) error stop "could not get command line arg 1"
+  if(s /= '0') win32_symlink = .true.
+endif
 
 tgt_dir = parent(tgt_dir)
 
@@ -53,26 +63,32 @@ endif
 call create_symlink(tgt, link)
 print '(a)', "PASSED: create_symlink " // link
 
-!> read_symlink
-rtgt = read_symlink(link)
-if(rtgt /= tgt) then
-  write(stderr, '(a)') "read_symlink() failed: " // rtgt // " /= " // tgt
-  error stop
-endif
-print '(a)', "PASSED: read_symlink " // rtgt // " == " // tgt
+if(win32_symlink) then
+  write(stderr,"(a)") "Skipping read_symlink() test on Windows"
+else
 
-!> read_symlink non-symlink
-rtgt = read_symlink(tgt)
-if (len_trim(rtgt) > 0) then
-  write(stderr, '(a)') "read_symlink() should return empty string for non-symlink file: " // rtgt
-  error stop
-endif
+  !> read_symlink
+  rtgt = read_symlink(link)
+  if(rtgt /= tgt) then
+    write(stderr, '(a)') "read_symlink() failed: " // rtgt // " /= " // tgt
+    error stop
+  endif
+  print '(a)', "PASSED: read_symlink " // rtgt // " == " // tgt
 
-!> read_symlink non-existant
-rtgt = read_symlink("not-exist-file")
-if (len_trim(rtgt) > 0) then
-  write(stderr, '(a)') "read_symlink() should return empty string for non-existant file: " // rtgt
-  error stop
+  !> read_symlink non-symlink
+  rtgt = read_symlink(tgt)
+  if (len_trim(rtgt) > 0) then
+    write(stderr, '(a)') "read_symlink() should return empty string for non-symlink file: " // rtgt
+    error stop
+  endif
+
+  !> read_symlink non-existant
+  rtgt = read_symlink("not-exist-file")
+  if (len_trim(rtgt) > 0) then
+    write(stderr, '(a)') "read_symlink() should return empty string for non-existant file: " // rtgt
+    error stop
+  endif
+
 endif
 
 
