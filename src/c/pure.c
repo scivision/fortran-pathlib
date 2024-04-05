@@ -93,13 +93,7 @@ size_t fs_file_name(const char* path, char* result, size_t buffer_size)
 
   cwk_path_get_basename(path, &base, &L);
 
-  if(L >= buffer_size){
-    fprintf(stderr, "ERROR:ffilesystem:fs_file_name: buffer_size %zu too small\n", buffer_size);
-    return 0;
-  }
-
-  strncpy(result, base, buffer_size);
-  return L;
+  return fs_strncpy(base, result, buffer_size);
 }
 
 
@@ -198,15 +192,13 @@ size_t fs_suffix(const char* path, char* result, size_t buffer_size)
     return 0;
   }
 
+  size_t L = 0;
   char* pos = strrchr(buf, '.');
   if (pos && pos != buf)
-    strncpy(result, pos, buffer_size);
-  else
-    result[0] = '\0';
+    L = fs_strncpy(pos, result, buffer_size);
 
   free(buf);
-
-  return strlen(result);
+  return L;
 }
 
 
@@ -248,7 +240,6 @@ size_t fs_root(const char* path, char* result, size_t buffer_size)
   }
 
   strncpy(result, path, L);
-
   return L;
 }
 
