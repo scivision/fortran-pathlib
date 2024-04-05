@@ -81,13 +81,11 @@ bool Ffs::remove(std::string_view path)
 {
   std::error_code ec;
 
-  if(!std::filesystem::remove(path, ec) || ec) FFS_UNLIKELY
-  {
-    std::cerr << "ERROR:ffilesystem:remove: " << ec.message() << "\n";
-    return false;
-  }
+  if(std::filesystem::remove(path, ec) && !ec) FFS_LIKELY
+    return true;
 
-  return true;
+  std::cerr << "ERROR:ffilesystem:remove: " << ec.message() << "\n";
+  return false;
 }
 
 
