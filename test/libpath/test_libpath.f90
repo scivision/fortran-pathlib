@@ -1,6 +1,5 @@
 program test_binpath
 
-use, intrinsic :: iso_fortran_env, only : stderr=>error_unit
 use filesystem
 
 implicit none
@@ -20,21 +19,19 @@ if(command_argument_count() > 0) then
   shared = s == '1'
 endif
 
-allocate(character(len=max_path()) :: path)
-
 path = lib_path()
 
-if(.not. exists(path)) error stop trim(path) // " does not exist"
+if(.not. exists(path)) error stop path // " does not exist"
 
 if(is_dir(path)) then
-  if(shared) error stop "test_libpath: for shared libraries a full path to the library file is expected: " // trim(path)
-  print '(a)', trim(path)
+  if(shared) error stop "test_libpath: for shared libraries a full path to the library file is expected: " // path
+  print '(a)', path
   stop
 endif
 
-if (.not. is_file(path)) error stop trim(path) // " is neither a file nor a directory"
+if (.not. is_file(path)) error stop path // " is neither a file nor a directory"
 
-print '(a)', trim(path)
+print '(a)', path
 
 end block valgrind
 
