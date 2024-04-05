@@ -7,12 +7,7 @@
 
 size_t fs_canonical(const char* path, bool strict, char* result, size_t buffer_size)
 {
-  try{
-    return fs_str2char(Ffs::canonical(std::string_view(path), strict), result, buffer_size);
-  } catch(std::filesystem::filesystem_error& e){
-    std::cerr << "ERROR:ffilesystem:canonical: " << e.what() << "\n";
-    return 0;
-  }
+  return fs_str2char(Ffs::canonical(std::string_view(path), strict), result, buffer_size);
 }
 
 std::string Ffs::canonical(std::string_view path, bool strict)
@@ -23,29 +18,31 @@ std::string Ffs::canonical(std::string_view path, bool strict)
     return {};
     // need this for macOS otherwise it returns the current working directory instead of empty string
 
-  auto ex = std::filesystem::path(Ffs::expanduser(path));
+  auto ex = Ffs::expanduser(path);
 
   if(FS_TRACE) std::cout << "TRACE:canonical: input: " << path << " expanded: " << ex << "\n";
 
-  if (!std::filesystem::exists(ex) && !ex.is_absolute())
+  if (!Ffs::exists(ex) && !Ffs::is_absolute(ex))
     // handles differences in ill-defined behaviour of std::filesystem::weakly_canonical() on non-existant paths
     // canonical(path, false) is distinct from resolve(path, false) for non-existing paths.
-    return Ffs::normal(ex.generic_string());
+    return Ffs::normal(ex);
 
-  return strict
-    ? std::filesystem::canonical(ex).generic_string()
-    : std::filesystem::weakly_canonical(ex).generic_string();
+  std::error_code ec;
+  auto c = strict
+    ? std::filesystem::canonical(ex, ec)
+    : std::filesystem::weakly_canonical(ex, ec);
+
+  if(!ec) FFS_LIKELY
+    return c.generic_string();
+
+  std::cerr << "ERROR:ffilesystem:canonical: " << ec.message() << "\n";
+  return {};
 }
 
 
 size_t fs_resolve(const char* path, bool strict, char* result, size_t buffer_size)
 {
-  try{
-    return fs_str2char(Ffs::resolve(std::string_view(path), strict), result, buffer_size);
-  } catch(std::filesystem::filesystem_error& e){
-    std::cerr << "ERROR:ffilesystem:resolve: " << e.what() << "\n";
-    return 0;
-  }
+  return fs_str2char(Ffs::resolve(std::string_view(path), strict), result, buffer_size);
 }
 
 std::string Ffs::resolve(std::string_view path, bool strict)
@@ -55,16 +52,23 @@ std::string Ffs::resolve(std::string_view path, bool strict)
   if(path.empty()) FFS_UNLIKELY
     return Ffs::get_cwd();
 
-  auto ex = std::filesystem::path(Ffs::expanduser(path));
+  auto ex = Ffs::expanduser(path);
 
-  if (!std::filesystem::exists(ex) && !ex.is_absolute())
+  if (!Ffs::exists(ex) && !Ffs::is_absolute(ex))
     // handles differences in ill-defined behaviour of std::filesystem::weakly_canonical() on non-existant paths
     // canonical(path, false) is distinct from resolve(path, false) for non-existing paths.
-    ex = Ffs::get_cwd() / ex;
+    ex = Ffs::join(Ffs::get_cwd(), ex);
 
-  return strict
-    ? std::filesystem::canonical(ex).generic_string()
-    : std::filesystem::weakly_canonical(ex).generic_string();
+  std::error_code ec;
+  auto c = strict
+    ? std::filesystem::canonical(ex, ec)
+    : std::filesystem::weakly_canonical(ex, ec);
+
+  if(!ec) FFS_LIKELY
+    return c.generic_string();
+
+  std::cerr << "ERROR:ffilesystem:resolve: " << ec.message() << "\n";
+  return {};
 }
 
 

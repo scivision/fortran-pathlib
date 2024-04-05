@@ -62,11 +62,8 @@ int main(){
     if(Ffs::is_symlink(""))
       err("Ffs::is_symlink");
 
-    try{
-      Ffs::create_symlink("", "");
-    } catch (std::filesystem::filesystem_error& e){
-      std::cerr << e.what() << "\n";
-    }
+    if(Ffs::create_symlink("", ""))
+      err("Ffs::create_symlink");
 
     if(Ffs::mkdir(""))
       err("Ffs::mkdir");
@@ -104,11 +101,8 @@ int main(){
     if(!Ffs::expanduser("").empty())
       err("Ffs::expanduser");
 
-    try{
-      Ffs::copy_file("", "", false);
-    } catch (std::filesystem::filesystem_error& e){
-      std::cerr << e.what() << "\n";
-    }
+    if(Ffs::copy_file("", "", false))
+      err("Ffs::copy_file");
 
     if(!Ffs::relative_to("", "").empty())
       err("Ffs::relative_to");
@@ -119,22 +113,11 @@ int main(){
       std::cerr << e.what() << "\n";
     }
 
-    try{
       if(Ffs::file_size("") != 0)
         err("Ffs::file_size");
-    } catch (std::filesystem::filesystem_error& e){
-      std::cerr << e.what() << "\n";
-    }
 
-
-    if(!fs_is_windows()) {
-      try{
-        if(Ffs::space_available("") != 0)
-          err("Ffs::space_available");
-      } catch (std::filesystem::filesystem_error& e){
-        std::cerr << e.what() << "\n";
-      }
-    }
+    if(!fs_is_windows() && Ffs::space_available("") != 0)
+        err("Ffs::space_available");
 
     if(Ffs::get_cwd().empty())
       err("get_cwd");
