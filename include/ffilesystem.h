@@ -9,11 +9,9 @@
 #ifdef __cplusplus
 
 // GCC itself does it this way https://github.com/gcc-mirror/gcc/blob/78b56a12dd028b9b4051422c6bad6260055e4465/libcpp/system.h#L426
-#ifdef __has_cpp_attribute
-#if __has_cpp_attribute(unlikely)
+#if defined(__has_cpp_attribute) && __has_cpp_attribute(unlikely)
 #define FFS_UNLIKELY [[unlikely]]
 #define FFS_LIKELY [[likely]]
-#endif
 #endif
 #ifndef FFS_UNLIKELY
 #define FFS_UNLIKELY
@@ -124,6 +122,13 @@ std::string fs_drop_slash(std::string_view);
 extern "C" {
 
 #else
+
+#if defined(__has_c_attribute) && __has_c_attribute(maybe_unused)
+#define FFS_MUNUSED_C [[maybe_unused]]
+#endif
+#ifndef FFS_MUNUSED_C
+#define FFS_MUNUSED_C
+#endif
 
 #include <stdlib.h>
 #include <stdbool.h>

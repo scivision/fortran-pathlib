@@ -276,10 +276,9 @@ bool fs_set_permissions(const char* path, int readable, int writable, int execut
 }
 
 
-size_t fs_make_tempdir(char* result, size_t buffer_size)
+size_t fs_make_tempdir(FFS_MUNUSED_C char* result, FFS_MUNUSED_C size_t buffer_size)
 {
 #ifdef _WIN32
-  (void) result; (void) buffer_size;
   fprintf(stderr, "ERROR:ffilesystem:fs_make_tempdir: not implemented for non-C++\n");
   return 0;
 #else

@@ -31,6 +31,8 @@ elseif(WIN32)
   message(WARNING "Windows without C++ is not supported, for internal development only. Some functions are not implemented.")
 else()
   unset(HAVE_CXX_FILESYSTEM CACHE)
+
+  check_symbol_exists(__has_c_attribute "" c23_has_c_attribute)
 endif()
 
 # --- deeper filesystem check: C, C++ and Fortran compiler ABI compatibility

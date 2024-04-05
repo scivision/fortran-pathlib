@@ -32,13 +32,11 @@ bool fs_is_symlink(const char* path)
 }
 
 
-size_t fs_read_symlink(const char* path, char* result, size_t buffer_size)
+size_t fs_read_symlink(const char* path, FFS_MUNUSED_C char* result, FFS_MUNUSED_C size_t buffer_size)
 {
 
 #ifdef _WIN32
-  (void) result;
-  (void) buffer_size;
-  fprintf(stderr, "ERROR:ffilesystem:read_symlink: not implemented for non-C++\n");
+  fprintf(stderr, "ERROR:Ffilesystem:read_symlink: not implemented for non-C++: %s\n", path);
   return 0;
 #else
   // https://www.man7.org/linux/man-pages/man2/readlink.2.html

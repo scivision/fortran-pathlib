@@ -189,13 +189,11 @@ size_t fs_relative_to(const char* base, const char* other, char* result, size_t 
 }
 
 
-size_t fs_proximate_to(const char* base, const char* other, char* result, size_t buffer_size)
+size_t fs_proximate_to(const char* base, const char* other,
+  FFS_MUNUSED_C char* result,
+  FFS_MUNUSED_C size_t buffer_size)
 {
-  (void) base;
-  (void) other;
-  (void) result;
-  (void) buffer_size;
-  fprintf(stderr, "ERROR:ffilesystem:proximate_to: not implemented for non-C++\n");
+  fprintf(stderr, "ERROR:ffilesystem:proximate_to: not implemented for non-C++: %s %s\n", base, other);
   return 0;
 }
 

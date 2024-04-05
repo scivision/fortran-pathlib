@@ -118,9 +118,8 @@ bool fs_is_file(const char* path)
 
 bool fs_is_reserved(const char* path)
 {
-  (void)path;
   if(fs_is_windows())
-    fprintf(stderr, "ERROR:ffilesystem:is_reserved: not implemented without C++\n");
+    fprintf(stderr, "ERROR:ffilesystem:is_reserved: not implemented without C++: %s\n", path);
 
   return false;
 }
@@ -150,12 +149,7 @@ uintmax_t fs_file_size(const char* path)
 
 uintmax_t fs_space_available(const char* path)
 {
-#ifdef _WIN32
-  (void) path;
-  fprintf(stderr, "ERROR:ffilesystem:space_available: not implemented for non-C++\n");
-  return 0;
-#else
-  // sanity check
+
   if(!fs_exists(path))
     return 0;
 
@@ -170,6 +164,12 @@ uintmax_t fs_space_available(const char* path)
     free(r);
     return 0;
   }
+
+#ifdef _WIN32
+  fprintf(stderr, "ERROR:ffilesystem:space_available: not implemented for non-C++: %s\n", path);
+  free(r);
+  return 0;
+#else
 
   struct statvfs stat;
 
@@ -200,12 +200,12 @@ size_t fs_get_permissions(const char* path, char* result, size_t buffer_size)
     return 0;
   }
 
+  result[9] = '\0';
+
 #ifdef _MSC_VER
-  (void) result;
   fprintf(stderr, "ERROR:ffilesystem:fs_get_permissions: not implemented for non-C++\n");
   return 0;
 #else
-  result[9] = '\0';
   result[0] = (s.st_mode & S_IRUSR) ? 'r' : '-';
   result[1] = (s.st_mode & S_IWUSR) ? 'w' : '-';
   result[2] = (s.st_mode & S_IXUSR) ? 'x' : '-';
