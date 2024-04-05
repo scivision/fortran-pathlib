@@ -26,11 +26,8 @@ bool fs_exists(const char* path)
 
 bool Ffs::exists(std::string_view path)
 {
-  // fs
   std::error_code ec;
-  auto s = std::filesystem::status(path, ec);
-
-  return !ec && std::filesystem::exists(s);
+  return std::filesystem::exists(path, ec) && !ec;
 }
 
 
@@ -43,8 +40,7 @@ bool fs_is_char_device(const char* path)
 bool Ffs::is_char_device(std::string_view path)
 {
   std::error_code ec;
-  auto s = std::filesystem::status(path, ec);
-  return !ec && std::filesystem::is_character_file(s);
+  return std::filesystem::is_character_file(path, ec) && !ec;
 }
 
 
@@ -61,8 +57,7 @@ bool Ffs::is_dir(std::string_view path)
     return true;
 
   std::error_code ec;
-  auto s = std::filesystem::status(p, ec);
-  return !ec && std::filesystem::is_directory(s);
+  return std::filesystem::is_directory(p, ec) && !ec;
 }
 
 
@@ -80,10 +75,9 @@ bool Ffs::is_exe(std::string_view path)
   if(ec || !std::filesystem::is_regular_file(s) || Ffs::is_reserved(path))
     return false;
 
-if(fs_is_mingw()){
   // Windows MinGW bug with executable bit
-  return Ffs::is_readable(path);
-}
+  if(fs_is_mingw())
+    return Ffs::is_readable(path);
 
 #if defined(__cpp_using_enum)
   using enum std::filesystem::perms;
@@ -94,8 +88,7 @@ if(fs_is_mingw()){
   std::filesystem::perms owner_exec = std::filesystem::perms::owner_exec;
 #endif
 
-  auto i = s.permissions() & (owner_exec | group_exec | others_exec);
-  return i != none;
+  return (s.permissions() & (owner_exec | group_exec | others_exec)) != none;
 }
 
 
@@ -120,8 +113,7 @@ bool Ffs::is_readable(std::string_view path)
   std::filesystem::perms others_read = std::filesystem::perms::others_read;
 #endif
 
-  auto i = s.permissions() & (owner_read | group_read | others_read);
-  return i != none;
+  return (s.permissions() & (owner_read | group_read | others_read)) != none;
 }
 
 
@@ -146,8 +138,7 @@ bool Ffs::is_writable(std::string_view path)
   std::filesystem::perms none = std::filesystem::perms::none;
 #endif
 
-  auto i = s.permissions() & (owner_write | group_write | others_write);
-  return i != none;
+  return (s.permissions() & (owner_write | group_write | others_write)) != none;
 }
 
 
@@ -159,10 +150,8 @@ bool fs_is_file(const char* path)
 bool Ffs::is_file(std::string_view path)
 {
   std::error_code ec;
-  auto s = std::filesystem::status(path, ec);
-
   // disqualify reserved names
-  return !ec && (std::filesystem::is_regular_file(s) && !Ffs::is_reserved(path));
+  return std::filesystem::is_regular_file(path, ec) && !ec && !Ffs::is_reserved(path);
 }
 
 
