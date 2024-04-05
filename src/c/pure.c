@@ -52,11 +52,9 @@ void fs_as_posix(char* path)
   if(!fs_is_windows())
     return;
 
-  char s = '\\';
-  char *p = strchr(path, s);
-  while (p) {
-    *p = '/';
-    p = strchr(p+1, s);
+  for (char* p = path; *p != '\0'; p++) {
+    if (*p == '\\')
+      *p = '/';
   }
 }
 
