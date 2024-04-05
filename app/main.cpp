@@ -154,12 +154,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
 #endif
   } else if (fun == "chdir" || fun == "set_cwd") {
     std::cout << "cwd: " << Ffs::get_cwd() << "\n";
-    try {
-      Ffs::chdir(a1);
-      std::cout << "new cwd: " << Ffs::get_cwd() << "\n";
-    } catch (std::filesystem::filesystem_error& e){
-      std::cerr << e.what() << "\n";
-    }
+    Ffs::chdir(a1);
+    std::cout << "new cwd: " << Ffs::get_cwd() << "\n";
   } else if (fun == "ls") {
     for (auto const& dir_entry : std::filesystem::directory_iterator{Ffs::expanduser(a1)}){
       std::filesystem::path p = dir_entry.path();

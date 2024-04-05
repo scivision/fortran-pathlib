@@ -229,13 +229,11 @@ uintmax_t fs_file_size(const char* path)
 uintmax_t Ffs::file_size(std::string_view path)
 {
   std::error_code ec;
-  auto s = std::filesystem::file_size(path, ec);
-  if(ec) FFS_UNLIKELY
-  {
-    std::cerr << "ERROR:ffilesystem:file_size: " << ec.message() << "\n";
-    return 0;
-  }
-  return s;
+  if(auto s = std::filesystem::file_size(path, ec); !ec)  FFS_LIKELY
+    return s;
+
+  std::cerr << "ERROR:ffilesystem:file_size: " << ec.message() << "\n";
+  return 0;
 }
 
 
@@ -249,13 +247,11 @@ uintmax_t Ffs::space_available(std::string_view path)
   // filesystem space available for device holding path
 
   std::error_code ec;
-  auto s = std::filesystem::space(path, ec);
-  if(ec) FFS_UNLIKELY
-  {
-    std::cerr << "ERROR:ffilesystem:space_available: " << ec.message() << "\n";
-    return 0;
-  }
-  return s.available;
+  if(auto s = std::filesystem::space(path, ec); !ec)  FFS_LIKELY
+    return s.available;
+
+  std::cerr << "ERROR:ffilesystem:space_available: " << ec.message() << "\n";
+  return 0;
 }
 
 

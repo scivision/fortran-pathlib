@@ -91,7 +91,7 @@ public:
   static bool set_env(std::string_view, std::string_view);
 
   static bool mkdir(std::string_view);
-  static void chdir(std::string_view);
+  static bool chdir(std::string_view);
 
   static bool equivalent(std::string_view, std::string_view);
 

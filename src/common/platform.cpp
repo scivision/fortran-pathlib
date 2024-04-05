@@ -136,13 +136,11 @@ size_t fs_get_tempdir(char* path, size_t buffer_size)
 std::string Ffs::get_tempdir()
 {
   std::error_code ec;
-  auto p = std::filesystem::temp_directory_path(ec);
-  if(ec) FFS_UNLIKELY
-  {
-    std::cerr << "ERROR:ffilesystem:get_tempdir: " << ec.message() << "\n";
-    return {};
-  }
-  return p.generic_string();
+  if(auto p = std::filesystem::temp_directory_path(ec); !ec) FFS_LIKELY
+    return p.generic_string();
+
+  std::cerr << "ERROR:ffilesystem:get_tempdir: " << ec.message() << "\n";
+  return {};
 }
 
 
@@ -154,30 +152,27 @@ size_t fs_get_cwd(char* path, size_t buffer_size)
 std::string Ffs::get_cwd()
 {
   std::error_code ec;
+  if(auto s = std::filesystem::current_path(ec); !ec) FFS_LIKELY
+    return s.generic_string();
 
-  auto s = std::filesystem::current_path(ec);
-  if (ec) FFS_UNLIKELY
-    return {};
-
-  return s.generic_string();
+  std::cerr << "ERROR:ffilesystem:get_cwd: " << ec.message() << "\n";
+  return {};
 }
 
 
 bool fs_set_cwd(const char *path)
 {
-  try{
-    std::filesystem::current_path(path);
-    return true;
-  } catch (std::filesystem::filesystem_error& e) {
-    std::cerr << "ERROR:ffilesystem:set_cwd: " << e.what() << "\n";
-    return false;
-  }
-
+  return Ffs::chdir(path);
 }
 
-void Ffs::chdir(std::string_view path)
+bool Ffs::chdir(std::string_view path)
 {
-  std::filesystem::current_path(path);
+  std::error_code ec;
+  if(std::filesystem::current_path(path, ec); !ec) FFS_LIKELY
+    return true;
+
+  std::cerr << "ERROR:ffilesystem:chdir: " << ec.message() << "\n";
+  return false;
 }
 
 

@@ -44,26 +44,18 @@ size_t fs_read_symlink(const char* path, char* result, size_t buffer_size)
 std::string Ffs::read_symlink(std::string_view path)
 {
   std::error_code ec;
-  auto p = std::filesystem::read_symlink(path, ec);
-  if(ec) FFS_UNLIKELY
-  {
-    std::cerr << "ERROR:ffilesystem:read_symlink: " << ec.message() << "\n";
-    return {};
-  }
+  if(auto p = std::filesystem::read_symlink(path, ec); !ec) FFS_LIKELY
+    return p.generic_string();
 
-  return p.generic_string();
   // std::filesystem::canonical fallback not helpful here
+  std::cerr << "ERROR:ffilesystem:read_symlink: " << ec.message() << "\n";
+  return {};
 }
 
 
 bool fs_create_symlink(const char* target, const char* link)
 {
-  try{
-    return Ffs::create_symlink(std::string_view(target), std::string_view(link));
-  } catch(std::filesystem::filesystem_error& e){
-    std::cerr << "ERROR:ffilesystem:create_symlink: " << e.what() << "\n";
-    return false;
-  }
+  return Ffs::create_symlink(std::string_view(target), std::string_view(link));
 }
 
 bool Ffs::create_symlink(std::string_view target, std::string_view link)
@@ -81,8 +73,6 @@ bool Ffs::create_symlink(std::string_view target, std::string_view link)
     return false;
   }
 
-  auto s = std::filesystem::status(target);
-
 #ifdef WIN32_SYMLINK
 // https://gcc.gnu.org/onlinedocs/libstdc++/manual/status.html#iso.2017.specific
 // 30.10.2.1 [fs.conform.9945] The behavior of the filesystem library implementation
@@ -92,7 +82,7 @@ bool Ffs::create_symlink(std::string_view target, std::string_view link)
 
   DWORD p = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
 
-  if(std::filesystem::is_directory(s))
+  if(Ffs::is_dir(target))
     p |= SYMBOLIC_LINK_FLAG_DIRECTORY;
 
   if (CreateSymbolicLinkA(link.data(), target.data(), p)) FFS_LIKELY
@@ -106,10 +96,12 @@ bool Ffs::create_symlink(std::string_view target, std::string_view link)
   std::cerr << msg << ": " << link << " => " << target << "\n";
   return false;
 #else
-  std::filesystem::is_directory(s)
-    ? std::filesystem::create_directory_symlink(target, link)
-    : std::filesystem::create_symlink(target, link);
+  std::error_code ec;
 
-  return true;
+  Ffs::is_dir(target)
+    ? std::filesystem::create_directory_symlink(target, link, ec)
+    : std::filesystem::create_symlink(target, link, ec);
+
+  return !ec;
 #endif
 }
