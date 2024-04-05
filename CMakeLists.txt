@@ -126,6 +126,9 @@ target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${${PROJECT_NAME}_HAVE_CLOCK_CAST}>>:HAVE_CLOCK_CAST>"
 "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${ffilesystem_trace}>>:FS_TRACE=1>"
 )
+target_compile_options(ffilesystem PRIVATE
+"$<$<AND:$<COMPILE_LANG_AND_ID:C,AppleClang,Clang,GNU>,$<NOT:$<BOOL:${c23_maybe_unused}>>>:-Wno-unused-parameter>"
+)
 set_target_properties(ffilesystem PROPERTIES
 PUBLIC_HEADER include/ffilesystem.h
 EXPORT_NAME filesystem

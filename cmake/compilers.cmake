@@ -1,6 +1,7 @@
 include(CheckIncludeFile)
 include(CheckSymbolExists)
 include(CheckCXXSymbolExists)
+include(CheckCSourceCompiles)
 include(CheckCXXSourceCompiles)
 
 include(${CMAKE_CURRENT_LIST_DIR}/CppCheck.cmake)
@@ -32,7 +33,16 @@ elseif(WIN32)
 else()
   unset(HAVE_CXX_FILESYSTEM CACHE)
 
+  check_symbol_exists(__has_include "" c23_has_include)
   check_symbol_exists(__has_c_attribute "" c23_has_c_attribute)
+  if(c23_has_c_attribute)
+    check_c_source_compiles("
+    #if !__has_c_attribute(maybe_unused)
+    #error \"no maybe_unused\"
+    #endif
+    int main(void) { return 0; }"
+    c23_maybe_unused)
+  endif()
 endif()
 
 # --- deeper filesystem check: C, C++ and Fortran compiler ABI compatibility

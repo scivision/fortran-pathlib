@@ -9,7 +9,7 @@
 #ifdef __cplusplus
 
 // GCC itself does it this way https://github.com/gcc-mirror/gcc/blob/78b56a12dd028b9b4051422c6bad6260055e4465/libcpp/system.h#L426
-#if defined(__has_cpp_attribute) && __has_cpp_attribute(unlikely)
+#if __has_cpp_attribute(unlikely)
 #define FFS_UNLIKELY [[unlikely]]
 #define FFS_LIKELY [[likely]]
 #endif
@@ -123,8 +123,11 @@ extern "C" {
 
 #else
 
-#if defined(__has_c_attribute) && __has_c_attribute(maybe_unused)
+#if defined(__has_c_attribute)
+// not on same line for GCC < 11
+#if __has_c_attribute(maybe_unused)
 #define FFS_MUNUSED_C [[maybe_unused]]
+#endif
 #endif
 #ifndef FFS_MUNUSED_C
 #define FFS_MUNUSED_C
