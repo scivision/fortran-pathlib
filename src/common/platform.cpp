@@ -184,9 +184,9 @@ size_t fs_get_homedir(char* path, size_t buffer_size)
 std::string Ffs::get_homedir()
 {
   // must be std::string to avoid dangling pointer -- GCC doesn't detect this but Clang does.
-  std::string homedir = Ffs::get_env(fs_is_windows() ? "USERPROFILE" : "HOME");
-  if(!homedir.empty()) FFS_LIKELY
-    return Ffs::as_posix(homedir);
+
+  if(std::string h = Ffs::get_env(fs_is_windows() ? "USERPROFILE" : "HOME"); !h.empty()) FFS_LIKELY
+    return Ffs::as_posix(h);
 
 #ifdef _WIN32
   // works on MSYS2, MSVC, oneAPI.
@@ -194,26 +194,21 @@ std::string Ffs::get_homedir()
   auto buf = std::make_unique<char[]>(L);
   // process with query permission
   HANDLE hToken = nullptr;
-  if(!OpenProcessToken( GetCurrentProcess(), TOKEN_QUERY, &hToken)) FFS_UNLIKELY
-  {
-		CloseHandle(hToken);
-    return {};
-  }
+  bool ok = OpenProcessToken( GetCurrentProcess(), TOKEN_QUERY, &hToken) != 0 &&
+            GetUserProfileDirectoryA(hToken, buf.get(), &L);
 
-  bool ok = GetUserProfileDirectoryA(hToken, buf.get(), &L);
   CloseHandle(hToken);
-  if (!ok) FFS_UNLIKELY
-    return {};
 
-  homedir = std::string(buf.get());
+  if (ok) FFS_LIKELY
+    return Ffs::as_posix(buf.get());
 #else
   const char *h = getpwuid(geteuid())->pw_dir;
-  if (!h) FFS_UNLIKELY
-    return {};
-  homedir = std::string(h);
+  if (h) FFS_LIKELY
+    return std::string(h);
 #endif
 
-  return Ffs::as_posix(homedir);
+  std::cerr << "ERROR:ffilesystem:homedir: could not get home directory\n";
+  return {};
 }
 
 
@@ -246,13 +241,9 @@ std::string Ffs::expanduser(std::string_view path)
 
   std::string h = Ffs::get_homedir();
   if (h.empty()) FFS_UNLIKELY
-  {
-    std::cerr << "ERROR:ffilesystem:expanduser: could not get home directory\n";
     return {};
-  }
 
   std::string p = fs_drop_slash(path);
-
   if (p.length() < 3)
     return h;
 
