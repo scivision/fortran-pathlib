@@ -77,14 +77,7 @@ bool Ffs::equivalent(std::string_view path1, std::string_view path2)
 {
   // non-existant paths are not equivalent
   std::error_code ec;
-  bool b = std::filesystem::equivalent(Ffs::expanduser(path1), Ffs::expanduser(path2), ec);
-  if (ec) FFS_UNLIKELY
-  {
-    std::cerr << "ERROR:ffilesystem:equivalent: " << ec.message() << "\n";
-    return false;
-  }
-
-  return b;
+  return std::filesystem::equivalent(Ffs::expanduser(path1), Ffs::expanduser(path2), ec) && !ec;
 }
 
 
@@ -108,13 +101,11 @@ std::string Ffs::relative_to(std::string_view base, std::string_view other)
     return {};
 
   std::error_code ec;
-  auto r = std::filesystem::relative(otherp, basep, ec);
-  if(ec) FFS_UNLIKELY
-  {
-    std::cerr << "ERROR:ffilesystem:relative_to: " << ec.message() << "\n";
-    return {};
-  }
-  return r.generic_string();
+  if (auto r = std::filesystem::relative(otherp, basep, ec); !ec) FFS_LIKELY
+    return r.generic_string();
+
+  std::cerr << "ERROR:ffilesystem:relative_to: " << ec.message() << "\n";
+  return {};
 }
 
 
@@ -142,13 +133,11 @@ std::string Ffs::proximate_to(std::string_view base, std::string_view other)
     return otherp.generic_string();
 
   std::error_code ec;
-  auto r = std::filesystem::proximate(otherp, basep, ec);
-  if(ec) FFS_UNLIKELY
-  {
-    std::cerr << "ERROR:ffilesystem:proximate_to: " << ec.message() << "\n";
-    return {};
-  }
-  return r.generic_string();
+  if(auto r = std::filesystem::proximate(otherp, basep, ec); !ec) FFS_LIKELY
+    return r.generic_string();
+
+  std::cerr << "ERROR:ffilesystem:proximate_to: " << ec.message() << "\n";
+  return {};
 }
 
 
@@ -207,7 +196,6 @@ bool fs_is_subdir(const char* subdir, const char* dir)
 
 bool Ffs::is_subdir(std::string_view subdir, std::string_view dir)
 {
-
   auto r = std::filesystem::relative(subdir, dir);
 
   return !r.empty() && r.native().front() != '.';
@@ -227,7 +215,5 @@ std::string Ffs::make_absolute(std::string_view path, std::string_view base)
   if (Ffs::is_absolute(out))
     return out;
 
-  std::string buf = Ffs::expanduser(base);
-
-  return Ffs::join(buf, out);
+  return Ffs::join(Ffs::expanduser(base), out);
 }
