@@ -67,17 +67,15 @@ bool fs_is_dir(const char* path)
 
 bool fs_is_exe(const char* path)
 {
-  if (!fs_is_file(path))
-    return false;
-
+  return (fs_is_file(path) &&
 #ifdef _WIN32
-  /* https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/access-s-waccess-s
-   in Windows, all readable files are executable.
-   Do not use _S_IEXEC, it is not reliable. */
-  return fs_is_readable(path);
+  // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/access-s-waccess-s
+  // in Windows, all readable files are executable. Do not use _S_IEXEC, it is not reliable.
+  fs_is_readable(path)
 #else
-  return !access(path, X_OK);
+  !access(path, X_OK)
 #endif
+  );
 }
 
 
@@ -128,22 +126,14 @@ bool fs_is_reserved(const char* path)
 time_t fs_get_modtime(const char* path)
 {
   struct stat s;
-
-  if (!stat(path, &s))
-    return s.st_mtime;
-
-  return 0;
+  return stat(path, &s) ? 0 : s.st_mtime;
 }
 
 
 uintmax_t fs_file_size(const char* path)
 {
   struct stat s;
-
-  if (fs_is_file(path) && !stat(path, &s))
-    return s.st_size;
-
-  return 0;
+  return (fs_is_file(path) && !stat(path, &s)) ? s.st_size : 0;
 }
 
 
@@ -195,12 +185,12 @@ size_t fs_get_permissions(const char* path, char* result, size_t buffer_size)
 
   struct stat s;
 
+  result[9] = '\0';
+
   if (stat(path, &s) != 0){
     fprintf(stderr, "ERROR:ffilesystem:fs_get_permissions: %s => %s\n", path, strerror(errno));
     return 0;
   }
-
-  result[9] = '\0';
 
 #ifdef _MSC_VER
   fprintf(stderr, "ERROR:ffilesystem:fs_get_permissions: not implemented for non-C++\n");

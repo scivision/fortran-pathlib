@@ -191,19 +191,14 @@ bool Ffs::is_reserved(std::string_view path)
 std::time_t fs_get_modtime(const char* path)
 {
 
-  std::time_t t_int = 0;
-
 #ifdef HAVE_CLOCK_CAST
   auto t_fs = Ffs::get_modtime(std::string_view(path));
   auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs);
-  t_int = std::chrono::system_clock::to_time_t(t_sys);
+  return std::chrono::system_clock::to_time_t(t_sys);
 #else
   struct stat s;
-  if (!stat(path, &s))
-    return s.st_mtime;
+  return stat(path, &s) ? 0 : s.st_mtime;
 #endif
-
-  return t_int;
 }
 
 std::filesystem::file_time_type Ffs::get_modtime(std::string_view path)
