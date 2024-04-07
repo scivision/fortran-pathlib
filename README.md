@@ -19,10 +19,9 @@ Fortran uses **Fortran 2008 standard** and either the C or C++ Ffilesystem backe
 
 For full features, Ffilesystem uses
 [C++ stdlib filesystem](https://en.cppreference.com/w/cpp/filesystem).
-For the less common case that a compatible C++ isn't available on Unix-like systems, FFilesystem downloads and uses
+If a compatible C++ compiler isn't available, Ffilesystem downloads and uses
 [CWalk](https://github.com/likle/cwalk)
 and C runtime library.
-However, Windows systems *require* the C++ stdlib filesystem with a working C++ compiler.
 
 Inspired by (and benchmarked against)
 [Python pathlib](https://docs.python.org/3/library/pathlib.html).

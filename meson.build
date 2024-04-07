@@ -1,6 +1,6 @@
 project('ffilesystem', ['c', 'cpp'],
 version: '5.6.0',
-default_options: ['cpp_std=c++20'],
+default_options: ['cpp_std=c++20', 'buildtype=release'],
 meson_version : '>=1.3.0')
 
 fortran = get_option('fortran')
@@ -12,6 +12,7 @@ fsrcs = fortran ? files('src/common/fortran/filesystem.f90') : []
 csrcs = files('src/common/common.c')
 cppsrcs = files(
 'src/common/filesystem.cpp',
+'src/common/c_ifc.cpp',
 'src/common/dynamic.cpp',
 'src/common/inquire.cpp',
 'src/common/pure.cpp',
@@ -58,11 +59,18 @@ else
   chrono_def = []
 endif
 
-filesystem = library('filessystem',
+is_windows = host_machine.system() == 'windows'
+
+if is_windows
+  libwin = cpp.find_library('Userenv', required: true)
+endif
+
+filesystem = library('filesystem',
 sources: [fsrcs, csrcs, cppsrcs],
 include_directories: inc,
 install: true,
 cpp_args: chrono_def,
+dependencies: libwin,
 )
 
 executable('fs_cli', sources: 'app/main.cpp', link_with: filesystem,
@@ -76,15 +84,7 @@ executable('filesystem_cli',
 endif
 
 if not meson.is_subproject()
-  foreach t : ['core', 'expanduser', 'permissions']
-    tec = executable(t + '_cpp', 'test/' + t + '/test_' + t + '.cpp', link_with: filesystem, include_directories: inc)
-    test(t + '_cpp', tec, suite: 'cpp')
+  foreach d : ['core', 'environment', 'expanduser', 'fortran', 'permissions', 'relative']
+    subdir('test/' + d)
   endforeach
-
-  if fortran
-    foreach t : ['core', 'expanduser', 'mkdtemp', 'permissions']
-    tef = executable(t + '_fortran', 'test/' + t + '/test_' + t + '.f90', link_with: filesystem)
-    test(t + '_fortran', tef, suite: 'fortran')
-    endforeach
-  endif
 endif

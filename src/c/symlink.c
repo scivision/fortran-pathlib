@@ -34,8 +34,10 @@ bool fs_is_symlink(const char* path)
 
 size_t fs_read_symlink(const char* path, FFS_MUNUSED_C char* result, FFS_MUNUSED_C size_t buffer_size)
 {
-
+  // target of symlink may or may not exist
 #ifdef _WIN32
+  // does not work for MinGW, oneAPI Windows, ...
+  // fs_canonical(path, false, result, buffer_size) just returns the unresolved symlink as in C++
   fprintf(stderr, "ERROR:Ffilesystem:read_symlink: not implemented for non-C++: %s\n", path);
   return 0;
 #else
@@ -57,7 +59,7 @@ size_t fs_read_symlink(const char* path, FFS_MUNUSED_C char* result, FFS_MUNUSED
 }
 
 
-bool fs_create_symlink(const char* target, FFS_MUNUSED_C const char* link)
+bool fs_create_symlink(const char* target, const char* link)
 {
 
   // necessary to avoid logic problems on macOS
@@ -67,8 +69,12 @@ bool fs_create_symlink(const char* target, FFS_MUNUSED_C const char* link)
   }
 
 #ifdef _WIN32
-  fprintf(stderr, "ERROR:ffilesystem:create_symlink: not implemented for non-C++\n");
-  return false;
+  DWORD p = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
+
+  if(fs_is_dir(target))
+    p |= SYMBOLIC_LINK_FLAG_DIRECTORY;
+
+  return CreateSymbolicLinkA(link, target, p);
 #else
   return symlink(target, link) == 0;
 #endif

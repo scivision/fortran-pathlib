@@ -28,8 +28,6 @@ endif()
 
 if(ffilesystem_cpp)
   cpp_check()
-elseif(WIN32)
-  message(WARNING "Windows without C++ is not supported, for internal development only. Some functions are not implemented.")
 else()
   unset(HAVE_CXX_FILESYSTEM CACHE)
 
@@ -42,6 +40,30 @@ else()
     #endif
     int main(void) { return 0; }"
     c23_maybe_unused)
+
+    check_c_source_compiles("
+    #if !__has_c_attribute(nodiscard)
+    #error \"no nodiscard\"
+    #endif
+    int main(void) { return 0; }"
+    c23_nodiscard)
+
+    # [[reproducible]] [[unsequenced]] support by compilers:
+    # https://en.cppreference.com/w/c/compiler_support/23
+
+    # check_c_source_compiles("
+    # #if !__has_c_attribute(reproducible)
+    # #error \"no reproducible\"
+    # #endif
+    # int main(void) { return 0; }"
+    # c23_reproducible)
+
+    # check_c_source_compiles("
+    # #if !__has_c_attribute(unsequenced)
+    # #error \"no unsequenced\"
+    # #endif
+    # int main(void) { return 0; }"
+    # c23_unsequenced)
   endif()
 endif()
 

@@ -168,36 +168,6 @@ bool fs_equivalent(const char* path1, const char* path2)
 }
 
 
-size_t fs_relative_to(const char* base, const char* other, char* result, size_t buffer_size)
-{
-  if((strlen(base) == 0) || (strlen(other) == 0))
-    return 0;
-
-  /* cannot be relative, avoid bugs with MacOS */
-  if(fs_is_absolute(base) != fs_is_absolute(other))
-    return 0;
-
-  // need this or separators are not handled correctly
-  cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
-
-  size_t L = cwk_path_get_relative(base, other, result, buffer_size);
-
-  if(L)
-    fs_as_posix(result);
-
-  return L;
-}
-
-
-size_t fs_proximate_to(const char* base, const char* other,
-  FFS_MUNUSED_C char* result,
-  FFS_MUNUSED_C size_t buffer_size)
-{
-  fprintf(stderr, "ERROR:ffilesystem:proximate_to: not implemented for non-C++: %s %s\n", base, other);
-  return 0;
-}
-
-
 size_t fs_which(const char* name, char* result, size_t buffer_size)
 {
 
@@ -234,24 +204,6 @@ size_t fs_which(const char* name, char* result, size_t buffer_size)
 
   free(buf);
   return 0;
-}
-
-
-bool fs_is_subdir(const char* subdir, const char* dir)
-{
-  // is subdir a subdirectory of dir
-  const size_t m = fs_get_max_path();
-
-  char* buf = (char*) malloc(m);
-  if(!buf) return false;
-
-  size_t L = fs_relative_to(dir, subdir, buf, m);
-  bool yes = L > 0 && buf[0] != '.';
-
-  free(buf);
-
-  return yes;
-
 }
 
 

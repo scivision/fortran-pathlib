@@ -21,4 +21,6 @@ endif()
 
 get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
 
-set_property(TEST ${test_names} PROPERTY SKIP_RETURN_CODE 77)
+set_tests_properties(${test_names} PROPERTIES
+SKIP_RETURN_CODE 77
+)

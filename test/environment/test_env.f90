@@ -52,8 +52,9 @@ endif
 
 h = get_homedir()
 
-if (len_trim(h) == 0) error stop "get_homedir failed: zero length result. This can happen on to CI due to getpwuid() restrictions."
-print '(a)', "get_homedir: " // h
+if(.not. is_dir(h)) error stop "get_homedir failed: not a directory: " // h
+
+print '(a)', "OK: get_homedir: " // h
 
 end subroutine
 

@@ -10,20 +10,14 @@
 #include <ranges>
 #endif
 
-#include <cstring> // std::strlen
 #include <cstddef> // size_t
 
 
-bool fs_cpp()
-{
-// tell if fs core is C or C++
-  return true;
-}
+// tell if Ffilesystme core is C or C++
+bool fs_cpp(){ return true; }
 
-long fs_lang()
-{
-  return __cplusplus;
-}
+// C++ version compiler claims to support with given options
+long fs_lang(){ return __cplusplus; }
 
 
 size_t fs_str2char(std::string_view s, char* result, size_t buffer_size)
@@ -56,76 +50,44 @@ std::string fs_drop_slash(std::string_view sv)
 void fs_as_posix(char* path)
 {
   std::string p = Ffs::as_posix(std::string_view(path));
-  fs_str2char(p, path, std::strlen(path)+1);
+  fs_str2char(p, path, p.length()+1);
 }
 
-std::string Ffs::as_posix(std::string_view path)
-{
+std::string Ffs::as_posix(std::string_view path){
   // force posix file separator on Windows
   return std::filesystem::path(path).generic_string();
 }
 
 
-std::string Ffs::lexically_normal(std::string_view path)
-{
+std::string Ffs::lexically_normal(std::string_view path){
   return std::filesystem::path(path).lexically_normal().generic_string();
 }
 
 
-std::string Ffs::make_preferred(std::string_view path)
-{
+std::string Ffs::make_preferred(std::string_view path){
   return std::filesystem::path(path).make_preferred().generic_string();
 }
 
 
-size_t fs_normal(const char* path, char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::normal(std::string_view(path)), result, buffer_size);
-}
-
-std::string Ffs::normal(std::string_view path)
-{
+std::string Ffs::normal(std::string_view path){
   return fs_drop_slash(std::filesystem::path(path).lexically_normal().generic_string());
 }
 
 
-size_t fs_file_name(const char* path, char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::file_name(std::string_view(path)), result, buffer_size);
-}
-
-std::string Ffs::file_name(std::string_view path)
-{
+std::string Ffs::file_name(std::string_view path){
   return std::filesystem::path(path).filename().generic_string();
 }
 
 
-size_t fs_stem(const char* path, char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::stem(std::string_view(path)), result, buffer_size);
-}
-
-std::string Ffs::stem(std::string_view path)
-{
+std::string Ffs::stem(std::string_view path){
   return std::filesystem::path(path).filename().stem().generic_string();
 }
 
 
-size_t fs_join(const char* path, const char* other, char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::join(std::string_view(path), std::string_view(other)), result, buffer_size);
-}
-
-std::string Ffs::join(std::string_view path, std::string_view other)
-{
+std::string Ffs::join(std::string_view path, std::string_view other){
   return fs_drop_slash((std::filesystem::path(path) / other).lexically_normal().generic_string());
 }
 
-
-size_t fs_parent(const char* path, char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::parent(std::string_view(path)), result, buffer_size);
-}
 
 std::string Ffs::parent(std::string_view path)
 {
@@ -142,7 +104,7 @@ std::string Ffs::parent(std::string_view path)
 
   // handle "/" and other no parent cases
   if (p.empty()){
-    if (path.front() == '/')
+    if (!path.empty() && path.front() == '/')
       return "/";
     else
       return ".";
@@ -152,50 +114,24 @@ std::string Ffs::parent(std::string_view path)
 }
 
 
-size_t fs_suffix(const char* path, char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::suffix(std::string_view(path)), result, buffer_size);
-}
-
-std::string Ffs::suffix(std::string_view path)
-{
+std::string Ffs::suffix(std::string_view path){
   return std::filesystem::path(path).filename().extension().generic_string();
 }
 
 
-size_t fs_with_suffix(const char* path, const char* new_suffix,
-                      char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::with_suffix(std::string_view(path), std::string_view(new_suffix)), result, buffer_size);
-}
-
-std::string Ffs::with_suffix(std::string_view path, std::string_view new_suffix)
-{
+std::string Ffs::with_suffix(std::string_view path, std::string_view new_suffix){
   return std::filesystem::path(path).replace_extension(new_suffix).generic_string();
 }
 
 
-size_t fs_root(const char* path, char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::root(std::string_view(path)), result, buffer_size);
-}
-
-std::string Ffs::root(std::string_view path)
-{
+std::string Ffs::root(std::string_view path){
   return std::filesystem::path(path).root_path().generic_string();
 }
 
 
-bool fs_is_absolute(const char* path)
-{
-  return Ffs::is_absolute(std::string_view(path));
-}
-
-bool Ffs::is_absolute(std::string_view path)
-{
+bool Ffs::is_absolute(std::string_view path){
   return std::filesystem::path(path).is_absolute();
 }
-
 
 
 static bool fs_is_safe_char(const char c)
@@ -211,11 +147,6 @@ static bool fs_is_safe_char(const char c)
 
 }
 
-
-bool fs_is_safe_name(const char* filename)
-{
-  return Ffs::is_safe_name(std::string_view(filename));
-}
 
 bool Ffs::is_safe_name(std::string_view filename)
 {
@@ -235,4 +166,24 @@ bool Ffs::is_safe_name(std::string_view filename)
 #else
   return std::all_of(filename.begin(), filename.end(), fs_is_safe_char);
 #endif
+}
+
+
+// relative_to is LEXICAL operation
+std::string Ffs::relative_to(std::string_view base, std::string_view other){
+  return std::filesystem::path(other).lexically_relative(base).lexically_normal().generic_string();
+}
+
+
+// proximate_to is LEXICAL operation
+std::string Ffs::proximate_to(std::string_view base, std::string_view other){
+  return std::filesystem::path(other).lexically_proximate(base).lexically_normal().generic_string();
+}
+
+
+bool Ffs::is_subdir(std::string_view subdir, std::string_view dir)
+{
+  auto r = Ffs::relative_to(dir, subdir);
+
+  return !r.empty() && r.front() != '.';
 }

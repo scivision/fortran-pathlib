@@ -11,7 +11,6 @@ set_property(TARGET test_${t}_fortran PROPERTY LINKER_LANGUAGE Fortran)
 add_test(NAME Fortran_${t} COMMAND test_${t}_fortran)
 set_tests_properties(Fortran_${t} PROPERTIES
 LABELS Fortran
-SKIP_REGULAR_EXPRESSION "not implemented"
 )
 
 endforeach()

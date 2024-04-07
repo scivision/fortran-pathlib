@@ -6,33 +6,39 @@ use, intrinsic :: iso_fortran_env, only : stderr=>error_unit
 
 implicit none
 
-integer, parameter :: L = 21, N = 14+6
+integer, parameter :: L = 21, N = 14
 
 character(L) :: in1(N) = [character(L) :: "", "",  "/", "/", "Hello", "Hello",  "/dev/null", "/a/b", &
-    "/a/b", "/a/b", "/a/b/c/d", "./this/one", "/this/one", "/path/same", &
-    "c:\a\b", "x", "c:/a/b", "c:/a/b", "c:\a/b\c/d", "c:/path"]
+    "/a/b", "/a/b", "/a/b/c/d", "./this/one", "/this/one", "/path/same"]
 character(L) :: in2(N) = [character(L) :: "", "/", "",  "/", "Hello", "Hello/", "/dev/null", "c", &
-    "/a/b", "/a",   "/a/b",     "./this/two", "/this/two", "/path/same/hi/..", &
-    "x",      "c:/a/b", "c:/a/b", "c:/a", "c:/a\b",   "x:/path"]
-character(L) :: ref(N) = [character(L) :: "", "/",  "",  ".", ".",     ".",      ".",        "c", &
-    ".",    "..",   "../..",    "../two",     "../two", ".", &
-    "x",      "c:/a/b",       ".",      "..",   "../..", "x:/path"]
+    "/a/b", "/a",   "/a/b",     "./this/two", "/this/two", "/path/same/hi/.."]
+character(L) :: ref(N) = [character(L) :: ".", "/",  "",  ".", ".",     ".",      ".",        "c", &
+    ".",    "..",   "../..",    "../two",     "../two", "."]
 
-integer :: i, j, k
+integer, parameter :: Nw = 9
+
+character(L) :: in1w(Nw) = [character(L) :: "", "Hello", "Hello", &
+"c:\a\b", "x", "c:/a/b", "c:/a/b", "c:\a/b\c/d", "c:/path"]
+character(L) :: in2w(Nw) = [character(L) :: "", "Hello", "Hello/", &
+"x",      "c:/a/b", "c:/a/b", "c:/a", "c:/a\b",  "x:/path"]
+character(L) :: refw(Nw) = [character(L) :: ".", ".",     ".", &
+"x",      "c:/a/b", ".",      "..",   "../..",   "x:/path"]
+
+integer :: i, j
 
 i = 0
 
-k = 14
-if(is_windows()) k = N
-
-do j = 1, k
+if(is_windows()) then
+  do j = 1, Nw
+    i = i + check(in1w(j), in2w(j), refw(j))
+  end do
+else
+  do j = 1, N
     i = i + check(in1(j), in2(j), ref(j))
-end do
+  end do
 
-if(.not. is_windows()) then
   i = i + check("c", "/a/b", "/a/b")
 endif
-
 
 if(i /= 0) error stop "FAIL: proximate_to()"
 

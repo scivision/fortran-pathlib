@@ -2,16 +2,21 @@
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif
+#ifndef _CRT_NONSTDC_NO_WARNINGS
+#define _CRT_NONSTDC_NO_WARNINGS
+#endif
 #endif
 
 #include "ffilesystem.h"
 
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h> // toupper
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <io.h> // _access_s
+#include <Windows.h> // GetDiskFreeSpaceEx
 #else
 #include <unistd.h>
 #include <sys/statvfs.h>
@@ -116,10 +121,32 @@ bool fs_is_file(const char* path)
 
 bool fs_is_reserved(const char* path)
 {
-  if(fs_is_windows())
-    fprintf(stderr, "ERROR:ffilesystem:is_reserved: not implemented without C++: %s\n", path);
+  if(!fs_is_windows())
+    return false;
 
-  return false;
+  char* s = (char*) malloc(fs_get_max_path());
+  if(!s) return false;
+
+  if(!fs_stem(path, s, fs_get_max_path())){
+    free(s);
+    return false;
+  }
+
+  // convert to upper case
+  for (char* p = s; *p; ++p)
+    *p = (char) toupper(*p);
+
+  // check if the stem is a reserved device name
+  bool r = !strcmp(s, "CON") || !strcmp(s, "PRN") || !strcmp(s, "AUX") || !strcmp(s, "NUL") ||
+           !strcmp(s, "COM1") || !strcmp(s, "COM2") || !strcmp(s, "COM3") || !strcmp(s, "COM4") ||
+           !strcmp(s, "COM5") || !strcmp(s, "COM6") || !strcmp(s, "COM7") || !strcmp(s, "COM8") ||
+           !strcmp(s, "COM9") || !strcmp(s, "LPT1") || !strcmp(s, "LPT2") || !strcmp(s, "LPT3") ||
+           !strcmp(s, "LPT4") || !strcmp(s, "LPT5") || !strcmp(s, "LPT6") || !strcmp(s, "LPT7") ||
+           !strcmp(s, "LPT8") || !strcmp(s, "LPT9");
+
+  free(s);
+
+  return r;
 }
 
 
@@ -156,9 +183,17 @@ uintmax_t fs_space_available(const char* path)
   }
 
 #ifdef _WIN32
-  fprintf(stderr, "ERROR:ffilesystem:space_available: not implemented for non-C++: %s\n", path);
+
+  ULARGE_INTEGER bytes_available;
+  bool ok = GetDiskFreeSpaceExA(r, &bytes_available, NULL, NULL);
   free(r);
+
+  if(ok)
+    return bytes_available.QuadPart;
+
+  fprintf(stderr, "ERROR:ffilesystem:space_available: %s => %s\n", path, strerror(errno));
   return 0;
+
 #else
 
   struct statvfs stat;
@@ -193,18 +228,27 @@ size_t fs_get_permissions(const char* path, char* result, size_t buffer_size)
   }
 
 #ifdef _MSC_VER
-  fprintf(stderr, "ERROR:ffilesystem:fs_get_permissions: not implemented for non-C++\n");
-  return 0;
+  const int m = s.st_mode;
+  result[0] = (m & _S_IREAD) ? 'r' : '-';
+  result[1] = (m & _S_IWRITE) ? 'w' : '-';
+  result[2] = (m & _S_IEXEC) ? 'x' : '-';
+  result[3] = (m & _S_IREAD) ? 'r' : '-';
+  result[4] = (m & _S_IWRITE) ? 'w' : '-';
+  result[5] = (m & _S_IEXEC) ? 'x' : '-';
+  result[6] = (m & _S_IREAD) ? 'r' : '-';
+  result[7] = (m & _S_IWRITE) ? 'w' : '-';
+  result[8] = (m & _S_IEXEC) ? 'x' : '-';
 #else
-  result[0] = (s.st_mode & S_IRUSR) ? 'r' : '-';
-  result[1] = (s.st_mode & S_IWUSR) ? 'w' : '-';
-  result[2] = (s.st_mode & S_IXUSR) ? 'x' : '-';
-  result[3] = (s.st_mode & S_IRGRP) ? 'r' : '-';
-  result[4] = (s.st_mode & S_IWGRP) ? 'w' : '-';
-  result[5] = (s.st_mode & S_IXGRP) ? 'x' : '-';
-  result[6] = (s.st_mode & S_IROTH) ? 'r' : '-';
-  result[7] = (s.st_mode & S_IWOTH) ? 'w' : '-';
-  result[8] = (s.st_mode & S_IXOTH) ? 'x' : '-';
-  return 9;
+  const mode_t m = s.st_mode;
+  result[0] = (m & S_IRUSR) ? 'r' : '-';
+  result[1] = (m & S_IWUSR) ? 'w' : '-';
+  result[2] = (m & S_IXUSR) ? 'x' : '-';
+  result[3] = (m & S_IRGRP) ? 'r' : '-';
+  result[4] = (m & S_IWGRP) ? 'w' : '-';
+  result[5] = (m & S_IXGRP) ? 'x' : '-';
+  result[6] = (m & S_IROTH) ? 'r' : '-';
+  result[7] = (m & S_IWOTH) ? 'w' : '-';
+  result[8] = (m & S_IXOTH) ? 'x' : '-';
 #endif
+  return 9;
 }

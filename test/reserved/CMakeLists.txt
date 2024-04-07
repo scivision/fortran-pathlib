@@ -5,7 +5,6 @@ add_test(NAME C_reserved COMMAND ${CMAKE_COMMAND} -E env $<TARGET_FILE:test_rese
 # the -E env launcher is needed to catch subprocess abort for macOS with Clang (shaky exception handling in general)
 set_tests_properties(C_reserved PROPERTIES
 SKIP_REGULAR_EXPRESSION "SIGABRT;[aA]bort"
-DISABLED $<AND:$<BOOL:${WIN32}>,$<NOT:$<BOOL:${HAVE_CXX_FILESYSTEM}>>>
 )
 
 
@@ -15,8 +14,6 @@ target_link_libraries(test_reserved_fortran PRIVATE ffilesystem)
 set_property(TARGET test_reserved_fortran PROPERTY LINKER_LANGUAGE Fortran)
 
 add_test(NAME Fortran_reserved COMMAND test_reserved_fortran)
-set_property(TEST Fortran_reserved PROPERTY DISABLED $<AND:$<BOOL:${WIN32}>,$<NOT:$<BOOL:${HAVE_CXX_FILESYSTEM}>>>)
-
 
 add_executable(test_safe_fortran test_safe.f90)
 target_link_libraries(test_safe_fortran PRIVATE ffilesystem)

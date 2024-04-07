@@ -25,7 +25,8 @@ fs_cpp, fs_lang, pathsep, is_safe_name, &
 is_admin, is_bsd, is_macos, is_windows, is_cygwin, is_wsl, is_mingw, is_linux, is_unix, &
 max_path, get_max_path, &
 exe_path, lib_path, compiler, compiler_c, &
-longname, shortname, getenv, setenv
+longname, shortname, getenv, setenv, &
+is_alpha
 
 interface get_max_path
 !! deprecated
@@ -1379,6 +1380,7 @@ N = fs_get_tempdir(cbuf, N)
 include "ifc0b.inc"
 end function
 
+
 function make_absolute(path, base) result(r)
 !! if path is absolute, return expanded path
 !! if path is relative, base / path
@@ -1389,6 +1391,14 @@ character(*), intent(in) :: path, base
 include "ifc0a.inc"
 N = fs_make_absolute(trim(path) // C_NULL_CHAR, trim(base) // C_NULL_CHAR, cbuf, N)
 include "ifc0b.inc"
+end function
+
+
+elemental logical function is_alpha(c) result(r)
+!! is character alphabetic in the ASCII alphabet
+character, intent(in) :: c
+
+r = (c >= 'A' .and. c <= 'Z') .or. (c >= 'a' .and. c <= 'z')
 end function
 
 end module filesystem

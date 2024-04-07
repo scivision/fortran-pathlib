@@ -74,6 +74,9 @@ endif()
 if(${PROJECT_NAME}_trace)
   check_cxx_symbol_exists(__cpp_lib_starts_ends_with "string" cpp20_string_ends_with)
   check_cxx_symbol_exists(__cpp_using_enum "" cpp20_using_enum)
+  check_cxx_symbol_exists(__has_cpp_attribute "" cpp20_has_cpp_attribute)
+
+  if(cpp20_has_cpp_attribute)
 
   check_cxx_source_compiles("#if !__has_cpp_attribute(likely)
   #error \"no likely attribute\"
@@ -81,6 +84,8 @@ if(${PROJECT_NAME}_trace)
   int main(){ return 0; }"
   cpp20_likely
   )
+
+  endif()
 endif()
 
 endfunction()

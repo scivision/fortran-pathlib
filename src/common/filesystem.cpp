@@ -44,14 +44,8 @@
 static std::string fs_generate_random_alphanumeric_string(std::size_t);
 
 
-bool fs_mkdir(const char* path)
-{
-  return Ffs::mkdir(std::string_view(path));
-}
-
 bool Ffs::mkdir(std::string_view path)
 {
-
   if (Ffs::is_dir(path))
     return true;
 
@@ -65,11 +59,6 @@ bool Ffs::mkdir(std::string_view path)
 }
 
 
-bool fs_remove(const char* path)
-{
-  return Ffs::remove(std::string_view(path));
-}
-
 bool Ffs::remove(std::string_view path)
 {
   std::error_code ec;
@@ -81,11 +70,6 @@ bool Ffs::remove(std::string_view path)
   return false;
 }
 
-
-bool fs_copy_file(const char* source, const char* dest, bool overwrite)
-{
-  return Ffs::copy_file(std::string_view(source), std::string_view(dest), overwrite);
-}
 
 bool Ffs::copy_file(std::string_view source, std::string_view dest, bool overwrite)
 {
@@ -106,11 +90,6 @@ bool Ffs::copy_file(std::string_view source, std::string_view dest, bool overwri
 }
 
 
-bool fs_set_modtime(const char* path)
-{
-  return Ffs::set_modtime(std::string_view(path));
-}
-
 bool Ffs::set_modtime(std::string_view path)
 {
   std::error_code ec;
@@ -125,20 +104,8 @@ bool Ffs::set_modtime(std::string_view path)
 }
 
 
-bool fs_touch(const char* path)
+bool Ffs::touch(std::string_view path)
 {
-  try{
-    Ffs::touch(std::string_view(path));
-    return true;
-  } catch(std::filesystem::filesystem_error& e){
-    std::cerr << "ERROR:ffilesystem:touch: " << path << " " << e.what() << "\n";
-    return false;
-  }
-}
-
-void Ffs::touch(std::string_view path)
-{
-  std::filesystem::path p(path);
 
 #if defined(__cpp_using_enum)
   using enum std::filesystem::perms;
@@ -147,38 +114,35 @@ void Ffs::touch(std::string_view path)
   std::filesystem::perms owner_write = std::filesystem::perms::owner_write;
 #endif
 
-  if(std::filesystem::exists(p)) {
-    std::filesystem::last_write_time(p, std::filesystem::file_time_type::clock::now());
+  std::error_code ec;
+
+  if(Ffs::exists(path)) {
+    std::filesystem::last_write_time(path, std::filesystem::file_time_type::clock::now(), ec);
     // techinically IWYU <chrono> but that can break some compilers, and it works without the include.
-    return;
+    return !ec;
   }
 
   std::ofstream ost;
-  ost.open(p, std::ios_base::out | std::ios_base::binary);
-  if(!ost.is_open()) FFS_UNLIKELY
-    throw std::filesystem::filesystem_error("filesystem:touch: could not create", p, std::make_error_code(std::errc::no_such_file_or_directory));
+  ost.open(path.data(), std::ios_base::out | std::ios_base::binary);
+  if(!ost.is_open()){ FFS_UNLIKELY
+    std::cerr << "ERROR:ffilesystem:touch: could not open file " << path << "\n";
+    return false;
+  }
+
   ost.close();
 
   // ensure user can access file, as default permissions may be mode 600 or such
-  std::filesystem::permissions(p, owner_read | owner_write, std::filesystem::perm_options::add);
-}
-
-
-bool fs_set_permissions(const char* path, int readable, int writable, int executable)
-{
-  // make path file owner readable or not
-  try{
-    Ffs::set_permissions(std::string_view(path), readable, writable, executable);
+  std::filesystem::permissions(path, owner_read | owner_write, std::filesystem::perm_options::add, ec);
+  if(!ec) FFS_LIKELY
     return true;
-  } catch(std::filesystem::filesystem_error& e){
-    std::cerr << "ERROR:Ffilesystem:set_permissions: " << readable << " " << e.what() << "\n";
-    return false;
-  }
+
+  std::cerr << "ERROR:ffilesystem:touch: " << ec.message() << "\n";
+  return false;
 }
 
-void Ffs::set_permissions(std::string_view path, int readable, int writable, int executable)
-{
 
+bool Ffs::set_permissions(std::string_view path, int readable, int writable, int executable)
+{
   std::filesystem::path pth(path);
 
 #if defined(__cpp_using_enum)
@@ -189,26 +153,35 @@ void Ffs::set_permissions(std::string_view path, int readable, int writable, int
   std::filesystem::perms owner_exec = std::filesystem::perms::owner_exec;
 #endif
 
+  std::error_code ec;
+  // need to error if path doesn't exist and no operations are requested
+  if(!std::filesystem::exists(pth, ec))
+    ec = std::make_error_code(std::errc::no_such_file_or_directory);
+
   if (readable != 0)
     std::filesystem::permissions(pth, owner_read,
-      (readable > 0) ? std::filesystem::perm_options::add : std::filesystem::perm_options::remove);
+      (readable > 0) ? std::filesystem::perm_options::add : std::filesystem::perm_options::remove,
+      ec);
 
-  if (writable != 0)
+  if (!ec && writable != 0)
     std::filesystem::permissions(pth, owner_write,
-      (writable > 0) ? std::filesystem::perm_options::add : std::filesystem::perm_options::remove);
+      (writable > 0) ? std::filesystem::perm_options::add : std::filesystem::perm_options::remove,
+      ec);
 
-  if (executable != 0)
+  if (!ec && executable != 0)
     std::filesystem::permissions(pth, owner_exec,
-      (executable > 0) ? std::filesystem::perm_options::add : std::filesystem::perm_options::remove);
+      (executable > 0) ? std::filesystem::perm_options::add : std::filesystem::perm_options::remove,
+      ec);
 
+  if(!ec) FFS_LIKELY
+    return true;
+
+  std::cerr << "ERROR:ffilesystem:set_permissions: " << ec.message() << "\n";
+  return false;
 }
 
 
 // --- mkdtemp
-
-size_t fs_make_tempdir(char* result, size_t buffer_size){
-  return fs_str2char(Ffs::mkdtemp("tmp."), result, buffer_size);
-}
 
 std::string Ffs::mkdtemp(std::string_view prefix)
 {
@@ -247,6 +220,7 @@ static auto fs_random_generator() -> T {
     auto seed_seq = std::seed_seq(std::begin(seed), std::end(seed));
     return T{seed_seq};
 }
+
 
 static std::string fs_generate_random_alphanumeric_string(std::size_t len)
 {

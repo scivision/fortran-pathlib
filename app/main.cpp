@@ -213,12 +213,7 @@ static void four_arg(std::string_view fun, std::string_view a1, std::string_view
 
     std::cout << "before chmod " << a1 << " " << Ffs::get_permissions(a1) << "\n";
 
-    try {
-      Ffs::set_permissions(a1, r, w, x);
-    } catch (std::filesystem::filesystem_error& e){
-      std::cerr << e.what() << "\n";
-      return;
-    }
+    Ffs::set_permissions(a1, r, w, x);
 
     std::cout << "after chmod " << a1 << " " << Ffs::get_permissions(a1) << "\n";
   } else {

@@ -30,22 +30,6 @@ long fs_lang(){
 }
 
 
-size_t fs_strncpy(const char* path, char* result, size_t buffer_size)
-{
-// check size before copy
-  size_t L = strlen(path);
-  if(L >= buffer_size){
-    fprintf(stderr, "ERROR:Ffilesystem:strncpy: output buffer %zu too small\n", buffer_size);
-    return 0;
-  }
-
-  if(L)
-    strncpy(result, path, buffer_size);
-
-  return L;
-}
-
-
 void fs_as_posix(char* path)
 {
 // force posix file seperator on Windows
@@ -160,9 +144,12 @@ size_t fs_parent(const char* path, char* result, size_t buffer_size)
   if(L == 0){
     if (path[0] == '/' || (fs_is_windows() && path[0] == '\\'))
       result[0] = '/';
-    else if (fs_is_windows() && isalpha(path[0]) && path[1] == ':')
-      return fs_root(path, result, buffer_size);
-    else
+    else if (fs_is_windows()){
+      L = fs_root(path, result, buffer_size);
+      if(L)
+        return L;
+      result[0] = '.';
+    } else
       result[0] = '.';
 
     result[1] = '\0';
@@ -240,6 +227,7 @@ size_t fs_root(const char* path, char* result, size_t buffer_size)
   }
 
   strncpy(result, path, L);
+  result[L] = '\0';  // need this for proper termination
   return L;
 }
 
@@ -280,5 +268,46 @@ for (size_t i = 0; i < L; i++) {
 }
 
 return true;
+}
+
+
+size_t fs_relative_to(const char* base, const char* other, char* result, size_t buffer_size)
+{
+  // need this or separators are not handled correctly
+  cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
+
+  size_t L = cwk_path_get_relative(base, other, result, buffer_size);
+
+  if(L)
+    fs_as_posix(result);
+
+  return L;
+}
+
+
+size_t fs_proximate_to(const char* base, const char* other, char* result, size_t buffer_size)
+{
+  size_t L = fs_relative_to(base, other, result, buffer_size);
+  if(L)
+    return L;
+
+  return fs_strncpy(other, result, buffer_size);
+}
+
+
+bool fs_is_subdir(const char* subdir, const char* dir)
+{
+  // is subdir a subdirectory of dir
+  const size_t m = fs_get_max_path();
+
+  char* buf = (char*) malloc(m);
+  if(!buf) return false;
+
+  size_t L = fs_relative_to(dir, subdir, buf, m);
+  bool yes = L > 0 && buf[0] != '.';
+
+  free(buf);
+
+  return yes;
 
 }

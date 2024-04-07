@@ -7,6 +7,5 @@ set_property(TARGET test_fortran_mkdtemp PROPERTY LINKER_LANGUAGE Fortran)
 
 
 add_test(NAME Fortran_mkdtemp COMMAND test_fortran_mkdtemp)
-set_property(TEST Fortran_mkdtemp PROPERTY DISABLED $<AND:$<BOOL:${WIN32}>,$<NOT:$<BOOL:${HAVE_CXX_FILESYSTEM}>>>)
 set_property(TEST Fortran_mkdtemp PROPERTY LABELS Fortran)
 endif()

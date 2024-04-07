@@ -283,7 +283,7 @@ Error stop if directory does not exist
 call assert_is_dir("my/dir")
 ```
 
-Is path a subdirectory under (not just equal to) of "dir":
+Is path a subdirectory under (not just equal to) of "dir". this is a lexical operation.
 
 ```fortran
 p%is_subdir(dir)
@@ -544,7 +544,7 @@ Windows: short to long path
 longname("C:/PROGRA~1")  !< "C:/Program Files"
 ```
 
-Get path relative to other path.
+Get path relative to other path. This is a purely lexical operation.
 
 ```fortran
 relative_to(base, other)
@@ -559,7 +559,7 @@ p%relative_to("/a")  !< "b/c"
 p%relative_to("d")  !< ""
 ```
 
-Get path proximate to other path.
+Get path proximate to other path. This is a purely lexical operation.
 
 ```fortran
 proximate_to(base, other)

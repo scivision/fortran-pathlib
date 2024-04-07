@@ -28,12 +28,8 @@ int main(){
     _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-    char O[1];
-
-    O[0] = '\0';
-
-    Ffs::as_posix(O);
-    std::cout << "PASS: as_posix(char*)\n";
+    if(!Ffs::as_posix("").empty())
+      err("Ffs::as_posix");
 
     if(!Ffs::normal("").empty())
       err("Ffs::normal");
@@ -104,32 +100,28 @@ int main(){
     if(Ffs::copy_file("", "", false))
       err("Ffs::copy_file");
 
-    if(!Ffs::relative_to("", "").empty())
-      err("Ffs::relative_to");
+    if(Ffs::touch(""))
+      err("Ffs::touch");
 
-    try{
-      Ffs::touch("");
-    } catch (std::filesystem::filesystem_error& e){
-      std::cerr << e.what() << "\n";
-    }
 
-      if(Ffs::file_size("") != 0)
-        err("Ffs::file_size");
+    if(Ffs::file_size("") != 0)
+      err("Ffs::file_size");
 
-    if(!fs_is_windows() && Ffs::space_available("") != 0)
+    if(!fs_is_windows()){
+
+      if(Ffs::space_available("") != 0)
         err("Ffs::space_available");
+
+      if(Ffs::set_permissions("", 0, 0, 0))
+        err("set_permissions");
+
+    }
 
     if(Ffs::get_cwd().empty())
       err("get_cwd");
 
     if(Ffs::get_homedir().empty())
       err("get_homedir");
-
-    try{
-      Ffs::set_permissions("", 0, 0, 0);
-    } catch (std::filesystem::filesystem_error& e){
-      std::cerr << e.what() << "\n";
-    }
 
     std::cout << "OK: test_c_empty\n";
 

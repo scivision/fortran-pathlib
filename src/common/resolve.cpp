@@ -5,10 +5,6 @@
 
 #include <filesystem>
 
-size_t fs_canonical(const char* path, bool strict, char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::canonical(std::string_view(path), strict), result, buffer_size);
-}
 
 std::string Ffs::canonical(std::string_view path, bool strict)
 {
@@ -18,16 +14,16 @@ std::string Ffs::canonical(std::string_view path, bool strict)
     return {};
     // need this for macOS otherwise it returns the current working directory instead of empty string
 
-  auto ex = Ffs::expanduser(path);
-
-  if(FS_TRACE) std::cout << "TRACE:canonical: input: " << path << " expanded: " << ex << "\n";
-
-  if (!Ffs::exists(ex) && !Ffs::is_absolute(ex))
-    // handles differences in ill-defined behaviour of std::filesystem::weakly_canonical() on non-existant paths
-    // canonical(path, false) is distinct from resolve(path, false) for non-existing paths.
-    return Ffs::normal(ex);
+  auto ex = std::filesystem::path(Ffs::expanduser(path));
 
   std::error_code ec;
+
+  if (!ex.is_absolute() && (!std::filesystem::exists(ex, ec) || ec)){
+    // handles differences in ill-defined behaviour of std::filesystem::weakly_canonical() on non-existant paths
+    // canonical(path, false) is distinct from resolve(path, false) for non-existing paths.
+    return Ffs::normal(ex.generic_string());
+  }
+
   auto c = strict
     ? std::filesystem::canonical(ex, ec)
     : std::filesystem::weakly_canonical(ex, ec);
@@ -40,11 +36,6 @@ std::string Ffs::canonical(std::string_view path, bool strict)
 }
 
 
-size_t fs_resolve(const char* path, bool strict, char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::resolve(std::string_view(path), strict), result, buffer_size);
-}
-
 std::string Ffs::resolve(std::string_view path, bool strict)
 {
   // expands ~ like canonical
@@ -52,14 +43,20 @@ std::string Ffs::resolve(std::string_view path, bool strict)
   if(path.empty()) FFS_UNLIKELY
     return Ffs::get_cwd();
 
-  auto ex = Ffs::expanduser(path);
-
-  if (!Ffs::exists(ex) && !Ffs::is_absolute(ex))
-    // handles differences in ill-defined behaviour of std::filesystem::weakly_canonical() on non-existant paths
-    // canonical(path, false) is distinct from resolve(path, false) for non-existing paths.
-    ex = Ffs::join(Ffs::get_cwd(), ex);
+  auto ex = std::filesystem::path(Ffs::expanduser(path));
 
   std::error_code ec;
+
+  if (!ex.is_absolute() && (!std::filesystem::exists(ex, ec) || ec)){
+    // handles differences in ill-defined behaviour of std::filesystem::weakly_canonical() on non-existant paths
+    // canonical(path, false) is distinct from resolve(path, false) for non-existing paths.
+    auto cwd = std::filesystem::current_path(ec);
+    if(!ec) FFS_LIKELY
+      ex = cwd / ex;
+    else
+      std::cerr << "ERROR:ffilesystem:resolve: current_path: " << ec.message() << "\n";
+  }
+
   auto c = strict
     ? std::filesystem::canonical(ex, ec)
     : std::filesystem::weakly_canonical(ex, ec);
@@ -72,11 +69,6 @@ std::string Ffs::resolve(std::string_view path, bool strict)
 }
 
 
-bool fs_equivalent(const char* path1, const char* path2)
-{
-  return Ffs::equivalent(std::string_view(path1), std::string_view(path2));
-}
-
 bool Ffs::equivalent(std::string_view path1, std::string_view path2)
 {
   // non-existant paths are not equivalent
@@ -84,71 +76,6 @@ bool Ffs::equivalent(std::string_view path1, std::string_view path2)
   return std::filesystem::equivalent(Ffs::expanduser(path1), Ffs::expanduser(path2), ec) && !ec;
 }
 
-
-size_t fs_relative_to(const char* base, const char* other, char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::relative_to(base, other), result, buffer_size);
-}
-
-std::string Ffs::relative_to(std::string_view base, std::string_view other)
-{
-  // std::filesystem::relative resolves symlinks and normalizes both paths first
-
-  // undefined case, avoid bugs with MacOS
-  if (base.empty() || other.empty()) FFS_UNLIKELY
-    return {};
-
-  std::filesystem::path basep(base);
-  std::filesystem::path otherp(other);
-  // cannot be relative, avoid bugs with MacOS
-  if(basep.is_absolute() != otherp.is_absolute())
-    return {};
-
-  std::error_code ec;
-  if (auto r = std::filesystem::relative(otherp, basep, ec); !ec) FFS_LIKELY
-    return r.generic_string();
-
-  std::cerr << "ERROR:ffilesystem:relative_to: " << ec.message() << "\n";
-  return {};
-}
-
-
-size_t fs_proximate_to(const char* base, const char* other, char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::proximate_to(base, other), result, buffer_size);
-}
-
-std::string Ffs::proximate_to(std::string_view base, std::string_view other)
-{
-  // std::filesystem::proximate resolves symlinks and normalizes both paths first
-
-  // undefined case, avoid bugs with MacOS
-  if(other.empty())
-    return {};
-
-  // undefined case, avoid bugs with MacOS and Windows
-  if (base.empty())
-      return std::string(other);
-
-  std::filesystem::path basep(base);
-  std::filesystem::path otherp(other);
-  // cannot be relative, avoid bugs with AppleClang
-  if(basep.is_absolute() != otherp.is_absolute())
-    return otherp.generic_string();
-
-  std::error_code ec;
-  if(auto r = std::filesystem::proximate(otherp, basep, ec); !ec) FFS_LIKELY
-    return r.generic_string();
-
-  std::cerr << "ERROR:ffilesystem:proximate_to: " << ec.message() << "\n";
-  return {};
-}
-
-
-size_t fs_which(const char* name, char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::which(std::string_view(name)), result, buffer_size);
-}
 
 std::string Ffs::which(std::string_view name)
 // find full path to executable name on Path
@@ -192,25 +119,6 @@ std::string Ffs::which(std::string_view name)
   return {};
 }
 
-
-bool fs_is_subdir(const char* subdir, const char* dir)
-{
-  return Ffs::is_subdir(std::string_view(subdir), std::string_view(dir));
-}
-
-bool Ffs::is_subdir(std::string_view subdir, std::string_view dir)
-{
-  auto r = std::filesystem::relative(subdir, dir);
-
-  return !r.empty() && r.native().front() != '.';
-}
-
-
-
-size_t fs_make_absolute(const char* path, const char* base, char* out, size_t buffer_size)
-{
-  return fs_str2char(Ffs::make_absolute(std::string_view(path), std::string_view(base)), out, buffer_size);
-}
 
 std::string Ffs::make_absolute(std::string_view path, std::string_view base)
 {

@@ -36,7 +36,7 @@ target_link_libraries(fortran_filesize PRIVATE ffilesystem)
 add_test(NAME Fortran_filesize
 COMMAND ${CMAKE_COMMAND} -E env $<TARGET_FILE:fortran_filesize> ${CMAKE_CURRENT_BINARY_DIR}/test_filesize.dat)
 
-set_property(TEST Fortran_filesize PROPERTY SKIP_REGULAR_EXPRESSION "not implemented;SIGABRT;[aA]bort")
+set_property(TEST Fortran_filesize PROPERTY SKIP_REGULAR_EXPRESSION "SIGABRT;[aA]bort")
 
 # Intel needs linker_language Fortran else error "undefined reference to `main'"
 get_property(test_targets DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY BUILDSYSTEM_TARGETS)

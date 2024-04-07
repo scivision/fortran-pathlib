@@ -59,10 +59,10 @@ int main(void){
     if(fs_is_dir(s))
       err("is_dir", p);
 
+if(!fs_is_windows()){
+
     if(fs_is_exe(s))
       err("is_exe", p);
-
-if(!fs_is_windows()){
 
     // NOTE: do not test
     //

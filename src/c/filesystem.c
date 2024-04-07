@@ -21,9 +21,8 @@
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <fileapi.h>
 #include <io.h>
-#include <direct.h> /* _mkdir, getcwd */
+#include <direct.h> // _mkdir
 #include <sys/utime.h>
 #else
 #include <unistd.h>
@@ -240,15 +239,14 @@ bool fs_touch(const char* path)
 bool fs_set_permissions(const char* path, int readable, int writable, int executable)
 {
   struct stat s;
-  if(stat(path, &s))
+  if(stat(path, &s) || (s.st_mode & S_IFCHR))
     return false;
-  if(s.st_mode & S_IFCHR)
-    return false; // special POSIX file character device like /dev/null
+  // special POSIX file character device like /dev/null
 
 #ifdef _MSC_VER
   int m = s.st_mode;
   const int r = _S_IREAD;
-  const int w = _S_IWRITE
+  const int w = _S_IWRITE;
   const int x = _S_IEXEC;
 #else
   mode_t m = s.st_mode;
@@ -276,15 +274,28 @@ bool fs_set_permissions(const char* path, int readable, int writable, int execut
 }
 
 
-size_t fs_make_tempdir(FFS_MUNUSED_C char* result, FFS_MUNUSED_C size_t buffer_size)
+size_t fs_make_tempdir(char* result, size_t buffer_size)
 {
-#ifdef _WIN32
-  fprintf(stderr, "ERROR:ffilesystem:fs_make_tempdir: not implemented for non-C++\n");
-  return 0;
-#else
   char tmpl[] = "tmp.XXXXXX";
+  char* tmp;
 
-  char* tmp = mkdtemp(tmpl);
+#ifdef _WIN32
+  tmp = _mktemp(tmpl);
+  if(!tmp){
+    fprintf(stderr, "ERROR:filesystem:fs_make_tempdir:_mktemp: could not create temporary directory %s\n", strerror(errno));
+    return 0;
+  }
+  if(!fs_get_tempdir(result, buffer_size))
+    return 0;
+
+  size_t L = fs_join(result, tmp, result, buffer_size);
+  if(L == 0)
+    return 0;
+
+  fs_mkdir(result);
+  return L;
+#else
+  tmp = mkdtemp(tmpl);
   /* Linux: stdlib.h  macOS: unistd.h */
   if (!tmp){
     fprintf(stderr, "ERROR:filesystem:fs_make_tempdir:mkdtemp: could not create temporary directory %s\n", strerror(errno));
@@ -293,4 +304,5 @@ size_t fs_make_tempdir(FFS_MUNUSED_C char* result, FFS_MUNUSED_C size_t buffer_s
 
   return fs_strncpy(tmp, result, buffer_size);
 #endif
+
 }

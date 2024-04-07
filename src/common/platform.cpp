@@ -2,6 +2,9 @@
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif
+#ifndef _CRT_NONSTDC_NO_WARNINGS
+#define _CRT_NONSTDC_NO_WARNINGS
+#endif
 #endif
 
 
@@ -90,22 +93,12 @@ int fs_is_wsl() {
 }
 
 
-size_t fs_getenv(const char* name, char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::get_env(std::string_view(name)), result, buffer_size);
-}
-
 std::string Ffs::get_env(std::string_view name)
 {
   if(auto r = std::getenv(name.data()); r && std::strlen(r) > 0)
     return r;
 
   return {};
-}
-
-bool fs_setenv(const char* name, const char* value)
-{
-  return Ffs::set_env(std::string_view(name), std::string_view(value));
 }
 
 
@@ -128,11 +121,6 @@ bool Ffs::set_env(std::string_view name, std::string_view value)
 }
 
 
-size_t fs_get_tempdir(char* path, size_t buffer_size)
-{
-  return fs_str2char(Ffs::get_tempdir(), path, buffer_size);
-}
-
 std::string Ffs::get_tempdir()
 {
   std::error_code ec;
@@ -143,11 +131,6 @@ std::string Ffs::get_tempdir()
   return {};
 }
 
-
-size_t fs_get_cwd(char* path, size_t buffer_size)
-{
-  return fs_str2char(Ffs::get_cwd(), path, buffer_size);
-}
 
 std::string Ffs::get_cwd()
 {
@@ -160,11 +143,6 @@ std::string Ffs::get_cwd()
 }
 
 
-bool fs_set_cwd(const char *path)
-{
-  return Ffs::chdir(path);
-}
-
 bool Ffs::chdir(std::string_view path)
 {
   std::error_code ec;
@@ -175,11 +153,6 @@ bool Ffs::chdir(std::string_view path)
   return false;
 }
 
-
-size_t fs_get_homedir(char* path, size_t buffer_size)
-{
-  return fs_str2char(Ffs::get_homedir(), path, buffer_size);
-}
 
 std::string Ffs::get_homedir()
 {
@@ -211,11 +184,6 @@ std::string Ffs::get_homedir()
   return {};
 }
 
-
-size_t fs_expanduser(const char* path, char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::expanduser(std::string_view(path)), result, buffer_size);
-}
 
 std::string Ffs::expanduser(std::string_view path)
 {

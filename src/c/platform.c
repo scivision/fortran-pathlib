@@ -2,6 +2,9 @@
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif
+#ifndef _CRT_NONSTDC_NO_WARNINGS
+#define _CRT_NONSTDC_NO_WARNINGS
+#endif
 #endif
 
 #include "ffilesystem.h"
@@ -18,7 +21,9 @@
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
-#include <dirent.h>
+#include <direct.h>  // getcwd, chdir
+#include <Windows.h>
+#include <UserEnv.h>
 #else
 #include <pwd.h>  /* getpwuid */
 #include <unistd.h>
@@ -57,11 +62,10 @@ int fs_is_wsl()
 
 size_t fs_getenv(const char* name, char* path, size_t buffer_size)
 {
-  // stdlib.h
   char* buf = getenv(name);
   if(!buf) // not error because sometimes we just check if envvar is defined
     return 0;
-
+  // need strncpy otherwise garbage output and/or segfault
   return fs_strncpy(buf, path, buffer_size);
 }
 
@@ -97,8 +101,10 @@ bool fs_setenv(const char* name, const char* value)
 size_t fs_get_tempdir(char* path, size_t buffer_size)
 {
   size_t L = fs_getenv(fs_is_windows() ? "TEMP" : "TMPDIR", path, buffer_size);
-  if(L)
+  if(L){
+    fs_as_posix(path);
     return L;
+  }
 
   if (buffer_size > 4 && fs_is_dir("/tmp")){
     strncpy(path, "/tmp", 5);
@@ -119,24 +125,19 @@ size_t fs_get_cwd(char* path, size_t buffer_size)
   }
 
   fs_as_posix(path);
-
   return strlen(path);
 }
 
 
-bool fs_set_cwd(const char* path){
-
-  if(strlen(path) == 0)
-    return false;
-
-  // unistd.h
-  // direct.h https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/chdir-wchdir?view=msvc-170
+bool fs_set_cwd(const char* path)
+{
+  // unistd.h / direct.h
+  // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/chdir-wchdir?view=msvc-170
   if(chdir(path) == 0)
     return true;
 
   fprintf(stderr, "ERROR:ffilesystem:set_cwd: %s    %s\n", path, strerror(errno));
   return false;
-
 }
 
 
@@ -149,7 +150,19 @@ size_t fs_get_homedir(char* path, size_t buffer_size)
   }
 
 #ifdef _WIN32
-  return 0;
+  // works on MSYS2, MSVC, oneAPI
+  DWORD N = (DWORD) buffer_size;
+  HANDLE hToken = NULL;
+  bool ok = OpenProcessToken( GetCurrentProcess(), TOKEN_QUERY, &hToken) != 0 &&
+            GetUserProfileDirectoryA(hToken, path, &N);
+
+  CloseHandle(hToken);
+
+  if (!ok)
+    return 0;
+
+  fs_as_posix(path);
+  return strlen(path);
 #else
   const char *h = getpwuid(geteuid())->pw_dir;
   if (!h)

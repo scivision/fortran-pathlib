@@ -12,34 +12,17 @@
 #include <filesystem>
 
 
-
-bool fs_is_symlink(const char* path)
-{
-  return Ffs::is_symlink(std::string_view(path));
-}
-
 bool Ffs::is_symlink(std::string_view path)
 {
-  if (path.empty()) FFS_UNLIKELY
-    return false;
-
 #ifdef WIN32_SYMLINK
   DWORD a = GetFileAttributes(path.data());
   return (a != INVALID_FILE_ATTRIBUTES) && (a & FILE_ATTRIBUTE_REPARSE_POINT);
 #else
   std::error_code ec;
-  auto s = std::filesystem::symlink_status(path, ec);
-  // NOTE: use of symlink_status here like lstat(), else logic is wrong with std::filesystem::status()
-
-  return !ec && std::filesystem::is_symlink(s);
+  return std::filesystem::is_symlink(path, ec) && !ec;
 #endif
 }
 
-
-size_t fs_read_symlink(const char* path, char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::read_symlink(std::string_view(path)), result, buffer_size);
-}
 
 std::string Ffs::read_symlink(std::string_view path)
 {
@@ -47,16 +30,11 @@ std::string Ffs::read_symlink(std::string_view path)
   if(auto p = std::filesystem::read_symlink(path, ec); !ec) FFS_LIKELY
     return p.generic_string();
 
-  // std::filesystem::canonical fallback not helpful here
+  // std::filesystem::canonical fallback not helpful here -- link is still not resolved
   std::cerr << "ERROR:ffilesystem:read_symlink: " << ec.message() << "\n";
   return {};
 }
 
-
-bool fs_create_symlink(const char* target, const char* link)
-{
-  return Ffs::create_symlink(std::string_view(target), std::string_view(link));
-}
 
 bool Ffs::create_symlink(std::string_view target, std::string_view link)
 {

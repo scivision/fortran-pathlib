@@ -6,7 +6,7 @@ target_link_libraries(test_exepath_cpp PRIVATE ffilesystem)
 add_test(NAME Cpp_exepath COMMAND test_exepath_cpp)
 
 set_tests_properties(Cpp_exepath PROPERTIES
-PASS_REGULAR_EXPRESSION $<TARGET_FILE:test_exepath_cpp>
+PASS_REGULAR_EXPRESSION $<TARGET_FILE_NAME:test_exepath_cpp>
 LABELS Cpp
 )
 
@@ -22,8 +22,10 @@ set_property(TARGET test_exepath_fortran PROPERTY LINKER_LANGUAGE Fortran)
 
 add_test(NAME Fortran_exepath COMMAND test_exepath_fortran)
 
+# TARGET_FILE_NAME to allow for macOS possible non-canonical result
+# and symlinked / special filesystems like WSL
 set_tests_properties(Fortran_exepath PROPERTIES
-PASS_REGULAR_EXPRESSION $<TARGET_FILE:test_exepath_fortran>
+PASS_REGULAR_EXPRESSION $<TARGET_FILE_NAME:test_exepath_fortran>
 LABELS Fortran
 )
 

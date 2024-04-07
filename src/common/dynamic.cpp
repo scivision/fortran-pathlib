@@ -24,11 +24,6 @@ static void dl_dummy_func() {}
 // --- end of lib_path, exe_path
 
 
-size_t fs_exe_path(char* path, size_t buffer_size)
-{
-  return fs_str2char(Ffs::exe_path(), path, buffer_size);
-}
-
 std::string Ffs::exe_path()
 {
   // https://stackoverflow.com/a/4031835
@@ -40,7 +35,7 @@ std::string Ffs::exe_path()
 
 #ifdef _WIN32
  // https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
-  if(size_t L = GetModuleFileNameA(nullptr, buf.get(), MP);
+  if(size_t L = GetModuleFileNameA(nullptr, buf.get(), static_cast<DWORD>(MP));
       L == 0 || L >= MP)  FFS_UNLIKELY
     return {};
 #elif defined(__linux__) || defined(__CYGWIN__)
@@ -61,11 +56,6 @@ std::string Ffs::exe_path()
   return Ffs::as_posix(buf.get());
 }
 
-
-size_t fs_lib_path(char* path, size_t buffer_size)
-{
-  return fs_str2char(Ffs::lib_path(), path, buffer_size);
-}
 
 std::string Ffs::lib_path()
 {

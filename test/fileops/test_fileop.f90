@@ -31,6 +31,8 @@ ok = set_cwd(buf)
 
 if (.not. ok) error stop "chdir failed"
 
+if(set_cwd("")) error stop "chdir should fail on empty string"
+
 cwd = get_cwd()
 print '(a)', 'New working directory: ', cwd
 

@@ -19,11 +19,6 @@
 #include <filesystem>
 
 
-bool fs_exists(const char* path)
-{
-  return Ffs::exists(std::string_view(path));
-}
-
 bool Ffs::exists(std::string_view path)
 {
   std::error_code ec;
@@ -31,23 +26,12 @@ bool Ffs::exists(std::string_view path)
 }
 
 
-bool fs_is_char_device(const char* path)
-{
-  // special POSIX file character device like /dev/null
-  return Ffs::is_char_device(std::string_view(path));
-}
-
 bool Ffs::is_char_device(std::string_view path)
 {
   std::error_code ec;
   return std::filesystem::is_character_file(path, ec) && !ec;
 }
 
-
-bool fs_is_dir(const char* path)
-{
-  return Ffs::is_dir(std::string_view(path));
-}
 
 bool Ffs::is_dir(std::string_view path)
 {
@@ -60,11 +44,6 @@ bool Ffs::is_dir(std::string_view path)
   return std::filesystem::is_directory(p, ec) && !ec;
 }
 
-
-bool fs_is_exe(const char* path)
-{
-  return Ffs::is_exe(std::string_view(path));
-}
 
 bool Ffs::is_exe(std::string_view path)
 {
@@ -92,11 +71,6 @@ bool Ffs::is_exe(std::string_view path)
 }
 
 
-bool fs_is_readable(const char* path)
-{
-  return Ffs::is_readable(std::string_view(path));
-}
-
 bool Ffs::is_readable(std::string_view path)
 {
   std::error_code ec;
@@ -116,11 +90,6 @@ bool Ffs::is_readable(std::string_view path)
   return (s.permissions() & (owner_read | group_read | others_read)) != none;
 }
 
-
-bool fs_is_writable(const char* path)
-{
-  return Ffs::is_writable(std::string_view(path));
-}
 
 bool Ffs::is_writable(std::string_view path)
 {
@@ -142,11 +111,6 @@ bool Ffs::is_writable(std::string_view path)
 }
 
 
-bool fs_is_file(const char* path)
-{
-  return Ffs::is_file(std::string_view(path));
-}
-
 bool Ffs::is_file(std::string_view path)
 {
   std::error_code ec;
@@ -154,11 +118,6 @@ bool Ffs::is_file(std::string_view path)
   return std::filesystem::is_regular_file(path, ec) && !ec && !Ffs::is_reserved(path);
 }
 
-
-bool fs_is_reserved(const char* path)
-{
-  return Ffs::is_reserved(std::string_view(path));
-}
 
 bool Ffs::is_reserved(std::string_view path)
 // https://learn.microsoft.com/en-gb/windows/win32/fileio/naming-a-file#naming-conventions
@@ -205,21 +164,13 @@ std::filesystem::file_time_type Ffs::get_modtime(std::string_view path)
 {
   std::error_code ec;
 
-  std::filesystem::file_time_type t_fs = std::filesystem::last_write_time(path, ec);
-  if(ec) FFS_UNLIKELY
-  {
-    std::cerr << "ERROR:ffilesystem:get_modtime: " << ec.message() << "\n";
-    return {};
-  }
+  if(std::filesystem::file_time_type t_fs = std::filesystem::last_write_time(path, ec); !ec) FFS_LIKELY
+    return t_fs;
 
-  return t_fs;
+  std::cerr << "ERROR:ffilesystem:get_modtime: " << ec.message() << "\n";
+  return {};
 }
 
-
-uintmax_t fs_file_size(const char* path)
-{
-  return Ffs::file_size(std::string_view(path));
-}
 
 uintmax_t Ffs::file_size(std::string_view path)
 {
@@ -231,11 +182,6 @@ uintmax_t Ffs::file_size(std::string_view path)
   return 0;
 }
 
-
-uintmax_t fs_space_available(const char* path)
-{
-  return Ffs::space_available(std::string_view(path));
-}
 
 uintmax_t Ffs::space_available(std::string_view path)
 {
@@ -249,11 +195,6 @@ uintmax_t Ffs::space_available(std::string_view path)
   return 0;
 }
 
-
-size_t fs_get_permissions(const char* path, char* result, size_t buffer_size)
-{
-  return fs_str2char(Ffs::get_permissions(std::string_view(path)), result, buffer_size);
-}
 
 std::string Ffs::get_permissions(std::string_view path)
 {

@@ -94,6 +94,7 @@ add_library(ffilesystem src/common/common.c
 if(HAVE_CXX_FILESYSTEM)
   target_sources(ffilesystem PRIVATE
     src/common/filesystem.cpp
+    src/common/c_ifc.cpp
     src/common/dynamic.cpp
     src/common/inquire.cpp
     src/common/platform.cpp
@@ -111,7 +112,6 @@ else()
   src/c/pure.c
   src/c/resolve.c
   src/c/symlink.c
-  src/c/windows.c
   ${cwalk_SOURCE_DIR}/src/cwalk.c
   )
 endif()
