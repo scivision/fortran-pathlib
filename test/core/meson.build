@@ -1,6 +1,10 @@
 if fortran
 
-foreach t : ['core', 'filename', 'is_subdir', 'parent']
+core_tests = ['core', 'filename', 'is_subdir', 'parent']
+
+core_tests += 'path_t'
+
+foreach t : core_tests
 tec = executable(t + '_fortran', 'test_' + t + '.f90', link_with: filesystem, include_directories: inc)
     test(t + '_fortran', tec, suite: 'fortran')
 endforeach

@@ -3,6 +3,7 @@ include(CheckSymbolExists)
 include(CheckCXXSymbolExists)
 include(CheckCSourceCompiles)
 include(CheckCXXSourceCompiles)
+include(CheckFortranSourceCompiles)
 
 include(${CMAKE_CURRENT_LIST_DIR}/CppCheck.cmake)
 
@@ -88,6 +89,22 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   check_pie_supported()
   set(CMAKE_POSITION_INDEPENDENT_CODE true)
 endif()
+
+
+if(HAVE_Fortran_FILESYSTEM)
+
+check_fortran_source_compiles("program main
+type :: path_t
+character(:), allocatable :: s
+end type
+end program"
+HAVE_F03_TYPE
+SRC_EXT .f90
+)
+
+endif()
+
+# --- END COMPILER CHECKS
 
 
 # --- C compile flags

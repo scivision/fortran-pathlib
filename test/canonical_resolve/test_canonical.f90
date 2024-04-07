@@ -14,82 +14,74 @@ contains
 
 subroutine test_canonical()
 
-type(path_t) :: cur, par, file, p1, p2
+character(:), allocatable :: p1, p2
 character(*), parameter :: dummy = "nobody.txt"
 
 integer :: L1, L2, L3
 
 ! -- current directory  -- old MacOS doesn't handle "." or ".." alone
-cur = path_t(".")
-cur = cur%canonical()
-L1 = cur%length()
-if (L1 < 1) then
-  write(stderr,*) "ERROR: canonical '.' " // cur%path()
-  error stop
-endif
+p1 = canonical(".")
+L1 = len_trim(p1)
+if(L1 == 0) error stop "ERROR: canonical '.' failed"
 
-if (cur%path() /= get_cwd()) then
-  write(stderr,*) "ERROR: canonical('.') " // cur%path() // " /= get_cwd: " // get_cwd()
-  error stop
-endif
+p2 = get_cwd()
+if(p1 /= p2) error stop "ERROR: canonical '.' failed: " // p1 // " /= " // p2
 
-print *, "OK: current dir = ", cur%path()
+print *, "OK: current dir = ", p1
+
 ! -- home directory
-p1 = path_t("~")
-p1 = p1%canonical()
-if (p1%path(1,1) == "~") error stop "%canonical ~ did not expanduser: " // p1%path()
-if (canonical("~") == "~") error stop "canonical('~') should not be '~'"
-print *, "OK: home dir = ", p1%path()
+p1 = canonical("~")
+L1 = len_trim(p1)
+if (p1(1:1) == "~") error stop "canonical(~) did not expanduser: " // p1
 
-p2 = path_t(p1%parent())
-L1 = p2%length()
-if (L1 >= p1%length()) error stop "parent home " // p2%path()
-print *, "OK: parent home = ", p2%path()
+p2 = get_homedir()
+if(p1 /= p2) error stop "ERROR: canonical(~) failed: " // p1 // " /= " // p2
 
+print *, "OK: home dir = ", p1
 
 ! -- relative dir
-par = path_t("~/..")
-par = par%canonical()
+p1 = canonical("~/..")
 
-L2 = par%length()
-if (L2 /= L1) then
-  write(stderr,*) 'ERROR:canonical:relative: up dir not canonicalized: ~/.. => ' // par%path()
+L2 = len_trim(p1)
+if (L2 >= L1) then
+  write(stderr,*) 'ERROR:canonical:relative: up dir not canonicalized: ~/.. => ' // p1
   error stop
 endif
-print *, 'OK: canon_dir = ', par%path()
+print *, 'OK: canon_dir = ', p1
 
 ! -- relative, non-existing file
-file = path_t('~/../' // dummy)
-file = file%canonical()
-if(file%length() == 0) error stop "ERROR: relative file did not canonicalize: " // file%path()
-L3 = file%length()
+p1 = canonical('~/../' // dummy)
+
+L3 = len_trim(p1)
+if(L3 == 0) error stop "ERROR: relative file did not canonicalize: " // p1
 
 L1 = len(dummy)
 if (L2 > 1) L1 = L1 + 1  !< when L2==1, $HOME is like /root instead of /home/user
 
 if (L3 - L2 /= L1) then
-  write(stderr,*) 'ERROR relative file was not canonicalized: ' // file%path(), L2, par%path(), L3, len(dummy)
+  write(stderr,*) 'ERROR relative file was not canonicalized: ' // p1, L2, L3, len(dummy)
   error stop
 endif
 
-file = path_t('../' // dummy)
-file = file%canonical()
-if (file%path() /= "../" // dummy) then
-  write(stderr,*) 'ERROR: relative file did not canonicalize: ' // file%path()
+p1 = canonical('../' // dummy)
+
+if (p1 /= "../" // dummy) then
+  write(stderr,*) 'ERROR: relative file did not canonicalize: ' // p1
   error stop
 end if
 
-file = path_t("not-exist/dir/../")
-file = file%canonical()
-if (file%path() /= "not-exist") then
-  write(stderr,*) 'ERROR: relative dir did not canonicalize: ' // file%path()
+p1 = canonical("not-exist/dir/../")
+
+if (p1 /= "not-exist") then
+  write(stderr,*) 'ERROR: relative dir did not canonicalize: ' // p1
   error stop
 end if
 
 !> empty
-if(canonical("") /= "") error stop "canonical('') " // canonical("") // " /= ''"
+p2 = canonical("")
+if(p2 /= "") error stop "canonical('') not empty: " // p2
 
-print *, 'OK: canon_file = ', file%path()
+print *, 'OK: canon_file = ', p1
 
 end subroutine test_canonical
 

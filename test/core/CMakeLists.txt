@@ -1,6 +1,12 @@
 if(HAVE_Fortran_FILESYSTEM)
 
-foreach(t IN ITEMS core filename is_subdir parent)
+set(tests core filename is_subdir parent)
+
+if(HAVE_F03_TYPE)
+  list(APPEND tests path_t)
+endif()
+
+foreach(t IN LISTS tests)
 
 add_executable(test_fortran_${t} test_${t}.f90)
 target_link_libraries(test_fortran_${t} PRIVATE ffilesystem)
