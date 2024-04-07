@@ -6,10 +6,10 @@ setenv_exe = executable('setenv_fortran', 'test_setenv.f90', link_with: filesyst
 test('env_fortran', env_exe, suite: 'fortran')
 
 env = environment()
-env.set('USERPROFILE', '')
-env.set('HOME', '')
-env.set('TMPDIR', '')
-env.set('TEMP', '')
+env.unset('USERPROFILE')
+env.unset('HOME')
+env.unset('TMPDIR')
+env.unset('TEMP')
 test('NoEnv_fortran', env_exe, suite: 'fortran', env: env)
 
 test('setenv_fortran', setenv_exe, suite: 'fortran')

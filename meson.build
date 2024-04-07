@@ -1,7 +1,7 @@
 project('ffilesystem', ['c', 'cpp'],
 version: '5.6.0',
 default_options: ['cpp_std=c++20', 'buildtype=release'],
-meson_version : '>=1.3.0')
+meson_version : '>=1.4.0')
 
 fortran = get_option('fortran')
 if fortran
@@ -61,6 +61,7 @@ endif
 
 is_windows = host_machine.system() == 'windows'
 
+libwin = []
 if is_windows
   libwin = cpp.find_library('Userenv', required: true)
 endif
@@ -84,7 +85,10 @@ executable('filesystem_cli',
 endif
 
 if not meson.is_subproject()
-  foreach d : ['core', 'environment', 'expanduser', 'fortran', 'permissions', 'relative']
+  foreach d : [
+      'canonical_resolve', 'core', 'environment', 'executable', 'expanduser',
+      'fortran', 'permissions', 'relative'
+      ]
     subdir('test/' + d)
   endforeach
 endif
