@@ -3,9 +3,33 @@ description = "Lightweight filesystem and path manipulations"
 categories = "io"
 version = "5.6.0"
 
+[build]
+auto-examples = false
+auto-tests = false
+
 [install]
 library = true
 
 [library]
 source-dir = "src/common"
 include-dir = ["include"]
+
+[[test]]
+name = "core"
+source-dir = "test/core"
+main = "test_core.f90"
+
+[[test]]
+name = "filename"
+source-dir = "test/core"
+main = "test_filename.f90"
+
+[[test]]
+name = "is_subdir"
+source-dir = "test/core"
+main = "test_is_subdir.f90"
+
+[[test]]
+name = "parent"
+source-dir = "test/core"
+main = "test_parent.f90"

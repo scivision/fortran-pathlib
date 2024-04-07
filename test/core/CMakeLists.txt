@@ -18,7 +18,7 @@ endif()
 if(HAVE_CXX_FILESYSTEM)
 
 # --- C++
-add_executable(test_cpp_core test_core.cpp)
+add_executable(test_cpp_core cpp/test_core.cpp)
 target_link_libraries(test_cpp_core PRIVATE ffilesystem)
 
 add_test(NAME Cpp_core COMMAND test_cpp_core)
