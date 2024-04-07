@@ -24,6 +24,8 @@ fbd = $(BUILD_DIR)/$(fdir)
 
 main = $(BUILD_DIR)/$(NAME)
 
+main_f = $(BUILD_DIR)/filesystem_cli
+
 ifeq ($(OS),Windows_NT)
 	SHELL := pwsh.exe
 	.SHELLFLAGS := -Command
@@ -38,7 +40,7 @@ MKDIR := mkdir -p
 
 .PHONY: $(main)
 
-all: mbd $(main)
+all: mbd $(main) $(main_f)
 
 mbd: $(fbd)
 
@@ -48,6 +50,9 @@ $(fbd):
 
 $(main): app/main.cpp $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $< $(LDFLAGS)
+
+$(main_f): app/fortran/main.f90 $(FOBJS) $(OBJS)
+	$(FC) $(FFLAGS) $(FOBJS) $(OBJS) -o $@ $< $(LDFLAGS) -lstdc++
 
 $(FNAME): app/fortran/main.f90 $(FOBJS) $(OBJS)
 	$(FC) $(FFLAGS) $(FOBJS) $(OBJS) -o $@ $< $(LDFLAGS) -lstdc++
