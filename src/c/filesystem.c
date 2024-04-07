@@ -277,7 +277,7 @@ bool fs_set_permissions(const char* path, int readable, int writable, int execut
 size_t fs_make_tempdir(char* result, size_t buffer_size)
 {
   char tmpl[] = "tmp.XXXXXX";
-  char* tmp;
+  const char* tmp;
 
 #ifdef _WIN32
   tmp = _mktemp(tmpl);

@@ -62,7 +62,7 @@ int fs_is_wsl()
 
 size_t fs_getenv(const char* name, char* path, size_t buffer_size)
 {
-  char* buf = getenv(name);
+  const char* buf = getenv(name);
   if(!buf) // not error because sometimes we just check if envvar is defined
     return 0;
   // need strncpy otherwise garbage output and/or segfault
