@@ -9,22 +9,24 @@
 
 #ifdef __cplusplus
 
+#if !defined(__has_cpp_attribute)
+// this is a C++20 feature, but available in many older compilers like GCC >= 7
+#  define __has_cpp_attribute(x)  0
+#endif
+
 // GCC itself does it this way https://github.com/gcc-mirror/gcc/blob/78b56a12dd028b9b4051422c6bad6260055e4465/libcpp/system.h#L426
-#ifdef __has_cpp_attribute  // this is a C++20 feature
 #if __has_cpp_attribute(unlikely)
-#define FFS_UNLIKELY [[unlikely]]
-#define FFS_LIKELY [[likely]]
+#  define FFS_UNLIKELY [[unlikely]]
+#  define FFS_LIKELY [[likely]]
+#else
+#  define FFS_UNLIKELY
+#  define FFS_LIKELY
 #endif
+
 #if __has_cpp_attribute(nodiscard)
-#define FFS_NODISCARD [[nodiscard]]
-#endif
-#endif
-#ifndef FFS_UNLIKELY
-#define FFS_UNLIKELY
-#define FFS_LIKELY
-#endif
-#ifndef FFS_NODISCARD
-#define FFS_NODISCARD
+#  define FFS_NODISCARD [[nodiscard]]
+#else
+#  define FFS_NODISCARD
 #endif
 
 #include <cstdint>
@@ -131,19 +133,21 @@ extern "C" {
 
 #else  // C only
 
-#if defined(__has_c_attribute)
+#if !defined(__has_c_attribute)
+// this is a C23 feature, but available in many older compilers
+#  define __has_c_attribute(x)  0
+#endif
+
 #if __has_c_attribute(maybe_unused)
-#define FFS_MUNUSED_C [[maybe_unused]]
+#  define FFS_MUNUSED_C [[maybe_unused]]
+#else
+#  define FFS_MUNUSED_C
 #endif
+
 #if __has_c_attribute(nodiscard)
-#define FFS_NODISCARD [[nodiscard]]
-#endif
-#endif
-#ifndef FFS_MUNUSED_C
-#define FFS_MUNUSED_C
-#endif
-#ifndef FFS_NODISCARD
-#define FFS_NODISCARD
+#  define FFS_NODISCARD [[nodiscard]]
+#else
+# define FFS_NODISCARD
 #endif
 
 #include <stdlib.h>
