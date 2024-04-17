@@ -81,8 +81,9 @@ Ffs::set_permissions(nowrite, 0, -1, 0);
 std::cout << "Permissions for " << nowrite << ": " << Ffs::get_permissions(nowrite) << "\n";
 
 if(Ffs::is_writable(nowrite)){
-    std::cerr << "ERROR: test_exe: " << nowrite << " should not be writable\n";
-    return 77;
+  std::cerr << "ERROR: test_exe: " << nowrite << " should not be writable\n";
+  if(!fs_is_windows())
+    return EXIT_FAILURE;
 }
 
 if(!Ffs::exists(nowrite))

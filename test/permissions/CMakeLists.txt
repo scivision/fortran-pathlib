@@ -18,9 +18,3 @@ set_property(TARGET test_permissions_fortran PROPERTY LINKER_LANGUAGE Fortran)
 add_test(NAME Fortran_permissions COMMAND test_permissions_fortran)
 set_property(TEST Fortran_permissions PROPERTY LABELS Fortran)
 endif()
-
-get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
-
-set_tests_properties(${test_names} PROPERTIES
-SKIP_RETURN_CODE 77
-)

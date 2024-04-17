@@ -54,20 +54,10 @@ std::string p;
 
 std::cout << "permissions: " << exe << " = " << Ffs::get_permissions(exe) << "\n";
 
-if (!Ffs::is_file(exe)){
-    std::cerr << "test_exe: " << exe << " is not a file.\n";
-    return 77;
-}
-
 if (!Ffs::is_exe(exe))
   err("test_exe: " + exe + " is not executable and should be.");
 
 std::cout << "permissions: " << noexe << " = " << Ffs::get_permissions(noexe) << "\n";
-
-if (!Ffs::is_file(noexe)){
-  std::cerr << "test_exe: " << noexe << " is not a file.\n";
-  return 77;
-}
 
 if (Ffs::is_exe(noexe)){
   if(fs_is_windows()){

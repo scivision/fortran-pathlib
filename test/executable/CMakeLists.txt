@@ -4,7 +4,6 @@ add_executable(test_exe_cpp test_exe.cpp)
 target_link_libraries(test_exe_cpp PRIVATE ffilesystem)
 add_test(NAME Cpp_exe COMMAND test_exe_cpp)
 
-set_property(TEST Cpp_exe PROPERTY SKIP_RETURN_CODE 77)
 set_property(TEST Cpp_exe PROPERTY LABELS "Cpp")
 
 endif()

@@ -68,7 +68,7 @@ if (len_trim(p) == 0) error stop "get_permissions('"//trim(nowrite)//"') should 
 
 if (index(p, "w") /= 0) then
     write(stderr, '(a)') "test_exe: "//trim(nowrite)//" should not be writable"
-    error stop 77
+    if(.not. is_windows()) error stop
 endif
 if(is_writable(nowrite)) error stop "test_exe: "//trim(nowrite)//" should not be writable"
 
