@@ -92,7 +92,7 @@ bool fs_mkdir(const char* path)
 
   const size_t m = fs_get_max_path();
 
-  // To disambiguate, use an absolute path -- must resolve multiple times because realpath only gives one level of non-existant path
+  // To disambiguate, use an absolute path -- must resolve multiple times because realpath only gives one level of non-existent path
   char* buf = (char*) malloc(m);
   if(!buf) return false;
 

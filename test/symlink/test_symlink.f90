@@ -82,10 +82,10 @@ else
     error stop
   endif
 
-  !> read_symlink non-existant
+  !> read_symlink non-existent
   rtgt = read_symlink("not-exist-file")
   if (len_trim(rtgt) > 0) then
-    write(stderr, '(a)') "read_symlink() should return empty string for non-existant file: " // rtgt
+    write(stderr, '(a)') "read_symlink() should return empty string for non-existent file: " // rtgt
     error stop
   endif
 

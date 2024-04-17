@@ -19,7 +19,7 @@ std::string Ffs::canonical(std::string_view path, bool strict)
   std::error_code ec;
 
   if (!ex.is_absolute() && (!std::filesystem::exists(ex, ec) || ec)){
-    // handles differences in ill-defined behaviour of std::filesystem::weakly_canonical() on non-existant paths
+    // handles differences in ill-defined behaviour of std::filesystem::weakly_canonical() on non-existent paths
     // canonical(path, false) is distinct from resolve(path, false) for non-existing paths.
     return Ffs::normal(ex.generic_string());
   }
@@ -48,7 +48,7 @@ std::string Ffs::resolve(std::string_view path, bool strict)
   std::error_code ec;
 
   if (!ex.is_absolute() && (!std::filesystem::exists(ex, ec) || ec)){
-    // handles differences in ill-defined behaviour of std::filesystem::weakly_canonical() on non-existant paths
+    // handles differences in ill-defined behaviour of std::filesystem::weakly_canonical() on non-existent paths
     // canonical(path, false) is distinct from resolve(path, false) for non-existing paths.
     auto cwd = std::filesystem::current_path(ec);
     if(!ec) FFS_LIKELY
@@ -71,9 +71,15 @@ std::string Ffs::resolve(std::string_view path, bool strict)
 
 bool Ffs::equivalent(std::string_view path1, std::string_view path2)
 {
-  // non-existant paths are not equivalent
+  // non-existent paths are not equivalent
   std::error_code ec;
-  return std::filesystem::equivalent(Ffs::expanduser(path1), Ffs::expanduser(path2), ec) && !ec;
+  std::filesystem::path p1(path1);
+  std::filesystem::path p2(path2);
+  if(fs_is_mingw()){
+    p1 = p1.lexically_normal();
+    p2 = p2.lexically_normal();
+  }
+  return std::filesystem::equivalent(p1, p2, ec) && !ec;
 }
 
 

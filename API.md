@@ -360,6 +360,7 @@ is_absolute("my/path")
 ```
 
 Does path "p" *resolve* to the same path as "other".
+Does not expanduser().
 To be true:
 
 * path must exist

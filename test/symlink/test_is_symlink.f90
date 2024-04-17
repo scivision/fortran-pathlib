@@ -14,7 +14,7 @@ character(:), allocatable :: tfile, tdir
 
 allocate(character(max_path()) :: tfile)
 
-if(is_symlink("not-exist-file")) error stop "is_symlink() should be false for non-existant file"
+if(is_symlink("not-exist-file")) error stop "is_symlink() should be false for non-existent file"
 if(is_symlink("")) error stop "is_symlink('') should be false"
 
 if (command_argument_count() == 0) error stop "please give test link file"
