@@ -38,8 +38,8 @@ subroutine test_exist()
 
 character(:), allocatable :: exe, noexe
 
-exe = canonical("test_exe")
-noexe = canonical("test_noexe")
+exe = "test_exe"
+noexe = "test_noexe"
 
 call touch(exe)
 call touch(noexe)
@@ -54,22 +54,12 @@ endif
 
 print '(a)', "permissions: " // trim(exe) // " = " // get_permissions(exe)
 
-if (.not. is_file(exe)) then
-  write(stderr,'(a)') "ERROR:test_exe: " // trim(exe) // " is not a file."
-  error stop 77
-endif
-
 if (.not. is_exe(exe)) then
   write(stderr,'(a)') "ERROR:test_exe: " // trim(exe) // " is not executable."
   error stop
 endif
 
 print '(a)', "permissions: " // trim(noexe) // " = " // get_permissions(noexe)
-
-if(.not. is_file(noexe)) then
-  write(stderr,'(a)') "ERROR:test_exe: " // trim(noexe) // " is not a file."
-  error stop 77
-endif
 
 if (is_exe(noexe)) then
   if(is_windows()) then

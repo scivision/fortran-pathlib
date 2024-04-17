@@ -27,8 +27,3 @@ foreach(t IN ITEMS is_symlink symlink)
   target_compile_options(test_${t} PRIVATE ${${PROJECT_NAME}_fortran_test_flags})
   set_property(TARGET test_${t} PROPERTY LINKER_LANGUAGE Fortran)
 endforeach()
-
-
-set_tests_properties(Fortran_symlink PROPERTIES
-SKIP_REGULAR_EXPRESSION "not implemented;SIGABRT;[aA]bort"
-)

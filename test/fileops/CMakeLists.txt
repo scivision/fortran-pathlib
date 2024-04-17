@@ -15,8 +15,3 @@ endforeach()
 set_property(TEST Fortran_mkdir PROPERTY FIXTURES_SETUP mkdir_fxt)
 
 set_property(TEST Fortran_same PROPERTY FIXTURES_REQUIRED mkdir_fxt)
-
-set_property(TEST Fortran_touch PROPERTY SKIP_REGULAR_EXPRESSION "C\\+\\+20 required")
-
-set_property(TEST Fortran_fileop PROPERTY
-SKIP_REGULAR_EXPRESSION "not implemented;not available;SIGABRT;[aA]bort")

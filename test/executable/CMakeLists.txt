@@ -10,7 +10,10 @@ set_property(TEST Cpp_exe PROPERTY LABELS "Cpp")
 endif()
 
 
-if(HAVE_Fortran_FILESYSTEM)
+if(NOT HAVE_Fortran_FILESYSTEM)
+  return()
+endif()
+
 
 foreach(t IN ITEMS exe which)
 
@@ -25,9 +28,6 @@ set_property(TEST Fortran_${t} PROPERTY LABELS "Fortran")
 endforeach()
 
 
-
-set_property(TEST Fortran_exe PROPERTY SKIP_RETURN_CODE 77)
-
 add_test(NAME Fortran_which_noPath COMMAND test_which_fortran)
 if(CMAKE_VERSION VERSION_LESS 3.22)
   set_property(TEST Fortran_which_noPath PROPERTY ENVIRONMENT "PATH=")
@@ -37,5 +37,3 @@ endif()
 set_property(TEST Fortran_which_noPath PROPERTY WILL_FAIL true)
 set_property(TEST Fortran_which_noPath PROPERTY LABELS "Fortran")
 set_property(TEST Fortran_which_noPath PROPERTY DISABLED $<BOOL:${WIN32}>)  # Windows will give error 135 due to missing PATH
-
-endif()
