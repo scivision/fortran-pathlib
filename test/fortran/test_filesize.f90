@@ -1,6 +1,9 @@
 program test_filesize
 
+use, intrinsic :: iso_fortran_env, only: int64, stderr=>error_unit
+
 use filesystem
+
 
 implicit none
 
@@ -14,19 +17,17 @@ contains
 
 subroutine test_space_available()
 
-integer :: ierr
-character(:), allocatable :: buf
-allocate(character(len=max_path()) :: buf)
+character, parameter :: s1 = "/"
+integer(int64) :: i64
 
+i64 = space_available(s1)
 
-if(command_argument_count() > 0) then
-  call get_command_argument(1, buf, status=ierr)
-  if (ierr /= 0) error stop "failed to get command line argument for test_space_available"
-else
-  buf = "."
+if (i64 == 0) then
+  write(stderr, '(a,i0)') "space_available(" // s1 // ") failed: ", i64
+  error stop
 end if
 
-print '(a,f7.3)', "space_available (GB): ", real(space_available(buf)) / 1024**3
+print *, "space_available (GB): ", real(i64) / 1024**3
 
 ! if(space_available("not-exist-file") /= 0) error stop "space_available /= 0 for not existing file"
 ! if(space_available("") /= 0) error stop "space_available /= 0 for empty file"
@@ -38,34 +39,29 @@ end subroutine
 subroutine test_file_size()
 
 integer :: u, d(10), ierr
+integer(int64) :: i64
 
-type(path_t) :: p1
+character(:), allocatable :: s1
+allocate(character(len=max_path()) :: s1)
 
-character(:), allocatable :: fn
-allocate(character(len=max_path()) :: fn)
+call get_command_argument(0, s1, status=ierr)
+if (ierr /= 0) error stop "failed to get command line argument for test_file_size"
 
+s1 = join(parent(s1), "test_filesize.dat")
 
-if(command_argument_count() > 0) then
-  call get_command_argument(1, fn, status=ierr)
-  if(ierr /= 0) error stop "failed to get path from command line argument"
-else
-  fn = "test_filesize.dat"
-endif
-
-print '(a)', "file_size path: ", trim(fn)
+print '(a)', "file_size path: ", trim(s1)
 
 d = 0
 
-p1 = path_t(fn)
-
-open(newunit=u, file=fn, status="replace", action="write", access="stream")
+open(newunit=u, file=s1, status="replace", action="write", access="stream")
 ! writing text made OS-specific newlines that could not be suppressed
 write(u) d
 close(u)
 
-if (p1%file_size() /= size(d)*storage_size(d)/8) error stop "size mismatch OO"
-if (p1%file_size() /= file_size(p1%path())) error stop "size mismatch functional"
-print '(a, i0)', "PASSED: filesize as expected: ", p1%file_size()
+i64 = file_size(s1)
+print '(a, i0)', "filesize (bytes): ", i64
+if (i64 /= size(d)*storage_size(d)/8) error stop "%file_size() mismatch"
+if (i64 /= file_size(s1)) error stop "file_size() mismatch"
 
 !> shaky platform
 

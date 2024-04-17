@@ -167,47 +167,19 @@ uintmax_t fs_file_size(const char* path)
 uintmax_t fs_space_available(const char* path)
 {
 
-  if(!fs_exists(path))
-    return 0;
-
-  const size_t m = fs_get_max_path();
-
-  char* r = (char*) malloc(m);
-  if(!r) return 0;
-
-  // for robustness and clarity, use root of path
-  if (!fs_root(path, r, m)){
-    fprintf(stderr, "ERROR:ffilesystem:space_available: %s => could not get root\n", path);
-    free(r);
-    return 0;
-  }
-
 #ifdef _WIN32
-
   ULARGE_INTEGER bytes_available;
-  bool ok = GetDiskFreeSpaceExA(r, &bytes_available, NULL, NULL);
-  free(r);
-
-  if(ok)
+  if(GetDiskFreeSpaceExA(path, &bytes_available, NULL, NULL))
     return bytes_available.QuadPart;
+#else
+  // https://unix.stackexchange.com/a/703650
+  struct statvfs stat;
+  if (!statvfs(path, &stat))
+    return (stat.f_frsize ? stat.f_frsize : stat.f_bsize) * stat.f_bavail;
+#endif
 
   fprintf(stderr, "ERROR:ffilesystem:space_available: %s => %s\n", path, strerror(errno));
   return 0;
-
-#else
-
-  struct statvfs stat;
-
-  if (statvfs(r, &stat)) {
-    fprintf(stderr, "ERROR:ffilesystem:space_available: %s => %s\n", r, strerror(errno));
-    free(r);
-    return 0;
-  }
-  free(r);
-
-  return stat.f_bsize * stat.f_bavail;
-
-#endif
 }
 
 
