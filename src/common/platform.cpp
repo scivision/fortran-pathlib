@@ -86,6 +86,7 @@ int fs_is_wsl() {
     if (release.ends_with("-Microsoft"))
       return 1;
 #endif
+    std::cerr << "ERROR:Ffilesystem:is_wsl(): compiler lacks C++20 __cpp_lib_starts_ends_with \n";
     return -1;
 #else
   return 0;

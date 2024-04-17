@@ -185,5 +185,10 @@ bool Ffs::is_subdir(std::string_view subdir, std::string_view dir)
 {
   auto r = Ffs::relative_to(dir, subdir);
 
-  return !r.empty() && r.front() != '.';
+  return !r.empty() && r != "." &&
+#ifdef __cpp_lib_starts_ends_with
+    !r.starts_with("..");
+#else
+    (r[0] != '.' || (r.length() > 1 && r[1] != '.'));
+#endif
 }

@@ -304,7 +304,7 @@ bool fs_is_subdir(const char* subdir, const char* dir)
   if(!buf) return false;
 
   size_t L = fs_relative_to(dir, subdir, buf, m);
-  bool yes = L > 0 && buf[0] != '.';
+  bool yes = L > 0 && !(L==1 && buf[0] == '.') && strncmp(buf, "..", 2) != 0;
 
   free(buf);
 

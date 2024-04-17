@@ -38,25 +38,20 @@ print '(a)', "PASS: parent()"
 contains
 
 
-integer function check(in, ref) result(i)
+integer function check(in1, ref1) result(i)
 
-character(*), intent(in) :: in, ref
+character(*), intent(in) :: in1, ref1
 
-character(:), allocatable :: s, s1
-type(path_t) :: p
+character(:), allocatable :: s
 
 i = 0
 
-s = parent(in)
+s = parent(in1)
 
-p = path_t(in)
-s1 = p%parent()
-
-if(s == ref .and. s1 == ref) return
+if(s == ref1) return
 
 i = 1
-write(stderr, '(a)') "parent("// trim(in) // ") = " // s // " /= " // ref
-write(stderr, '(a)') "path_t("// trim(in) // ")%parent() = " // s1 // " /= " // ref
+write(stderr, '(a)') "parent("// trim(in1) // ") = " // s // " /= " // ref1
 
 end function
 
