@@ -22,9 +22,15 @@ call get_command_argument(0, c1, status=i)
 if (i /= 0) error stop 'ERROR: get_command_argument(0)'
 
 print '(a)', "own command: " // trim(c1)
+print '(a)', "current directory: " // get_cwd()
 
 s1 = file_name(c1)
 s2 = "./" // s1
+
+if(.not. is_file(s2)) then
+  write(stderr, '(a)') "ERROR: file name: " // s2 // " is not a file"
+  error stop
+endif
 
 if(.not. is_file(s1)) then
   write(stderr, '(a)') "ERROR: file name: " // s1 // " is not a file"
