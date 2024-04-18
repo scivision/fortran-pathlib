@@ -70,10 +70,18 @@ if (p1 /= "../" // dummy) then
   error stop
 end if
 
+!> not strict, not exist
 p1 = canonical("not-exist/dir/../")
 
 if (p1 /= "not-exist") then
   write(stderr,*) 'ERROR: relative dir did not canonicalize: ' // p1
+  error stop
+end if
+
+!> strict, not exist
+p1 = canonical("not-exist/dir/../", strict=.true.)
+if (len_trim(p1) /= 0) then
+  write(stderr,*) 'ERROR: strict not-exist should return empty string: ' // p1
   error stop
 end if
 

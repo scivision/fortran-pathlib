@@ -42,6 +42,7 @@ size_t fs_canonical(const char* path, bool strict, char* result, size_t buffer_s
   if(!e) {
     if(strict){
       fprintf(stderr, "ERROR:ffilesystem:canonical: \"%s\" => does not exist and strict=true\n", buf);
+      L = 0;
     } else {
       L = fs_normal(buf, result, buffer_size);
     }

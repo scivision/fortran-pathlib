@@ -18,7 +18,7 @@ std::string Ffs::canonical(std::string_view path, bool strict)
 
   std::error_code ec;
 
-  if (!ex.is_absolute() && (!std::filesystem::exists(ex, ec) || ec)){
+  if (!strict && !ex.is_absolute() && (!std::filesystem::exists(ex, ec) || ec)){
     // handles differences in ill-defined behaviour of std::filesystem::weakly_canonical() on non-existent paths
     // canonical(path, false) is distinct from resolve(path, false) for non-existing paths.
     return Ffs::normal(ex.generic_string());
