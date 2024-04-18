@@ -162,12 +162,8 @@ bool fs_equivalent(const char* path1, const char* path2)
 size_t fs_which(const char* name, char* result, size_t buffer_size)
 {
 
-  if(fs_is_absolute(name)){
-    if(fs_is_exe(name))
-      return fs_strncpy(name, result, buffer_size);
-
-    return 0;
-  }
+  if(fs_is_absolute(name))
+    return fs_is_exe(name) ? fs_strncpy(name, result, buffer_size) : 0;
 
   char* path = getenv("PATH");
   if(!path){
