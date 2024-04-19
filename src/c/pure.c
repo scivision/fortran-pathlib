@@ -64,6 +64,7 @@ size_t fs_normal(const char* path, char* result, size_t buffer_size)
 size_t fs_file_name(const char* path, char* result, size_t buffer_size)
 {
   size_t L = strlen(path);
+  // need this check to avoid cwalk segfault
   if(L == 0)
     return 0;
 
