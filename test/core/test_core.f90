@@ -196,17 +196,18 @@ end subroutine test_join
 
 subroutine test_suffix()
 
-type(path_t) :: p1, p2
+type(path_t) :: p1
+character(:), allocatable :: s1
 
 if(suffix("") /= "") error stop "suffix empty"
 
 p1 = path_t("suffix_name.a.b")
 
-if (p1%suffix() /= ".b") error stop "%suffix failed: " // p1%suffix()
-p2 = path_t(p1%suffix())
-if (p2%suffix() /= "") error stop "suffix nest failed on " // p2%path()
-p2 = path_t(p2%suffix())
-if (p2%suffix() /= "") error stop "suffix idempotent failed"
+s1 = p1%suffix()
+if (s1 /= ".b") error stop "%suffix failed: " // s1
+
+s1 = suffix(s1)
+if (s1 /= "") error stop "suffix recursive failed: " // s1
 
 if(len_trim(suffix(".suffix")) /= 0) error stop "suffix leading dot filename: " // suffix(".suffix")
 if(len_trim(suffix("./.suffix")) /= 0) error stop "suffix leading dot filename cwd: " // suffix("./.suffix")
