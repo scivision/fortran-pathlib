@@ -50,28 +50,21 @@ size_t fs_canonical(const char* path, bool strict, char* result, size_t buffer_s
     return L;
   }
 
-  char* buf2 = (char*) malloc(buffer_size);
-  if(!buf2) {
-    free(buf);
-    return 0;
-  }
-
 #ifdef _WIN32
-  const char* t = _fullpath(buf2, buf, buffer_size);
+  const char* t = _fullpath(result, buf, buffer_size);
 #else
-  const char* t = realpath(buf, buf2);
+  const char* t = realpath(buf, result);
 #endif
 
-  if (!t) {
+  L = strlen(result);
+  if(L >= buffer_size){
+    fprintf(stderr, "ERROR:ffilesystem:resolve: buffer overflow\n");
+    L = 0;
+  } else if (!t) {
     fprintf(stderr, "ERROR:ffilesystem:canonical: %s   %s\n", buf, strerror(errno));
-    free(buf);
-    free(buf2);
-    return 0;
+    L = 0;
   }
   free(buf);
-
-  L = fs_strncpy(buf2, result, buffer_size);
-  free(buf2);
 
   if(L)
     fs_as_posix(result);
@@ -113,28 +106,21 @@ size_t fs_resolve(const char* path, bool strict, char* result, size_t buffer_siz
     }
   }
 
-  char* buf2 = (char*) malloc(buffer_size);
-  if(!buf2) {
-    free(buf);
-    return 0;
-  }
-
 #ifdef _WIN32
-  const char* t = _fullpath(buf2, buf, buffer_size);
+  const char* t = _fullpath(result, buf, buffer_size);
 #else
-  const char* t = realpath(buf, buf2);
+  const char* t = realpath(buf, result);
 #endif
 
-  if (!t && strict) {
+  L = strlen(result);
+  if(L >= buffer_size){
+    fprintf(stderr, "ERROR:ffilesystem:resolve: buffer overflow\n");
+    L = 0;
+  } else if (!t && strict) {
     fprintf(stderr, "ERROR:ffilesystem:resolve: %s   %s\n", buf, strerror(errno));
-    free(buf);
-    free(buf2);
-    return 0;
+    L = 0;
   }
   free(buf);
-
-  L = fs_strncpy(buf2, result, buffer_size);
-  free(buf2);
 
   if(L)
     fs_as_posix(result);

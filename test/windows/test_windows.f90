@@ -7,34 +7,34 @@ implicit none
 
 integer :: i
 
-character(:), allocatable :: buf, buf2, buf3
+character(:), allocatable :: s1, s2, s3
 
-allocate(character(max_path()) :: buf, buf2, buf3)
+allocate(character(max_path()) :: s1, s2, s3)
 
 
-call get_environment_variable("PROGRAMFILES", buf, status=i)
+call get_environment_variable("PROGRAMFILES", s1, status=i)
 if (i /= 0) then
     write(stderr, '(a)') "Error getting PROGRAMFILES"
     error stop 77
 endif
 
-print '(a)', "PROGRAMFILES: " // trim(buf)
+print '(a)', "PROGRAMFILES: " // trim(s1)
 
-buf2 = shortname(buf)
-print '(a)', trim(buf) // " => " // trim(buf2)
-if(len_trim(buf2) == 0) then
-    write(stderr, '(a)') "Error converting long path to short path: " // trim(buf2)
+s2 = shortname(s1)
+print '(a)', trim(s1) // " => " // trim(s2)
+if(len_trim(s2) == 0) then
+    write(stderr, '(a)') "Error converting long path to short path: " // trim(s2)
     error stop
 endif
 
-buf3 = longname(buf2)
-print '(a)', trim(buf2) // " => " // trim(buf3)
-if(len_trim(buf3) == 0) then
-    write(stderr, '(a)') "Error converting short path to long path: " // trim(buf3)
+s3 = longname(s2)
+print '(a)', trim(s2) // " => " // trim(s3)
+if(len_trim(s3) == 0) then
+    write(stderr, '(a)') "Error converting short path to long path: " // trim(s3)
     error stop
 endif
 
-if(buf /= buf3) then
+if(s1 /= s3) then
     write(stderr, '(a)') "Error: shortname(longname(x)) != x"
     error stop
 endif

@@ -219,8 +219,8 @@ size_t fs_get_permissions(const char*, char*, size_t);
 
 bool fs_remove(const char*);
 
-size_t fs_canonical(const char*, bool, char*, size_t);
-size_t fs_resolve(const char*, bool, char*, size_t);
+FFS_NODISCARD size_t fs_canonical(const char*, bool, char*, size_t);
+FFS_NODISCARD size_t fs_resolve(const char*, bool, char*, size_t);
 
 FFS_NODISCARD bool fs_equivalent(const char*, const char*);
 bool fs_copy_file(const char*, const char*, bool);
