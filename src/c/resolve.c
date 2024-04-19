@@ -166,6 +166,17 @@ size_t fs_which(const char* name, char* result, size_t buffer_size)
   if(fs_is_absolute(name))
     return fs_is_exe(name) ? fs_strncpy(name, result, buffer_size) : 0;
 
+  size_t L;
+
+  // Windows gives priority to cwd, so check that first
+  if(fs_is_windows()){
+    L = fs_get_cwd(result, buffer_size);
+    if(L)
+      L = fs_join(result, name, result, buffer_size);
+    if(L && fs_is_exe(result))
+      return L;
+  }
+
   char* path = getenv("PATH");
   if(!path){
     fprintf(stderr, "ERROR:ffilesystem:which: PATH environment variable not set\n");
@@ -183,7 +194,7 @@ size_t fs_which(const char* name, char* result, size_t buffer_size)
     fs_join(p, name, buf, buffer_size);
 
     if(fs_is_exe(buf)){
-      size_t L = fs_strncpy(buf, result, buffer_size);
+      L = fs_strncpy(buf, result, buffer_size);
       free(buf);
       return L;
     }

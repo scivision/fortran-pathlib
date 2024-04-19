@@ -89,6 +89,11 @@ std::string Ffs::which(std::string_view name)
   if (Ffs::is_absolute(n))
     return Ffs::is_exe(n) ? n : std::string();
 
+  // Windows gives priority to cwd, so check that first
+  if(fs_is_windows()){
+    if(std::string t = Ffs::get_cwd() + "/" + n; Ffs::is_exe(t))
+      return t;
+  }
   const char pathsep = fs_pathsep();
 
   std::string path = Ffs::get_env("PATH");
@@ -97,10 +102,6 @@ std::string Ffs::which(std::string_view name)
     std::cerr << "ERROR:ffilesystem:which: Path environment variable not set\n";
     return {};
   }
-
-  // Windows gives priority to cwd, so check that first
-  if(fs_is_windows())
-    path = Ffs::get_cwd() + pathsep + path;
 
   std::string::size_type start = 0;
   std::string::size_type end = path.find_first_of(pathsep, start);

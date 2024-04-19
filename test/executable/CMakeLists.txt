@@ -26,6 +26,8 @@ set_property(TEST Fortran_${t} PROPERTY LABELS "Fortran")
 
 endforeach()
 
+set_property(TEST Fortran_which PROPERTY WORKING_DIRECTORY $<TARGET_FILE_DIR:test_which_fortran>)
+# Windows CWD priority test with multi-config generators
 
 add_test(NAME Fortran_which_noPath COMMAND test_which_fortran)
 if(CMAKE_VERSION VERSION_LESS 3.22)
