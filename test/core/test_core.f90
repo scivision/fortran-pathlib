@@ -220,14 +220,16 @@ end subroutine test_suffix
 
 subroutine test_stem()
 
-type(path_t) :: p1, p2
+type(path_t) :: p1
+character(:), allocatable :: s1
 
 if(stem("") /= "") error stop "stem empty: " // stem("")
 
 p1 = path_t("stem.a.b")
-if (p1%stem() /= "stem.a") error stop "%stem failed: " // p1%stem()
-p2 = path_t(p1%stem())
-if (p2%stem() /= "stem") error stop "stem nest failed: " // p2%stem()
+s1 = p1%stem()
+if (s1 /= "stem.a") error stop "%stem failed: " // s1
+s1 = stem(s1)
+if (s1 /= "stem") error stop "stem nest failed: " // s1
 
 if (stem("stem") /= "stem") error stop "stem idempotent failed: " // stem("stem")
 

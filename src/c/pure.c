@@ -83,23 +83,13 @@ size_t fs_file_name(const char* path, char* result, size_t buffer_size)
 
 size_t fs_stem(const char* path, char* result, size_t buffer_size)
 {
-  char* buf = (char*) malloc(buffer_size);
-  if(!buf) return 0;
-  if(!fs_file_name(path, buf, buffer_size)){
-    free(buf);
+  if(!fs_file_name(path, result, buffer_size))
     return 0;
-  }
 
-  // no need to recheck buffer_size as it's already checked in fs_file_name()
+  char* pos = strrchr(result, '.');
+  if (pos && pos != result)
+    *pos = '\0';
 
-  char* pos = strrchr(buf, '.');
-  if (pos && pos != buf){
-    strncpy(result, buf, pos-buf);
-    result[pos-buf] = '\0';  // need this to truncate suffix
-  } else
-    strncpy(result, buf, buffer_size);
-
-  free(buf);
   return strlen(result);
 }
 
