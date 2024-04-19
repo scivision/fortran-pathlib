@@ -194,7 +194,7 @@ size_t fs_root(const char*, char*, size_t);
 
 size_t fs_with_suffix(const char*, const char*, char*, size_t);
 
-size_t fs_which(const char*, char*, size_t);
+FFS_NODISCARD size_t fs_which(const char*, char*, size_t);
 
 FFS_NODISCARD bool fs_is_symlink(const char*);
 bool fs_create_symlink(const char*, const char*);

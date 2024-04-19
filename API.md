@@ -452,6 +452,9 @@ join("a/b", "c/d") ! "a/b/c/d"
 
 Find executable file on environment variable PATH if present.
 Windows must include the ".exe" suffix.
+Windows prioritizes CWD.
+Does not resolve path--if Windows CWD or relative path is in PATH, may output relative path.
+Does not expanduser tilde.
 
 ```fortran
 character(:), allocatable :: which("myprog")

@@ -86,13 +86,17 @@ std::string Ffs::which(std::string_view name)
 {
   std::string n(name);
 
-  if (Ffs::is_absolute(n))
-    return Ffs::is_exe(n) ? n : std::string();
+  if (Ffs::is_exe(n))
+    return Ffs::as_posix(n);
+
+  // relative directory component, but path was not a file
+  if(Ffs::file_name(n) != n)
+    return {};
 
   // Windows gives priority to cwd, so check that first
   if(fs_is_windows()){
     if(std::string t = Ffs::get_cwd() + "/" + n; Ffs::is_exe(t))
-      return t;
+      return Ffs::as_posix(t);
   }
   const char pathsep = fs_pathsep();
 
@@ -111,7 +115,7 @@ std::string Ffs::which(std::string_view name)
     p = path.substr(start, end - start) + "/" + n;
     if (FS_TRACE) std::cout << "TRACE:ffilesystem:which: " << p << "\n";
     if (Ffs::is_exe(p))
-      return p;
+      return Ffs::as_posix(p);
 
     start = end + 1;
     end = path.find_first_of(pathsep, start);
@@ -119,7 +123,7 @@ std::string Ffs::which(std::string_view name)
 
   p = path.substr(start) + "/" + n;
   if(Ffs::is_exe(p))
-    return p;
+    return Ffs::as_posix(p);
 
   return {};
 }
