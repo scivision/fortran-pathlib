@@ -2,8 +2,6 @@
 #include <cstdlib>
 #include <string>
 
-#include <filesystem>
-
 #include "ffilesystem.h"
 
 #ifdef _MSC_VER

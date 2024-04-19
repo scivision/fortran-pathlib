@@ -16,8 +16,6 @@
 #include <sys/stat.h>
 #endif
 
-#include <filesystem>
-
 
 bool Ffs::exists(std::string_view path)
 {

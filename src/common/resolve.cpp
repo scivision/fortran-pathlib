@@ -3,8 +3,6 @@
 #include <cstddef> // size_t
 #include <iostream>
 
-#include <filesystem>
-
 
 std::string Ffs::canonical(std::string_view path, bool strict)
 {
