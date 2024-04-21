@@ -1,6 +1,20 @@
 # Fortran Filesystem API
 
-Fortran filesystem module contains one Fortran type "path_t" that contains properties and methods.
+Fortran filesystem modules contains numerous procedures and one (optional, default enabled) Fortran type "path_t" that contains properties and methods.
+
+C++ stdlib `<filesystem>` is used extensively within Ffilesystem to implement functions in a platform-agnostic and robust way.
+Fallback to C99 functions is available for compilers that do not support C++ [<filesystem>](https://en.cppreference.com/w/cpp/header/filesystem).
+For the interchange of character strings between Fortran and C++ / C, the buffer length is determined at compile time and is available in `fs_get_max_path()` (C, C++) or `max_path()` (Fortran).
+
+```fortran
+integer :: m
+m = max_path()
+```
+
+## path_t
+
+`path_t` can be manually disabled with CMake by setting `cmake -DHAVE_F03TYPE=0`.
+
 The "path_t" type uses getter and setter procedure to access the path as a string `character(:), allocatable`.
 
 ```fortran
@@ -22,14 +36,6 @@ p%path(2) !< character index 2:end
 ```
 
 In all the examples, we assume "p" is path_t.
-
-C++17 filesystem is used extensively within Ffilesystem to implement functions in a platform-agnostic and robust way.
-For the interchange of character strings between Fortran and C++, the buffer length is determined at compile time and is available in `fs_get_max_path()` (C, C++) or `max_path()` (Fortran).
-
-```fortran
-integer :: m
-m = max_path()
-```
 
 ## System capabilities
 
