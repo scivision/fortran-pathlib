@@ -1,7 +1,7 @@
 name = "ffilesystem"
 description = "Lightweight filesystem and path manipulations"
 categories = "io"
-version = "5.6.1"
+version = "5.6.2"
 
 [build]
 auto-examples = false
