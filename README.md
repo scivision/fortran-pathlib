@@ -15,7 +15,7 @@ can be used from C and C++ project code--see
 
 For C++ users, **C++17 standard** is required.
 For C users, **C99 standard** is required.
-Fortran uses **Fortran 2008 standard** and either the C or C++ Ffilesystem backend.
+Fortran uses **Fortran 2003 standard** and either the C or C++ Ffilesystem backend.
 
 For full features, Ffilesystem uses
 [C++ stdlib filesystem](https://en.cppreference.com/w/cpp/filesystem).
@@ -27,19 +27,6 @@ Inspired by (and benchmarked against)
 [Python pathlib](https://docs.python.org/3/library/pathlib.html).
 
 Important Ffilesystem functions are [benchmarked](./test/bench/bench.md) to help improve performance.
-
-Fortran "filesystem" module contains Fortran type "path_t" that contains properties and methods.
-The "path_t" type uses getter and setter procedure to access the path as a string `character(:), allocatable`.
-
-```fortran
-use filesystem, only : path_t
-
-type(path_t) :: p
-
-p = path_t("my/path")  !< setter
-
-print *, "path: ", p%path() !< getter
-```
 
 Advanced / conceptual development takes place in [ffilesystem-concepts](https://github.com/scivision/ffilesystem-concepts) repo.
 
@@ -126,6 +113,24 @@ make
 ```
 
 We provide Fortran REPL "filesystem_cli" and C++ REPL "fs_cli" for interactive testing of Ffilesystem routines.
+
+### Build options
+
+Fortran "filesystem" module contains OPTIONAL (enabled by default) Fortran type "path_t" that contains properties and methods.
+The "path_t" type uses getter and setter procedure to access the path as a string `character(:), allocatable`.
+
+```fortran
+use filesystem, only : path_t
+
+type(path_t) :: p
+
+p = path_t("my/path")  !< setter
+
+print *, "path: ", p%path() !< getter
+```
+
+The CMake and Meson scripts detect if Fortran 2003 `type` is available and enable `path_t` by default.
+To manually enable / disable `path_t` with CMake set command option `cmake -DHAVE_F03TYPE=1` or `cmake -DHAVE_F03TYPE=0` respectively.
 
 ## Usage from other projects
 

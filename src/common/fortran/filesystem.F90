@@ -406,9 +406,9 @@ end function
 
 end interface
 
-
+#ifndef NO_F03TYPE
 include "path_type.inc"
-
+#endif
 
 contains
 
@@ -428,7 +428,9 @@ max_path = int(fs_get_max_path())
 end function
 
 
+#ifndef NO_F03TYPE
 include "path_methods.inc"
+#endif
 
 
 function as_posix(path) result(r)

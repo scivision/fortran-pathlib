@@ -8,7 +8,7 @@ if fortran
   add_languages('fortran', native: false, required: true)
 endif
 
-fsrcs = fortran ? files('src/common/fortran/filesystem.f90') : []
+fsrcs = fortran ? files('src/common/fortran/filesystem.F90') : []
 csrcs = files('src/common/common.c')
 cppsrcs = files(
 'src/common/filesystem.cpp',
@@ -24,6 +24,7 @@ cppsrcs = files(
 
 inc = include_directories('include')
 
+# feature checks
 fs_check = '''
 #include <filesystem>
 static_assert(__cpp_lib_filesystem, "No C++ filesystem support");
@@ -59,6 +60,21 @@ else
   chrono_def = []
 endif
 
+fc = meson.get_compiler('fortran')
+
+f03type_src = '''
+program main
+type :: path_t
+character(:), allocatable :: s
+end type
+end program
+'''
+
+have_f03type = fc.compiles(f03type_src, name: 'Fortran 2003 derived type')
+
+f03type_def = have_f03type ? [] : '-DNO_F03TYPE'
+
+# Windows-specific
 is_windows = host_machine.system() == 'windows'
 
 libwin = []
@@ -66,11 +82,13 @@ if is_windows
   libwin = cpp.find_library('Userenv', required: true)
 endif
 
+# main library
 filesystem = library('filesystem',
 sources: [fsrcs, csrcs, cppsrcs],
 include_directories: inc,
 install: true,
 cpp_args: chrono_def,
+fortran_args: f03type_def,
 dependencies: libwin,
 )
 

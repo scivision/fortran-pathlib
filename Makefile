@@ -17,7 +17,7 @@ SRCS = $(cdir)common.c $(cdir)filesystem.cpp $(cdir)c_ifc.cpp $(cdir)dynamic.cpp
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 
 fdir = $(cdir)fortran/
-FSRCS = $(fdir)filesystem.f90
+FSRCS = $(fdir)filesystem.F90
 FOBJS := $(FSRCS:%=$(BUILD_DIR)/%.o)
 
 fbd = $(BUILD_DIR)/$(fdir)

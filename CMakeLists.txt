@@ -89,7 +89,7 @@ endif()
 
 
 add_library(ffilesystem src/common/common.c
-"$<$<BOOL:${HAVE_Fortran_FILESYSTEM}>:src/common/fortran/filesystem.f90>"
+"$<$<BOOL:${HAVE_Fortran_FILESYSTEM}>:src/common/fortran/filesystem.F90>"
 )
 if(HAVE_CXX_FILESYSTEM)
   target_sources(ffilesystem PRIVATE
@@ -125,6 +125,7 @@ target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${${PROJECT_NAME}_WIN32_SYMLINK}>>:WIN32_SYMLINK>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${${PROJECT_NAME}_HAVE_CLOCK_CAST}>>:HAVE_CLOCK_CAST>"
 "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${ffilesystem_trace}>>:FS_TRACE=1>"
+"$<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${HAVE_F03TYPE}>>>:NO_F03TYPE>"
 )
 target_compile_options(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANG_AND_ID:C,AppleClang,Clang,GNU>,$<NOT:$<BOOL:${c23_maybe_unused}>>>:-Wno-unused-parameter>"
@@ -204,5 +205,6 @@ include(FeatureSummary)
 add_feature_info(Fortran HAVE_Fortran_FILESYSTEM "Fortran bindings")
 add_feature_info(Cpp HAVE_CXX_FILESYSTEM "C++ stdlib filesystem")
 add_feature_info(shared BUILD_SHARED_LIBS "Build shared library: enables lib_path()")
+add_feature_info(path_t HAVE_F03TYPE "Fortran 2003 path_t object-oriented interface")
 
 feature_summary(WHAT ENABLED_FEATURES DESCRIPTION "${PROJECT_NAME} enabled features:")
