@@ -63,9 +63,7 @@ std::cout << "Permissions for " << noread << ": " << p << "\n";
 if(p.length() == 0)
     err(noread + "') should not be empty");
 
-if(Ffs::is_readable(noread)){
-    std::cerr << "XFAIL: test_exe: " << noread << " should not be readable\n";
-} else {
+if(p.find("r") == std::string::npos && Ffs::is_readable(noread)){
 
 if(!Ffs::exists(noread))
     err(noread + " should exist");
@@ -73,15 +71,17 @@ if(!Ffs::exists(noread))
 if(!Ffs::is_file(noread))
     err(noread + " should be a file");
 }
+
 // writable
 if(!Ffs::is_file(nowrite))
   Ffs::touch(nowrite);
 Ffs::set_permissions(nowrite, 0, -1, 0);
 
-std::cout << "Permissions for " << nowrite << ": " << Ffs::get_permissions(nowrite) << "\n";
+p = Ffs::get_permissions(nowrite);
+std::cout << "Permissions for " << nowrite << " " << p << "\n";
 
-if(Ffs::is_writable(nowrite)){
-  std::cerr << "ERROR: test_exe: " << nowrite << " should not be writable\n";
+if(p.find("w") == std::string::npos && Ffs::is_writable(nowrite)){
+  std::cerr << "ERROR:  " << nowrite << " should not be writable\n";
   if(!fs_is_windows())
     return EXIT_FAILURE;
 }

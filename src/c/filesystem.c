@@ -238,6 +238,8 @@ bool fs_touch(const char* path)
 
 bool fs_set_permissions(const char* path, int readable, int writable, int executable)
 {
+  // on POSIX, only sets permission for user, not group or others
+
   struct stat s;
   if(stat(path, &s) || (s.st_mode & S_IFCHR))
     return false;
