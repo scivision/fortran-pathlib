@@ -14,6 +14,7 @@ if(HAVE_Fortran_FILESYSTEM)
 add_executable(test_permissions_fortran test_permissions.f90)
 target_link_libraries(test_permissions_fortran PRIVATE ffilesystem)
 set_property(TARGET test_permissions_fortran PROPERTY LINKER_LANGUAGE Fortran)
+target_compile_options(test_permissions_fortran PRIVATE ${${PROJECT_NAME}_fortran_test_flags})
 
 add_test(NAME Fortran_permissions COMMAND test_permissions_fortran)
 set_property(TEST Fortran_permissions PROPERTY LABELS Fortran)

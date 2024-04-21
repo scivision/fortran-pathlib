@@ -11,6 +11,7 @@
 #endif
 
 #include <cstddef> // size_t
+#include <cctype> // std::isalnum
 
 
 // tell if Ffilesystme core is C or C++

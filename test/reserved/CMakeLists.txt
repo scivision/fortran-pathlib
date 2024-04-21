@@ -9,21 +9,17 @@ SKIP_REGULAR_EXPRESSION "SIGABRT;[aA]bort"
 
 
 if(HAVE_Fortran_FILESYSTEM)
-add_executable(test_reserved_fortran test_reserved.f90)
-target_link_libraries(test_reserved_fortran PRIVATE ffilesystem)
-set_property(TARGET test_reserved_fortran PROPERTY LINKER_LANGUAGE Fortran)
 
-add_test(NAME Fortran_reserved COMMAND test_reserved_fortran)
+foreach(t IN ITEMS reserved safe)
+add_executable(test_${t}_fortran test_${t}.f90)
+target_link_libraries(test_${t}_fortran PRIVATE ffilesystem)
+set_property(TARGET test_${t}_fortran PROPERTY LINKER_LANGUAGE Fortran)
+target_compile_options(test_${t}_fortran PRIVATE ${${PROJECT_NAME}_fortran_test_flags})
 
-add_executable(test_safe_fortran test_safe.f90)
-target_link_libraries(test_safe_fortran PRIVATE ffilesystem)
-set_property(TARGET test_safe_fortran PROPERTY LINKER_LANGUAGE Fortran)
-target_compile_options(test_safe_fortran PRIVATE ${${PROJECT_NAME}_fortran_test_flags})
+add_test(NAME Fortran_${t} COMMAND test_${t}_fortran)
+set_property(TEST Fortran_${t} PROPERTY LABELS "Fortran")
+endforeach()
 
-add_test(NAME Fortran_safe COMMAND test_safe_fortran)
-
-
-set_property(TEST Fortran_reserved Fortran_safe PROPERTY LABELS "Fortran")
 endif()
 
 if(HAVE_CXX_FILESYSTEM)

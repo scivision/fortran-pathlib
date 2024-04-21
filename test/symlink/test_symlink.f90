@@ -11,7 +11,6 @@ logical :: win32_symlink
 
 valgrind: block
 
-type(path_t) :: p_sym, p_tgt
 logical :: ok
 
 character(:), allocatable :: tgt, rtgt, link, linko, tgt_dir, link_dir
@@ -33,8 +32,6 @@ tgt_dir = parent(tgt_dir)
 tgt = join(tgt_dir, "test.txt")
 call touch(tgt)
 
-p_tgt = path_t(tgt)
-
 link = join(tgt_dir, "test.link")
 linko = join(tgt_dir, "test_oo.link")
 link_dir = join(tgt_dir, "my_link.dir")
@@ -53,8 +50,6 @@ endif
 call create_symlink("", link, ok)
 if (ok) error stop "ERROR: create_symlink() should fail with empty target"
 print '(a)', "PASSED: create_symlink: empty target"
-
-p_sym = path_t(linko)
 
 if (is_symlink(link)) then
   print *, "deleting old symlink " // link
@@ -92,12 +87,12 @@ else
 endif
 
 
-if (p_sym%is_symlink()) then
-  print *, "deleting old symlink " // p_sym%path()
-  call p_sym%remove()
+if (is_symlink(linko)) then
+  print *, "deleting old symlink " // linko
+  call remove(linko)
 endif
-call p_tgt%create_symlink(linko)
-print '(a)', "PASSED: created symlink " // p_sym%path()
+call create_symlink(tgt, linko)
+print '(a)', "PASSED: created symlink " // linko
 
 !> directory symlinks
 if (is_symlink(link_dir)) then
@@ -111,7 +106,6 @@ call create_symlink(tgt_dir, link_dir)
 
 !> file symlinks
 if(is_symlink(tgt)) error stop "is_symlink() should be false for non-symlink file"
-if(p_tgt%is_symlink()) error stop "%is_symlink() should be false for non-symlink file"
 if(.not. is_file(link)) then
   write(stderr, "(a)") "is_file() should be true for existing regular file: " // link
   error stop
@@ -119,10 +113,6 @@ endif
 
 if(.not. is_symlink(link)) then
   write(stderr, '(a)') "is_symlink() should be true for symlink file: " // link
-  error stop
-endif
-if(.not. p_sym%is_symlink()) then
-  write(stderr, '(a)') "%is_symlink() should be trum for symlink file: " // p_sym%path()
   error stop
 endif
 if(.not. is_file(link)) then

@@ -60,7 +60,7 @@ close(u)
 
 i64 = file_size(s1)
 print '(a, i0)', "filesize (bytes): ", i64
-if (i64 /= size(d)*storage_size(d)/8) error stop "%file_size() mismatch"
+if (i64 /= size(d)*storage_size(d)/8) error stop "file_size() mismatch"
 if (i64 /= file_size(s1)) error stop "file_size() mismatch"
 
 !> shaky platform

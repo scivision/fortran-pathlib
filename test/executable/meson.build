@@ -11,8 +11,8 @@ test('exe_fortran', t_exe, suite: 'fortran')
 
 env = environment()
 env.unset('PATH')
-test('NoPathWhich_fortran', t_which, suite: 'fortran', env: env)
+test('NoPathWhich_fortran', t_which, suite: 'fortran', env: env, workdir: meson.current_build_dir())
 
-test('which_fortran', t_which, suite: 'fortran')
+test('which_fortran', t_which, suite: 'fortran', workdir: meson.current_build_dir())
 
 endif

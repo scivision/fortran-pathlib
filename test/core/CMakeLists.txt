@@ -1,8 +1,12 @@
 if(HAVE_Fortran_FILESYSTEM)
 
-set(tests core filename is_subdir parent)
+set(tests absolute filename
+is_dir is_subdir join
+normal parent root separator stem
+suffix with_suffix
+)
 
-if(HAVE_F03_TYPE)
+if(HAVE_F03TYPE)
   list(APPEND tests path_t)
 endif()
 

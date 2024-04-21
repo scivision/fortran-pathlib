@@ -98,7 +98,7 @@ type :: path_t
 character(:), allocatable :: s
 end type
 end program"
-HAVE_F03_TYPE
+HAVE_F03TYPE
 SRC_EXT .f90
 )
 

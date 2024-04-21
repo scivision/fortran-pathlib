@@ -11,8 +11,6 @@ contains
 
 subroutine test_mkdir()
 
-type(path_t) :: p
-
 character(:), allocatable :: pwd, p2, p1
 logical :: ok
 
@@ -34,11 +32,11 @@ if(.not. ok) error stop "mkdir: full: ok false despite success: " // p1
 call remove(p1)
 
 print '(a)', "test_mkdir: test relative path"
-p = path_t("test-filesystem-dir/hello")
-call p%mkdir(ok=ok)
-if(.not.p%is_dir()) error stop "ERROR:test_mkdir: relative: " // p%path()
-if (.not. ok) error stop "ERROR:test_mkdir: relative: ok false despite success: " // p%path()
-call p%remove()
+p1 = "test-filesystem-dir/hello"
+call mkdir(p1, ok=ok)
+if(.not. is_dir(p1)) error stop "ERROR:test_mkdir: relative: " // p1
+if (.not. ok) error stop "ERROR:test_mkdir: relative: ok false despite success: " // p1
+call remove(p1)
 
 p2 = join(pwd, "test-filesystem-dir2/hello_posix")
 print '(a)', "mkdir: testing " // p2

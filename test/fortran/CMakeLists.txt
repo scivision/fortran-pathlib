@@ -20,7 +20,7 @@ COMMAND ${CMAKE_COMMAND} -Dexe=$<TARGET_FILE:filesystem_cli>
 
 endif()
 
-foreach(t IN ITEMS filesize find normal utf8)
+foreach(t IN ITEMS filesize find utf8)
   add_executable(test_${t} test_${t}.f90)
   target_link_libraries(test_${t} PRIVATE ffilesystem)
   target_compile_options(test_${t} PRIVATE ${${PROJECT_NAME}_fortran_test_flags})

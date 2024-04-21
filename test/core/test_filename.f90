@@ -37,21 +37,16 @@ integer function check(in, ref) result(i)
 
 character(*), intent(in) :: in, ref
 
-character(:), allocatable :: s, s1
-type(path_t) :: p
+character(:), allocatable :: s
 
 i = 0
 
 s = file_name(in)
 
-p = path_t(in)
-s1 = p%file_name()
-
-if(s == ref .and. s1 == ref) return
+if(s == ref) return
 
 i = 1
 write(stderr, '(a)') "file_name("// trim(in) // ") = " // s // " /= " // ref
-write(stderr, '(a)') "path_t("// trim(in) // ")%file_name() = " // s1 // " /= " // ref
 
 end function
 

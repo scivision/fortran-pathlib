@@ -5,8 +5,18 @@ use filesystem
 
 implicit none
 
-character(9) :: p
+call test_set_permissions()
+print '(a)', "OK: set_permission"
 
+call test_get_permissions()
+print '(a)', "OK: get_permission"
+
+
+contains
+
+subroutine test_get_permissions()
+
+character(9) :: p
 
 character(*), parameter :: reada="readable.txt", noread="not-readable.txt", nowrite="not-writable.txt"
 
@@ -79,5 +89,76 @@ if (.not. is_file(nowrite)) error stop "test_exe: "//trim(nowrite)//" should be 
 call remove(reada)
 call remove(noread)
 call remove(nowrite)
+
+end subroutine test_get_permissions
+
+
+subroutine test_set_permissions()
+
+character(9) :: perm
+logical :: ok
+
+character(:), allocatable :: exe, noexe
+
+exe = join(get_tempdir(), "yes_exe")
+noexe = join(get_tempdir(), "no_exe")
+
+!> chmod(.true.)
+
+call touch(exe)
+if(.not. is_file(exe)) error stop "ERROR:test_exe: not a file: " // exe
+
+perm = get_permissions(exe)
+print '(a)', "permissions before set_permissions(exe=true) " // perm
+
+call set_permissions(exe, executable=.true.)
+
+call set_permissions(exe, executable=.false., ok=ok)
+if (.not. ok) error stop "ERROR:test_exe: set_permissions(exe=.false.) failed"
+
+call set_permissions(exe, executable=.true., ok=ok)
+
+perm = get_permissions(exe)
+print '(a)', "permissions after set_permissions(exe=true): " // perm
+
+if (.not. is_exe(exe)) then
+    write(stderr,'(a)') "ERROR:test_exe: is_exe() did not detect executable file " // trim(exe)
+    if(.not. is_windows()) error stop
+endif
+
+if(.not. is_windows()) then
+if(perm(3:3) /= "x") then
+    write(stderr,'(a)') "ERROR:test_exe: get_permissions() " // trim(exe) // " is not executable"
+    error stop
+endif
+endif
+
+!> chmod(.false.)
+
+call touch(noexe)
+if(.not. is_file(noexe)) then
+    write(stderr,'(a)') "ERROR:test_exe: " // trim(noexe) // " is not a file."
+    error stop
+endif
+
+perm = get_permissions(noexe)
+print '(a)', "permissions: " // trim(noexe) // " = " // perm
+
+call set_permissions(noexe, executable=.false., ok=ok)
+if (.not. ok) error stop "ERROR:test_exe: set_permissions(exe=.false.) failed"
+
+if(.not. is_windows()) then
+!~ Windows file system is always executable to stdlib.
+
+    if (is_exe(noexe)) error stop "ERROR:test_exe: did not detect non-executable file."
+
+    if(perm(3:3) /= "-") then
+    write(stderr,'(a)') "ERROR:test_exe: get_permissions() " // trim(noexe) // " is executable"
+    error stop
+    endif
+
+endif
+
+end subroutine test_set_permissions
 
 end program

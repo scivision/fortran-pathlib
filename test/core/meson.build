@@ -1,6 +1,8 @@
 if fortran
 
-core_tests = ['core', 'filename', 'is_subdir', 'parent']
+core_tests = ['absolute', 'filename', 'is_dir',
+'is_subdir', 'join', 'normal', 'parent', 'root', 'separator', 'stem',
+'suffix', 'with_suffix']
 
 core_tests += 'path_t'
 

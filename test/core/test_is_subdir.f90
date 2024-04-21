@@ -6,20 +6,20 @@ implicit none
 
 valgrind : block
 
-type(path_t) :: p1
+character(:), allocatable :: s1
 
-p1 = path_t("a/b/c")
+s1 = "a/b/c"
 
-if (.not. p1%is_subdir("a/b")) error stop "a/b/c is subdir of a/b"
-if (.not. p1%is_subdir("a/b/")) error stop "a/b/c is subdir of a/b/"
-if (.not. p1%is_subdir("a")) error stop "a/b/c is subdir of a"
+if (.not. is_subdir(s1, "a/b")) error stop "a/b/c is subdir of a/b"
+if (.not. is_subdir(s1, "a/b/")) error stop "a/b/c is subdir of a/b/"
+if (.not. is_subdir(s1, "a")) error stop "a/b/c is subdir of a"
 
-if(p1%is_subdir("a/b/c")) error stop "a/b/c is not subdir of a/b/c"
-if(p1%is_subdir("a/b/c/")) error stop "a/b/c/ is not subdir of a/b/c"
+if(is_subdir(s1, "a/b/c")) error stop "a/b/c is not subdir of a/b/c"
+if(is_subdir(s1, "a/b/c/")) error stop "a/b/c/ is not subdir of a/b/c"
 
-p1 = path_t("a/b/c/d/..")
+s1 = "a/b/c/d/.."
 
-if (.not. p1%is_subdir("a/b/")) error stop "a/b/c/d/.. is subdir of a/b/"
+if (.not. is_subdir(s1, "a/b/")) error stop "a/b/c/d/.. is subdir of a/b/"
 
 if (is_subdir("a/b", "c")) error stop "c is not subdir of a/b"
 if (is_subdir("b", "a/b")) error stop "a/b is not subdir of b"

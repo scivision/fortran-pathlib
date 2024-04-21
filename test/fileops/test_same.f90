@@ -12,7 +12,6 @@ contains
 
 subroutine test_same_file()
 
-type(path_t) :: p1, p2
 character(:), allocatable :: c1, s1, s2
 integer :: i
 
@@ -69,17 +68,15 @@ if(.not. same_file(s1, s2)) error stop "ERROR: same_file(" // s1 // " /= " // s2
 
 call mkdir("test-a/b/")
 
-p1 = path_t("test-a/c")
-call p1%touch()
-if(.not. is_file("test-a/c")) error stop "touch test-a/c failed"
+s1 = "test-a/c"
+call touch(s1)
+if(.not. is_file(s1)) error stop "touch failed: " // s1
 
-p2 = path_t("test-a/b/../c")
+s2 = "test-a/b/../c"
 
-if (.not. p1%same_file(p2)) error stop 'ERROR: %same_file'
-if (.not. same_file(p1%path(), p2%path())) error stop 'ERROR: same_file()'
+if (.not. same_file(s1, s2)) error stop 'ERROR: same_file resolve'
 
 if(same_file("not-exist-same", "not-exist-same")) error stop 'ERROR: same_file(not-exist-same, not-exist-same)'
-
 
 end subroutine test_same_file
 

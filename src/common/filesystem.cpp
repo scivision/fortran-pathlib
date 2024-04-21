@@ -21,12 +21,10 @@
 #include <cstring>  // std::strlen
 #include <string>
 #include <fstream>
-#include <set>
 #include <cstddef> // size_t
 #include <cstdint>
 #include <cstdlib>
 #include <system_error>
-#include <cctype> // std::isalnum
 
 #include <sys/types.h>
 
@@ -129,7 +127,7 @@ bool Ffs::touch(std::string_view path)
 
   ost.close();
 
-  // ensure user can access file, as default permissions may be mode 600 or such
+  // ensure user can access new file, as default permissions may be mode 600 or such
   std::filesystem::permissions(path, owner_read | owner_write, std::filesystem::perm_options::add, ec);
   if(!ec) FFS_LIKELY
     return true;

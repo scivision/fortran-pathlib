@@ -20,13 +20,8 @@ contains
 
 subroutine test_exists()
 
-type(path_t) :: p1
-
 if(exists("")) error stop "empty does not exist"
 
-p1 = path_t(get_cwd())
-
-if(.not. p1%exists()) error stop "%exists() failed"
 if(.not. exists(get_cwd())) error stop "exists(get_cwd) failed"
 
 end subroutine

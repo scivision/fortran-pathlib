@@ -15,11 +15,6 @@ source-dir = "src/common"
 include-dir = ["include"]
 
 [[test]]
-name = "core"
-source-dir = "test/core"
-main = "test_core.f90"
-
-[[test]]
 name = "filename"
 source-dir = "test/core"
 main = "test_filename.f90"
