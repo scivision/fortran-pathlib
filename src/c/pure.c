@@ -163,15 +163,22 @@ size_t fs_parent(const char* path, char* result, size_t buffer_size)
 
 size_t fs_suffix(const char* path, char* result, size_t buffer_size)
 {
-
-  if(!fs_file_name(path, result, buffer_size))
+  // leave malloc() in -- eliminating it by getting clever with pointer
+  // failed on some systems in the path_t Fortran type jumbling the string
+  char* buf = (char*) malloc(buffer_size);
+  if(!buf) return 0;
+  if(!fs_file_name(path, buf, buffer_size)){
+    free(buf);
     return 0;
+  }
 
-  char* pos = strrchr(result, '.');
-  if (!pos || pos == result)
-    return 0;
+  size_t L = 0;
+  char* pos = strrchr(buf, '.');
+  if (pos && pos != buf)
+    L = fs_strncpy(pos, result, buffer_size);
 
-  return fs_strncpy(pos, result, buffer_size);
+  free(buf);
+  return L;
 }
 
 
