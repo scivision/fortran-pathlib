@@ -9,10 +9,12 @@
 
 #include "ffilesystem.h"
 
-#if defined(__has_include)
+#ifndef __has_include
+#define __has_include(x) 0
+#endif
+
 #if __has_include(<sys/utsname.h>)
 #include <sys/utsname.h>
-#endif
 #endif
 
 #include <string.h>
@@ -45,11 +47,10 @@ static inline bool str_ends_with(const char *s, const char *suffix) {
 
 int fs_is_wsl()
 {
-#if defined(__has_include)
 #if __has_include(<sys/utsname.h>)
   struct utsname buf;
   if (uname(&buf) != 0)
-    return 0;
+    return -1;
 
   if (strcmp(buf.sysname, "Linux") != 0)
     return 0;
@@ -57,10 +58,11 @@ int fs_is_wsl()
     return 2;
   if (str_ends_with(buf.release, "-Microsoft"))
     return 1;
-#endif
-#endif
 
   return 0;
+#endif
+
+  return -1;
 }
 
 
