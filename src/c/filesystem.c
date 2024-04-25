@@ -63,7 +63,7 @@ static inline bool _mkdir_segment(char* buf, size_t L)
 #else
       mkdir(dir, S_IRWXU)
 #endif
-        && errno != EEXIST) {
+        && !(errno == EEXIST || errno == EACCES)) {
       fprintf(stderr, "ERROR:ffilesystem:create_directories: %s %s => %s\n", buf, dir, strerror(errno));
       free(buf);
       free(dir);
@@ -79,7 +79,8 @@ static inline bool _mkdir_segment(char* buf, size_t L)
 }
 
 
-bool fs_mkdir(const char* path)
+bool
+fs_mkdir(const char* path)
 {
 
   if(fs_exists(path)){
@@ -284,7 +285,7 @@ size_t fs_make_tempdir(char* result, size_t buffer_size)
 #ifdef _WIN32
   tmp = _mktemp(tmpl);
   if(!tmp){
-    fprintf(stderr, "ERROR:filesystem:fs_make_tempdir:_mktemp: could not create temporary directory %s\n", strerror(errno));
+    fprintf(stderr, "ERROR:filesystem:fs_make_tempdir:_mktemp: could not generate tempdir name %s\n", strerror(errno));
     return 0;
   }
   if(!fs_get_tempdir(result, buffer_size))
