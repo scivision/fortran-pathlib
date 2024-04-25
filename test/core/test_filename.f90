@@ -6,11 +6,13 @@ use, intrinsic :: iso_fortran_env, only : stderr=>error_unit
 
 implicit none
 
-integer, parameter :: L = 21, N = 15
+integer, parameter :: L = 21, N = 17
 
-character(L) :: in(N) =  [character(L) ::  "", "/", ".", "./", "..", "../", "a", "a/", "a/b", "a/b/", "a/b/c", &
+character(L) :: in(N) =  [character(L) ::  "", "/", ".", "./", "..", "../", &
+  "a", "a/", "a/.", "a/..", "a/b", "a/b/", "a/b/c", &
   "ab/.parent", "ab/.parent.txt", "a/b/../.parent.txt", "./fil"]
-character(L) :: ref(N) = [character(L) ::  "", "",  ".", "",  "..",  "",    "a", "",   "b",   "",    "c", &
+character(L) :: ref(N) = [character(L) ::  "", "",  ".", "",   "..",  "", &
+  "a", "",   ".",   "..",   "b",   "",    "c", &
   ".parent",    ".parent.txt",   ".parent.txt", "fil"]
 
 integer :: i, j

@@ -6,11 +6,13 @@ use filesystem
 
 implicit none
 
-integer, parameter :: L = 21, N = 14
+integer, parameter :: L = 21, N = 16
 
-character(L) :: in(N) =  [character(L) ::  "",  "/", ".", "./", "..", "../", "a", "a/", "a/b", "a/b/", "a/b/c", &
+character(L) :: in(N) =  [character(L) ::  "",  "/", ".", "./", "..", "../", &
+  "a", "a/", "a/.", "a/..", "a/b", "a/b/", "a/b/c", &
   "ab/.parent", "ab/.parent.txt", "a/b/../.parent.txt"]
-character(L) :: ref(N) = [character(L) ::  ".", "/", ".", ".",  ".",  ".",   ".", ".",  "a",   "a",    "a/b", &
+character(L) :: ref(N) = [character(L) ::  ".", "/", ".", ".",  ".",  ".",  &
+  ".", ".",  "a", "a",    "a",   "a",    "a/b", &
   "ab",         "ab",            "a/b/.."]
 
 integer :: i, j
