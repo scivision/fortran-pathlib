@@ -23,6 +23,7 @@ size_t fs_canonical(const char* path, bool strict, char* result, size_t buffer_s
   // also expands ~
   // distinct from resolve()
 
+  // distinct from resolve
   if(strlen(path) == 0)
     return 0;
 
@@ -37,15 +38,13 @@ size_t fs_canonical(const char* path, bool strict, char* result, size_t buffer_s
     return 0;
   }
 
-  bool e = fs_exists(buf);
-
-  if(!e) {
+  if(!fs_exists(buf)){
     if(strict){
       fprintf(stderr, "ERROR:ffilesystem:canonical: \"%s\" => does not exist and strict=true\n", buf);
       L = 0;
-    } else {
+    } else
       L = fs_normal(buf, result, buffer_size);
-    }
+
     free(buf);
     return L;
   }
@@ -55,16 +54,16 @@ size_t fs_canonical(const char* path, bool strict, char* result, size_t buffer_s
 #else
   const char* t = realpath(buf, result);
 #endif
+  free(buf);
 
   L = strlen(result);
   if(L >= buffer_size){
     fprintf(stderr, "ERROR:ffilesystem:resolve: buffer overflow\n");
     L = 0;
   } else if (!t) {
-    fprintf(stderr, "ERROR:ffilesystem:canonical: %s   %s\n", buf, strerror(errno));
+    fprintf(stderr, "ERROR:ffilesystem:canonical: %s   %s\n", result, strerror(errno));
     L = 0;
   }
-  free(buf);
 
   if(L)
     fs_as_posix(result);
@@ -89,9 +88,7 @@ size_t fs_resolve(const char* path, bool strict, char* result, size_t buffer_siz
     return 0;
   }
 
-  bool e = fs_exists(buf);
-
-  if(!e) {
+  if(!fs_exists(buf)) {
     if(strict){
       fprintf(stderr, "ERROR:ffilesystem:resolve: %s => does not exist and strict=true\n", buf);
       free(buf);
@@ -106,21 +103,22 @@ size_t fs_resolve(const char* path, bool strict, char* result, size_t buffer_siz
     }
   }
 
+  const char* t =
 #ifdef _WIN32
-  const char* t = _fullpath(result, buf, buffer_size);
+    _fullpath(result, buf, buffer_size);
 #else
-  const char* t = realpath(buf, result);
+    realpath(buf, result);
 #endif
+  free(buf);
 
   L = strlen(result);
   if(L >= buffer_size){
     fprintf(stderr, "ERROR:ffilesystem:resolve: buffer overflow\n");
     L = 0;
-  } else if (!t && strict) {
-    fprintf(stderr, "ERROR:ffilesystem:resolve: %s   %s\n", buf, strerror(errno));
+  } else if (!t && strict) {  // needs && strict unlike canonical()
+    fprintf(stderr, "ERROR:ffilesystem:resolve: %s   %s\n", result, strerror(errno));
     L = 0;
   }
-  free(buf);
 
   if(L)
     fs_as_posix(result);
