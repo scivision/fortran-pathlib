@@ -19,7 +19,7 @@
 #include <cstddef> // size_t
 #include <cstdlib>
 
-#include <cstring> // std::strlen
+#include <cstring> // std::strlen, std::strerror
 #include <string>
 #include <iostream>
 
@@ -181,7 +181,7 @@ std::string Ffs::get_homedir()
     return std::string(h);
 #endif
 
-  std::cerr << "ERROR:ffilesystem:homedir: could not get home directory\n";
+  std::cerr << "ERROR:ffilesystem:homedir: could not get home directory: " << std::strerror(errno) << "\n";
   return {};
 }
 
