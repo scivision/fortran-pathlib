@@ -152,7 +152,9 @@ static void one_arg(std::string_view fun, std::string_view a1){
 #else
     std::cerr << "std::format not available, could not print modtime(" << a1 << ")\n";
 #endif
-  } else if (fun == "chdir" || fun == "set_cwd") {
+  } else if (fun == "fs_modtime")
+    std::cout << fs_get_modtime(a1.data()) << "\n";
+  else if (fun == "chdir" || fun == "set_cwd") {
     std::cout << "cwd: " << Ffs::get_cwd() << "\n";
     Ffs::chdir(a1);
     std::cout << "new cwd: " << Ffs::get_cwd() << "\n";

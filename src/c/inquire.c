@@ -153,14 +153,22 @@ bool fs_is_reserved(const char* path)
 time_t fs_get_modtime(const char* path)
 {
   struct stat s;
-  return stat(path, &s) ? 0 : s.st_mtime;
+  if (!stat(path, &s))
+    return s.st_mtime;
+
+  fprintf(stderr, "ERROR:ffilesystem:fs_get_modtime: %s => %s\n", path, strerror(errno));
+  return 0;
 }
 
 
 uintmax_t fs_file_size(const char* path)
 {
   struct stat s;
-  return (fs_is_file(path) && !stat(path, &s)) ? s.st_size : 0;
+  if (!stat(path, &s))
+    return s.st_size;
+
+  fprintf(stderr, "ERROR:ffilesystem:file_size: %s => %s\n", path, strerror(errno));
+  return 0;
 }
 
 

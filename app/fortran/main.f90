@@ -108,6 +108,8 @@ main : do
   select case (cmd)
   case ("as_posix")
     print '(a)', as_posix(arg1)
+  case ('modtime')
+    print '(i0)', get_modtime(arg1)
   case ("expanduser")
     print '(A)', expanduser(arg1)
   case ("which")

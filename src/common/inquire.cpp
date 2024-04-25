@@ -2,19 +2,23 @@
 
 #include <set>
 #include <iostream>
+#include <string>
+#include <cstring> // std::streerror
 
 #if __has_include(<ranges>)
 #include <ranges>
 #endif
 
+// preferred import order for stat() -- always include to avoid dev confusion
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #ifdef HAVE_CLOCK_CAST
 // this include can break even when functions not used if C++ ABI problem e.g. Clang 14 with GCC 13
 #include <chrono>
-#else
-// preferred import order for stat()
-#include <sys/types.h>
-#include <sys/stat.h>
 #endif
+
+#include <cerrno>
 
 
 bool Ffs::exists(std::string_view path)
@@ -154,8 +158,13 @@ std::time_t fs_get_modtime(const char* path)
   return std::chrono::system_clock::to_time_t(t_sys);
 #else
   struct stat s;
-  return stat(path, &s) ? 0 : s.st_mtime;
+  if (!stat(path, &s))
+    return s.st_mtime;
+
+  std::cerr << "ERROR:Ffs:fs_get_modtime: " << std::strerror(errno) << "\n";
+  return {};
 #endif
+
 }
 
 std::filesystem::file_time_type Ffs::get_modtime(std::string_view path)
@@ -165,8 +174,8 @@ std::filesystem::file_time_type Ffs::get_modtime(std::string_view path)
   if(std::filesystem::file_time_type t_fs = std::filesystem::last_write_time(path, ec); !ec) FFS_LIKELY
     return t_fs;
 
-  std::cerr << "ERROR:ffilesystem:get_modtime: " << ec.message() << "\n";
-  return {};
+  std::cerr << "ERROR:Ffs:get_modtime: " << ec.message() << "\n";
+  return std::filesystem::file_time_type::min();
 }
 
 
