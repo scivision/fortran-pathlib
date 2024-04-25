@@ -30,7 +30,26 @@
 #include <errno.h>
 
 
-bool fs_exists(const char* path)
+static
+#ifdef _MSC_VER
+int
+#else
+mode_t
+#endif
+fs_st_mode(const char* path)
+{
+  struct stat s;
+  if(stat(path, &s)){
+    // fprintf(stderr, "ERROR:ffilesystem:fs_st_mode: %s => %s\n", path, strerror(errno));
+    return 0;
+  }
+
+  return s.st_mode;
+}
+
+
+bool
+fs_exists(const char* path)
 {
   /* fs_exists() is true even if path is non-readable
    this is like Python pathlib.Path.exists()
@@ -51,26 +70,27 @@ bool fs_exists(const char* path)
 }
 
 
-bool fs_is_char_device(const char* path)
+bool
+fs_is_char_device(const char* path)
 {
 // special character device like /dev/null
 // Windows: https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fstat-fstat32-fstat64-fstati64-fstat32i64-fstat64i32
-  struct stat s;
-  return !stat(path, &s) && (s.st_mode & S_IFCHR);
+  return fs_st_mode(path) & S_IFCHR;
   // S_ISCHR not available with MSVC
 }
 
 
-bool fs_is_dir(const char* path)
+bool
+fs_is_dir(const char* path)
 {
 // NOTE: root() e.g. "C:" needs a trailing slash
-  struct stat s;
-  return !stat(path, &s) && (s.st_mode & S_IFDIR);
+  return fs_st_mode(path) & S_IFDIR;
   // S_ISDIR not available with MSVC
 }
 
 
-bool fs_is_exe(const char* path)
+bool
+fs_is_exe(const char* path)
 {
   return (fs_is_file(path) &&
 #ifdef _WIN32
@@ -84,7 +104,8 @@ bool fs_is_exe(const char* path)
 }
 
 
-bool fs_is_readable(const char* path)
+bool
+fs_is_readable(const char* path)
 {
 /* directory or file readable */
 
@@ -97,7 +118,8 @@ bool fs_is_readable(const char* path)
 }
 
 
-bool fs_is_writable(const char* path)
+bool
+fs_is_writable(const char* path)
 {
 /* directory or file writable */
 
@@ -110,16 +132,16 @@ bool fs_is_writable(const char* path)
 }
 
 
-bool fs_is_file(const char* path)
+bool
+fs_is_file(const char* path)
 {
-  struct stat s;
-
-  return !stat(path, &s) && (s.st_mode & S_IFREG);
+  return fs_st_mode(path) & S_IFREG;
   // S_ISREG not available with MSVC
 }
 
 
-bool fs_is_reserved(const char* path)
+bool
+fs_is_reserved(const char* path)
 {
   if(!fs_is_windows())
     return false;
@@ -150,7 +172,8 @@ bool fs_is_reserved(const char* path)
 }
 
 
-time_t fs_get_modtime(const char* path)
+time_t
+fs_get_modtime(const char* path)
 {
   struct stat s;
   if (!stat(path, &s))
@@ -161,7 +184,8 @@ time_t fs_get_modtime(const char* path)
 }
 
 
-uintmax_t fs_file_size(const char* path)
+uintmax_t
+fs_file_size(const char* path)
 {
   struct stat s;
   if (!stat(path, &s))
@@ -172,7 +196,8 @@ uintmax_t fs_file_size(const char* path)
 }
 
 
-uintmax_t fs_space_available(const char* path)
+uintmax_t
+fs_space_available(const char* path)
 {
 
 #ifdef _WIN32
@@ -201,24 +226,22 @@ uintmax_t fs_space_available(const char* path)
 }
 
 
-size_t fs_get_permissions(const char* path, char* result, size_t buffer_size)
+size_t
+fs_get_permissions(const char* path, char* result, size_t buffer_size)
 {
   if (buffer_size < 10) {
     fprintf(stderr, "ERROR:ffilesystem:fs_get_permissions: buffer_size must be at least 10\n");
     return 0;
   }
-
-  struct stat s;
-
-  result[9] = '\0';
-
-  if (stat(path, &s) != 0){
-    fprintf(stderr, "ERROR:ffilesystem:fs_get_permissions: %s => %s\n", path, strerror(errno));
+  if (!fs_exists(path)) {
+    fprintf(stderr, "ERROR:ffilesystem:fs_get_permissions: %s does not exist\n", path);
     return 0;
   }
 
+  result[9] = '\0';
+
 #ifdef _MSC_VER
-  const int m = s.st_mode;
+  const int m = fs_st_mode(path);
   result[0] = (m & _S_IREAD) ? 'r' : '-';
   result[1] = (m & _S_IWRITE) ? 'w' : '-';
   result[2] = (m & _S_IEXEC) ? 'x' : '-';
@@ -229,7 +252,7 @@ size_t fs_get_permissions(const char* path, char* result, size_t buffer_size)
   result[7] = (m & _S_IWRITE) ? 'w' : '-';
   result[8] = (m & _S_IEXEC) ? 'x' : '-';
 #else
-  const mode_t m = s.st_mode;
+  const mode_t m = fs_st_mode(path);
   result[0] = (m & S_IRUSR) ? 'r' : '-';
   result[1] = (m & S_IWUSR) ? 'w' : '-';
   result[2] = (m & S_IXUSR) ? 'x' : '-';
