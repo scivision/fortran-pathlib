@@ -9,7 +9,10 @@
 
 #include <stdio.h>
 #include <stddef.h> // size_t
-#include <stdlib.h> // malloc(), free()
+
+#include <limits.h> // realpath()
+#include <stdlib.h> // malloc(), free(), realpath(), _fullpath()
+
 #include <string.h>
 #include <errno.h>
 
