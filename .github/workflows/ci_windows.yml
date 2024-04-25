@@ -55,7 +55,7 @@ jobs:
 
     strategy:
       matrix:
-        shared: [false]
+        cpp: [false, true]
       # github actions generally broken for shared lib, even when exe in cwd
 
     steps:
@@ -71,10 +71,10 @@ jobs:
 
     - uses: actions/checkout@v4
 
-    - name: config shared=${{ matrix.shared }}
+    - name: config cpp=${{ matrix.cpp }}
       run: >-
         cmake --preset multi
-        -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+        -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
 
     - name: Debug workflow
       run: cmake --workflow --preset debug
