@@ -4,6 +4,7 @@
 #include <vector>
 #include <functional>
 #include <map>
+#include <ctime>
 
 #include <chrono> // needed to std::format() std::filesystem::file_time_type
 
@@ -150,7 +151,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
     auto t = Ffs::get_modtime(a1);
     std::cout << std::format("{}\n", t);
 #else
-    std::cerr << "std::format not available, could not print modtime(" << a1 << ")\n";
+    auto t = fs_get_modtime(a1.data());
+    std::cout << std::ctime(&t) << "\n";
 #endif
   } else if (fun == "fs_modtime")
     std::cout << fs_get_modtime(a1.data()) << "\n";
