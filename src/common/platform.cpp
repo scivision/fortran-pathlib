@@ -34,7 +34,7 @@
 #include <Windows.h>
 #else
 #include <sys/types.h>
-#include <pwd.h>
+#include <pwd.h>  // getpwuid
 #include <cerrno>
 #include <unistd.h> // for mac too
 #endif
@@ -168,7 +168,7 @@ std::string Ffs::get_homedir()
   if(std::string h = Ffs::get_env(fs_is_windows() ? "USERPROFILE" : "HOME"); !h.empty()) FFS_LIKELY
     return Ffs::as_posix(h);
 
-#ifdef _WIN32
+#if defined(_WIN32) && defined(__cpp_lib_make_unique)
   // works on MSYS2, MSVC, oneAPI.
   auto L = static_cast<DWORD>(fs_get_max_path());
   auto buf = std::make_unique<char[]>(L);
@@ -181,7 +181,7 @@ std::string Ffs::get_homedir()
 
   if (ok) FFS_LIKELY
     return Ffs::as_posix(buf.get());
-#else
+#elif !defined(_WIN32)
   if (const char *h = getpwuid(geteuid())->pw_dir; h)
     return std::string(h);
 #endif

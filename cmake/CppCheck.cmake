@@ -26,13 +26,6 @@ if(NOT HAVE_CXX_FILESYSTEM)
   return()
 endif()
 
-check_cxx_symbol_exists(__cpp_lib_make_unique "memory" cpp14_make_unique)
-if(NOT cpp14_make_unique)
-  message(WARNING "C++ compiler has filesystem feature, but lacks C++14 std::make_unique() -- disabling C++ filesystem")
-  set(HAVE_CXX_FILESYSTEM false CACHE BOOL "C++14 make_unique is missing" FORCE)
-  return()
-endif()
-
 # e.g. AppleClang 15 doesn't yet have this, maybe not worth the bother
 # i.e. benchmarking may reveal miniscule benefit.
 # check_cxx_symbol_exists(__cpp_lib_smart_ptr_for_overwrite "memory" cpp20_smart_ptr_for_overwrite)
@@ -74,6 +67,12 @@ endif()
 if(${PROJECT_NAME}_trace)
   check_cxx_symbol_exists(__cpp_lib_starts_ends_with "string" cpp20_string_ends_with)
   check_cxx_symbol_exists(__cpp_using_enum "" cpp20_using_enum)
+
+  check_cxx_symbol_exists(__cpp_lib_make_unique "memory" cpp14_make_unique)
+  if(NOT cpp14_make_unique)
+    message(WARNING "C++ compiler lacks C++14 std::make_unique() -- some functions not available")
+  endif()
+
   check_cxx_symbol_exists(__has_cpp_attribute "" cpp20_has_cpp_attribute)
 
   if(cpp20_has_cpp_attribute)

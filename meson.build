@@ -40,7 +40,7 @@ if not cpp.links(fs_check, name: 'C++ filesystem')
 endif
 
 if not cpp.has_define('__cpp_lib_make_unique', prefix : '#include <memory>')
-  error('C++14 make_unique support missing')
+  warning('C++14 make_unique support missing -- some functions not available')
 endif
 
 chrono_src = '''
