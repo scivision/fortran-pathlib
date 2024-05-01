@@ -10,9 +10,7 @@ std::string Ffs::shortname(std::string_view in)
   [[maybe_unused]] const size_t MP = fs_get_max_path();
 
 #ifndef __cpp_lib_make_unique
-#if __cplusplus >= 202302L
-  #warning "compiler lacks C++ 14 make_unique: Ffs::shortname"
-#endif
+  std::cerr << "compiler lacks C++ 14 make_unique: Ffs::shortname\n";
   return {};
 #else
   if(auto buf = std::make_unique<char[]>(MP); fs_shortname(in.data(), buf.get(), MP)) FFS_LIKELY
@@ -28,9 +26,7 @@ std::string Ffs::longname(std::string_view in)
   [[maybe_unused]] const size_t MP = fs_get_max_path();
 
 #ifndef __cpp_lib_make_unique
-#if __cplusplus >= 202302L
-  #warning "compiler lacks C++ 14 make_unique: Ffs::longname"
-#endif
+  std::cerr << "compiler lacks C++ 14 make_unique: Ffs::longname\n";
   return {};
 #else
   if(auto buf = std::make_unique<char[]>(MP); fs_longname(in.data(), buf.get(), MP)) FFS_LIKELY

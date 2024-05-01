@@ -67,6 +67,7 @@ endif()
 if(${PROJECT_NAME}_trace)
   check_cxx_symbol_exists(__cpp_lib_starts_ends_with "string" cpp20_string_ends_with)
   check_cxx_symbol_exists(__cpp_using_enum "" cpp20_using_enum)
+  check_cxx_symbol_exists(__cpp_deduction_guides "" cpp17_deduction_guides)
 
   check_cxx_symbol_exists(__cpp_lib_make_unique "memory" cpp14_make_unique)
   if(NOT cpp14_make_unique)

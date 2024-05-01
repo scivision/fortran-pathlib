@@ -30,9 +30,7 @@ std::string Ffs::exe_path()
   // https://stackoverflow.com/a/1024937
 
 #ifndef __cpp_lib_make_unique
-#if __cplusplus >= 202302L
-  #warning "compiler lacks C++ 14 make_unique: Ffs::exe_path"
-#endif
+  std::cerr << "compiler lacks C++ 14 make_unique: Ffs::exe_path\n";
   return {};
 #else
   const size_t MP = fs_get_max_path();

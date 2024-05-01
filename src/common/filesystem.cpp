@@ -182,7 +182,7 @@ bool Ffs::set_permissions(std::string_view path, int readable, int writable, int
 std::string Ffs::mkdtemp(std::string_view prefix)
 {
   // make unique temporary directory starting with prefix
-
+#ifdef __cpp_deduction_guides
   std::error_code ec;
   std::filesystem::path t;
   size_t Lname = 16;  // arbitrary length for random string
@@ -200,11 +200,16 @@ std::string Ffs::mkdtemp(std::string_view prefix)
   }
 
   std::cerr << "Ffs::mkdtemp:mkdir: could not create temporary directory " << ec.message() << "\n";
+#else
+  std::cerr << "Ffs::mkdtemp not available without C++17 CTAD\n";
+#endif
   return {};
 }
 
+#ifdef __cpp_deduction_guides
 // CTAD C++17 random string generator
 // https://stackoverflow.com/a/444614
+// https://en.cppreference.com/w/cpp/language/class_template_argument_deduction
 
 template <typename T = std::mt19937>
 static auto fs_random_generator() -> T {
@@ -231,3 +236,4 @@ static std::string fs_generate_random_alphanumeric_string(std::size_t len)
     return result;
 }
 // --- end mkdtemp
+#endif
