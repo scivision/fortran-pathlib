@@ -7,9 +7,9 @@ set_property(DIRECTORY PROPERTY LABELS "Fortran")
 if(ffilesystem_cli)
 
 if(HAVE_CXX_FILESYSTEM)
-  set(_r "^Ffilesystem\> T")
+  set(_r "^Ffs\> T")
 else()
-  set(_r "^Ffilesystem\> F")
+  set(_r "^Ffs\> F")
 endif()
 
 add_test(NAME Fortran_CLI_Cpp

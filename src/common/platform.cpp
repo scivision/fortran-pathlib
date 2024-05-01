@@ -182,8 +182,7 @@ std::string Ffs::get_homedir()
   if (ok) FFS_LIKELY
     return Ffs::as_posix(buf.get());
 #else
-  const char *h = getpwuid(geteuid())->pw_dir;
-  if (h) FFS_LIKELY
+  if (const char *h = getpwuid(geteuid())->pw_dir; h)
     return std::string(h);
 #endif
 

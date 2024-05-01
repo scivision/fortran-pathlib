@@ -8,7 +8,7 @@ implicit none
 valgrind : block
 
 character(:), allocatable :: s1, s2
-integer :: i
+integer :: i, L
 
 
 if(is_dir("")) error stop "is_dir empty should be false"
@@ -33,9 +33,10 @@ call assert_is_dir(".")
 
 if(.not. is_readable(".")) error stop "%is_readable failed on '.'"
 
-allocate(character(max_path()) :: s2)
-call get_command_argument(0, s2, status=i)
+call get_command_argument(0, length=L, status=i)
 if(i /= 0) error stop "get_command_argument(0) failed"
+allocate(character(L) :: s2)
+call get_command_argument(0, value=s2)
 
 if (is_dir(s2)) error stop "detected file as directory"
 

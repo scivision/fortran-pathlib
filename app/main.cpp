@@ -244,7 +244,7 @@ while (true){
 
   std::string inp;
 
-  std::cout << "Ffilesystem> ";
+  std::cout << "Ffs> ";
 
   std::getline(std::cin, inp);
 

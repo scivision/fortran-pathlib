@@ -50,7 +50,7 @@ bool Ffs::mkdir(std::string_view path)
   if (std::filesystem::create_directories(path, ec) || (!ec && Ffs::is_dir(path))) FFS_LIKELY
     return true;
 
-  std::cerr << "ERROR:ffilesystem:mkdir: " << ec.message() << "\n";
+  std::cerr << "ERROR:Ffs:mkdir(" << path << ") " << ec.message() << "\n";
   return false;
 }
 
@@ -62,7 +62,7 @@ bool Ffs::remove(std::string_view path)
   if(std::filesystem::remove(path, ec) && !ec) FFS_LIKELY
     return true;
 
-  std::cerr << "ERROR:ffilesystem:remove: " << ec.message() << "\n";
+  std::cerr << "ERROR:FFs:remove: " << ec.message() << "\n";
   return false;
 }
 

@@ -11,7 +11,7 @@ integer, parameter :: Lcmd = 40
 
 character(1000) :: inp
 character(Lcmd) :: cmd
-character(100) :: arg1, arg2
+character(1000) :: arg1, arg2
 
 integer :: i, i0, i1
 logical :: ok, done
@@ -21,7 +21,7 @@ character, parameter :: delim = " "
 if(is_admin()) write(stderr, '(a)') "WARNING: running as admin / sudo"
 
 main : do
-  write(stdout, "(a)", advance="no") "Ffilesystem> "
+  write(stdout, "(a)", advance="no") "Ffs> "
 
   read(stdin, '(A)', iostat=i) inp
   if (i /= 0) exit
@@ -145,7 +145,7 @@ main : do
   case ("is_writable")
     print '(L1)', is_writable(arg1)
   case ("perm")
-    print '(A)', get_permissions(expanduser(arg1))
+    print '(A)', get_permissions(arg1)
   case ("mkdtemp")
     print '(A)', make_tempdir()
   case ("is_symlink")
@@ -155,16 +155,16 @@ main : do
   case ("size")
     print '(i0)', file_size(arg1)
   case ("space")
-    print '(i0)', space_available(expanduser(arg1))
+    print '(i0)', space_available(arg1)
   case ("mkdir")
-    call mkdir(expanduser(arg1), ok)
+    call mkdir(arg1, ok)
     if (ok) then
       print '(a)', "created directory " // trim(arg1)
     else
       write(stderr, "(a)") "ERROR: failed to create directory " // trim(arg1)
     endif
   case ("chdir")
-    print '(l1)', set_cwd(expanduser(arg1))
+    print '(l1)', set_cwd(arg1)
   case ("longname")
     print '(A)', longname(arg1)
   case ("shortname")
