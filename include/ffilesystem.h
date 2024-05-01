@@ -23,12 +23,6 @@
 #  define FFS_LIKELY
 #endif
 
-#if __has_cpp_attribute(nodiscard)
-#  define FFS_NODISCARD [[nodiscard]]
-#else
-#  define FFS_NODISCARD
-#endif
-
 #include <cstdint>
 #include <cstdlib>
 #include <algorithm> // std::min
@@ -42,82 +36,82 @@
 class Ffs
 {
 public:
-  FFS_NODISCARD static std::string compiler();
-  FFS_NODISCARD static std::string get_homedir();
-  FFS_NODISCARD static std::string get_tempdir();
-  FFS_NODISCARD static std::string get_cwd();
+  [[nodiscard]] static std::string compiler();
+  [[nodiscard]] static std::string get_homedir();
+  [[nodiscard]] static std::string get_tempdir();
+  [[nodiscard]] static std::string get_cwd();
 
-  FFS_NODISCARD static std::string exe_path();
-  FFS_NODISCARD static std::string lib_path();
+  [[nodiscard]] static std::string exe_path();
+  [[nodiscard]] static std::string lib_path();
 
-  FFS_NODISCARD static std::string expanduser(std::string_view);
+  [[nodiscard]] static std::string expanduser(std::string_view);
 
-  FFS_NODISCARD static bool is_absolute(std::string_view);
-  FFS_NODISCARD static bool is_char_device(std::string_view);
-  FFS_NODISCARD static bool is_dir(std::string_view);
-  FFS_NODISCARD static bool is_exe(std::string_view);
-  FFS_NODISCARD static bool is_readable(std::string_view);
-  FFS_NODISCARD static bool is_writable(std::string_view);
-  FFS_NODISCARD static bool is_symlink(std::string_view);
-  FFS_NODISCARD static bool exists(std::string_view);
-  FFS_NODISCARD static bool is_file(std::string_view);
-  FFS_NODISCARD static bool is_reserved(std::string_view);
-  FFS_NODISCARD static bool is_subdir(std::string_view, std::string_view);
+  [[nodiscard]] static bool is_absolute(std::string_view);
+  [[nodiscard]] static bool is_char_device(std::string_view);
+  [[nodiscard]] static bool is_dir(std::string_view);
+  [[nodiscard]] static bool is_exe(std::string_view);
+  [[nodiscard]] static bool is_readable(std::string_view);
+  [[nodiscard]] static bool is_writable(std::string_view);
+  [[nodiscard]] static bool is_symlink(std::string_view);
+  [[nodiscard]] static bool exists(std::string_view);
+  [[nodiscard]] static bool is_file(std::string_view);
+  [[nodiscard]] static bool is_reserved(std::string_view);
+  [[nodiscard]] static bool is_subdir(std::string_view, std::string_view);
 
   static bool remove(std::string_view);
 
-  FFS_NODISCARD static std::string as_posix(std::string_view);
+  [[nodiscard]] static std::string as_posix(std::string_view);
 
-  FFS_NODISCARD static std::string normal(std::string_view);
-  FFS_NODISCARD static std::string lexically_normal(std::string_view);
-  FFS_NODISCARD static std::string make_preferred(std::string_view);
+  [[nodiscard]] static std::string normal(std::string_view);
+  [[nodiscard]] static std::string lexically_normal(std::string_view);
+  [[nodiscard]] static std::string make_preferred(std::string_view);
 
-  FFS_NODISCARD static std::string file_name(std::string_view);
-  FFS_NODISCARD static std::string stem(std::string_view);
-  FFS_NODISCARD static std::string parent(std::string_view);
-  FFS_NODISCARD static std::string suffix(std::string_view);
-  FFS_NODISCARD static std::string root(std::string_view);
-  FFS_NODISCARD static std::string which(std::string_view);
+  [[nodiscard]] static std::string file_name(std::string_view);
+  [[nodiscard]] static std::string stem(std::string_view);
+  [[nodiscard]] static std::string parent(std::string_view);
+  [[nodiscard]] static std::string suffix(std::string_view);
+  [[nodiscard]] static std::string root(std::string_view);
+  [[nodiscard]] static std::string which(std::string_view);
 
   static bool touch(std::string_view);
-  FFS_NODISCARD static std::filesystem::file_time_type get_modtime(std::string_view);
+  [[nodiscard]] static std::filesystem::file_time_type get_modtime(std::string_view);
   static bool set_modtime(std::string_view);
 
-  FFS_NODISCARD static std::string canonical(std::string_view, bool);
-  FFS_NODISCARD static std::string resolve(std::string_view, bool);
+  [[nodiscard]] static std::string canonical(std::string_view, bool);
+  [[nodiscard]] static std::string resolve(std::string_view, bool);
 
-  FFS_NODISCARD static std::string read_symlink(std::string_view);
-  FFS_NODISCARD static std::string get_permissions(std::string_view);
+  [[nodiscard]] static std::string read_symlink(std::string_view);
+  [[nodiscard]] static std::string get_permissions(std::string_view);
 
-  FFS_NODISCARD static uintmax_t file_size(std::string_view);
-  FFS_NODISCARD static uintmax_t space_available(std::string_view);
+  [[nodiscard]] static uintmax_t file_size(std::string_view);
+  [[nodiscard]] static uintmax_t space_available(std::string_view);
 
-  FFS_NODISCARD static std::string mkdtemp(std::string_view);
+  [[nodiscard]] static std::string mkdtemp(std::string_view);
 
-  FFS_NODISCARD static std::string shortname(std::string_view);
-  FFS_NODISCARD static std::string longname(std::string_view);
+  [[nodiscard]] static std::string shortname(std::string_view);
+  [[nodiscard]] static std::string longname(std::string_view);
 
-  FFS_NODISCARD static std::string get_env(std::string_view);
+  [[nodiscard]] static std::string get_env(std::string_view);
   static bool set_env(std::string_view, std::string_view);
 
   static bool mkdir(std::string_view);
   static bool chdir(std::string_view);
 
-  FFS_NODISCARD static bool equivalent(std::string_view, std::string_view);
+  [[nodiscard]] static bool equivalent(std::string_view, std::string_view);
 
-  FFS_NODISCARD static std::string join(std::string_view, std::string_view);
-  FFS_NODISCARD static std::string relative_to(std::string_view, std::string_view);
-  FFS_NODISCARD static std::string proximate_to(std::string_view, std::string_view);
+  [[nodiscard]] static std::string join(std::string_view, std::string_view);
+  [[nodiscard]] static std::string relative_to(std::string_view, std::string_view);
+  [[nodiscard]] static std::string proximate_to(std::string_view, std::string_view);
 
-  FFS_NODISCARD static std::string with_suffix(std::string_view, std::string_view);
-  FFS_NODISCARD static std::string make_absolute(std::string_view, std::string_view);
+  [[nodiscard]] static std::string with_suffix(std::string_view, std::string_view);
+  [[nodiscard]] static std::string make_absolute(std::string_view, std::string_view);
 
   static bool create_symlink(std::string_view, std::string_view);
   static bool copy_file(std::string_view, std::string_view, bool);
 
   static bool set_permissions(std::string_view, int, int, int);
 
-  FFS_NODISCARD static bool is_safe_name(std::string_view);
+  [[nodiscard]] static bool is_safe_name(std::string_view);
 
   // Disallow creating an instance of this object
   Ffs() = delete;
@@ -144,12 +138,6 @@ extern "C" {
 #  define FFS_MUNUSED_C
 #endif
 
-#if __has_c_attribute(nodiscard)
-#  define FFS_NODISCARD [[nodiscard]]
-#else
-# define FFS_NODISCARD
-#endif
-
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -158,6 +146,18 @@ extern "C" {
 
 size_t fs_strncpy(const char*, char*, size_t);
 
+#endif
+
+
+#if !defined(__has_c_attribute)
+// need this twice, inside #if and outside for C++ case
+#  define __has_c_attribute(x)  0
+#endif
+
+#if __has_c_attribute(nodiscard)
+#  define FFS_NODISCARD [[nodiscard]]
+#else
+#  define FFS_NODISCARD
 #endif
 
 
