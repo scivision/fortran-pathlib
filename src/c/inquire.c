@@ -202,16 +202,13 @@ fs_space_available(const char* path)
 
 #ifdef _WIN32
   // Windows MinGW and oneAPI need root() or space is zero.
-  char* buf = (char*) malloc(4);
-  if(!buf) return 0;
-  if(!fs_root(path, buf, 4)){
-    free(buf);
+  char r[4];
+  if(!fs_root(path, r, 4)){
     fprintf(stderr, "ERROR:ffilesystem:space_available: %s => root() failed\n", path);
     return 0;
   }
   ULARGE_INTEGER bytes_available;
-  BOOL ok = GetDiskFreeSpaceExA(buf, &bytes_available, NULL, NULL);
-  free(buf);
+  BOOL ok = GetDiskFreeSpaceExA(r, &bytes_available, NULL, NULL);
   if(ok)
     return bytes_available.QuadPart;
 #else
@@ -221,7 +218,7 @@ fs_space_available(const char* path)
     return (stat.f_frsize ? stat.f_frsize : stat.f_bsize) * stat.f_bavail;
 #endif
 
-  fprintf(stderr, "ERROR:ffilesystem:space_available: %s => %s\n", path, strerror(errno));
+  fprintf(stderr, "ERROR:ffilesystem:space_available(%s) => %s\n", path, strerror(errno));
   return 0;
 }
 
