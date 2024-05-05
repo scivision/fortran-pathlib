@@ -5,6 +5,11 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   cmake -Bbuild")
 endif()
 
+get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+if(NOT is_multi_config AND NOT (CMAKE_BUILD_TYPE OR DEFINED ENV{CMAKE_BUILD_TYPE}))
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Release default")
+endif()
+
 project(ffilesystem
 LANGUAGES C
 VERSION 5.6.3
@@ -87,7 +92,7 @@ if(NOT HAVE_CXX_FILESYSTEM)
 endif()
 
 
-add_library(ffilesystem src/common/common.c
+add_library(ffilesystem src/common/common.c src/common/partition.c
 "$<$<BOOL:${HAVE_Fortran_FILESYSTEM}>:src/common/fortran/filesystem.F90>"
 )
 if(HAVE_CXX_FILESYSTEM)

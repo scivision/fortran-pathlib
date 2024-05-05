@@ -14,12 +14,12 @@
 #include <sys/utsname.h>
 #endif
 
-#include <memory>
+#include <vector>
 #include <set>
 #include <cstddef> // size_t
 #include <cstdlib>
 
-#include <cstring> // std::strlen, std::strerror
+#include <cstring> // std::strerror
 #include <string>
 #include <iostream>
 
@@ -102,7 +102,7 @@ int fs_is_wsl() {
 
 std::string Ffs::get_env(std::string_view name)
 {
-  if(auto r = std::getenv(name.data()); r && std::strlen(r) > 0)
+  if(auto r = std::getenv(name.data()); r)
     return r;
 
   return {};
@@ -168,19 +168,19 @@ std::string Ffs::get_homedir()
   if(std::string h = Ffs::get_env(fs_is_windows() ? "USERPROFILE" : "HOME"); !h.empty()) FFS_LIKELY
     return Ffs::as_posix(h);
 
-#if defined(_WIN32) && defined(__cpp_lib_make_unique)
+#if defined(_WIN32)
   // works on MSYS2, MSVC, oneAPI.
   auto L = static_cast<DWORD>(fs_get_max_path());
-  auto buf = std::make_unique<char[]>(L);
+  std::vector<char> buf(L);
   // process with query permission
   HANDLE hToken = nullptr;
   bool ok = OpenProcessToken( GetCurrentProcess(), TOKEN_QUERY, &hToken) != 0 &&
-            GetUserProfileDirectoryA(hToken, buf.get(), &L);
+            GetUserProfileDirectoryA(hToken, buf.data(), &L);
 
   CloseHandle(hToken);
 
   if (ok) FFS_LIKELY
-    return Ffs::as_posix(buf.get());
+    return Ffs::as_posix(buf.data());
 #elif !defined(_WIN32)
   if (const char *h = getpwuid(geteuid())->pw_dir; h)
     return std::string(h);

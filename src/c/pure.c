@@ -215,8 +215,8 @@ size_t fs_root(const char* path, char* result, size_t buffer_size)
   cwk_path_get_root(path, &L);
 
   if(L >= buffer_size){
-     fprintf(stderr, "ERROR:ffilesystem:fs_root: buffer_size %zu too small\n", buffer_size);
-     return 0;
+    fprintf(stderr, "ERROR:ffilesystem:fs_root(%s) buffer_size %zu too small\n", path, buffer_size);
+    return 0;
   }
 
   strncpy(result, path, L);

@@ -69,11 +69,6 @@ if(${PROJECT_NAME}_trace)
   check_cxx_symbol_exists(__cpp_using_enum "" cpp20_using_enum)
   check_cxx_symbol_exists(__cpp_deduction_guides "" cpp17_deduction_guides)
 
-  check_cxx_symbol_exists(__cpp_lib_make_unique "memory" cpp14_make_unique)
-  if(NOT cpp14_make_unique)
-    message(WARNING "C++ compiler lacks C++14 std::make_unique() -- some functions not available")
-  endif()
-
   check_cxx_symbol_exists(__has_cpp_attribute "" cpp20_has_cpp_attribute)
 
   if(cpp20_has_cpp_attribute)

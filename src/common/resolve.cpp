@@ -29,7 +29,7 @@ std::string Ffs::canonical(std::string_view path, bool strict)
   if(!ec) FFS_LIKELY
     return c.generic_string();
 
-  std::cerr << "ERROR:ffilesystem:canonical: " << ec.message() << "\n";
+  std::cerr << "ERROR:ffilesystem:canonical(" << path << ") " << ec.message() << "\n";
   return {};
 }
 
@@ -62,7 +62,7 @@ std::string Ffs::resolve(std::string_view path, bool strict)
   if(!ec) FFS_LIKELY
     return c.generic_string();
 
-  std::cerr << "ERROR:ffilesystem:resolve: " << ec.message() << "\n";
+  std::cerr << "ERROR:ffilesystem:resolve(" << path << ") " << ec.message() << "\n";
   return {};
 }
 

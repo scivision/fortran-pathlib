@@ -1,6 +1,8 @@
 if fortran
 
-core_tests = ['absolute', 'filename', 'is_dir',
+core_tests = ['absolute',
+'filesystem_type',
+'filename', 'is_dir',
 'is_subdir', 'join', 'normal', 'parent', 'root', 'separator', 'stem',
 'suffix', 'with_suffix']
 

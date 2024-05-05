@@ -18,7 +18,6 @@
 #include <functional>
 #include <random>
 #include <iterator> // std::begin, std::end
-#include <cstring>  // std::strlen
 #include <string>
 #include <fstream>
 #include <cstddef> // size_t
@@ -225,12 +224,12 @@ static auto fs_random_generator() -> T {
 
 static std::string fs_generate_random_alphanumeric_string(std::size_t len)
 {
-    static constexpr auto chars =
+    constexpr std::string_view chars =
         "0123456789"
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         "abcdefghijklmnopqrstuvwxyz";
     thread_local auto rng = fs_random_generator<>();
-    auto dist = std::uniform_int_distribution{{}, std::strlen(chars) - 1};
+    auto dist = std::uniform_int_distribution{{}, chars.length() - 1};
     auto result = std::string(len, '\0');
     std::generate_n(std::begin(result), len, [&]() { return chars[dist(rng)]; });
     return result;

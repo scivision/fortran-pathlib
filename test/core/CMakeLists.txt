@@ -1,6 +1,9 @@
+set_property(DIRECTORY PROPERTY LABELS "core")
+
 if(HAVE_Fortran_FILESYSTEM)
 
 set(tests absolute filename
+filesystem_type
 is_dir is_subdir join
 normal parent root separator stem
 suffix with_suffix

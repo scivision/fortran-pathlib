@@ -334,3 +334,10 @@ class(path_t), intent(in) :: self
 type(path_t) :: r
 r%path_str = longname(self%path_str)
 end function
+
+
+function m_filesystem_type(self) result(r)
+class(path_t), intent(in) :: self
+character(:), allocatable :: r
+r = filesystem_type(self%path_str)
+end function

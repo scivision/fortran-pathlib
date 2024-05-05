@@ -9,7 +9,9 @@ if fortran
 endif
 
 fsrcs = fortran ? files('src/common/fortran/filesystem.F90') : []
-csrcs = files('src/common/common.c')
+
+csrcs = files('src/common/common.c', 'src/common/partition.c')
+
 cppsrcs = files(
 'src/common/filesystem.cpp',
 'src/common/c_ifc.cpp',
@@ -37,10 +39,6 @@ return 0;
 cpp = meson.get_compiler('cpp')
 if not cpp.links(fs_check, name: 'C++ filesystem')
   error('No C++ filesystem support')
-endif
-
-if not cpp.has_define('__cpp_lib_make_unique', prefix : '#include <memory>')
-  warning('C++14 make_unique support missing -- some functions not available')
 endif
 
 chrono_src = '''

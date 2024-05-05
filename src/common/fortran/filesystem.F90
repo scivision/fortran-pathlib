@@ -25,7 +25,7 @@ is_admin, is_bsd, is_macos, is_windows, is_cygwin, is_wsl, is_mingw, is_linux, i
 max_path, get_max_path, &
 exe_path, lib_path, compiler, compiler_c, &
 longname, shortname, getenv, setenv, &
-is_alpha
+is_alpha, filesystem_type
 
 interface get_max_path
 !! deprecated
@@ -402,6 +402,13 @@ end function
 logical(C_BOOL) function fs_setenv(name, val) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: name(*), val(*)
+end function
+
+integer(C_SIZE_T) function fs_filesystem_type(path, name, buffer_size) bind(C)
+import
+character(kind=C_CHAR), intent(in) :: path(*)
+character(kind=C_CHAR), intent(out) :: name(*)
+integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
 
 end interface
@@ -1036,6 +1043,17 @@ character(*), intent(in) :: path, base
 
 include "ifc0a.inc"
 N = fs_make_absolute(trim(path) // C_NULL_CHAR, trim(base) // C_NULL_CHAR, cbuf, N)
+include "ifc0b.inc"
+end function
+
+
+function filesystem_type(path) result (r)
+!! get filesystem type of path, which must exist
+!! returns empty string if path does not exist or type cannot be determined
+character(*), intent(in) :: path
+
+include "ifc0a.inc"
+N = fs_filesystem_type(trim(path) // C_NULL_CHAR, cbuf, N)
 include "ifc0b.inc"
 end function
 

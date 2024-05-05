@@ -171,6 +171,8 @@ main : do
     print '(A)', shortname(arg1)
   case ("getenv")
     print '(A)', getenv(arg1)
+  case ("type")
+    print '(A)', filesystem_type(arg1)
   case default
     done = .false.
   end select

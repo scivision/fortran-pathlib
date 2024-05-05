@@ -10,7 +10,7 @@
 #ifdef __cplusplus
 
 #if !defined(__has_cpp_attribute)
-// this is a C++20 feature, but available in many older compilers like GCC >= 7
+// this is a C++20 feature, but available in many older compilers
 #  define __has_cpp_attribute(x)  0
 #endif
 
@@ -112,6 +112,8 @@ public:
   static bool set_permissions(std::string_view, int, int, int);
 
   [[nodiscard]] static bool is_safe_name(std::string_view);
+
+  [[nodiscard]] static std::string filesystem_type(std::string_view);
 
   // Disallow creating an instance of this object
   Ffs() = delete;
@@ -257,6 +259,8 @@ size_t fs_longname(const char*, char*, size_t);
 
 size_t fs_getenv(const char*, char*, size_t);
 bool fs_setenv(const char*, const char*);
+
+size_t fs_filesystem_type(const char*, char*, size_t);
 
 #ifdef __cplusplus
 }

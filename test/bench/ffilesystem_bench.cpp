@@ -1,6 +1,6 @@
 #include <chrono>
 #include <string>
-#include <memory>
+#include <vector>
 #include <algorithm>
 #include <iostream>
 #include <functional>
@@ -45,21 +45,20 @@ std::map<std::string_view, std::function<size_t(const char*, bool, char*, size_t
   };
 
 
-const bool strict = false;
+constexpr bool strict = false;
 
-size_t Lp = fs_get_max_path();
 // warmup
 std::string_view w;
 auto t = std::chrono::duration<double>::max();
 size_t L=0;
 
-auto buf = std::make_unique<char[]>(Lp);
+std::vector<char> buf(fs_get_max_path());
 if (s_.contains(fname))
-  L = s_[fname](buf.get(), Lp);
+  L = s_[fname](buf.data(), buf.size());
 else if (ssb.contains(fname))
-  L = ssb[fname](path.data(), strict, buf.get(), Lp);
+  L = ssb[fname](path.data(), strict, buf.data(), buf.size());
 else if (s_s.contains(fname))
-  L = s_s[fname](path.data(), buf.get(), Lp);
+  L = s_s[fname](path.data(), buf.data(), buf.size());
 else
   {
     std::cerr << "Error: unknown function " << fname << "\n";
@@ -68,17 +67,17 @@ else
 if(L == 0)
   return t;
 
-w = buf.get();
+w = buf.data();
 
 for (int i = 0; i < n; ++i){
     auto t0 = std::chrono::steady_clock::now();
 
     if (s_.contains(fname))
-      s_[fname](buf.get(), Lp);
+      s_[fname](buf.data(), buf.size());
     else if (ssb.contains(fname))
-      ssb[fname](path.data(), strict, buf.get(), Lp);
+      ssb[fname](path.data(), strict, buf.data(), buf.size());
     else if (s_s.contains(fname))
-      s_s[fname](path.data(), buf.get(), Lp);
+      s_s[fname](path.data(), buf.data(), buf.size());
 
     auto t1 = std::chrono::steady_clock::now();
     t = std::min(t, std::chrono::duration_cast<std::chrono::duration<double>>(t1 - t0));
@@ -151,7 +150,7 @@ std::map<std::string_view, std::function<std::string(std::string_view, bool)>> s
     {"resolve", Ffs::resolve}
   };
 
-const bool strict = false;
+constexpr bool strict = false;
 
 // warmup
 std::string h;
@@ -205,10 +204,10 @@ if(argc > 1)
 
 std::string_view path;
 
-auto buf = std::make_unique<char[]>(1000);
+std::vector<char> buf(1000);
 
-if(fs_compiler(buf.get(), 1000))
-  std::cout << buf.get() << "\n";
+if(fs_compiler(buf.data(), buf.size()))
+  std::cout << buf.data() << "\n";
 
 for (std::set<std::string_view, std::less<>> funcs = {"canonical", "resolve", "which", "expanduser", "normal", "cwd", "homedir", "parent"};
       std::string_view func : funcs) {

@@ -116,13 +116,20 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"mkdtemp", Ffs::mkdtemp},
     {"shortname", Ffs::shortname},
     {"longname", Ffs::longname},
-    {"getenv", Ffs::get_env}
+    {"getenv", Ffs::get_env},
+    {"type", Ffs::filesystem_type}
   };
 
   std::map<std::string_view, std::function<std::string(std::string_view, bool)>> mstrb =
   {
     {"canonical", Ffs::canonical},
     {"resolve", Ffs::resolve}
+  };
+
+  std::map<std::string_view, std::function<std::string(std::string_view, bool)>> mstrbw =
+  {
+    {"weakly_canonical", Ffs::canonical},
+    {"weakly_resolve", Ffs::resolve}
   };
 
   std::map<std::string_view, std::function<uintmax_t(std::string_view)>> mmax =
@@ -141,7 +148,9 @@ static void one_arg(std::string_view fun, std::string_view a1){
   else if (mstring.contains(fun))
     std::cout << mstring[fun](a1) << "\n";
   else if (mstrb.contains(fun))
-    std::cout << mstrb[fun](a1, false) << "\n";
+    std::cout << mstrb[fun](a1, true) << "\n";
+  else if (mstrbw.contains(fun))
+    std::cout << mstrbw[fun](a1, false) << "\n";
   else if (mmax.contains(fun))
     std::cout << mmax[fun](a1) << "\n";
   else if (mvoid.contains(fun))
@@ -250,11 +259,11 @@ while (true){
 
   // "\x04" is Ctrl-D on Windows.
   // EOF for non-Windows
-  if (std::cin.eof() || inp == "\x04" || inp == "q")
+  if (std::cin.eof() || inp == "\x04" || inp == "q" || inp == "quit" || inp == "exit")
     break;
 
   // split variable inp on space-delimiters
-  const char delimiter = ' ';
+  constexpr char delimiter = ' ';
   size_t pos = 0;
   std::vector<std::string> args;
   // NOTE: loop getline() instead?

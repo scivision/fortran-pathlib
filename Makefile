@@ -13,8 +13,9 @@ CFLAGS := -Wall $(INC)
 FFLAGS := -Wall
 
 cdir = src/common/
-SRCS = $(cdir)common.c $(cdir)filesystem.cpp $(cdir)c_ifc.cpp $(cdir)dynamic.cpp $(cdir)inquire.cpp $(cdir)pure.cpp $(cdir)platform.cpp $(cdir)resolve.cpp $(cdir)symlink.cpp $(cdir)windows.cpp
-OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
+COMM_SRCS = $(cdir)common.c $(cdir)partition.c
+SRCS = $(cdir)filesystem.cpp $(cdir)c_ifc.cpp $(cdir)dynamic.cpp $(cdir)inquire.cpp $(cdir)pure.cpp $(cdir)platform.cpp $(cdir)resolve.cpp $(cdir)symlink.cpp $(cdir)windows.cpp
+OBJS := $(SRCS:%=$(BUILD_DIR)/%.o) $(COMM_SRCS:%=$(BUILD_DIR)/%.o)
 
 fdir = $(cdir)fortran/
 FSRCS = $(fdir)filesystem.F90
@@ -64,6 +65,9 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/%.f90.o: %.f90
+	$(FC) $(FFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/%.F90.o: %.F90
 	$(FC) $(FFLAGS) -c $< -o $@
 
 clean:
