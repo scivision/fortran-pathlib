@@ -49,6 +49,8 @@ jobs:
         cmake --preset multi
         -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
         -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+        --install-prefix ${{ github.workspace }}/build/local
+
 
     - name: log if fail
       if: failure()
@@ -100,6 +102,8 @@ jobs:
         cmake --preset multi
         -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
         -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+        --install-prefix ${{ github.workspace }}/build/local
+
 
     - name: log if fail
       if: failure()
@@ -160,6 +164,8 @@ jobs:
         cmake --preset multi
         -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
         -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+        --install-prefix ${{ github.workspace }}/build/local
+
 
     - name: log if fail
       if: failure()
@@ -288,6 +294,8 @@ jobs:
         cmake --preset multi
         -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
         -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+        --install-prefix ${{ github.workspace }}/build/local
+
 
     - name: log if fail
       if: failure()

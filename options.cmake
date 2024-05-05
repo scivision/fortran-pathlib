@@ -13,11 +13,6 @@ option(${PROJECT_NAME}_iwyu "Run include-what-you-use on the code")
 
 option(CMAKE_TLS_VERIFY "Verify TLS certificates" on)
 
-
 option(${PROJECT_NAME}_BUILD_TESTING "Build tests" ${PROJECT_IS_TOP_LEVEL})
-
-if(PROJECT_IS_TOP_LEVEL AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set_property(CACHE CMAKE_INSTALL_PREFIX PROPERTY VALUE "${PROJECT_BINARY_DIR}/local")
-endif()
 
 file(GENERATE OUTPUT .gitignore CONTENT "*")

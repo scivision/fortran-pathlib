@@ -29,7 +29,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Configure
-      run: cmake -B build
+      run: cmake -B build --install-prefix ${{ github.workspace }}/build/local
 
     - name: build Release
       run: cmake --build build --config Release
@@ -75,6 +75,7 @@ jobs:
       run: >-
         cmake --preset multi
         -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
+        --install-prefix ${{ github.workspace }}/build/local
 
     - name: Debug workflow
       run: cmake --workflow --preset debug
