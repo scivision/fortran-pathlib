@@ -10,8 +10,9 @@
 #include "ffilesystem.h"
 
 static void err(const char* msg, char* buf){
+  fprintf(stderr, "ERROR: %s %s\n", msg, buf);
+
   free(buf);
-  fprintf(stderr, "ERROR: %s\n", msg);
   exit(EXIT_FAILURE);
 }
 
@@ -26,13 +27,10 @@ int main(void){
   _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-#ifdef _WIN32
-    char s[] = "NUL";
-    const char ref[] = "NUL";
-#else
-    char s[] = "/dev/null";
-    const char ref[] = "/dev/null";
-#endif
+    char s[10];
+    strcpy(s, fs_devnull());
+
+    const char* ref = fs_devnull();
 
     const size_t maxp = fs_get_max_path();
 

@@ -40,6 +40,22 @@ endif
 
 endif
 
+!> devnull
+b = devnull()
+if(is_windows()) then
+  if (b /= "nul") then
+    write(stderr,*) "ERROR: devnull: " // b
+    c = c+1
+  endif
+else
+  if (b /= "/dev/null") then
+    write(stderr,*) "ERROR: devnull: " // b
+    c = c+1
+  endif
+endif
+
+print '(a)', "devnull: " // b
+
 end block valgrind
 
 if (c /= 0) error stop "failed separator tests"

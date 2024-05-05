@@ -335,12 +335,12 @@ p%is_char_device()
 is_char_device("/dev/null")
 ```
 
-On Windows, is the path a reserved name (like "NUL")?
+On Windows, is the path a reserved name (like "nul" on Windows)?
 
 ```fortran
 p%is_reserved()
 ! or
-is_reserved("NUL")
+is_reserved("nul")
 ```
 
 Error stop if file does not exist
@@ -510,6 +510,29 @@ Get file name without path and suffix:
 p%stem()
 ! or
 stem("my/file.txt")  !< "file"
+```
+
+Get path separator: ":" for Unix, ";" for Windows
+
+```fortran
+character :: s = pathsep()
+```
+
+Get null path: "/dev/null" on Unix, "nul" on Windows
+
+```fortran
+character(:), allocatable :: n = devnull()
+```
+
+Get filesystem type of path.
+E.g. "NTFS" or "ext4". WSL shows "v9fs" for Windows paths.
+
+```fortran
+character(:), allocatable :: p%filesystem_type()
+
+! or
+
+filesystem_type("my/file.txt")  !< "NTFS" or "ext4" or ...
 ```
 
 Get drive root. E.g. Unix "/"  Windows "c:"

@@ -168,6 +168,7 @@ FFS_NODISCARD long fs_lang();
 FFS_NODISCARD size_t fs_get_max_path();
 
 FFS_NODISCARD char fs_pathsep();
+FFS_NODISCARD const char* fs_devnull();
 
 FFS_NODISCARD bool fs_is_admin();
 FFS_NODISCARD bool fs_is_bsd();

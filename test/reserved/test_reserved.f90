@@ -13,12 +13,12 @@ character(:), allocatable :: s1
 s1 = "a"
 if (is_reserved(s1)) error stop "a is not reserved"
 
-s1 = "NUL"
+s1 = "nul"
 b = is_reserved(s1)
 if (is_windows()) then
-    if (.not. b) error stop "NUL is reserved on Windows"
+    if (.not. b) error stop "nul is reserved on Windows"
 else
-    if (b) error stop "NUL is not reserved on Unix"
+    if (b) error stop "nul is not reserved on Unix"
 endif
 
 if(is_char_device("a")) error stop "a is not a char device"

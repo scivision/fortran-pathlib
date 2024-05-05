@@ -104,6 +104,10 @@ char fs_pathsep(){
   return fs_is_windows() ? ';' : ':';
 }
 
+const char* fs_devnull(){
+  return fs_is_windows() ? "nul" : "/dev/null";
+}
+
 
 size_t fs_strncpy(const char* path, char* result, size_t buffer_size)
 {

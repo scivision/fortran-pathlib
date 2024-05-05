@@ -25,7 +25,7 @@ is_admin, is_bsd, is_macos, is_windows, is_cygwin, is_wsl, is_mingw, is_linux, i
 max_path, get_max_path, &
 exe_path, lib_path, compiler, compiler_c, &
 longname, shortname, getenv, setenv, &
-is_alpha, filesystem_type
+is_alpha, filesystem_type, devnull
 
 interface get_max_path
 !! deprecated
@@ -1055,6 +1055,18 @@ character(*), intent(in) :: path
 include "ifc0a.inc"
 N = fs_filesystem_type(trim(path) // C_NULL_CHAR, cbuf, N)
 include "ifc0b.inc"
+end function
+
+
+function devnull() result (r)
+!! get path to /dev/null or equivalent
+character(:), allocatable :: r
+
+if(is_windows()) then
+  r = "nul"
+else
+  r = "/dev/null"
+endif
 end function
 
 
