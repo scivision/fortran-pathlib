@@ -1,6 +1,5 @@
 #include <chrono>
 #include <string>
-#include <vector>
 #include <algorithm>
 #include <iostream>
 #include <functional>
@@ -52,7 +51,7 @@ std::string_view w;
 auto t = std::chrono::duration<double>::max();
 size_t L=0;
 
-std::vector<char> buf(fs_get_max_path());
+std::string buf(fs_get_max_path(), '\0');
 if (s_.contains(fname))
   L = s_[fname](buf.data(), buf.size());
 else if (ssb.contains(fname))
@@ -67,7 +66,7 @@ else
 if(L == 0)
   return t;
 
-w = buf.data();
+w = buf;
 
 for (int i = 0; i < n; ++i){
     auto t0 = std::chrono::steady_clock::now();

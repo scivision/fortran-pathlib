@@ -1,6 +1,6 @@
 #include "ffilesystem.h"
 
-#include <vector>
+#include <string>
 #include <cstddef> // size_t
 
 // for lib_path, exe_path
@@ -29,7 +29,7 @@ std::string Ffs::exe_path()
   // https://stackoverflow.com/a/4031835
   // https://stackoverflow.com/a/1024937
 
-  [[maybe_unused]] std::vector<char> buf(fs_get_max_path());
+  std::string buf(fs_get_max_path(), '\0');
 
 #ifdef _WIN32
  // https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
@@ -49,7 +49,7 @@ std::string Ffs::exe_path()
   return {};
 #endif
 
-  return Ffs::as_posix(buf.data());
+  return Ffs::as_posix(buf.c_str());
 }
 
 
@@ -57,12 +57,11 @@ std::string Ffs::lib_path()
 {
 
 #if (defined(_WIN32) || defined(__CYGWIN__)) && defined(FS_DLL_NAME)
-
-  std::vector<char> buf(fs_get_max_path());
+  std::string buf(fs_get_max_path(), '\0');
  // https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
 
   if (size_t L = GetModuleFileNameA(GetModuleHandleA(FS_DLL_NAME), buf.data(), buf.size()); L > 0)  FFS_LIKELY
-    return Ffs::as_posix(buf.data());
+    return Ffs::as_posix(buf.c_str());
 #elif __has_include(<dlfcn.h>)
   Dl_info info;
   if(dladdr( (void*)&dl_dummy_func, &info))  FFS_LIKELY

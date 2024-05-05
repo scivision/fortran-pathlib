@@ -3,7 +3,6 @@
 #include <set>
 #include <iostream>
 #include <string>
-#include <vector>
 #include <cstring> // std::streerror
 
 #if __has_include(<ranges>)
@@ -255,10 +254,10 @@ std::string Ffs::get_permissions(std::string_view path)
 
 std::string Ffs::filesystem_type(std::string_view path){
 
-  std::vector<char> name(fs_get_max_path());
+  std::string name(fs_get_max_path(), '\0');
 
   if(fs_filesystem_type(path.data(), name.data(), name.size()))
-    return std::string(name.data());
+    return name.c_str();
 
   return {};
 }

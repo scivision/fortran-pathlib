@@ -14,7 +14,6 @@
 #include <sys/utsname.h>
 #endif
 
-#include <vector>
 #include <set>
 #include <cstddef> // size_t
 #include <cstdlib>
@@ -171,7 +170,7 @@ std::string Ffs::get_homedir()
 #if defined(_WIN32)
   // works on MSYS2, MSVC, oneAPI.
   auto L = static_cast<DWORD>(fs_get_max_path());
-  std::vector<char> buf(L);
+  std::string buf(L, '\0');
   // process with query permission
   HANDLE hToken = nullptr;
   bool ok = OpenProcessToken( GetCurrentProcess(), TOKEN_QUERY, &hToken) != 0 &&
@@ -180,10 +179,10 @@ std::string Ffs::get_homedir()
   CloseHandle(hToken);
 
   if (ok) FFS_LIKELY
-    return Ffs::as_posix(buf.data());
+    return Ffs::as_posix(buf.c_str());
 #elif !defined(_WIN32)
   if (const char *h = getpwuid(geteuid())->pw_dir; h)
-    return std::string(h);
+    return h;
 #endif
 
   std::cerr << "ERROR:ffilesystem:homedir: could not get home directory: " << std::strerror(errno) << "\n";
