@@ -1,5 +1,5 @@
 project('ffilesystem', ['c', 'cpp'],
-version: '5.6.3',
+version: '5.6.4',
 default_options: ['cpp_std=c++20', 'buildtype=release'],
 meson_version : '>=1.4.0')
 
