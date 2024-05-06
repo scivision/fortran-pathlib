@@ -21,8 +21,8 @@ include(GNUInstallDirs)
 include(CheckLanguage)
 
 # some parts of ffilesystem have optional C++20 features.
-# almost all ffilesystem functions work with C++17 (emits warnings for unavailable functions)
-# ffilesystem does not build at all with C++14 due to C++17 code in every function
+# almost all ffilesystem functions require C++17 (emits warnings for unavailable functions)
+# ffilesystem does not build at all with C++14
 #
 # https://cmake.org/cmake/help/latest/prop_tgt/CXX_STANDARD.html
 if(DEFINED ${PROJECT_NAME}_CXX_STANDARD)
@@ -51,6 +51,9 @@ set(_msg "${PROJECT_NAME} ${PROJECT_VERSION} CMake ${CMAKE_VERSION} ${CMAKE_SYST
 include(options.cmake)
 
 if(ffilesystem_cpp OR ffilesystem_bench)
+  set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+  # 3.28.0 .. 3.29.2 Clang CMake bug and not using C++ modules anyway at this time
+  # https://gitlab.kitware.com/cmake/cmake/-/issues/25956
   enable_language(CXX)
 endif()
 
