@@ -1,6 +1,8 @@
-# Check compiler's C++17 capabilities
+# Check compiler C++ capabilities
 
 function(cpp_check)
+
+set(CMAKE_CXX_STANDARD 20)
 
 # some compilers e.g. Cray claim to have filesystem, but their libstdc++ doesn't have it.
 check_cxx_source_compiles([=[

@@ -10,9 +10,6 @@ endif()
 
 enable_testing()
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 if(GNU_stdfs)
   message(STATUS "fs_check: applying flags ${GNU_stdfs}")
 endif()
@@ -28,6 +25,7 @@ endif()
 add_library(fs_cpp OBJECT lib_fs.cpp)
 target_include_directories(fs_cpp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(fs_cpp PUBLIC ${GNU_stdfs})
+target_compile_features(fs_cpp PUBLIC cxx_std_17)
 
 add_executable(c_fs main_fs.c)
 target_link_libraries(c_fs PRIVATE fs_cpp)

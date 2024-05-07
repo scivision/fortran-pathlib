@@ -1,3 +1,5 @@
+set(CMAKE_CXX_STANDARD 20)
+
 add_compile_definitions($<$<BOOL:${WIN32}>:_CRT_SECURE_NO_WARNINGS>)
 
 set(${PROJECT_NAME}_fortran_test_flags

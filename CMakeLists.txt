@@ -12,7 +12,7 @@ endif()
 
 project(ffilesystem
 LANGUAGES C
-VERSION 5.6.4
+VERSION 5.6.5
 )
 
 include(CTest) # needed for "ctest -T memcheck"
@@ -20,40 +20,18 @@ include(FetchContent)
 include(GNUInstallDirs)
 include(CheckLanguage)
 
-# some parts of ffilesystem have optional C++20 features.
-# almost all ffilesystem functions require C++17 (emits warnings for unavailable functions)
-# ffilesystem does not build at all with C++14
-#
-# https://cmake.org/cmake/help/latest/prop_tgt/CXX_STANDARD.html
-if(DEFINED ${PROJECT_NAME}_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD ${${PROJECT_NAME}_CXX_STANDARD})
+get_property(cxx_features GLOBAL PROPERTY CMAKE_CXX_KNOWN_FEATURES)
+if("cxx_std_20" IN_LIST cxx_features)
+  set(cxx_std 20)
 else()
-  set(CMAKE_CXX_STANDARD 20)
-endif()
-# https://cmake.org/cmake/help/latest/prop_tgt/CXX_EXTENSIONS.html
-if(DEFINED ${PROJECT_NAME}_CXX_EXTENSIONS)
-  set(CMAKE_CXX_EXTENSIONS ${${PROJECT_NAME}_CXX_EXTENSIONS})
+  set(cxx_std 17)
 endif()
 
-# https://cmake.org/cmake/help/latest/prop_tgt/C_STANDARD.html
-if(DEFINED ${PROJECT_NAME}_C_STANDARD)
-  set(CMAKE_C_STANDARD ${${PROJECT_NAME}_C_STANDARD})
-else()
-  set(CMAKE_C_STANDARD 99)
-endif()
-# https://cmake.org/cmake/help/latest/prop_tgt/C_EXTENSIONS.html
-if(DEFINED ${PROJECT_NAME}_C_EXTENSIONS)
-  set(CMAKE_C_EXTENSIONS ${${PROJECT_NAME}_C_EXTENSIONS})
-endif()
-
-set(_msg "${PROJECT_NAME} ${PROJECT_VERSION} CMake ${CMAKE_VERSION} ${CMAKE_SYSTEM_NAME} Toolchain ${CMAKE_TOOLCHAIN_FILE}")
+message(STATUS "${PROJECT_NAME} ${PROJECT_VERSION} C++${cxx_std} CMake ${CMAKE_VERSION} ${CMAKE_SYSTEM_NAME} Toolchain ${CMAKE_TOOLCHAIN_FILE}")
 
 include(options.cmake)
 
 if(ffilesystem_cpp OR ffilesystem_bench)
-  set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
-  # 3.28.0 .. 3.29.2 Clang CMake bug and not using C++ modules anyway at this time
-  # https://gitlab.kitware.com/cmake/cmake/-/issues/25956
   enable_language(CXX)
 endif()
 
@@ -67,16 +45,14 @@ if(ffilesystem_fortran)
   endif()
 endif()
 
-message(STATUS "CXX_STANDARD ${CMAKE_CXX_STANDARD}  C_STANDARD ${CMAKE_C_STANDARD}")
-
 include(cmake/compilers.cmake)
 
 # CPPcheck
 if(${PROJECT_NAME}_cppcheck)
   find_program(cppcheck_exe NAMES cppcheck REQUIRED)
   set(cppcheck_opts --enable=all --inline-suppr --quiet --suppressions-list=${PROJECT_SOURCE_DIR}/cppcheck.supp)
-  set(CMAKE_C_CPPCHECK ${cppcheck_exe} --std=c++${CMAKE_CXX_STANDARD} ${cppcheck_opts})
-  set(CMAKE_CXX_CPPCHECK ${cppcheck_exe} --std=c++${CMAKE_CXX_STANDARD} ${cppcheck_opts})
+  set(CMAKE_C_CPPCHECK ${cppcheck_exe} --std=c++20 ${cppcheck_opts})
+  set(CMAKE_CXX_CPPCHECK ${cppcheck_exe} --std=c++20 ${cppcheck_opts})
 endif()
 
 # --- filesystem library
@@ -134,6 +110,7 @@ target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${ffilesystem_trace}>>:FS_TRACE=1>"
 "$<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${HAVE_F03TYPE}>>>:NO_F03TYPE>"
 )
+target_compile_features(ffilesystem PRIVATE cxx_std_${cxx_std} c_std_99)
 target_compile_options(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANG_AND_ID:C,AppleClang,Clang,GNU>,$<NOT:$<BOOL:${c23_maybe_unused}>>>:-Wno-unused-parameter>"
 )
@@ -182,9 +159,10 @@ endif()
 # --- CLI
 
 if(ffilesystem_cli)
-  if(HAVE_CXX_FILESYSTEM AND ${PROJECT_NAME}_cpp_map_contains)
+  if(HAVE_CXX_FILESYSTEM AND ${PROJECT_NAME}_cpp_map_contains AND cxx_std GREATER_EQUAL 20)
     add_executable(fs_cli app/main.cpp)
     target_link_libraries(fs_cli PRIVATE ffilesystem)
+    target_compile_features(fs_cli PRIVATE cxx_std_20)
 
     install(TARGETS fs_cli EXPORT ${PROJECT_NAME}-targets)
   endif()
