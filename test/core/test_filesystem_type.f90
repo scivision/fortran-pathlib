@@ -1,11 +1,14 @@
 program test
 
+use, intrinsic :: iso_fortran_env, only: stderr => error_unit
+
 use filesystem
 
 implicit none
 
 valgrind : block
 
+character(:), allocatable :: exp(:)
 character(:), allocatable :: fsname
 
 fsname = filesystem_type(".")
@@ -13,16 +16,21 @@ fsname = filesystem_type(".")
 print '(a)', fsname
 
 if(is_windows()) then
-  if (.not. any(fsname == [character(5) :: "NTFS", "EXFAT"])) error stop "expected NTFS or EXFAT"
+  exp = [character(5) :: "NTFS", "EXFAT"]
 elseif (is_wsl() > 0) then
-  if (.not. any(fsname == ["ext4", "v9fs"])) error stop "expected ext4 or v9fs"
+  exp = [character(4) :: "ext4", "nfs", "v9fs"]
 elseif (is_linux()) then
-  if (.not. any(fsname == [character(5) :: "ext4", "tmpfs", "xfs"])) error stop "expected ext4 or tmpfs or xfs"
+  exp = [character(5) :: "ext4", "nfs", "tmpfs", "xfs"]
 elseif (is_macos()) then
-  if (.not. any(fsname == [character(4) :: "apfs", "hfs"])) error stop "expected apfs or hfs"
+  exp = [character(4) :: "apfs", "hfs"]
 else
   error stop 77
 end if
+
+if (.not. any(fsname == exp)) then
+  write(stderr, *) "FAIL: got " // fsname // " but expected: ", exp
+  error stop
+endif
 
 end block valgrind
 

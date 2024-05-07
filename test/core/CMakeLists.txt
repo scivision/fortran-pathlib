@@ -25,6 +25,10 @@ set_property(TEST Fortran_${t} PROPERTY LABELS Fortran)
 
 endforeach()
 
+target_compile_options(test_fortran_filesystem_type PRIVATE
+$<$<COMPILE_LANG_AND_ID:Fortran,GNU>:-Wno-uninitialized>
+)
+
 endif()
 
 
