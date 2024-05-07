@@ -30,27 +30,31 @@ static inline const char* fs_type_linux(const char* path)
   }
 
   switch (s.f_type) {
-    case EXT4_SUPER_MAGIC:
-      return "ext4";
+    case BTRFS_SUPER_MAGIC: return "btrfs";
+    case EXT4_SUPER_MAGIC: return "ext4";
 #ifdef EXFAT_SUPER_MAGIC
-    case EXFAT_SUPER_MAGIC:
-      return "exfat";
+    case EXFAT_SUPER_MAGIC: return "exfat";
+#endif
+#ifdef F2FS_SUPER_MAGIC
+    case F2FS_SUPER_MAGIC: return "f2fs";
 #endif
 #ifdef FUSE_SUPER_MAGIC
-    case FUSE_SUPER_MAGIC:
-      return "fuse";
+    case FUSE_SUPER_MAGIC: return "fuse";
 #endif
-    case SQUASHFS_MAGIC:
-      return "squashfs";
-    case TMPFS_MAGIC:
-      return "tmpfs";
-    case V9FS_MAGIC:
-      return "v9fs";
+    case NFS_SUPER_MAGIC: return "nfs";
+    case SQUASHFS_MAGIC: return "squashfs";
+    case TMPFS_MAGIC: return "tmpfs";
+#ifdef TRACEFS_MAGIC
+    case TRACEFS_MAGIC: return "tracefs";
+#endif
+#ifdef UDF_SUPER_MAGIC
+    case UDF_SUPER_MAGIC: return "udf";
+#endif
+    case V9FS_MAGIC: return "v9fs";
     // used for WSL
     // https://devblogs.microsoft.com/commandline/whats-new-for-wsl-in-windows-10-version-1903/
 #ifdef XFS_SUPER_MAGIC
-    case XFS_SUPER_MAGIC:
-      return "xfs";
+    case XFS_SUPER_MAGIC: return "xfs";
 #endif
     default:
       fprintf(stderr, "ERROR:fs_get_type(%s) type ID: %ld\n", path, s.f_type);
