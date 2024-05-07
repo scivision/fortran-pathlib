@@ -119,7 +119,7 @@ public:
   Ffs() = delete;
 };
 
-size_t fs_str2char(std::string_view, char*, size_t);
+size_t fs_str2char(std::string_view, char*, const size_t);
 std::string fs_drop_slash(std::string_view);
 
 
@@ -146,7 +146,7 @@ extern "C" {
 #include <stdint.h>
 #include <time.h>
 
-size_t fs_strncpy(const char*, char*, size_t);
+size_t fs_strncpy(const char*, char*, const size_t);
 
 #endif
 
@@ -184,24 +184,24 @@ FFS_NODISCARD bool fs_is_safe_name(const char*);
 
 void fs_as_posix(char*);
 
-size_t fs_normal(const char*, char*, size_t);
+size_t fs_normal(const char*, char*, const size_t);
 
-size_t fs_join(const char*, const char*, char*, size_t);
-size_t fs_make_absolute(const char*, const char*, char*, size_t);
+size_t fs_join(const char*, const char*, char*, const size_t);
+size_t fs_make_absolute(const char*, const char*, char*, const size_t);
 
-size_t fs_file_name(const char*, char*, size_t);
-size_t fs_stem(const char*, char*, size_t);
-size_t fs_parent(const char*, char*, size_t);
-size_t fs_suffix(const char*, char*, size_t);
-size_t fs_root(const char*, char*, size_t);
+size_t fs_file_name(const char*, char*, const size_t);
+size_t fs_stem(const char*, char*, const size_t);
+size_t fs_parent(const char*, char*, const size_t);
+size_t fs_suffix(const char*, char*, const size_t);
+size_t fs_root(const char*, char*, const size_t);
 
-size_t fs_with_suffix(const char*, const char*, char*, size_t);
+size_t fs_with_suffix(const char*, const char*, char*, const size_t);
 
-FFS_NODISCARD size_t fs_which(const char*, char*, size_t);
+FFS_NODISCARD size_t fs_which(const char*, char*, const size_t);
 
 FFS_NODISCARD bool fs_is_symlink(const char*);
 bool fs_create_symlink(const char*, const char*);
-size_t fs_read_symlink(const char*, char*, size_t);
+size_t fs_read_symlink(const char*, char*, const size_t);
 
 bool fs_mkdir(const char*);
 bool fs_exists(const char*);
@@ -218,50 +218,50 @@ FFS_NODISCARD bool fs_is_subdir(const char*, const char*);
 
 bool fs_set_permissions(const char*, int, int, int);
 
-size_t fs_get_permissions(const char*, char*, size_t);
+size_t fs_get_permissions(const char*, char*, const size_t);
 
 bool fs_remove(const char*);
 
-FFS_NODISCARD size_t fs_canonical(const char*, bool, char*, size_t);
-FFS_NODISCARD size_t fs_resolve(const char*, bool, char*, size_t);
+FFS_NODISCARD size_t fs_canonical(const char*, bool, char*, const size_t);
+FFS_NODISCARD size_t fs_resolve(const char*, bool, char*, const size_t);
 
 FFS_NODISCARD bool fs_equivalent(const char*, const char*);
 bool fs_copy_file(const char*, const char*, bool);
 
-size_t fs_relative_to(const char*, const char*, char*, size_t);
-size_t fs_proximate_to(const char*, const char*, char*, size_t);
+size_t fs_relative_to(const char*, const char*, char*, const size_t);
+size_t fs_proximate_to(const char*, const char*, char*, const size_t);
 
 bool fs_touch(const char*);
 
 FFS_NODISCARD time_t fs_get_modtime(const char*);
 bool fs_set_modtime(const char*);
 
-size_t fs_get_cwd(char*, size_t);
+size_t fs_get_cwd(char*, const size_t);
 bool fs_set_cwd(const char*);
-size_t fs_get_homedir(char*, size_t);
-size_t fs_get_tempdir(char*, size_t);
+size_t fs_get_homedir(char*, const size_t);
+size_t fs_get_tempdir(char*, const size_t);
 
-size_t fs_expanduser(const char*, char*, size_t);
+size_t fs_expanduser(const char*, char*, const size_t);
 
 FFS_NODISCARD uintmax_t fs_file_size(const char*);
 FFS_NODISCARD uintmax_t fs_space_available(const char*);
 
-size_t fs_exe_path(char*, size_t);
-size_t fs_lib_path(char*, size_t);
+size_t fs_exe_path(char*, const size_t);
+size_t fs_lib_path(char*, const size_t);
 
-size_t fs_compiler(char*, size_t);
+size_t fs_compiler(char*, const size_t);
 
 FFS_NODISCARD bool fs_win32_is_symlink(const char*);
 
-size_t fs_make_tempdir(char*, size_t);
+size_t fs_make_tempdir(char*, const size_t);
 
-size_t fs_shortname(const char*, char*, size_t);
-size_t fs_longname(const char*, char*, size_t);
+size_t fs_shortname(const char*, char*, const size_t);
+size_t fs_longname(const char*, char*, const size_t);
 
-size_t fs_getenv(const char*, char*, size_t);
+size_t fs_getenv(const char*, char*, const size_t);
 bool fs_setenv(const char*, const char*);
 
-size_t fs_filesystem_type(const char*, char*, size_t);
+size_t fs_filesystem_type(const char*, char*, const size_t);
 
 #ifdef __cplusplus
 }

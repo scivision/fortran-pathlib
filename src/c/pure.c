@@ -43,7 +43,7 @@ void fs_as_posix(char* path)
 }
 
 
-size_t fs_normal(const char* path, char* result, size_t buffer_size)
+size_t fs_normal(const char* path, char* result, const size_t buffer_size)
 {
 // normalize path
   cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
@@ -61,7 +61,7 @@ size_t fs_normal(const char* path, char* result, size_t buffer_size)
 }
 
 
-size_t fs_file_name(const char* path, char* result, size_t buffer_size)
+size_t fs_file_name(const char* path, char* result, const size_t buffer_size)
 {
   size_t L = strlen(path);
   // need this check to avoid cwalk segfault
@@ -82,7 +82,7 @@ size_t fs_file_name(const char* path, char* result, size_t buffer_size)
 }
 
 
-size_t fs_stem(const char* path, char* result, size_t buffer_size)
+size_t fs_stem(const char* path, char* result, const size_t buffer_size)
 {
   if(!fs_file_name(path, result, buffer_size))
     return 0;
@@ -95,7 +95,7 @@ size_t fs_stem(const char* path, char* result, size_t buffer_size)
 }
 
 
-size_t fs_join(const char* path, const char* other, char* result, size_t buffer_size)
+size_t fs_join(const char* path, const char* other, char* result, const size_t buffer_size)
 {
   size_t L1 = strlen(path);
   size_t L2 = strlen(other);
@@ -115,7 +115,7 @@ size_t fs_join(const char* path, const char* other, char* result, size_t buffer_
 }
 
 
-size_t fs_parent(const char* path, char* result, size_t buffer_size)
+size_t fs_parent(const char* path, char* result, const size_t buffer_size)
 {
 
   size_t L = strlen(path);
@@ -161,7 +161,7 @@ size_t fs_parent(const char* path, char* result, size_t buffer_size)
 }
 
 
-size_t fs_suffix(const char* path, char* result, size_t buffer_size)
+size_t fs_suffix(const char* path, char* result, const size_t buffer_size)
 {
   // leave malloc() in -- eliminating it by getting clever with pointer
   // failed on some systems in the path_t Fortran type jumbling the string
@@ -183,7 +183,7 @@ size_t fs_suffix(const char* path, char* result, size_t buffer_size)
 
 
 size_t fs_with_suffix(const char* path, const char* suffix,
-                      char* result, size_t buffer_size)
+                      char* result, const size_t buffer_size)
 {
   if(strlen(suffix) == 0)
     return fs_stem(path, result, buffer_size);
@@ -206,7 +206,7 @@ size_t fs_with_suffix(const char* path, const char* suffix,
 }
 
 
-size_t fs_root(const char* path, char* result, size_t buffer_size)
+size_t fs_root(const char* path, char* result, const size_t buffer_size)
 {
   size_t L;
 
@@ -264,7 +264,7 @@ return true;
 }
 
 
-size_t fs_relative_to(const char* base, const char* other, char* result, size_t buffer_size)
+size_t fs_relative_to(const char* base, const char* other, char* result, const size_t buffer_size)
 {
   // need this or separators are not handled correctly
   cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
@@ -278,7 +278,7 @@ size_t fs_relative_to(const char* base, const char* other, char* result, size_t 
 }
 
 
-size_t fs_proximate_to(const char* base, const char* other, char* result, size_t buffer_size)
+size_t fs_proximate_to(const char* base, const char* other, char* result, const size_t buffer_size)
 {
   size_t L = fs_relative_to(base, other, result, buffer_size);
   if(L)

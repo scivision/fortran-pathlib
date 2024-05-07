@@ -109,7 +109,7 @@ const char* fs_devnull(){
 }
 
 
-size_t fs_strncpy(const char* path, char* result, size_t buffer_size)
+size_t fs_strncpy(const char* path, char* result, const size_t buffer_size)
 {
 // check size before copy
   size_t L = strlen(path);
@@ -146,7 +146,7 @@ bool fs_is_admin(){
 }
 
 
-size_t fs_compiler(char* name, size_t buffer_size)
+size_t fs_compiler(char* name, const size_t buffer_size)
 {
 int L=0;
 
@@ -183,7 +183,7 @@ if(N >= buffer_size){
 }
 
 
-size_t fs_longname(const char* in, char* out, size_t buffer_size)
+size_t fs_longname(const char* in, char* out, const size_t buffer_size)
 {
 // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlongpathnamea
 // the path must exist
@@ -202,7 +202,7 @@ size_t fs_longname(const char* in, char* out, size_t buffer_size)
 }
 
 
-size_t fs_shortname(const char* in, char* out, size_t buffer_size)
+size_t fs_shortname(const char* in, char* out, const size_t buffer_size)
 {
 // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getshortpathnamew
 // the path must exist

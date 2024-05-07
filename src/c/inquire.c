@@ -224,7 +224,7 @@ fs_space_available(const char* path)
 
 
 size_t
-fs_get_permissions(const char* path, char* result, size_t buffer_size)
+fs_get_permissions(const char* path, char* result, const size_t buffer_size)
 {
   if (buffer_size < 10) {
     fprintf(stderr, "ERROR:ffilesystem:fs_get_permissions: buffer_size must be at least 10\n");

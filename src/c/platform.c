@@ -66,7 +66,7 @@ int fs_is_wsl()
 }
 
 
-size_t fs_getenv(const char* name, char* path, size_t buffer_size)
+size_t fs_getenv(const char* name, char* path, const size_t buffer_size)
 {
   const char* buf = getenv(name);
   if(!buf) // not error because sometimes we just check if envvar is defined
@@ -104,7 +104,7 @@ bool fs_setenv(const char* name, const char* value)
 }
 
 
-size_t fs_get_tempdir(char* path, size_t buffer_size)
+size_t fs_get_tempdir(char* path, const size_t buffer_size)
 {
   size_t L = fs_getenv(fs_is_windows() ? "TEMP" : "TMPDIR", path, buffer_size);
   if(L){
@@ -121,7 +121,7 @@ size_t fs_get_tempdir(char* path, size_t buffer_size)
 }
 
 
-size_t fs_get_cwd(char* path, size_t buffer_size)
+size_t fs_get_cwd(char* path, const size_t buffer_size)
 {
 // direct.h https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/getcwd-wgetcwd
 // unistd.h https://www.man7.org/linux/man-pages/man3/getcwd.3.html
@@ -147,7 +147,7 @@ bool fs_set_cwd(const char* path)
 }
 
 
-size_t fs_get_homedir(char* path, size_t buffer_size)
+size_t fs_get_homedir(char* path, const size_t buffer_size)
 {
   size_t L = fs_getenv(fs_is_windows() ? "USERPROFILE" : "HOME", path, buffer_size);
   if (L){
@@ -179,7 +179,7 @@ size_t fs_get_homedir(char* path, size_t buffer_size)
 }
 
 
-size_t fs_expanduser(const char* path, char* result, size_t buffer_size)
+size_t fs_expanduser(const char* path, char* result, const size_t buffer_size)
 {
   // The path is also normalized by defintion
   if(path[0] != '~')

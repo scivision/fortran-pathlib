@@ -21,7 +21,7 @@
 #include <sys/stat.h>
 
 
-size_t fs_canonical(const char* path, bool strict, char* result, size_t buffer_size)
+size_t fs_canonical(const char* path, bool strict, char* result, const size_t buffer_size)
 {
   // also expands ~
   // distinct from resolve()
@@ -75,7 +75,7 @@ size_t fs_canonical(const char* path, bool strict, char* result, size_t buffer_s
 }
 
 
-size_t fs_resolve(const char* path, bool strict, char* result, size_t buffer_size)
+size_t fs_resolve(const char* path, bool strict, char* result, const size_t buffer_size)
 {
   // also expands ~
   // distinct from canonical()
@@ -147,7 +147,7 @@ bool fs_equivalent(const char* path1, const char* path2)
 }
 
 
-size_t fs_which(const char* name, char* result, size_t buffer_size)
+size_t fs_which(const char* name, char* result, const size_t buffer_size)
 {
 
   size_t L;
@@ -203,7 +203,7 @@ size_t fs_which(const char* name, char* result, size_t buffer_size)
 
 
 size_t fs_make_absolute(const char* path, const char* base,
-                        char* result, size_t buffer_size)
+                        char* result, const size_t buffer_size)
 {
   size_t L1 = fs_expanduser(path, result, buffer_size);
 

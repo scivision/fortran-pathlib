@@ -64,7 +64,7 @@ static inline const char* fs_type_linux(const char* path)
 #endif
 
 
-size_t fs_filesystem_type(const char* path, char* name, size_t buffer_size)
+size_t fs_filesystem_type(const char* path, char* name, const size_t buffer_size)
 {
   // return name of filesystem type if known
 
@@ -109,8 +109,7 @@ size_t fs_filesystem_type(const char* path, char* name, size_t buffer_size)
   struct statfs s;
   if(!statfs(path, &s))
     return fs_strncpy(s.f_fstypename, name, buffer_size);
-#else
+#endif
   fprintf(stderr, "ERROR:fs_get_type: Unknown operating system\n");
   return 0;
-#endif
 }

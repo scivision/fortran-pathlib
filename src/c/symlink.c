@@ -32,7 +32,7 @@ bool fs_is_symlink(const char* path)
 }
 
 
-size_t fs_read_symlink(const char* path, FFS_MUNUSED_C char* result, FFS_MUNUSED_C size_t buffer_size)
+size_t fs_read_symlink(const char* path, FFS_MUNUSED_C char* result, FFS_MUNUSED_C const size_t buffer_size)
 {
   // target of symlink may or may not exist
 #ifdef _WIN32
