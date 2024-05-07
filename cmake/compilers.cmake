@@ -93,6 +93,12 @@ endif()
 
 if(HAVE_Fortran_FILESYSTEM)
 
+if(NOT DEFINED HAVE_F03TYPE AND
+    CMAKE_Fortran_COMPILER_ID STREQUAL "NVHPC" AND
+    CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 24)
+  set(HAVE_F03TYPE false CACHE BOOL "Fortran 2003 type support")
+endif()
+
 check_fortran_source_compiles("program main
 type :: path_t
 character(:), allocatable :: s
