@@ -93,16 +93,39 @@ endif()
 
 if(HAVE_Fortran_FILESYSTEM)
 
-if(NOT DEFINED HAVE_F03TYPE AND
-    CMAKE_Fortran_COMPILER_ID STREQUAL "NVHPC" AND
-    CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 24)
-  set(HAVE_F03TYPE false CACHE BOOL "Fortran 2003 type support")
-endif()
-
-check_fortran_source_compiles("program main
+check_fortran_source_compiles("
+module dummy
 type :: path_t
-character(:), allocatable :: s
+private
+character(:), allocatable :: path_str
+contains
+final :: destructor
 end type
+
+interface path_t
+  module procedure set_path
+end interface
+
+contains
+
+subroutine destructor(self)
+type(path_t), intent(inout) :: self
+if(allocated(self%path_str)) deallocate(self%path_str)
+end subroutine destructor
+
+type(path_t) function set_path(path)
+character(*), intent(in) :: path
+allocate(character(100) :: set_path%path_str)
+set_path%path_str = path
+end function set_path
+
+end module dummy
+
+program main
+use dummy
+implicit none
+type(path_t) :: p
+p = path_t('.')
 end program"
 HAVE_F03TYPE
 SRC_EXT .f90

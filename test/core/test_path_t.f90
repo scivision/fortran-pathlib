@@ -1,7 +1,32 @@
+!> use a dummy module instead of
+!> program-contains to workaround bug in NVHPC through at least 24.3
+
+module dummy
+use filesystem, only : path_t
+implicit none
+
+contains
+
+subroutine test_setter_getter()
+
+type(path_t) :: p1
+
+p1 = path_t("a/b/c")
+
+if (p1%path(2,3) /= "/b") error stop "getter start,end"
+if (p1%path(3,3) /= "b") error stop "getter same"
+if (p1%path(2) /= "/b/c") error stop "getter start only"
+
+end subroutine
+
+end module
+
+
 program path_methods
 
 use, intrinsic :: iso_fortran_env, only : stderr => ERROR_UNIT, int64
-use filesystem, only : path_t, get_cwd, is_windows, max_path, get_homedir
+use filesystem
+use dummy, only : test_setter_getter
 
 implicit none
 
@@ -211,19 +236,5 @@ call p2%remove()
 end block valgrind
 
 print '(a)', "OK: path methods"
-
-contains
-
-subroutine test_setter_getter()
-
-type(path_t) :: p1
-
-p1 = path_t("a/b/c")
-
-if (p1%path(2,3) /= "/b") error stop "getter start,end"
-if (p1%path(3,3) /= "b") error stop "getter same"
-if (p1%path(2) /= "/b/c") error stop "getter start only"
-
-end subroutine
 
 end program

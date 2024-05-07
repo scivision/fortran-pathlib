@@ -18,7 +18,7 @@ character(L) :: ref(N) = [character(L) :: ".", "",  "",  ".", ".",     ".",     
 integer, parameter :: Nw = 9
 
 character(L) :: in1w(Nw) = [character(L) :: "", "Hello", "Hello", &
-"c:\a\b", "c:\", "c:/a/b", "c:/a/b", "c:\a/b\c/d", "c:/path"]
+"c:\a\b", "c:/", "c:/a/b", "c:/a/b", "c:\a/b\c/d", "c:/path"]
 character(L) :: in2w(Nw) = [character(L) :: "", "Hello", "Hello/", &
 "c:/", "c:/a/b", "c:/a/b", "c:/a", "c:/a\b", "d:/path"]
 character(L) :: refw(Nw) = [character(L) :: ".", ".", ".", "../..", "a/b", ".", "..", "../..", ""]
