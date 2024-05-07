@@ -13,9 +13,8 @@ endif()
 
 if(ffilesystem_fortran)
   enable_language(Fortran)
+  add_compile_options("$<$<COMPILE_LANG_AND_ID:Fortran,Intel,IntelLLVM>:-standard-semantics>")
 endif()
-
-set(CMAKE_CXX_STANDARD 17)
 
 # --- Fortran use
 if(ffilesystem_fortran)
@@ -33,6 +32,7 @@ if(ffilesystem_cpp)
 
 add_executable(ex_cpp 2/main.cpp)
 target_link_libraries(ex_cpp PRIVATE ffilesystem::filesystem)
+target_compile_features(ex_cpp PRIVATE cxx_std_17)
 add_test(NAME BasicCpp COMMAND ex_cpp)
 
 endif()

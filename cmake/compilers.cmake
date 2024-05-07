@@ -132,7 +132,7 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
 
 add_compile_options(
 "$<$<COMPILE_LANGUAGE:Fortran>:-warn>"
-"$<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${WIN32}>>>:-fpscomp;logicals>"
+"$<$<COMPILE_LANGUAGE:Fortran>:-standard-semantics>"
 "$<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<CONFIG:Debug>>:-traceback;-check;-debug>"
 )
 
