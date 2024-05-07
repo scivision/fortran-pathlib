@@ -13,7 +13,6 @@ endif()
 
 if(ffilesystem_fortran)
   enable_language(Fortran)
-  add_compile_options("$<$<COMPILE_LANG_AND_ID:Fortran,Intel,IntelLLVM>:-standard-semantics>")
 endif()
 
 # --- Fortran use
