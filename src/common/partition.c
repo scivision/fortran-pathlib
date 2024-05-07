@@ -109,8 +109,8 @@ size_t fs_filesystem_type(const char* path, char* name, size_t buffer_size)
   struct statfs s;
   if(!statfs(path, &s))
     return fs_strncpy(s.f_fstypename, name, buffer_size);
-#endif
-
+#else
   fprintf(stderr, "ERROR:fs_get_type: Unknown operating system\n");
   return 0;
+#endif
 }
