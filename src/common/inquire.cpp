@@ -157,8 +157,7 @@ std::time_t fs_get_modtime(const char* path)
   auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs);
   return std::chrono::system_clock::to_time_t(t_sys);
 #else
-  struct stat s;
-  if (!stat(path, &s))
+  if (struct stat s; !stat(path, &s))
     return s.st_mtime;
 
   std::cerr << "ERROR:Ffs:fs_get_modtime: " << std::strerror(errno) << "\n";

@@ -182,7 +182,7 @@ endif()
 # --- CLI
 
 if(ffilesystem_cli)
-  if(HAVE_CXX_FILESYSTEM AND ${PROJECT_NAME}_format AND ${PROJECT_NAME}_cpp20_ranges)
+  if(HAVE_CXX_FILESYSTEM AND ${PROJECT_NAME}_cpp_map_contains)
     add_executable(fs_cli app/main.cpp)
     target_link_libraries(fs_cli PRIVATE ffilesystem)
 

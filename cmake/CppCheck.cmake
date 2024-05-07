@@ -45,22 +45,13 @@ ${PROJECT_NAME}_HAVE_CLOCK_CAST
 )
 
 if(${PROJECT_NAME}_cli)
-  check_cxx_source_compiles("
-  #include <iostream>
-  #include <chrono>
-  #include <format>
-  #include <filesystem>
-
-  int main(){
-  std::filesystem::file_time_type t;
-  t = std::filesystem::file_time_type::clock::now();
-  std::cout << t << std::endl;
-  return 0;
-  }"
-  ${PROJECT_NAME}_format
+  check_cxx_source_compiles("#include <map>
+   int main(){
+    std::map<int, char> m{{1, 'a'}, {2, 'b'}};
+    return m.contains(2);
+   }"
+  ${PROJECT_NAME}_cpp_map_contains
   )
-
-  check_cxx_symbol_exists(__cpp_lib_ranges "algorithm" ${PROJECT_NAME}_cpp20_ranges)
 endif()
 
 
