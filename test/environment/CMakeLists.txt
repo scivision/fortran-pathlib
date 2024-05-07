@@ -39,7 +39,7 @@ set_property(TEST CppHomedirEnv CppHomedirNoEnv PROPERTY LABELS Cpp)
 endif()
 
 
-if(CMAKE_VERSION VERSION_LESS 3.22 OR DEFINED ENV{CI})
+if(CMAKE_VERSION VERSION_LESS 3.22 OR "$ENV{CI}")
   set_property(TEST ${_noenv} PROPERTY DISABLED true)
 else()
   set_property(TEST ${_noenv} PROPERTY ENVIRONMENT_MODIFICATION "HOME=unset:;USERPROFILE=unset:;TEMP=unset:;TMPDIR=unset:")
