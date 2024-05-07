@@ -171,7 +171,6 @@ if(NOT WIN32)
   add_compile_options("$<$<COMPILE_LANGUAGE:Fortran>:-fpscomp;logicals>")
 endif()
 
-
 elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
 
 add_compile_options(
@@ -181,6 +180,9 @@ add_compile_options(
 "$<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<CONFIG:Debug>>>:-fno-backtrace>"
 )
 
+elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "NVHPC")
+  # C_BOOL correctness
+  add_compile_options("$<$<COMPILE_LANGUAGE:Fortran>:-Munixlogical>")
 endif()
 
 # --- code coverage
