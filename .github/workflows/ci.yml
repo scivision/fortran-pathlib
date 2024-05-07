@@ -135,7 +135,6 @@ jobs:
 # github actions clang 13, 14 have broken stdc++ between clang and GCC
 # https://github.com/actions/runner-images/issues/8659
         clang-version: [13, 14, 15]
-        shared: [false]
         cpp: [true, false]
         include:
         - clang-version: 15
@@ -163,6 +162,7 @@ jobs:
       run: >-
         cmake --preset multi
         -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
+        -Dffilesystem_cli:BOOL=${{ matrix.clang-version == 15 }}
         -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
         --install-prefix ${{ github.workspace }}/build/local
 
