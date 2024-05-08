@@ -195,8 +195,7 @@ size_t fs_with_suffix(const char* path, const char* suffix,
       return 0;
     }
     // workaround for leading dot filename
-    strncpy(result, path, buffer_size);
-    strncat(result, suffix, buffer_size);
+    snprintf(result, buffer_size, "%s%s", path, suffix);
     return L;
   }
 

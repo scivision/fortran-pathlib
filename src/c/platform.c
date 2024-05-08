@@ -85,9 +85,7 @@ bool fs_setenv(const char* name, const char* value)
   char* buf = (char*) malloc(L);
   if(!buf) return false;
 
-  fs_strncpy(name, buf, L);
-  strcat(buf, "=");
-  strcat(buf, value);
+  snprintf(buf, L, "%s=%s", name, value);
   if(putenv(buf) == 0){
     free(buf);
     return true;
