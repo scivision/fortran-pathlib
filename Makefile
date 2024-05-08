@@ -14,7 +14,7 @@ FFLAGS := -Wall
 
 cdir = src/common/
 COMM_SRCS = $(cdir)common.c $(cdir)dynamic.c $(cdir)partition.c
-SRCS = $(cdir)filesystem.cpp $(cdir)c_ifc.cpp $(cdir)dynamic.cpp $(cdir)inquire.cpp $(cdir)pure.cpp $(cdir)platform.cpp $(cdir)resolve.cpp $(cdir)symlink.cpp $(cdir)windows.cpp
+SRCS = $(cdir)filesystem.cpp $(cdir)c_ifc.cpp $(cdir)ifc.cpp $(cdir)inquire.cpp $(cdir)pure.cpp $(cdir)platform.cpp $(cdir)resolve.cpp $(cdir)symlink.cpp
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o) $(COMM_SRCS:%=$(BUILD_DIR)/%.o)
 
 fdir = $(cdir)fortran/

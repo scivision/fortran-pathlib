@@ -15,13 +15,12 @@ csrcs = files('src/common/common.c', 'src/common/partition.c', 'src/common/dynam
 cppsrcs = files(
 'src/common/filesystem.cpp',
 'src/common/c_ifc.cpp',
-'src/common/dynamic.cpp',
+'src/common/ifc.cpp',
 'src/common/inquire.cpp',
 'src/common/pure.cpp',
 'src/common/platform.cpp',
 'src/common/resolve.cpp',
-'src/common/symlink.cpp',
-'src/common/windows.cpp'
+'src/common/symlink.cpp'
 )
 
 inc = include_directories('include')

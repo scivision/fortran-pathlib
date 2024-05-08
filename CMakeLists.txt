@@ -80,13 +80,12 @@ if(HAVE_CXX_FILESYSTEM)
   target_sources(ffilesystem PRIVATE
     src/common/filesystem.cpp
     src/common/c_ifc.cpp
-    src/common/dynamic.cpp
+    src/common/ifc.cpp
     src/common/inquire.cpp
     src/common/platform.cpp
     src/common/pure.cpp
     src/common/resolve.cpp
     src/common/symlink.cpp
-    src/common/windows.cpp
     )
 else()
   target_sources(ffilesystem PRIVATE
