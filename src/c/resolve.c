@@ -91,19 +91,10 @@ size_t fs_resolve(const char* path, bool strict, char* result, const size_t buff
     return 0;
   }
 
-  if(!fs_exists(buf)) {
-    if(strict){
-      fprintf(stderr, "ERROR:ffilesystem:resolve: %s => does not exist and strict=true\n", buf);
-      free(buf);
-      return 0;
-    } else if (fs_is_absolute(buf)){
-      L = fs_normal(buf, result, buffer_size);
-      free(buf);
-      return L;
-    } else if (!fs_join(".", buf, buf, buffer_size)){
-      free(buf);
-      return 0;
-    }
+  if(!fs_exists(buf) && strict){
+    fprintf(stderr, "ERROR:ffilesystem:resolve: %s => does not exist and strict=true\n", buf);
+    free(buf);
+    return 0;
   }
 
   const char* t =

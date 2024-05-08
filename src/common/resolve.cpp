@@ -45,16 +45,6 @@ std::string Ffs::resolve(std::string_view path, bool strict)
 
   std::error_code ec;
 
-  if (!ex.is_absolute() && (!std::filesystem::exists(ex, ec) || ec)){
-    // handles differences in ill-defined behaviour of std::filesystem::weakly_canonical() on non-existent paths
-    // canonical(path, false) is distinct from resolve(path, false) for non-existing paths.
-    auto cwd = std::filesystem::current_path(ec);
-    if(!ec) FFS_LIKELY
-      ex = cwd / ex;
-    else
-      std::cerr << "ERROR:ffilesystem:resolve: current_path: " << ec.message() << "\n";
-  }
-
   auto c = strict
     ? std::filesystem::canonical(ex, ec)
     : std::filesystem::weakly_canonical(ex, ec);
