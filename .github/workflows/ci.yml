@@ -20,26 +20,46 @@ on:
 
 jobs:
 
-  linux-new:
+# waiting for public release https://github.com/actions/runner-images/issues/9691#issuecomment-2099267078
+  # linux-new:
 
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
+  #   runs-on: ubuntu-24.04
+  #   timeout-minutes: 15
 
-    strategy:
-      matrix:
-        gcc-version: [12, 13, 14]
-        shared: [true, false]
-        cpp: [true, false]
+  #   strategy:
+  #     matrix:
+  #       gcc-version: [12, 13, 14]
+  #       shared: [true, false]
+  #       cpp: [true, false]
 
-    env:
-      CC: gcc-${{ matrix.gcc-version }}
-      CXX: g++-${{ matrix.gcc-version }}
-      FC: gfortran-${{ matrix.gcc-version }}
+  #   env:
+  #     CC: gcc-${{ matrix.gcc-version }}
+  #     CXX: g++-${{ matrix.gcc-version }}
+  #     FC: gfortran-${{ matrix.gcc-version }}
 
-    steps:
+  #   steps:
 
-    - uses: actions/checkout@v4
-    - uses: ./.github/workflows/composite-action
+  #   - uses: actions/checkout@v4
+  #   - uses: ./.github/workflows/composite-action
+#-------------------------------
+  # linux-clang:
+  #   runs-on: ubuntu-24.04
+  #   timeout-minutes: 15
+
+  #   strategy:
+  #     matrix:
+  #       clang-version: [16, 17, 18]
+  #       cpp: [true, false]
+  #       shared: [true, false]
+
+  #   env:
+  #     CC: clang-${{ matrix.clang-version }}
+  #     CXX: clang++-${{ matrix.clang-version }}
+  #     FC: gfortran
+
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - uses: ./.github/workflows/composite-action
 
 
   gcc-9-10-11:
@@ -49,9 +69,13 @@ jobs:
 
     strategy:
       matrix:
-        gcc-version: [9, 10, 11]
+        gcc-version: [9, 10, 11, 12, 13]
         shared: [false]
         cpp: [true, false]
+        include:
+        - gcc-version: 11
+          shared: true
+          cpp: true
 
     env:
       CC: gcc-${{ matrix.gcc-version }}
@@ -88,29 +112,8 @@ jobs:
     - uses: ./.github/workflows/composite-action
 
 
-  linux-clang:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
-
-    strategy:
-      matrix:
-        clang-version: [16, 17, 18]
-        cpp: [true, false]
-        shared: [true, false]
-
-    env:
-      CC: clang-${{ matrix.clang-version }}
-      CXX: clang++-${{ matrix.clang-version }}
-      FC: gfortran
-
-    steps:
-    - uses: actions/checkout@v4
-    - uses: ./.github/workflows/composite-action
-
-
   valgrind-memory:
-    runs-on: ubuntu-24.04
-    needs: linux-new
+    runs-on: ubuntu-latest
     continue-on-error: true
     timeout-minutes: 10
 
@@ -135,24 +138,24 @@ jobs:
         name: valgrind-log
         path: build-Valgrind/Testing/Temporary/MemoryChecker.*.log
 
+#------------------------------
+  # clang-tidy:
 
-  clang-tidy:
+  #   runs-on: ubuntu-24.04
+  #   needs: linux-new
+  #   timeout-minutes: 10
 
-    runs-on: ubuntu-24.04
-    needs: linux-new
-    timeout-minutes: 10
+  #   strategy:
+  #     matrix:
+  #       cpp: [false,true]
 
-    strategy:
-      matrix:
-        cpp: [false]
-    # it seems clang-tidy 14 can't handle std::filesystem
+  #   steps:
+  #   - uses: actions/checkout@v4
 
-    steps:
-    - uses: actions/checkout@v4
+  #   - run: cmake --preset tidy -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
+  #   - run: cmake --build --preset tidy
 
-    - run: cmake --preset tidy -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
-    - run: cmake --build --preset tidy
-
+#------------------------------
 # disabled coverage due to broken Jinja import
   # linux-coverage:
   #   runs-on: ubuntu-latest
