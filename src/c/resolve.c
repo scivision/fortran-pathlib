@@ -33,29 +33,27 @@ size_t fs_canonical(const char* path, const bool strict, char* result, const siz
   if(strlen(path) == 1 && path[0] == '.')
     return fs_get_cwd(result, buffer_size);
 
+  size_t L = fs_expanduser(path, result, buffer_size);
+  if(!L)
+    return 0;
+
+  if(strict){
+    if(!fs_exists(result)){
+      fprintf(stderr, "ERROR:ffilesystem:canonical: \"%s\" => does not exist and strict=true\n", result);
+      return 0;
+    }
+  } else if (!fs_exists(result))
+    return L;
+
   char* buf = (char*) malloc(buffer_size);
   if(!buf) return 0;
-  size_t L = fs_expanduser(path, buf, buffer_size);
-  if(L == 0){
-    free(buf);
-    return 0;
-  }
+  strcpy(buf, result);
 
-  if(!fs_exists(buf)){
-    if(strict){
-      fprintf(stderr, "ERROR:ffilesystem:canonical: \"%s\" => does not exist and strict=true\n", buf);
-      L = 0;
-    } else
-      L = fs_normal(buf, result, buffer_size);
-
-    free(buf);
-    return L;
-  }
-
+  const char* t =
 #ifdef _WIN32
-  const char* t = _fullpath(result, buf, buffer_size);
+  _fullpath(result, buf, buffer_size);
 #else
-  const char* t = realpath(buf, result);
+  realpath(buf, result);
 #endif
   free(buf);
 
@@ -83,19 +81,17 @@ size_t fs_resolve(const char* path, const bool strict, char* result, const size_
   if(strlen(path) == 0 || (strlen(path) == 1 && path[0] == '.'))
     return fs_get_cwd(result, buffer_size);
 
-  char* buf = (char*) malloc(buffer_size);
-  if(!buf) return 0;
-  size_t L = fs_expanduser(path, buf, buffer_size);
-  if(L == 0){
-    free(buf);
+  if(!fs_expanduser(path, result, buffer_size))
+    return 0;
+
+  if(strict && !fs_exists(result)){
+    fprintf(stderr, "ERROR:ffilesystem:resolve: %s => does not exist and strict=true\n", result);
     return 0;
   }
 
-  if(strict && !fs_exists(buf)){
-    fprintf(stderr, "ERROR:ffilesystem:resolve: %s => does not exist and strict=true\n", buf);
-    free(buf);
-    return 0;
-  }
+  char* buf = (char*) malloc(buffer_size);
+  if(!buf) return 0;
+  strcpy(buf, result);
 
   const char* t =
 #ifdef _WIN32
@@ -105,7 +101,7 @@ size_t fs_resolve(const char* path, const bool strict, char* result, const size_
 #endif
   free(buf);
 
-  L = strlen(result);
+  size_t L = strlen(result);
   if(L >= buffer_size){
     fprintf(stderr, "ERROR:ffilesystem:resolve: buffer overflow\n");
     L = 0;
