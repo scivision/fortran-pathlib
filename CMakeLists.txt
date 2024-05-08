@@ -71,7 +71,9 @@ if(NOT HAVE_CXX_FILESYSTEM)
 endif()
 
 
-add_library(ffilesystem src/common/common.c src/common/partition.c
+add_library(ffilesystem src/common/common.c
+src/common/partition.c
+src/common/dynamic.c
 "$<$<BOOL:${HAVE_Fortran_FILESYSTEM}>:src/common/fortran/filesystem.F90>"
 )
 if(HAVE_CXX_FILESYSTEM)
@@ -89,7 +91,6 @@ if(HAVE_CXX_FILESYSTEM)
 else()
   target_sources(ffilesystem PRIVATE
   src/c/filesystem.c
-  src/c/dynamic.c
   src/c/inquire.c
   src/c/platform.c
   src/c/pure.c

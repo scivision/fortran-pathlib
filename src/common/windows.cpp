@@ -5,7 +5,6 @@
 
 std::string Ffs::shortname(std::string_view in)
 {
-
   if(std::string buf(fs_get_max_path(), '\0');
       fs_shortname(in.data(), buf.data(), buf.size())) FFS_LIKELY
     return buf.c_str();

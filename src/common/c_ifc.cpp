@@ -126,12 +126,7 @@ bool fs_setenv(const char* name, const char* value){ return Ffs::set_env(std::st
 
 bool fs_set_cwd(const char *path){ return Ffs::chdir(path); }
 
-
 size_t fs_get_tempdir(char* path, size_t buffer_size){ return fs_str2char(Ffs::get_tempdir(), path, buffer_size); }
-
-size_t fs_exe_path(char* path, size_t buffer_size){ return fs_str2char(Ffs::exe_path(), path, buffer_size); }
-
-size_t fs_lib_path(char* path, size_t buffer_size){ return fs_str2char(Ffs::lib_path(), path, buffer_size); }
 
 
 bool fs_copy_file(const char* source, const char* dest, bool overwrite){

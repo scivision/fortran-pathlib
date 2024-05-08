@@ -129,17 +129,6 @@ extern "C" {
 
 #else  // C only
 
-#if !defined(__has_c_attribute)
-// this is a C23 feature, but available in many older compilers
-#  define __has_c_attribute(x)  0
-#endif
-
-#if __has_c_attribute(maybe_unused)
-#  define FFS_MUNUSED_C [[maybe_unused]]
-#else
-#  define FFS_MUNUSED_C
-#endif
-
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -152,7 +141,6 @@ size_t fs_strncpy(const char*, char*, const size_t);
 
 
 #if !defined(__has_c_attribute)
-// need this twice, inside #if and outside for C++ case
 #  define __has_c_attribute(x)  0
 #endif
 
@@ -162,6 +150,11 @@ size_t fs_strncpy(const char*, char*, const size_t);
 #  define FFS_NODISCARD
 #endif
 
+#if __has_c_attribute(maybe_unused)
+#  define FFS_MUNUSED [[maybe_unused]]
+#else
+#  define FFS_MUNUSED
+#endif
 
 FFS_NODISCARD bool fs_cpp();
 FFS_NODISCARD long fs_lang();
