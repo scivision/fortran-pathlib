@@ -1,0 +1,57 @@
+name: "build-test-install-example"
+
+runs:
+
+  using: "composite"
+
+  steps:
+
+  - name: install Ninja (Linux)
+    if: runner.os == 'Linux'
+    shell: bash
+    run: |
+      sudo apt update
+      sudo apt install --no-install-recommends ninja-build
+
+  - name: install Ninja (macOS)
+    if: runner.os == 'macOS'
+    shell: bash
+    run: brew install ninja
+
+  - uses: actions/checkout@v4
+
+  - name: config cpp=${{ matrix.cpp }} shared=${{ matrix.shared }}
+    shell: bash
+    run: >-
+      cmake --preset multi
+      -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
+      -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
+      --install-prefix ${{ github.workspace }}/build/local
+
+
+  - name: log if fail
+    shell: bash
+    if: failure()
+    run: cat build/CMakeFiles/CMakeConfigureLog.yaml
+
+  - name: Debug workflow
+    shell: bash
+    run: cmake --workflow --preset debug
+
+  - name: Release workflow
+    shell: bash
+    run: cmake --workflow --preset release
+
+  - name: install package
+    shell: bash
+    run: cmake --install build
+
+  - name: example workflow
+    shell: bash
+    run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH=${{ github.workspace }}/build/local
+
+  - run: cmake --build example/build
+    shell: bash
+
+  - run: ctest --test-dir example/build -V
+    shell: bash

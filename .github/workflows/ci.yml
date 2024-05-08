@@ -20,14 +20,15 @@ on:
 
 jobs:
 
-  linux-gcc:
-    runs-on: ubuntu-latest
+  linux-new:
+
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     strategy:
       matrix:
-        gcc-version: [9, 10, 11, 12, 13]
-        shared: [false, true]
+        gcc-version: [12, 13, 14]
+        shared: [true, false]
         cpp: [true, false]
 
     env:
@@ -37,43 +38,32 @@ jobs:
 
     steps:
 
-    - name: install compilers
-      run: |
-        sudo apt update
-        sudo apt install --no-install-recommends ninja-build
-
     - uses: actions/checkout@v4
-
-    - name: config cpp=${{ matrix.cpp }} shared=${{ matrix.shared }}
-      run: >-
-        cmake --preset multi
-        -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
-        -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
-        --install-prefix ${{ github.workspace }}/build/local
+    - uses: ./.github/workflows/composite-action
 
 
-    - name: log if fail
-      if: failure()
-      run: cat build/CMakeFiles/CMakeConfigureLog.yaml
+  gcc-9-10-11:
 
-    - name: Debug workflow
-      run: cmake --workflow --preset debug
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
 
-    - name: Release workflow
-      run: cmake --workflow --preset release
+    strategy:
+      matrix:
+        gcc-version: [9, 10, 11]
+        shared: [false]
+        cpp: [true, false]
 
-    - name: install package
-      run: cmake --install build
+    env:
+      CC: gcc-${{ matrix.gcc-version }}
+      CXX: g++-${{ matrix.gcc-version }}
+      FC: gfortran-${{ matrix.gcc-version }}
 
-    - name: example workflow
-      run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH=${{ github.workspace }}/build/local
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/workflows/composite-action
 
-    - run: cmake --build example/build
 
-    - run: ctest --test-dir example/build -V
-
-  old-gcc:
-    needs: linux-gcc
+  gcc-8:
     runs-on: ubuntu-20.04
     timeout-minutes: 15
 
@@ -89,60 +79,24 @@ jobs:
       FC: gfortran-${{ matrix.gcc-version }}
 
     steps:
-
     - name: install compilers
       run: |
         sudo apt update
         sudo apt install --no-install-recommends ninja-build ${{ env.CC }} ${{ env.CXX }} ${{ env.FC }}
 
     - uses: actions/checkout@v4
-
-    - name: config cpp=${{ matrix.cpp }} shared=${{ matrix.shared }}
-      run: >-
-        cmake --preset multi
-        -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
-        -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
-        --install-prefix ${{ github.workspace }}/build/local
-
-
-    - name: log if fail
-      if: failure()
-      run: cat build/CMakeFiles/CMakeConfigureLog.yaml
-
-    - name: Debug workflow
-      run: cmake --workflow --preset debug
-
-    - name: Release workflow
-      run: cmake --workflow --preset release
-
-    - name: install package
-      run: cmake --install build
-
-    - name: example workflow
-      run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH=${{ github.workspace }}/build/local
-
-    - run: cmake --build example/build
-
-    - run: ctest --test-dir example/build -V
+    - uses: ./.github/workflows/composite-action
 
 
   linux-clang:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     strategy:
       matrix:
-# github actions clang 13, 14 have broken stdc++ between clang and GCC
-# https://github.com/actions/runner-images/issues/8659
-        clang-version: [13, 14, 15]
+        clang-version: [16, 17, 18]
         cpp: [true, false]
-        include:
-        - clang-version: 15
-          cpp: false
-          shared: true
-        - clang-version: 15
-          cpp: true
-          shared: true
+        shared: [true, false]
 
     env:
       CC: clang-${{ matrix.clang-version }}
@@ -150,46 +104,13 @@ jobs:
       FC: gfortran
 
     steps:
-
-    - name: install compilers
-      run: |
-        sudo apt update
-        sudo apt install --no-install-recommends ninja-build
-
     - uses: actions/checkout@v4
+    - uses: ./.github/workflows/composite-action
 
-    - name: config cpp=${{ matrix.cpp }} shared=${{ matrix.shared }}
-      run: >-
-        cmake --preset multi
-        -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
-        -Dffilesystem_cli:BOOL=${{ matrix.clang-version == 15 }}
-        -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
-        --install-prefix ${{ github.workspace }}/build/local
-
-
-    - name: log if fail
-      if: failure()
-      run: cat build/CMakeFiles/CMakeConfigureLog.yaml
-
-    - name: Debug workflow
-      run: cmake --workflow --preset debug
-
-    - name: Release workflow
-      run: cmake --workflow --preset release
-
-    - name: install package
-      run: cmake --install build
-
-    - name: example workflow
-      run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH=${{ github.workspace }}/build/local
-
-    - run: cmake --build example/build
-
-    - run: ctest --test-dir example/build -V
 
   valgrind-memory:
-    runs-on: ubuntu-latest
-    needs: linux-gcc
+    runs-on: ubuntu-24.04
+    needs: linux-new
     continue-on-error: true
     timeout-minutes: 10
 
@@ -214,9 +135,11 @@ jobs:
         name: valgrind-log
         path: build-Valgrind/Testing/Temporary/MemoryChecker.*.log
 
+
   clang-tidy:
-    runs-on: ubuntu-latest
-    needs: linux-gcc
+
+    runs-on: ubuntu-24.04
+    needs: linux-new
     timeout-minutes: 10
 
     strategy:
@@ -258,20 +181,14 @@ jobs:
 
 
   mac:
-    runs-on: macos-14
-    # macos-14 is Apple Silicon hardware
-    needs: linux-clang
+    runs-on: macos-latest
     timeout-minutes: 10
 
     strategy:
       matrix:
         compiler: [ {cpp: g++-13, c: gcc-13}, {cpp: clang++, c: clang} ]
-        shared: [false]
+        shared: [true, false]
         cpp: [true, false]
-        include:
-        - shared: true
-          cpp: true
-          compiler: {cpp: clang++, c: clang}
 
     env:
       CC: ${{ matrix.compiler.c }}
@@ -279,40 +196,12 @@ jobs:
       FC: gfortran-13
 
     steps:
-
-    - run: brew install ninja
-
-    - uses: actions/checkout@v4
-
     - run: sudo xcode-select --switch /Applications/Xcode_15.1.app
       if: ${{ matrix.compiler.c == 'gcc-13' }}
       # https://docs.brew.sh/Xcode
       # https://github.com/Homebrew/brew/blob/HEAD/Library/Homebrew/os/mac/xcode.rb#L20
 
-    - name: config cpp=${{ matrix.cpp }} shared=${{ matrix.shared }}
-      run: >-
-        cmake --preset multi
-        -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
-        -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
-        --install-prefix ${{ github.workspace }}/build/local
+    - run: brew install ninja
 
-
-    - name: log if fail
-      if: failure()
-      run: cat build/CMakeFiles/CMakeConfigureLog.yaml
-
-    - name: Debug workflow
-      run: cmake --workflow --preset debug
-
-    - name: Release workflow
-      run: cmake --workflow --preset release
-
-    - name: install package
-      run: cmake --install build
-
-    - name: example workflow
-      run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH=${{ github.workspace }}/build/local
-
-    - run: cmake --build example/build
-
-    - run: ctest --test-dir example/build -V
+    - uses: actions/checkout@v4
+    - uses: ./.github/workflows/composite-action
