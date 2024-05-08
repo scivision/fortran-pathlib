@@ -185,24 +185,12 @@ size_t fs_expanduser(const char* path, char* result, const size_t buffer_size)
   if(strlen(path) > 1 && path[1] != '/')
     return fs_normal(path, result, buffer_size);
 
-  char* buf = (char*) malloc(buffer_size);
-  if(!buf) return 0;
-  if (!fs_get_homedir(buf, buffer_size)) {
-    free(buf);
+  if (!fs_get_homedir(result, buffer_size))
     return 0;
-  }
 
   // ~ alone
-  size_t L = strlen(path);
-  if (L < 3){
-    L = fs_normal(buf, result, buffer_size);
-    if(FS_TRACE) printf("TRACE:expanduser: orphan ~: homedir %s %s\n", buf, result);
-    free(buf);
-    return L;
-  }
+  if (strlen(path) < 3)
+    return strlen(result);
 
-  L = fs_join(buf, path+2, result, buffer_size);
-  free(buf);
-
-  return L;
+  return fs_join(result, path+2, result, buffer_size);
 }
