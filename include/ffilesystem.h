@@ -77,8 +77,8 @@ public:
   [[nodiscard]] static std::filesystem::file_time_type get_modtime(std::string_view);
   static bool set_modtime(std::string_view);
 
-  [[nodiscard]] static std::string canonical(std::string_view, bool);
-  [[nodiscard]] static std::string resolve(std::string_view, bool);
+  [[nodiscard]] static std::string canonical(std::string_view, const bool);
+  [[nodiscard]] static std::string resolve(std::string_view, const bool);
 
   [[nodiscard]] static std::string read_symlink(std::string_view);
   [[nodiscard]] static std::string get_permissions(std::string_view);
@@ -215,8 +215,8 @@ size_t fs_get_permissions(const char*, char*, const size_t);
 
 bool fs_remove(const char*);
 
-FFS_NODISCARD size_t fs_canonical(const char*, bool, char*, const size_t);
-FFS_NODISCARD size_t fs_resolve(const char*, bool, char*, const size_t);
+FFS_NODISCARD size_t fs_canonical(const char*, const bool, char*, const size_t);
+FFS_NODISCARD size_t fs_resolve(const char*, const bool, char*, const size_t);
 
 FFS_NODISCARD bool fs_equivalent(const char*, const char*);
 bool fs_copy_file(const char*, const char*, bool);

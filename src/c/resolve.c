@@ -21,7 +21,7 @@
 #include <sys/stat.h>
 
 
-size_t fs_canonical(const char* path, bool strict, char* result, const size_t buffer_size)
+size_t fs_canonical(const char* path, const bool strict, char* result, const size_t buffer_size)
 {
   // also expands ~
   // distinct from resolve()
@@ -75,7 +75,7 @@ size_t fs_canonical(const char* path, bool strict, char* result, const size_t bu
 }
 
 
-size_t fs_resolve(const char* path, bool strict, char* result, const size_t buffer_size)
+size_t fs_resolve(const char* path, const bool strict, char* result, const size_t buffer_size)
 {
   // also expands ~
   // distinct from canonical()
@@ -91,7 +91,7 @@ size_t fs_resolve(const char* path, bool strict, char* result, const size_t buff
     return 0;
   }
 
-  if(!fs_exists(buf) && strict){
+  if(strict && !fs_exists(buf)){
     fprintf(stderr, "ERROR:ffilesystem:resolve: %s => does not exist and strict=true\n", buf);
     free(buf);
     return 0;

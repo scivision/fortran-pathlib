@@ -34,7 +34,7 @@ uintmax_t fs_file_size(const char* path){ return Ffs::file_size(std::string_view
 uintmax_t fs_space_available(const char* path){ return Ffs::space_available(std::string_view(path)); }
 
 
-size_t fs_canonical(const char* path, bool strict, char* result, size_t buffer_size){
+size_t fs_canonical(const char* path, const bool strict, char* result, size_t buffer_size){
   return fs_str2char(Ffs::canonical(std::string_view(path), strict), result, buffer_size);
 }
 
@@ -98,7 +98,7 @@ size_t fs_relative_to(const char* base, const char* other, char* result, size_t 
   return fs_str2char(Ffs::relative_to(base, other), result, buffer_size);
 }
 
-size_t fs_resolve(const char* path, bool strict, char* result, size_t buffer_size){
+size_t fs_resolve(const char* path, const bool strict, char* result, size_t buffer_size){
   return fs_str2char(Ffs::resolve(std::string_view(path), strict), result, buffer_size);
 }
 
