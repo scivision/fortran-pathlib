@@ -173,22 +173,17 @@ size_t fs_which(const char* name, char* result, const size_t buffer_size)
 
 // strtok_r, strtok_s not necessarily available, and non-C++ is fallback
   char* p = strtok(path, sep);  // NOSONAR
-  char* buf = (char*) malloc(buffer_size);
-  if(!buf) return 0;
 
   while (p) {
-    fs_join(p, name, buf, buffer_size);
+    L = fs_join(p, name, result, buffer_size);
 
-    if(fs_is_exe(buf)){
-      L = fs_strncpy(buf, result, buffer_size);
-      free(buf);
+    if(fs_is_exe(result)){
       fs_as_posix(result);
       return L;
     }
     p = strtok(NULL, sep);  // NOSONAR
   }
 
-  free(buf);
   return 0;
 }
 
