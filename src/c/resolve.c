@@ -175,11 +175,11 @@ size_t fs_which(const char* name, char* result, const size_t buffer_size)
   char* p = strtok(path, sep);  // NOSONAR
 
   while (p) {
-    L = fs_join(p, name, result, buffer_size);
+    sprintf(result, "%s/%s", p, name);
 
     if(fs_is_exe(result)){
       fs_as_posix(result);
-      return L;
+      return strlen(result);
     }
     p = strtok(NULL, sep);  // NOSONAR
   }
