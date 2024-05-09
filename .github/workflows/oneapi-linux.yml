@@ -10,6 +10,8 @@ env:
   CTEST_PARALLEL_LEVEL: 0
   CMAKE_BUILD_TYPE: Release
   # debug triggers asan build errors in general with oneAPI Linux
+  CMAKE_INSTALL_PREFIX: ~/libs
+  CMAKE_PREFIX_PATH: ~/libs
 
 on:
   push:
@@ -63,7 +65,6 @@ jobs:
       timeout-minutes: 1
       run: >-
         cmake --preset default
-        --install-prefix ${{ runner.temp }}
         -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
 
     - name: print config log
@@ -77,7 +78,7 @@ jobs:
       run: cmake --install build
 
     - name: example workflow
-      run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH=${{ runner.temp }}
+      run: cmake -S example -B example/build
 
     - run: cmake --build example/build
 

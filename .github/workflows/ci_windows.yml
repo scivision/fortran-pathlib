@@ -3,6 +3,9 @@ name: ci_windows
 env:
   CTEST_NO_TESTS_ACTION: error
   CTEST_PARALLEL_LEVEL: 0
+  CMAKE_BUILD_PARALLEL_LEVEL: 4
+  CMAKE_INSTALL_PREFIX: libs
+  CMAKE_PREFIX_PATH: libs
 
 on:
   push:
@@ -29,7 +32,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Configure
-      run: cmake -B build --install-prefix ${{ github.workspace }}/build/local
+      run: cmake -B build
 
     - name: build Release
       run: cmake --build build --config Release
@@ -41,7 +44,7 @@ jobs:
       run: cmake --install build --config Release
 
     - name: example configure
-      run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH=${{ github.workspace }}/build/local
+      run: cmake -S example -B example/build
 
     - name: example build
       run: cmake --build example/build --config Release
@@ -75,7 +78,6 @@ jobs:
       run: >-
         cmake --preset multi
         -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
-        --install-prefix ${{ github.workspace }}/build/local
 
     - name: Debug workflow
       run: cmake --workflow --preset debug
@@ -87,7 +89,7 @@ jobs:
       run: cmake --install build
 
     - name: example workflow
-      run: cmake -G Ninja -S example -B example/build -DCMAKE_PREFIX_PATH=${{ github.workspace }}/build/local
+      run: cmake -G Ninja -S example -B example/build
 
     - run: cmake --build example/build
 

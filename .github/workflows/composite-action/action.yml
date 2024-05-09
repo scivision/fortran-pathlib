@@ -26,7 +26,6 @@ runs:
       cmake --preset multi
       -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
       -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
-      --install-prefix ${{ github.workspace }}/build/local
 
 
   - name: log if fail
@@ -48,7 +47,7 @@ runs:
 
   - name: example workflow
     shell: bash
-    run: cmake -S example -B example/build -DCMAKE_PREFIX_PATH=${{ github.workspace }}/build/local
+    run: cmake -S example -B example/build
 
   - run: cmake --build example/build
     shell: bash
