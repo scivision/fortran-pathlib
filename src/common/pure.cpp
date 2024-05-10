@@ -3,7 +3,8 @@
 
 #include "ffilesystem.h"
 
-#include <set>
+#include <algorithm>
+#include <vector>
 #include <iostream>
 
 #if __has_include(<ranges>)
@@ -137,15 +138,12 @@ bool Ffs::is_absolute(std::string_view path){
 
 static bool fs_is_safe_char(const char c)
 {
-  std::set<char, std::less<>> safe = {'_', '-', '.', '~', '@', '#', '$', '%', '^', '&', '(', ')', '[', ']', '{', '}', '+', '=', ',', '!'};
+  // std::unordered_set<char>  8us
+  // std::set<char, std::less<>>  6us
+  // std::vector<char> 0.3us so much faster!
+  const std::vector<char> safe {'_', '-', '.', '~', '@', '#', '$', '%', '^', '&', '(', ')', '[', ']', '{', '}', '+', '=', ',', '!'};
 
-  return std::isalnum(c) ||
-#if __cplusplus >= 202002L
-    safe.contains(c);
-#else
-    safe.find(c) != safe.end();
-#endif
-
+  return std::isalnum(c) || std::find(safe.begin(), safe.end(), c) != safe.end();
 }
 
 
