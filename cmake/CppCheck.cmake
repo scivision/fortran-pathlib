@@ -2,7 +2,9 @@
 
 function(cpp_check)
 
-set(CMAKE_CXX_STANDARD 20)
+# use 17 for the essential filesystem test to avoid compiler
+# with shaky C++20 from breaking essential test
+set(CMAKE_CXX_STANDARD 17)
 
 # some compilers e.g. Cray claim to have filesystem, but their libstdc++ doesn't have it.
 check_cxx_source_compiles([=[
@@ -27,6 +29,8 @@ if(NOT HAVE_CXX_FILESYSTEM)
   message(WARNING "C++ stdlib filesystem is broken in libstdc++ ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
   return()
 endif()
+
+set(CMAKE_CXX_STANDARD 20)
 
 # e.g. AppleClang 15 doesn't yet have this, maybe not worth the bother
 # i.e. benchmarking may reveal miniscule benefit.
