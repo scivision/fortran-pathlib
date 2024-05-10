@@ -1,6 +1,7 @@
 #include "ffilesystem.h"
 
-#include <set>
+#include <vector>
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <cstring> // std::streerror
@@ -127,11 +128,16 @@ bool Ffs::is_reserved(std::string_view path)
   if (path.empty()) FFS_UNLIKELY
     return false;
 
-#ifndef _WIN32
-  return false;
-#elif defined(__cpp_lib_ranges)
+  if (!fs_is_windows())
+    return false;
 
-  std::set<std::string_view, std::less<>> reserved {
+#if defined(__cpp_lib_ranges)
+
+  // std::set<std::string_view, std::less<>> 2.5us
+  // std::unordered_set<std::string_view> 1.5us
+  // std::vector<std::string_view> 0.2us  so much faster!
+
+  const std::vector<std::string_view> r {
       "CON", "PRN", "AUX", "NUL",
       "COM0", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
       "LPT0", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
@@ -140,7 +146,7 @@ bool Ffs::is_reserved(std::string_view path)
 
   std::ranges::transform(s.begin(), s.end(), s.begin(), ::toupper);
 
-  return reserved.contains(s);
+  return std::find(r.begin(), r.end(), s) != r.end();
 
 #else
   std::cerr << "ERROR:ffilesystem:is_reserved: C++20 required for reserved names check\n";
