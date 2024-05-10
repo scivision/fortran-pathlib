@@ -43,6 +43,22 @@ std::map<std::string_view, std::function<size_t(const char*, bool, char*, size_t
     {"resolve", fs_resolve}
   };
 
+std::map<std::string_view, std::function<bool(const char*)>> b_s =
+  {
+    {"is_dir", fs_is_dir},
+    {"is_exe", fs_is_exe},
+    {"is_file", fs_is_file},
+    {"remove", fs_remove},
+    {"is_reserved", fs_is_reserved},
+    {"is_readable", fs_is_readable},
+    {"is_writable", fs_is_writable},
+    {"is_symlink", fs_is_symlink},
+    {"exists", fs_exists},
+    {"is_absolute", fs_is_absolute},
+    {"is_char", fs_is_char_device},
+    {"mkdir", fs_mkdir},
+    {"is_safe", fs_is_safe_name}
+  };
 
 constexpr bool strict = false;
 
@@ -50,9 +66,12 @@ constexpr bool strict = false;
 std::string_view w;
 auto t = std::chrono::duration<double>::max();
 size_t L=0;
+bool b;
 
 std::string buf(fs_get_max_path(), '\0');
-if (s_.contains(fname))
+if (b_s.contains(fname))
+  b = b_s[fname](buf.data());
+else if (s_.contains(fname))
   L = s_[fname](buf.data(), buf.size());
 else if (ssb.contains(fname))
   L = ssb[fname](path.data(), strict, buf.data(), buf.size());
@@ -70,8 +89,9 @@ w = buf;
 
 for (int i = 0; i < n; ++i){
     auto t0 = std::chrono::steady_clock::now();
-
-    if (s_.contains(fname))
+    if (b_s.contains(fname))
+      b = b_s[fname](buf.data());
+    else if (s_.contains(fname))
       s_[fname](buf.data(), buf.size());
     else if (ssb.contains(fname))
       ssb[fname](path.data(), strict, buf.data(), buf.size());
@@ -83,24 +103,34 @@ for (int i = 0; i < n; ++i){
 }
 
 if(verbose)
-  print_c(t, n, path, fname, w);
+  print_c(t, n, path, fname, w, b);
 
 return t;
 }
 
 
-void print_c(std::chrono::duration<double> t, int n, std::string_view path, std::string_view func, std::string_view w)
+void print_c(std::chrono::duration<double> t, int n, std::string_view path, std::string_view func, std::string_view w, bool b)
 {
   std::chrono::nanoseconds ns = std::chrono::duration_cast<std::chrono::nanoseconds>(t);
   double us = ns.count() / 1000.0;
-  std::cout << "C: " << n << " x " << func << "(" << path << ") = " << w << ": " << us << " us\n";
+  std::cout << "C: " << n << " x " << func << "(" << path << ") = ";
+  if(w.empty())
+    std::cout << b;
+  else
+    std::cout << w;
+  std::cout << ": " << us << " us\n";
 }
 
-void print_cpp(std::chrono::duration<double> t, int n, std::string_view path, std::string_view func, std::string_view w)
+void print_cpp(std::chrono::duration<double> t, int n, std::string_view path, std::string_view func, std::string_view w, bool b)
 {
   std::chrono::nanoseconds ns = std::chrono::duration_cast<std::chrono::nanoseconds>(t);
   double us = ns.count() / 1000.0;
-  std::cout << "Cpp: " << n << " x " << func << "(" << path << ") = " << w << ": " << us << " us\n";
+  std::cout << "Cpp: " << n << " x " << func << "(" << path << ") = ";
+  if(w.empty())
+    std::cout << b;
+  else
+    std::cout << w;
+  std::cout << ": " << us << " us\n";
 }
 
 
@@ -153,12 +183,32 @@ std::map<std::string_view, std::function<std::string(std::string_view, bool)>> s
     {"resolve", Ffs::resolve}
   };
 
+std::map<std::string_view, std::function<bool(std::string_view)>> b_s =
+  {
+    {"is_dir", Ffs::is_dir},
+    {"is_exe", Ffs::is_exe},
+    {"is_file", Ffs::is_file},
+    {"remove", Ffs::remove},
+    {"is_reserved", Ffs::is_reserved},
+    {"is_readable", Ffs::is_readable},
+    {"is_writable", Ffs::is_writable},
+    {"is_symlink", Ffs::is_symlink},
+    {"exists", Ffs::exists},
+    {"is_absolute", Ffs::is_absolute},
+    {"is_char", Ffs::is_char_device},
+    {"mkdir", Ffs::mkdir},
+    {"is_safe", Ffs::is_safe_name}
+  };
+
 constexpr bool strict = false;
 
 // warmup
 std::string h;
+bool b;
 
-if (s_.contains(fname))
+if (b_s.contains(fname))
+  b = b_s[fname](path);
+else if (s_.contains(fname))
   h = s_[fname]();
 else if (ssb.contains(fname))
   h = ssb[fname](path, strict);
@@ -170,28 +220,25 @@ else
     return t;
   }
 
-if(h.empty())
+for (int i = 0; i < n; ++i)
 {
-    std::cerr << "Error: " << fname << "(" << path << ") is empty\n";
-    return t;
-}
+  auto t0 = std::chrono::steady_clock::now();
 
-for (int i = 0; i < n; ++i){
-    auto t0 = std::chrono::steady_clock::now();
+  if (b_s.contains(fname))
+    b = b_s[fname](path);
+  else if (s_.contains(fname))
+    h = s_[fname]();
+  else if (ssb.contains(fname))
+    h = ssb[fname](path, strict);
+  else if (s_s.contains(fname))
+    h = s_s[fname](path);
 
-    if (s_.contains(fname))
-      h = s_[fname]();
-    else if (ssb.contains(fname))
-      h = ssb[fname](path, strict);
-    else if (s_s.contains(fname))
-      h = s_s[fname](path);
-
-    auto t1 = std::chrono::steady_clock::now();
-    t = std::min(t, std::chrono::duration_cast<std::chrono::duration<double>>(t1 - t0));
+  auto t1 = std::chrono::steady_clock::now();
+  t = std::min(t, std::chrono::duration_cast<std::chrono::duration<double>>(t1 - t0));
 }
 
 if(verbose)
-  print_cpp(t, n, path, fname, h);
+  print_cpp(t, n, path, fname, h, b);
 
 #endif
 
@@ -212,9 +259,16 @@ std::vector<char> buf(1000);
 if(fs_compiler(buf.data(), buf.size()))
   std::cout << buf.data() << "\n";
 
-for (std::set<std::string_view, std::less<>> funcs = {"canonical", "resolve", "which", "expanduser", "normal", "cwd", "homedir", "parent"};
-      std::string_view func : funcs) {
+std::set<std::string_view, std::less<>> fset;
 
+if(argc > 3)
+  fset = {argv[3]};
+else
+  fset = {"canonical", "resolve", "which", "expanduser", "normal", "cwd", "homedir", "parent", "is_reserved"};
+
+
+for (std::set<std::string_view, std::less<>> funcs = fset; std::string_view func : funcs)
+  {
   std::set <std::string_view, std::less<>> tildef = {"canonical", "resolve", "normal", "expanduser", "parent"};
 
   if (argc > 2)
