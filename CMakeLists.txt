@@ -20,6 +20,9 @@ include(FetchContent)
 include(GNUInstallDirs)
 include(CheckLanguage)
 
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+# This project isn't using C++ modules; avoid bugs in module scanning CMake 3.28, 3.29 with GCC >= 14.
+
 get_property(cxx_features GLOBAL PROPERTY CMAKE_CXX_KNOWN_FEATURES)
 if("cxx_std_20" IN_LIST cxx_features)
   set(cxx_std 20)
