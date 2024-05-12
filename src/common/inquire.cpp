@@ -133,9 +133,9 @@ bool Ffs::is_reserved(std::string_view path)
 
 #if defined(__cpp_lib_ranges)
 
-  // std::set<std::string_view, std::less<>> 2.5us
-  // std::unordered_set<std::string_view> 1.5us
-  // std::vector<std::string_view> 0.2us  so much faster!
+  // set<std::string_view, std::less<>> 2.5us
+  // unordered_set<std::string_view> 1.5us
+  // vector<std::string_view> 0.2us  so much faster!
 
   const std::vector<std::string_view> r {
       "CON", "PRN", "AUX", "NUL",
@@ -146,7 +146,13 @@ bool Ffs::is_reserved(std::string_view path)
 
   std::ranges::transform(s.begin(), s.end(), s.begin(), ::toupper);
 
-  return std::find(r.begin(), r.end(), s) != r.end();
+  return
+#ifdef __cpp_lib_ranges
+    std::ranges::find(r, s)
+#else
+    std::find(r.begin(), r.end(), s)
+#endif
+    != r.end();
 
 #else
   std::cerr << "ERROR:ffilesystem:is_reserved: C++20 required for reserved names check\n";

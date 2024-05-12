@@ -138,12 +138,18 @@ bool Ffs::is_absolute(std::string_view path){
 
 static bool fs_is_safe_char(const char c)
 {
-  // std::unordered_set<char>  8us
-  // std::set<char, std::less<>>  6us
-  // std::vector<char> 0.3us so much faster!
+  // unordered_set<char>  8us
+  // set<char, std::less<>>  6us
+  // vector<char> 0.3us so much faster!
   const std::vector<char> safe {'_', '-', '.', '~', '@', '#', '$', '%', '^', '&', '(', ')', '[', ']', '{', '}', '+', '=', ',', '!'};
 
-  return std::isalnum(c) || std::find(safe.begin(), safe.end(), c) != safe.end();
+  return std::isalnum(c) ||
+#ifdef __cpp_lib_ranges
+    std::ranges::find(safe, c)
+#else
+    std::find(safe.begin(), safe.end(), c)
+#endif
+    != safe.end();
 }
 
 
