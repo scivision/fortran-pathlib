@@ -171,7 +171,7 @@ size_t fs_which(const char* name, char* result, const size_t buffer_size)
   char* p = strtok(path, sep);  // NOSONAR
 
   while (p) {
-    sprintf(result, "%s/%s", p, name);
+    snprintf(result, buffer_size, "%s/%s", p, name);
 
     if(fs_is_exe(result)){
       fs_as_posix(result);
