@@ -14,7 +14,6 @@
 #include <sys/utsname.h>
 #endif
 
-#include <set>
 #include <cstdlib>
 
 #include <cstring> // std::strerror
@@ -198,18 +197,11 @@ std::string Ffs::expanduser(std::string_view path)
   if(path.front() != '~')
     return std::string(path);
 
-  std::set <char> filesep = {'/', std::filesystem::path::preferred_separator};
+  const std::string filesep = {'/', std::filesystem::path::preferred_separator};
 
-  if(path.length() > 1 &&
-     // second character is not a file separator
-#if __cplusplus >= 202002L
-  !filesep.contains(path[1])
-#else
-  filesep.find(path[1]) == filesep.end()
-#endif
-  )
+  // second character is not a file separator
+  if(path.length() > 1 && filesep.find(path[1]) == std::string::npos)
     return std::string(path);
-
 
   std::string h = Ffs::get_homedir();
   if (h.empty()) FFS_UNLIKELY
@@ -221,13 +213,7 @@ std::string Ffs::expanduser(std::string_view path)
 
 // handle initial duplicated file separators. NOT .lexical_normal to handle "~/.."
   std::string::size_type i = 2;
-  while(i < p.length() &&
-#if __cplusplus >= 202002L
-  filesep.contains(p[i])
-#else
-  filesep.find(p[i]) != filesep.end()
-#endif
-  )
+  while(i < p.length() && filesep.find(p[i]) != std::string::npos)
     i++;
 
   return (std::filesystem::path(h) / p.substr(i)).generic_string();
