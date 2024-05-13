@@ -15,7 +15,6 @@
 #endif
 
 #include <set>
-#include <cstddef> // size_t
 #include <cstdlib>
 
 #include <cstring> // std::strerror
@@ -221,7 +220,7 @@ std::string Ffs::expanduser(std::string_view path)
     return h;
 
 // handle initial duplicated file separators. NOT .lexical_normal to handle "~/.."
-  size_t i = 2;
+  std::string::size_type i = 2;
   while(i < p.length() &&
 #if __cplusplus >= 202002L
   filesep.contains(p[i])

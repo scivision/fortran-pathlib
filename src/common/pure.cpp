@@ -11,7 +11,6 @@
 #include <ranges>
 #endif
 
-#include <cstddef> // size_t
 #include <cctype> // std::isalnum
 
 
@@ -22,7 +21,7 @@ bool fs_cpp(){ return true; }
 long fs_lang(){ return __cplusplus; }
 
 
-size_t fs_str2char(std::string_view s, char* result, size_t buffer_size)
+std::string::size_type fs_str2char(std::string_view s, char* result, const std::string::size_type buffer_size)
 {
   if(s.length() >= buffer_size) FFS_UNLIKELY
   {

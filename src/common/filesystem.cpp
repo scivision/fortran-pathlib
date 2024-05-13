@@ -20,7 +20,6 @@
 #include <iterator> // std::begin, std::end
 #include <string>
 #include <fstream>
-#include <cstddef> // size_t
 #include <cstdint>
 #include <cstdlib>
 #include <system_error>
@@ -36,7 +35,6 @@
 #include "ffilesystem.h"
 
 
-static std::string fs_generate_random_alphanumeric_string(std::size_t);
 
 
 bool Ffs::mkdir(std::string_view path)
@@ -176,7 +174,36 @@ bool Ffs::set_permissions(std::string_view path, int readable, int writable, int
 }
 
 
-// --- mkdtemp
+#ifdef __cpp_deduction_guides
+// CTAD C++17 random string generator
+// https://stackoverflow.com/a/444614
+// https://en.cppreference.com/w/cpp/language/class_template_argument_deduction
+
+template <typename T = std::mt19937>
+static auto fs_random_generator() -> T {
+    auto constexpr seed_bytes = sizeof(typename T::result_type) * T::state_size;
+    auto constexpr seed_len = seed_bytes / sizeof(std::seed_seq::result_type);
+    auto seed = std::array<std::seed_seq::result_type, seed_len>();
+    auto dev = std::random_device();
+    std::generate_n(std::begin(seed), seed_len, std::ref(dev));
+    auto seed_seq = std::seed_seq(std::begin(seed), std::end(seed));
+    return T{seed_seq};
+}
+
+
+static std::string fs_generate_random_alphanumeric_string(const std::string::size_type len)
+{
+    constexpr std::string_view chars =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+    thread_local auto rng = fs_random_generator<>();
+    auto dist = std::uniform_int_distribution{{}, chars.length() - 1};
+    auto result = std::string(len, '\0');
+    std::generate_n(std::begin(result), len, [&]() { return chars[dist(rng)]; });
+    return result;
+}
+#endif
 
 std::string Ffs::mkdtemp(std::string_view prefix)
 {
@@ -184,7 +211,7 @@ std::string Ffs::mkdtemp(std::string_view prefix)
 #ifdef __cpp_deduction_guides
   std::error_code ec;
   std::filesystem::path t;
-  size_t Lname = 16;  // arbitrary length for random string
+  constexpr std::string::size_type Lname = 16;  // arbitrary length for random string
   std::filesystem::path temp = std::filesystem::temp_directory_path(ec);
 
   if(!ec) FFS_LIKELY
@@ -204,35 +231,3 @@ std::string Ffs::mkdtemp(std::string_view prefix)
 #endif
   return {};
 }
-
-#ifdef __cpp_deduction_guides
-// CTAD C++17 random string generator
-// https://stackoverflow.com/a/444614
-// https://en.cppreference.com/w/cpp/language/class_template_argument_deduction
-
-template <typename T = std::mt19937>
-static auto fs_random_generator() -> T {
-    auto constexpr seed_bytes = sizeof(typename T::result_type) * T::state_size;
-    auto constexpr seed_len = seed_bytes / sizeof(std::seed_seq::result_type);
-    auto seed = std::array<std::seed_seq::result_type, seed_len>();
-    auto dev = std::random_device();
-    std::generate_n(std::begin(seed), seed_len, std::ref(dev));
-    auto seed_seq = std::seed_seq(std::begin(seed), std::end(seed));
-    return T{seed_seq};
-}
-
-
-static std::string fs_generate_random_alphanumeric_string(std::size_t len)
-{
-    constexpr std::string_view chars =
-        "0123456789"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        "abcdefghijklmnopqrstuvwxyz";
-    thread_local auto rng = fs_random_generator<>();
-    auto dist = std::uniform_int_distribution{{}, chars.length() - 1};
-    auto result = std::string(len, '\0');
-    std::generate_n(std::begin(result), len, [&]() { return chars[dist(rng)]; });
-    return result;
-}
-// --- end mkdtemp
-#endif

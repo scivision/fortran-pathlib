@@ -5,7 +5,6 @@
 #include <Windows.h>
 #endif
 
-#include <cstddef> // size_t
 #include <iostream>
 #include <string>
 

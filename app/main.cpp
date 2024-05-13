@@ -264,7 +264,7 @@ while (true){
 
   // split variable inp on space-delimiters
   constexpr char delimiter = ' ';
-  size_t pos = 0;
+  std::string::size_type pos = 0;
   std::vector<std::string> args;
   // NOTE: loop getline() instead?
   while ((pos = inp.find(delimiter)) != std::string::npos) {
@@ -277,7 +277,7 @@ while (true){
   if(args.empty())
     continue;
 
-  size_t argc = args.size();
+  const std::vector<std::string>::size_type argc = args.size();
 
   switch (argc){
   case 1:

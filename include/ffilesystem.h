@@ -119,7 +119,7 @@ public:
   Ffs() = delete;
 };
 
-size_t fs_str2char(std::string_view, char*, const size_t);
+std::string::size_type fs_str2char(std::string_view, char*, const std::string::size_type);
 std::string fs_drop_slash(std::string_view);
 
 
