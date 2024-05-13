@@ -1,7 +1,5 @@
 #include "ffilesystem.h"
 
-#include <cstddef> // size_t
-
 
 bool fs_exists(const char* path){ return Ffs::exists(std::string_view(path)); }
 
@@ -34,7 +32,8 @@ uintmax_t fs_file_size(const char* path){ return Ffs::file_size(std::string_view
 uintmax_t fs_space_available(const char* path){ return Ffs::space_available(std::string_view(path)); }
 
 
-size_t fs_canonical(const char* path, const bool strict, char* result, size_t buffer_size){
+std::string::size_type fs_canonical(const char* path, const bool strict,
+                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::canonical(std::string_view(path), strict), result, buffer_size);
 }
 
@@ -49,76 +48,97 @@ bool fs_equivalent(const char* path1, const char* path2){
 }
 
 
-size_t fs_get_cwd(char* path, size_t buffer_size){ return fs_str2char(Ffs::get_cwd(), path, buffer_size); }
+std::string::size_type fs_get_cwd(char* path, const std::string::size_type buffer_size){
+  return fs_str2char(Ffs::get_cwd(), path, buffer_size);
+}
 
-size_t fs_getenv(const char* name, char* result, size_t buffer_size){
+std::string::size_type fs_getenv(const char* name,
+                         char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::get_env(std::string_view(name)), result, buffer_size);
 }
 
-size_t fs_get_homedir(char* path, size_t buffer_size){ return fs_str2char(Ffs::get_homedir(), path, buffer_size); }
+std::string::size_type fs_get_homedir(char* path, const std::string::size_type buffer_size){
+  return fs_str2char(Ffs::get_homedir(), path, buffer_size);
+}
 
-size_t fs_get_permissions(const char* path, char* result, size_t buffer_size){
+std::string::size_type fs_get_permissions(const char* path,
+                         char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::get_permissions(std::string_view(path)), result, buffer_size);
 }
 
 
-size_t fs_expanduser(const char* path, char* result, size_t buffer_size){
+std::string::size_type fs_expanduser(const char* path,
+                         char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::expanduser(std::string_view(path)), result, buffer_size);
 }
 
-size_t fs_file_name(const char* path, char* result, size_t buffer_size){
+std::string::size_type fs_file_name(const char* path,
+                         char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::file_name(std::string_view(path)), result, buffer_size);
 }
 
-size_t fs_join(const char* path, const char* other, char* result, size_t buffer_size){
+std::string::size_type fs_join(const char* path, const char* other,
+                         char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::join(std::string_view(path), std::string_view(other)), result, buffer_size);
 }
 
-size_t fs_make_absolute(const char* path, const char* base, char* out, size_t buffer_size){
+std::string::size_type fs_make_absolute(const char* path, const char* base,
+                          char* out, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::make_absolute(std::string_view(path), std::string_view(base)), out, buffer_size);
 }
 
-size_t fs_normal(const char* path, char* result, size_t buffer_size){
+std::string::size_type fs_normal(const char* path,
+                         char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::normal(std::string_view(path)), result, buffer_size);
 }
 
-size_t fs_parent(const char* path, char* result, size_t buffer_size){
+std::string::size_type fs_parent(const char* path,
+                         char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::parent(std::string_view(path)), result, buffer_size);
 }
 
-size_t fs_proximate_to(const char* base, const char* other, char* result, size_t buffer_size){
+std::string::size_type fs_proximate_to(const char* base, const char* other,
+                         char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::proximate_to(base, other), result, buffer_size);
 }
 
-size_t fs_read_symlink(const char* path, char* result, size_t buffer_size){
+std::string::size_type fs_read_symlink(const char* path,
+                         char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::read_symlink(std::string_view(path)), result, buffer_size);
 }
 
-size_t fs_relative_to(const char* base, const char* other, char* result, size_t buffer_size){
+std::string::size_type fs_relative_to(const char* base, const char* other,
+                         char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::relative_to(base, other), result, buffer_size);
 }
 
-size_t fs_resolve(const char* path, const bool strict, char* result, size_t buffer_size){
+std::string::size_type fs_resolve(const char* path, const bool strict,
+                         char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::resolve(std::string_view(path), strict), result, buffer_size);
 }
 
-size_t fs_root(const char* path, char* result, size_t buffer_size){
+std::string::size_type fs_root(const char* path,
+                         char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::root(std::string_view(path)), result, buffer_size);
 }
 
-size_t fs_stem(const char* path, char* result, size_t buffer_size){
+std::string::size_type fs_stem(const char* path,
+                         char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::stem(std::string_view(path)), result, buffer_size);
 }
 
-size_t fs_suffix(const char* path, char* result, size_t buffer_size){
+std::string::size_type fs_suffix(const char* path,
+                         char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::suffix(std::string_view(path)), result, buffer_size);
 }
 
-size_t fs_which(const char* name, char* result, size_t buffer_size){
+std::string::size_type fs_which(const char* name,
+                         char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::which(std::string_view(name)), result, buffer_size);
 }
 
-size_t fs_with_suffix(const char* path, const char* new_suffix, char* result, size_t buffer_size){
+std::string::size_type fs_with_suffix(const char* path, const char* new_suffix,
+                         char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::with_suffix(std::string_view(path), std::string_view(new_suffix)), result, buffer_size);
 }
 
@@ -126,7 +146,9 @@ bool fs_setenv(const char* name, const char* value){ return Ffs::set_env(std::st
 
 bool fs_set_cwd(const char *path){ return Ffs::chdir(path); }
 
-size_t fs_get_tempdir(char* path, size_t buffer_size){ return fs_str2char(Ffs::get_tempdir(), path, buffer_size); }
+std::string::size_type fs_get_tempdir(char* path, const std::string::size_type buffer_size){
+  return fs_str2char(Ffs::get_tempdir(), path, buffer_size);
+}
 
 
 bool fs_copy_file(const char* source, const char* dest, bool overwrite){
@@ -139,7 +161,9 @@ bool fs_remove(const char* path){ return Ffs::remove(std::string_view(path)); }
 
 bool fs_set_modtime(const char* path){ return Ffs::set_modtime(std::string_view(path)); }
 
-size_t fs_make_tempdir(char* result, size_t buffer_size){ return fs_str2char(Ffs::mkdtemp("tmp."), result, buffer_size); }
+std::string::size_type fs_make_tempdir(char* result, const std::string::size_type buffer_size){
+  return fs_str2char(Ffs::mkdtemp("tmp."), result, buffer_size);
+}
 
 bool fs_set_permissions(const char* path, int readable, int writable, int executable){
     return Ffs::set_permissions(std::string_view(path), readable, writable, executable);
