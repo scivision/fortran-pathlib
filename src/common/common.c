@@ -4,6 +4,8 @@
 #endif
 #endif
 
+#include "ffilesystem.h"
+
 #include <stdbool.h>
 #include <stdio.h>  // snprintf
 #include <string.h>
@@ -125,6 +127,19 @@ size_t fs_strncpy(const char* path, char* result, const size_t buffer_size)
 }
 
 
+void
+fs_win32_print_error(FFS_MUNUSED const char* path, FFS_MUNUSED const char* fname)
+{
+#ifdef _WIN32
+  DWORD error = GetLastError();
+  char *message;
+  FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+      NULL, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (char *)&message, 0, NULL);
+  fprintf(stderr, "ERROR:ffilesystem:%s %s => %s\n", fname, path, message);
+#endif
+}
+
+
 bool fs_is_admin(){
   // running as admin / root / superuser
 #ifdef _WIN32
@@ -194,7 +209,7 @@ size_t fs_longname(const char* in, char* out, const size_t buffer_size)
   if(L > 0)
     return L;
 
-  fprintf(stderr, "ERROR:Ffs::longname:GetLongPathName: could not determine %s\n", in);
+  fs_win32_print_error(in, "longname");
   return 0;
 #else
   return fs_strncpy(in, out, buffer_size);
@@ -213,7 +228,7 @@ size_t fs_shortname(const char* in, char* out, const size_t buffer_size)
   if(L > 0)
     return L;
 
-  fprintf(stderr, "ERROR:Ffs::shortname:GetShortPathName: could not determine %s\n", in);
+  fs_win32_print_error(in, "shortname");
   return 0;
 #else
   return fs_strncpy(in, out, buffer_size);

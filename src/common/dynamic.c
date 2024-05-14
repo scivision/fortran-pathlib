@@ -37,8 +37,10 @@ size_t fs_exe_path(FFS_MUNUSED char* path, FFS_MUNUSED const size_t buffer_size)
 #ifdef _WIN32
  // https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
   L = GetModuleFileNameA(NULL, path, (DWORD) buffer_size);
-  if(!L)
+  if(!L){
+    fs_win32_print_error(path, "exe_path");
     return 0;
+  }
   path[L] = '\0';
 #elif defined(__linux__) || defined(__CYGWIN__)
   // https://man7.org/linux/man-pages/man2/readlink.2.html
@@ -69,8 +71,10 @@ size_t fs_lib_path(FFS_MUNUSED char* path, FFS_MUNUSED const size_t buffer_size)
 #if (defined(_WIN32) || defined(__CYGWIN__)) && defined(FS_DLL_NAME)
  // https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
   L = GetModuleFileNameA(GetModuleHandleA(FS_DLL_NAME), path, buffer_size);
-  if(L == 0 && L >= buffer_size)
+  if(L == 0 && L >= buffer_size){
+    fs_win32_print_error(path, "lib_path");
     return 0;
+  }
 #elif __has_include(<dlfcn.h>)
   Dl_info info;
   if(!dladdr( (void*)&dl_dummy_func, &info))

@@ -74,7 +74,11 @@ bool fs_create_symlink(const char* target, const char* link)
   if(fs_is_dir(target))
     p |= SYMBOLIC_LINK_FLAG_DIRECTORY;
 
-  return CreateSymbolicLinkA(link, target, p);
+  bool ok = CreateSymbolicLinkA(link, target, p);
+  if(!ok)
+    fs_win32_print_error(target, "create_symlink");
+
+  return ok;
 #else
   return symlink(target, link) == 0;
 #endif

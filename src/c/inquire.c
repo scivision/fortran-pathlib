@@ -211,15 +211,18 @@ fs_space_available(const char* path)
   BOOL ok = GetDiskFreeSpaceExA(r, &bytes_available, NULL, NULL);
   if(ok)
     return bytes_available.QuadPart;
+
+  fs_win32_print_error(path, "space_available");
+  return 0;
 #else
   // https://unix.stackexchange.com/a/703650
   struct statvfs stat;
   if (!statvfs(path, &stat))
     return (stat.f_frsize ? stat.f_frsize : stat.f_bsize) * stat.f_bavail;
-#endif
 
   fprintf(stderr, "ERROR:ffilesystem:space_available(%s) => %s\n", path, strerror(errno));
   return 0;
+#endif
 }
 
 

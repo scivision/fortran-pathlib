@@ -101,7 +101,7 @@ size_t fs_filesystem_type(const char* path, char* name, const size_t buffer_size
   if(GetVolumeInformationA(r, NULL, 0, NULL, NULL, NULL, name, L))
     return strlen(name);
 
-  fprintf(stderr, "ERROR:Ffs::get_type(%s)  GetVolumeInformationA failed", path);
+  fs_win32_print_error(path, "filesystem_type");
   return 0;
 #elif defined(__linux__)
   return fs_strncpy(fs_type_linux(path), name, buffer_size);

@@ -140,13 +140,9 @@ bool fs_remove(const char* path)
 // https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-removedirectorya
 // https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilea
   bool ok = fs_is_dir(path) ? RemoveDirectoryA(path) : DeleteFileA(path);
-  if (!ok) {
-    DWORD error = GetLastError();
-    char *message;
-    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-		    NULL, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (char *)&message, 0, NULL);
-    fprintf(stderr, "ERROR:ffilesystem:remove: %s => %s\n", path, message);
-  }
+  if (!ok)
+    fs_win32_print_error(path, "remove");
+
   return ok;
 #else
   if(remove(path) == 0)

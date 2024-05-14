@@ -162,8 +162,10 @@ size_t fs_get_homedir(char* path, const size_t buffer_size)
 
   CloseHandle(hToken);
 
-  if (!ok)
+  if (!ok){
+    fs_win32_print_error(path, "get_homedir");
     return 0;
+  }
 
   fs_as_posix(path);
   return strlen(path);

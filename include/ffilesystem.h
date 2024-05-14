@@ -256,6 +256,8 @@ bool fs_setenv(const char*, const char*);
 
 size_t fs_filesystem_type(const char*, char*, const size_t);
 
+void fs_win32_print_error(const char*, const char*);
+
 #ifdef __cplusplus
 }
 #endif
