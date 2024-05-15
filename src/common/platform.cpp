@@ -19,6 +19,7 @@
 #include <cstring> // std::strerror
 #include <string>
 #include <iostream>
+#include <system_error>
 
 #if __has_include(<format>)
 #include <format>
@@ -178,6 +179,9 @@ std::string Ffs::get_homedir()
 
   if (ok) FFS_LIKELY
     return Ffs::as_posix(buf.c_str());
+
+  std::cerr << "ERROR: Ffilesystem::homedir " << std::system_category().message(GetLastError()) << "\n";
+  return {};
 #elif !defined(_WIN32)
   if (const char *h = getpwuid(geteuid())->pw_dir; h)
     return h;

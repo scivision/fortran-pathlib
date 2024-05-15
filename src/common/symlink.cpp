@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <string>
+#include <system_error>
 
 
 bool Ffs::is_symlink(std::string_view path)
@@ -68,7 +69,7 @@ bool Ffs::create_symlink(std::string_view target, std::string_view link)
   if(err == ERROR_PRIVILEGE_NOT_HELD)
     msg += "Enable Windows developer mode to use symbolic links: https://learn.microsoft.com/en-us/windows/apps/get-started/developer-mode-features-and-debugging";
 
-  std::cerr << msg << ": " << link << " => " << target << "\n";
+  std::cerr << msg << ": " << link << " => " << target << " " << std::system_category().message(GetLastError()) << "\n";
   return false;
 #else
   std::error_code ec;
@@ -76,6 +77,9 @@ bool Ffs::create_symlink(std::string_view target, std::string_view link)
   Ffs::is_dir(target)
     ? std::filesystem::create_directory_symlink(target, link, ec)
     : std::filesystem::create_symlink(target, link, ec);
+
+  if(ec) FFS_UNLIKELY
+    std::cerr << "ERROR:ffilesystem:create_symlink: " << ec.message() << "\n";
 
   return !ec;
 #endif

@@ -22,7 +22,6 @@
 #include <fstream>
 #include <cstdint>
 #include <cstdlib>
-#include <system_error>
 
 #include <sys/types.h>
 
