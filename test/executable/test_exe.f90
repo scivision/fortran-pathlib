@@ -19,8 +19,11 @@ subroutine test_not_exist()
 character(:), allocatable :: s1
 
 !> empty file
+if(is_file("")) error stop "ERROR:test_exe: is_file('') should be false"
 if(is_exe("")) error stop "ERROR:test_exe: is_exe('') should be false"
-if(len_trim(get_permissions("")) /= 0) error stop "ERROR:test_exe: get_permissions('') should be empty"
+
+s1 = get_permissions("")
+if(len_trim(s1) /= 0) error stop "ERROR:test_exe: get_permissions('') should be empty: " // s1
 
 !> not exist file
 s1 = "not-exist-file"
@@ -43,8 +46,10 @@ allocate(character(max_path()) :: exe)
 call get_command_argument(0, exe, status=i)
 if(i/=0) error stop "ERROR:test_exe: get_command_argument(0) failed"
 
+print '(a)', "test_is_exe: touch(" // noexe // ")"
 call touch(noexe)
 
+print '(a)', "set_permissions(" // trim(noexe) // ", executable=.false.)"
 call set_permissions(noexe, executable=.false.)
 
 if(is_exe(parent(exe))) then
@@ -70,6 +75,7 @@ if (is_exe(noexe)) then
   endif
 endif
 
+print '(a)', "remove(" // trim(noexe) // ")"
 call remove(noexe)
 
 end subroutine test_is_exe
