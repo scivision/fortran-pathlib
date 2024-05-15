@@ -23,45 +23,46 @@ on:
 jobs:
 
 # waiting for public release https://github.com/actions/runner-images/issues/9691#issuecomment-2099267078
-  # linux-new:
+  linux-new:
 
-  #   runs-on: ubuntu-24.04
-  #   timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
 
-  #   strategy:
-  #     matrix:
-  #       gcc-version: [12, 13, 14]
-  #       shared: [true, false]
-  #       cpp: [true, false]
+    strategy:
+      matrix:
+        gcc-version: [12, 13, 14]
+        shared: [true, false]
+        cpp: [true, false]
 
-  #   env:
-  #     CC: gcc-${{ matrix.gcc-version }}
-  #     CXX: g++-${{ matrix.gcc-version }}
-  #     FC: gfortran-${{ matrix.gcc-version }}
+    env:
+      CC: gcc-${{ matrix.gcc-version }}
+      CXX: g++-${{ matrix.gcc-version }}
+      FC: gfortran-${{ matrix.gcc-version }}
 
-  #   steps:
+    steps:
 
-  #   - uses: actions/checkout@v4
-  #   - uses: ./.github/workflows/composite-action
-#-------------------------------
-  # linux-clang:
-  #   runs-on: ubuntu-24.04
-  #   timeout-minutes: 15
+    - uses: actions/checkout@v4
+    - uses: ./.github/workflows/composite-action
 
-  #   strategy:
-  #     matrix:
-  #       clang-version: [16, 17, 18]
-  #       cpp: [true, false]
-  #       shared: [true, false]
 
-  #   env:
-  #     CC: clang-${{ matrix.clang-version }}
-  #     CXX: clang++-${{ matrix.clang-version }}
-  #     FC: gfortran
+  linux-clang:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
 
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #   - uses: ./.github/workflows/composite-action
+    strategy:
+      matrix:
+        clang-version: [16, 17, 18]
+        cpp: [true, false]
+        shared: [true, false]
+
+    env:
+      CC: clang-${{ matrix.clang-version }}
+      CXX: clang++-${{ matrix.clang-version }}
+      FC: gfortran
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/workflows/composite-action
 
 
   gcc-9-10-11:
@@ -71,7 +72,7 @@ jobs:
 
     strategy:
       matrix:
-        gcc-version: [9, 10, 11, 12, 13]
+        gcc-version: [9, 10, 11]
         shared: [false]
         cpp: [true, false]
         include:
@@ -141,21 +142,21 @@ jobs:
         path: build-Valgrind/Testing/Temporary/MemoryChecker.*.log
 
 #------------------------------
-  # clang-tidy:
+  clang-tidy:
 
-  #   runs-on: ubuntu-24.04
-  #   needs: linux-new
-  #   timeout-minutes: 10
+    runs-on: ubuntu-24.04
+    needs: linux-new
+    timeout-minutes: 10
 
-  #   strategy:
-  #     matrix:
-  #       cpp: [false,true]
+    strategy:
+      matrix:
+        cpp: [false,true]
 
-  #   steps:
-  #   - uses: actions/checkout@v4
+    steps:
+    - uses: actions/checkout@v4
 
-  #   - run: cmake --preset tidy -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
-  #   - run: cmake --build --preset tidy
+    - run: cmake --preset tidy -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
+    - run: cmake --build --preset tidy
 
 #------------------------------
 # disabled coverage due to broken Jinja import
