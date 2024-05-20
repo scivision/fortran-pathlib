@@ -58,7 +58,7 @@ jobs:
     env:
       CC: clang-${{ matrix.clang-version }}
       CXX: clang++-${{ matrix.clang-version }}
-      FC: gfortran
+      FC: gfortran-13
 
     steps:
     - uses: actions/checkout@v4
