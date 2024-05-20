@@ -18,7 +18,6 @@ VERSION 5.6.5
 include(CTest) # needed for "ctest -T memcheck"
 include(FetchContent)
 include(GNUInstallDirs)
-include(CheckLanguage)
 
 set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 # This project isn't using C++ modules; avoid bugs in module scanning CMake 3.28, 3.29 with GCC >= 14.
@@ -39,13 +38,10 @@ if(ffilesystem_cpp OR ffilesystem_bench)
 endif()
 
 if(ffilesystem_fortran)
-  check_language(Fortran)
-  if(CMAKE_Fortran_COMPILER)
     enable_language(Fortran)
     set(HAVE_Fortran_FILESYSTEM ON)
-  else()
+else()
     set(HAVE_Fortran_FILESYSTEM OFF)
-  endif()
 endif()
 
 include(cmake/compilers.cmake)
