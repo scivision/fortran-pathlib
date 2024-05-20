@@ -69,7 +69,7 @@ size_t fs_filesystem_type(const char* path, char* name, const size_t buffer_size
   // return name of filesystem type if known
 
 #if defined(_WIN32) || defined(__CYGWIN__)
-  size_t L = MAX_PATH+1;
+  DWORD L = MAX_PATH+1;
   if(L < buffer_size){
     fprintf(stderr, "ERROR:fs_get_type: buffer_size too small\n");
     return 0;

@@ -73,11 +73,25 @@ if(NOT HAVE_CXX_FILESYSTEM)
   endif()
 endif()
 
+# use separate object for Fortran to work with Visual Studio generator
+if(HAVE_Fortran_FILESYSTEM)
+
+add_library(ffilesystem_Fortran OBJECT src/common/fortran/filesystem.F90)
+
+target_compile_definitions(ffilesystem_Fortran PRIVATE
+$<$<NOT:$<BOOL:${HAVE_F03TYPE}>>:NO_F03TYPE>
+)
+set_property(TARGET ffilesystem_Fortran PROPERTY
+Fortran_MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/include
+)
+
+endif()
+
 
 add_library(ffilesystem src/common/common.c
 src/common/partition.c
 src/common/dynamic.c
-"$<$<BOOL:${HAVE_Fortran_FILESYSTEM}>:src/common/fortran/filesystem.F90>"
+$<$<TARGET_EXISTS:ffilesystem_Fortran>:$<TARGET_OBJECTS:ffilesystem_Fortran>>
 )
 if(HAVE_CXX_FILESYSTEM)
   target_sources(ffilesystem PRIVATE
@@ -111,7 +125,6 @@ target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${${PROJECT_NAME}_WIN32_SYMLINK}>>:WIN32_SYMLINK>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${${PROJECT_NAME}_HAVE_CLOCK_CAST}>>:HAVE_CLOCK_CAST>"
 "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${ffilesystem_trace}>>:FS_TRACE=1>"
-"$<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<NOT:$<BOOL:${HAVE_F03TYPE}>>>:NO_F03TYPE>"
 )
 target_compile_features(ffilesystem PRIVATE cxx_std_${cxx_std} c_std_99)
 target_compile_options(ffilesystem PRIVATE
@@ -120,7 +133,6 @@ target_compile_options(ffilesystem PRIVATE
 set_target_properties(ffilesystem PROPERTIES
 PUBLIC_HEADER include/ffilesystem.h
 EXPORT_NAME filesystem
-Fortran_MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/include
 VERSION ${PROJECT_VERSION}
 WINDOWS_EXPORT_ALL_SYMBOLS ON
 )

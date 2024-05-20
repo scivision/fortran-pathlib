@@ -70,7 +70,7 @@ size_t fs_lib_path(FFS_MUNUSED char* path, FFS_MUNUSED const size_t buffer_size)
 
 #if (defined(_WIN32) || defined(__CYGWIN__)) && defined(FS_DLL_NAME)
  // https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
-  L = GetModuleFileNameA(GetModuleHandleA(FS_DLL_NAME), path, buffer_size);
+  L = GetModuleFileNameA(GetModuleHandleA(FS_DLL_NAME), path, (DWORD) buffer_size);
   if(L == 0 && L >= buffer_size){
     fs_win32_print_error(path, "lib_path");
     return 0;
