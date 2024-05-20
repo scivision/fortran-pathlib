@@ -155,7 +155,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - run: cmake --preset tidy -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
+    - run: >-
+       cmake --preset tidy
+       -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
+       -Dffilesystem_fortran:BOOL=off
+
     - run: cmake --build --preset tidy
 
 #------------------------------
