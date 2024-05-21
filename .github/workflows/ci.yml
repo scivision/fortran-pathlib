@@ -46,6 +46,7 @@ jobs:
 
 
   linux-flang:
+  # waiting for Clang 19 + Flang. Flang 19 is needed.
     runs-on: ubuntu-24.04
     timeout-minutes: 15
 
@@ -58,13 +59,10 @@ jobs:
     env:
       CC: clang-${{ matrix.clang-version }}
       CXX: clang++-${{ matrix.clang-version }}
-      FC: flang-new
+      FC: gfortran-14
 
     steps:
     - uses: actions/checkout@v4
-
-    - name: install Flang
-      run: sudo apt install --no-install-recommends flang
 
     - uses: ./.github/workflows/composite-action
 
