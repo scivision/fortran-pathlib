@@ -45,23 +45,27 @@ jobs:
     - uses: ./.github/workflows/composite-action
 
 
-  linux-clang:
+  linux-flang:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     strategy:
       matrix:
-        clang-version: [16, 17, 18]
+        clang-version: [18]
         cpp: [true, false]
         shared: [true, false]
 
     env:
       CC: clang-${{ matrix.clang-version }}
       CXX: clang++-${{ matrix.clang-version }}
-      FC: gfortran-13
+      FC: flang-new
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: install Flang
+      run: sudo apt install --no-install-recommends flang
+
     - uses: ./.github/workflows/composite-action
 
 
@@ -166,7 +170,7 @@ jobs:
 # disabled coverage due to broken Jinja import
   # linux-coverage:
   #   runs-on: ubuntu-latest
-  #   needs: linux-gcc
+  #   needs: linux-new
   #   timeout-minutes: 10
 
   #   steps:
