@@ -50,7 +50,7 @@ std::string fs_drop_slash(std::string_view sv)
 
 void fs_as_posix(char* path)
 {
-  std::string p = Ffs::as_posix(std::string_view(path));
+  const std::string p = Ffs::as_posix(std::string_view(path));
   fs_str2char(p, path, p.length()+1);
 }
 
@@ -93,7 +93,7 @@ std::string Ffs::join(std::string_view path, std::string_view other){
 std::string Ffs::parent(std::string_view path)
 {
   // have to drop_slash on input to get expected parent path
-  std::string p = std::filesystem::path(fs_drop_slash(path)).parent_path().generic_string();
+  const std::string p = std::filesystem::path(fs_drop_slash(path)).parent_path().generic_string();
 
   if(FS_TRACE) std::cout << "TRACE:parent(" << path << ") => " << p << "\n";
 
@@ -187,7 +187,7 @@ std::string Ffs::proximate_to(std::string_view base, std::string_view other){
 
 bool Ffs::is_subdir(std::string_view subdir, std::string_view dir)
 {
-  auto r = Ffs::relative_to(dir, subdir);
+  const std::string r = Ffs::relative_to(dir, subdir);
 
   return !r.empty() && r != "." &&
 #ifdef __cpp_lib_starts_ends_with

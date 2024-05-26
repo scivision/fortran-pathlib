@@ -99,8 +99,8 @@ bool Ffs::touch(std::string_view path)
 #if defined(__cpp_using_enum)
   using enum std::filesystem::perms;
 #else
-  std::filesystem::perms owner_read = std::filesystem::perms::owner_read;
-  std::filesystem::perms owner_write = std::filesystem::perms::owner_write;
+  constexpr std::filesystem::perms owner_read = std::filesystem::perms::owner_read;
+  constexpr std::filesystem::perms owner_write = std::filesystem::perms::owner_write;
 #endif
 
   std::error_code ec;
@@ -137,9 +137,9 @@ bool Ffs::set_permissions(std::string_view path, int readable, int writable, int
 #if defined(__cpp_using_enum)
   using enum std::filesystem::perms;
 #else
-  std::filesystem::perms owner_read = std::filesystem::perms::owner_read;
-  std::filesystem::perms owner_write = std::filesystem::perms::owner_write;
-  std::filesystem::perms owner_exec = std::filesystem::perms::owner_exec;
+  constexpr std::filesystem::perms owner_read = std::filesystem::perms::owner_read;
+  constexpr std::filesystem::perms owner_write = std::filesystem::perms::owner_write;
+  constexpr std::filesystem::perms owner_exec = std::filesystem::perms::owner_exec;
 #endif
 
   std::error_code ec;
@@ -208,7 +208,7 @@ std::string Ffs::mkdtemp(std::string_view prefix)
   std::error_code ec;
   std::filesystem::path t;
   constexpr std::string::size_type Lname = 16;  // arbitrary length for random string
-  std::filesystem::path temp = std::filesystem::temp_directory_path(ec);
+  const std::filesystem::path temp = std::filesystem::temp_directory_path(ec);
 
   if(!ec) FFS_LIKELY
   {

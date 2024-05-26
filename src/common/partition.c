@@ -69,13 +69,13 @@ size_t fs_filesystem_type(const char* path, char* name, const size_t buffer_size
   // return name of filesystem type if known
 
 #if defined(_WIN32) || defined(__CYGWIN__)
-  DWORD L = MAX_PATH+1;
+  const DWORD L = MAX_PATH+1;
   if(L < buffer_size){
     fprintf(stderr, "ERROR:fs_get_type: buffer_size too small\n");
     return 0;
   }
 
-  size_t MP = fs_get_max_path();
+  const size_t MP = fs_get_max_path();
 
   char* buf = (char*) malloc(MP);
   if(!buf) return 0;

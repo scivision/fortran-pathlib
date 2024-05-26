@@ -37,8 +37,8 @@
 #ifndef _WIN32
 static inline bool str_ends_with(const char *s, const char *suffix) {
   /* https://stackoverflow.com/a/41652727 */
-    size_t slen = strlen(s);
-    size_t suffix_len = strlen(suffix);
+    const size_t slen = strlen(s);
+    const size_t suffix_len = strlen(suffix);
 
     return suffix_len <= slen && !strcmp(s + slen - suffix_len, suffix);
 }
@@ -81,7 +81,7 @@ bool fs_setenv(const char* name, const char* value)
 
 #ifdef _WIN32
   // SetEnvironmentVariable set empty value despite returning success code
-  size_t L = strlen(name) + strlen(value) + 2;
+  const size_t L = strlen(name) + strlen(value) + 2;
   char* buf = (char*) malloc(L);
   if(!buf) return false;
 
@@ -104,7 +104,8 @@ bool fs_setenv(const char* name, const char* value)
 
 size_t fs_get_tempdir(char* path, const size_t buffer_size)
 {
-  size_t L = fs_getenv(fs_is_windows() ? "TEMP" : "TMPDIR", path, buffer_size);
+  const size_t L = fs_getenv(fs_is_windows() ? "TEMP" : "TMPDIR", path, buffer_size);
+
   if(L){
     fs_as_posix(path);
     return L;
@@ -147,7 +148,7 @@ bool fs_set_cwd(const char* path)
 
 size_t fs_get_homedir(char* path, const size_t buffer_size)
 {
-  size_t L = fs_getenv(fs_is_windows() ? "USERPROFILE" : "HOME", path, buffer_size);
+  const size_t L = fs_getenv(fs_is_windows() ? "USERPROFILE" : "HOME", path, buffer_size);
   if (L){
     fs_as_posix(path);
     return L;

@@ -11,7 +11,7 @@ std::string Ffs::canonical(std::string_view path, const bool strict)
     return {};
     // need this for macOS otherwise it returns the current working directory instead of empty string
 
-  auto ex = std::filesystem::path(Ffs::expanduser(path));
+  const auto ex = std::filesystem::path(Ffs::expanduser(path));
 
   std::error_code ec;
 
@@ -21,7 +21,7 @@ std::string Ffs::canonical(std::string_view path, const bool strict)
     return Ffs::normal(ex.generic_string());
   }
 
-  auto c = strict
+  const auto c = strict
     ? std::filesystem::canonical(ex, ec)
     : std::filesystem::weakly_canonical(ex, ec);
 
@@ -40,11 +40,11 @@ std::string Ffs::resolve(std::string_view path, const bool strict)
   if(path.empty()) FFS_UNLIKELY
     return Ffs::get_cwd();
 
-  auto ex = std::filesystem::path(Ffs::expanduser(path));
+  const auto ex = std::filesystem::path(Ffs::expanduser(path));
 
   std::error_code ec;
 
-  auto c = strict
+  const auto c = strict
     ? std::filesystem::canonical(ex, ec)
     : std::filesystem::weakly_canonical(ex, ec);
 
@@ -89,7 +89,7 @@ std::string Ffs::which(std::string_view name)
   }
   const char pathsep = fs_pathsep();
 
-  std::string path = Ffs::get_env("PATH");
+  const std::string path = Ffs::get_env("PATH");
   if (path.empty()) FFS_UNLIKELY
   {
     std::cerr << "ERROR:ffilesystem:which: Path environment variable not set\n";
@@ -120,7 +120,7 @@ std::string Ffs::which(std::string_view name)
 
 std::string Ffs::make_absolute(std::string_view path, std::string_view base)
 {
-  std::string out = Ffs::expanduser(path);
+  const std::string out = Ffs::expanduser(path);
 
   if (Ffs::is_absolute(out))
     return out;

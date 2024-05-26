@@ -172,7 +172,7 @@ std::string Ffs::get_homedir()
   std::string buf(L, '\0');
   // process with query permission
   HANDLE hToken = nullptr;
-  bool ok = OpenProcessToken( GetCurrentProcess(), TOKEN_QUERY, &hToken) != 0 &&
+  const bool ok = OpenProcessToken( GetCurrentProcess(), TOKEN_QUERY, &hToken) != 0 &&
             GetUserProfileDirectoryA(hToken, buf.data(), &L);
 
   CloseHandle(hToken);
@@ -207,11 +207,11 @@ std::string Ffs::expanduser(std::string_view path)
   if(path.length() > 1 && filesep.find(path[1]) == std::string::npos)
     return std::string(path);
 
-  std::string h = Ffs::get_homedir();
+  const std::string h = Ffs::get_homedir();
   if (h.empty()) FFS_UNLIKELY
     return {};
 
-  std::string p = fs_drop_slash(path);
+  const std::string p = fs_drop_slash(path);
   if (p.length() < 3)
     return h;
 

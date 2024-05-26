@@ -139,7 +139,7 @@ bool fs_remove(const char* path)
 #ifdef _WIN32
 // https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-removedirectorya
 // https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilea
-  bool ok = fs_is_dir(path) ? RemoveDirectoryA(path) : DeleteFileA(path);
+  const bool ok = fs_is_dir(path) ? RemoveDirectoryA(path) : DeleteFileA(path);
   if (!ok)
     fs_win32_print_error(path, "remove");
 
@@ -287,7 +287,7 @@ size_t fs_make_tempdir(char* result, const size_t buffer_size)
   if(!fs_get_tempdir(result, buffer_size))
     return 0;
 
-  size_t L = fs_join(result, tmp, result, buffer_size);
+  const size_t L = fs_join(result, tmp, result, buffer_size);
   if(L == 0)
     return 0;
 

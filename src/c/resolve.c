@@ -187,17 +187,17 @@ size_t fs_which(const char* name, char* result, const size_t buffer_size)
 size_t fs_make_absolute(const char* path, const char* base,
                         char* result, const size_t buffer_size)
 {
-  size_t L1 = fs_expanduser(path, result, buffer_size);
+  size_t L = fs_expanduser(path, result, buffer_size);
 
   if (fs_is_absolute(result))
-    return L1;
+    return L;
 
   char* buf = (char*) malloc(buffer_size);
   if(!buf) return 0;
-  size_t L2 = fs_expanduser(base, buf, buffer_size);
-  if(L2 == 0){
+
+  if(!fs_expanduser(base, buf, buffer_size)){
     free(buf);
-    return L1;
+    return L;
   }
 
   char* buf2 = (char*) malloc(buffer_size);
@@ -205,14 +205,14 @@ size_t fs_make_absolute(const char* path, const char* base,
     free(buf);
     return 0;
   }
-  L1 = fs_join(buf, result, buf2, buffer_size);
+  L = fs_join(buf, result, buf2, buffer_size);
   free(buf);
-  if(L1 == 0){
+  if(L == 0){
     free(buf2);
     return 0;
   }
 
-  L1 = fs_strncpy(buf2, result, buffer_size);
+  L = fs_strncpy(buf2, result, buffer_size);
   free(buf2);
-  return L1;
+  return L;
 }

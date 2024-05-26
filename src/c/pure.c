@@ -48,7 +48,8 @@ size_t fs_normal(const char* path, char* result, const size_t buffer_size)
 // normalize path
   cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
 
-  size_t L = cwk_path_normalize(path, result, buffer_size);
+  const size_t L = cwk_path_normalize(path, result, buffer_size);
+
   if(L >= buffer_size){
     fprintf(stderr, "ERROR:ffilesystem:normal: output buffer %zu too small\n", buffer_size);
     return 0;
@@ -97,8 +98,8 @@ size_t fs_stem(const char* path, char* result, const size_t buffer_size)
 
 size_t fs_join(const char* path, const char* other, char* result, const size_t buffer_size)
 {
-  size_t L1 = strlen(path);
-  size_t L2 = strlen(other);
+  const size_t L1 = strlen(path);
+  const size_t L2 = strlen(other);
 
   if(L1 == 0 && L2 == 0)
     return 0;
@@ -189,7 +190,7 @@ size_t fs_with_suffix(const char* path, const char* suffix,
     return fs_stem(path, result, buffer_size);
 
   if(path[0] == '.'){
-    size_t L = strlen(path) + strlen(suffix);
+    const size_t L = strlen(path) + strlen(suffix);
     if (L >= buffer_size){
       fprintf(stderr, "ERROR:ffilesystem:fs_with_suffix: buffer_size too small for string\n");
       return 0;
@@ -238,7 +239,7 @@ bool fs_is_absolute(const char* path)
 bool fs_is_safe_name(const char* filename)
 {
 
-size_t L = strlen(filename);
+const size_t L = strlen(filename);
 
 if(L == 0)
   return false;
@@ -251,8 +252,9 @@ for (size_t i = 0; i < L; i++) {
     continue;
 
   switch (filename[i]) {
-    case '_': case '-': case '.': case '~': case '@': case '#': case '$': case '%': case '^': case '&':
-    case '(': case ')': case '[': case ']': case '{': case '}': case '+': case '=': case ',': case '!':
+    case '_': case '-': case '.': case '~': case '@': case '#': case '$':
+    case '%': case '^': case '&': case '(': case ')': case '[': case ']':
+    case '{': case '}': case '+': case '=': case ',': case '!':
       continue;
     default:
       return false;
@@ -268,7 +270,7 @@ size_t fs_relative_to(const char* base, const char* other, char* result, const s
   // need this or separators are not handled correctly
   cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
 
-  size_t L = cwk_path_get_relative(base, other, result, buffer_size);
+  const size_t L = cwk_path_get_relative(base, other, result, buffer_size);
 
   if(L)
     fs_as_posix(result);
@@ -279,7 +281,7 @@ size_t fs_relative_to(const char* base, const char* other, char* result, const s
 
 size_t fs_proximate_to(const char* base, const char* other, char* result, const size_t buffer_size)
 {
-  size_t L = fs_relative_to(base, other, result, buffer_size);
+  const size_t L = fs_relative_to(base, other, result, buffer_size);
   if(L)
     return L;
 
@@ -296,7 +298,7 @@ bool fs_is_subdir(const char* subdir, const char* dir)
   if(!buf) return false;
 
   size_t L = fs_relative_to(dir, subdir, buf, m);
-  bool yes = L > 0 && !(L==1 && buf[0] == '.') && strncmp(buf, "..", 2) != 0;
+  const bool yes = L > 0 && !(L==1 && buf[0] == '.') && strncmp(buf, "..", 2) != 0;
 
   free(buf);
 

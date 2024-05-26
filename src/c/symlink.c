@@ -21,7 +21,7 @@
 bool fs_is_symlink(const char* path)
 {
 #ifdef _WIN32
-  DWORD a = GetFileAttributes(path);
+  const DWORD a = GetFileAttributes(path);
   return (a != INVALID_FILE_ATTRIBUTES) && (a & FILE_ATTRIBUTE_REPARSE_POINT);
 #else
   struct stat buf;
@@ -42,12 +42,12 @@ size_t fs_read_symlink(const char* path, FFS_MUNUSED char* result, FFS_MUNUSED c
   return 0;
 #else
   // https://www.man7.org/linux/man-pages/man2/readlink.2.html
-  ssize_t Lr = readlink(path, result, buffer_size);
+  const ssize_t Lr = readlink(path, result, buffer_size);
   if (Lr < 0){
     fprintf(stderr, "ERROR:ffilesystem:read_symlink: %s => %s\n", path, strerror(errno));
     return 0;
   }
-  size_t L = (size_t) Lr;
+  const size_t L = (size_t) Lr;
   if (L == buffer_size) {
     fprintf(stderr, "ERROR:ffilesystem:read_symlink: truncation occurred %s\n", path);
     return 0;
@@ -74,7 +74,7 @@ bool fs_create_symlink(const char* target, const char* link)
   if(fs_is_dir(target))
     p |= SYMBOLIC_LINK_FLAG_DIRECTORY;
 
-  bool ok = CreateSymbolicLinkA(link, target, p);
+  const bool ok = CreateSymbolicLinkA(link, target, p);
   if(!ok)
     fs_win32_print_error(target, "create_symlink");
 

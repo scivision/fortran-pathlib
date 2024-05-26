@@ -13,7 +13,7 @@
 bool Ffs::is_symlink(std::string_view path)
 {
 #ifdef WIN32_SYMLINK
-  DWORD a = GetFileAttributes(path.data());
+  const DWORD a = GetFileAttributes(path.data());
   return (a != INVALID_FILE_ATTRIBUTES) && (a & FILE_ATTRIBUTE_REPARSE_POINT);
 #else
   std::error_code ec;
@@ -64,7 +64,7 @@ bool Ffs::create_symlink(std::string_view target, std::string_view link)
   if (CreateSymbolicLinkA(link.data(), target.data(), p)) FFS_LIKELY
     return true;
 
-  DWORD err = GetLastError();
+  const DWORD err = GetLastError();
   std::string msg = "ERROR:Ffs:CreateSymbolicLink";
   if(err == ERROR_PRIVILEGE_NOT_HELD)
     msg += "Enable Windows developer mode to use symbolic links: https://learn.microsoft.com/en-us/windows/apps/get-started/developer-mode-features-and-debugging";

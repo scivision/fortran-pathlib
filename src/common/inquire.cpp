@@ -52,7 +52,7 @@ bool Ffs::is_exe(std::string_view path)
 {
   std::error_code ec;
 
-  auto s = std::filesystem::status(path, ec);
+  const auto s = std::filesystem::status(path, ec);
   // need reserved check for Windows
   if(ec || !std::filesystem::is_regular_file(s) || Ffs::is_reserved(path))
     return false;
@@ -64,10 +64,10 @@ bool Ffs::is_exe(std::string_view path)
 #if defined(__cpp_using_enum)
   using enum std::filesystem::perms;
 #else
-  std::filesystem::perms none = std::filesystem::perms::none;
-  std::filesystem::perms others_exec = std::filesystem::perms::others_exec;
-  std::filesystem::perms group_exec = std::filesystem::perms::group_exec;
-  std::filesystem::perms owner_exec = std::filesystem::perms::owner_exec;
+  constexpr std::filesystem::perms none = std::filesystem::perms::none;
+  constexpr std::filesystem::perms others_exec = std::filesystem::perms::others_exec;
+  constexpr std::filesystem::perms group_exec = std::filesystem::perms::group_exec;
+  constexpr std::filesystem::perms owner_exec = std::filesystem::perms::owner_exec;
 #endif
 
   return (s.permissions() & (owner_exec | group_exec | others_exec)) != none;
@@ -77,17 +77,17 @@ bool Ffs::is_exe(std::string_view path)
 bool Ffs::is_readable(std::string_view path)
 {
   std::error_code ec;
-  auto s = std::filesystem::status(path, ec);
+  const auto s = std::filesystem::status(path, ec);
   if(ec || !std::filesystem::exists(s))
     return false;
 
 #if defined(__cpp_using_enum)
   using enum std::filesystem::perms;
 #else
-  std::filesystem::perms none = std::filesystem::perms::none;
-  std::filesystem::perms owner_read = std::filesystem::perms::owner_read;
-  std::filesystem::perms group_read = std::filesystem::perms::group_read;
-  std::filesystem::perms others_read = std::filesystem::perms::others_read;
+  constexpr std::filesystem::perms none = std::filesystem::perms::none;
+  constexpr std::filesystem::perms owner_read = std::filesystem::perms::owner_read;
+  constexpr std::filesystem::perms group_read = std::filesystem::perms::group_read;
+  constexpr std::filesystem::perms others_read = std::filesystem::perms::others_read;
 #endif
 
   return (s.permissions() & (owner_read | group_read | others_read)) != none;
@@ -97,17 +97,17 @@ bool Ffs::is_readable(std::string_view path)
 bool Ffs::is_writable(std::string_view path)
 {
   std::error_code ec;
-  auto s = std::filesystem::status(path, ec);
+  const auto s = std::filesystem::status(path, ec);
   if(ec || !std::filesystem::exists(s))
     return false;
 
 #if defined(__cpp_using_enum)
   using enum std::filesystem::perms;
 #else
-  std::filesystem::perms owner_write = std::filesystem::perms::owner_write;
-  std::filesystem::perms group_write = std::filesystem::perms::group_write;
-  std::filesystem::perms others_write = std::filesystem::perms::others_write;
-  std::filesystem::perms none = std::filesystem::perms::none;
+  constexpr std::filesystem::perms owner_write = std::filesystem::perms::owner_write;
+  constexpr std::filesystem::perms group_write = std::filesystem::perms::group_write;
+  constexpr std::filesystem::perms others_write = std::filesystem::perms::others_write;
+  constexpr std::filesystem::perms none = std::filesystem::perms::none;
 #endif
 
   return (s.permissions() & (owner_write | group_write | others_write)) != none;
@@ -165,8 +165,8 @@ std::time_t fs_get_modtime(const char* path)
 {
 
 #ifdef HAVE_CLOCK_CAST
-  auto t_fs = Ffs::get_modtime(std::string_view(path));
-  auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs);
+  const auto t_fs = Ffs::get_modtime(std::string_view(path));
+  const auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs);
   return std::chrono::system_clock::to_time_t(t_sys);
 #else
   if (struct stat s; !stat(path, &s))
@@ -218,25 +218,25 @@ std::string Ffs::get_permissions(std::string_view path)
 {
 
   std::error_code ec;
-  auto s = std::filesystem::status(path, ec);
+  const auto s = std::filesystem::status(path, ec);
   if(ec || !std::filesystem::exists(s)) FFS_UNLIKELY
     return {};
 
-  std::filesystem::perms p = s.permissions();
+  const std::filesystem::perms p = s.permissions();
 
 #if defined(__cpp_using_enum)
   using enum std::filesystem::perms;
 #else
-  std::filesystem::perms none = std::filesystem::perms::none;
-  std::filesystem::perms owner_read = std::filesystem::perms::owner_read;
-  std::filesystem::perms owner_write = std::filesystem::perms::owner_write;
-  std::filesystem::perms owner_exec = std::filesystem::perms::owner_exec;
-  std::filesystem::perms group_read = std::filesystem::perms::group_read;
-  std::filesystem::perms group_write = std::filesystem::perms::group_write;
-  std::filesystem::perms group_exec = std::filesystem::perms::group_exec;
-  std::filesystem::perms others_read = std::filesystem::perms::others_read;
-  std::filesystem::perms others_write = std::filesystem::perms::others_write;
-  std::filesystem::perms others_exec = std::filesystem::perms::others_exec;
+  constexpr std::filesystem::perms none = std::filesystem::perms::none;
+  constexpr std::filesystem::perms owner_read = std::filesystem::perms::owner_read;
+  constexpr std::filesystem::perms owner_write = std::filesystem::perms::owner_write;
+  constexpr std::filesystem::perms owner_exec = std::filesystem::perms::owner_exec;
+  constexpr std::filesystem::perms group_read = std::filesystem::perms::group_read;
+  constexpr std::filesystem::perms group_write = std::filesystem::perms::group_write;
+  constexpr std::filesystem::perms group_exec = std::filesystem::perms::group_exec;
+  constexpr std::filesystem::perms others_read = std::filesystem::perms::others_read;
+  constexpr std::filesystem::perms others_write = std::filesystem::perms::others_write;
+  constexpr std::filesystem::perms others_exec = std::filesystem::perms::others_exec;
 #endif
 
   std::string r = "---------";

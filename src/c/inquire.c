@@ -159,12 +159,13 @@ fs_is_reserved(const char* path)
     *p = (char) toupper(*p);
 
   // check if the stem is a reserved device name
-  bool r = !strcmp(s, "CON") || !strcmp(s, "PRN") || !strcmp(s, "AUX") || !strcmp(s, "NUL") ||
-           !strcmp(s, "COM1") || !strcmp(s, "COM2") || !strcmp(s, "COM3") || !strcmp(s, "COM4") ||
-           !strcmp(s, "COM5") || !strcmp(s, "COM6") || !strcmp(s, "COM7") || !strcmp(s, "COM8") ||
-           !strcmp(s, "COM9") || !strcmp(s, "LPT1") || !strcmp(s, "LPT2") || !strcmp(s, "LPT3") ||
-           !strcmp(s, "LPT4") || !strcmp(s, "LPT5") || !strcmp(s, "LPT6") || !strcmp(s, "LPT7") ||
-           !strcmp(s, "LPT8") || !strcmp(s, "LPT9");
+  const bool r =
+    !strcmp(s, "CON") || !strcmp(s, "PRN") || !strcmp(s, "AUX") || !strcmp(s, "NUL") ||
+    !strcmp(s, "COM1") || !strcmp(s, "COM2") || !strcmp(s, "COM3") || !strcmp(s, "COM4") ||
+    !strcmp(s, "COM5") || !strcmp(s, "COM6") || !strcmp(s, "COM7") || !strcmp(s, "COM8") ||
+    !strcmp(s, "COM9") || !strcmp(s, "LPT1") || !strcmp(s, "LPT2") || !strcmp(s, "LPT3") ||
+    !strcmp(s, "LPT4") || !strcmp(s, "LPT5") || !strcmp(s, "LPT6") || !strcmp(s, "LPT7") ||
+    !strcmp(s, "LPT8") || !strcmp(s, "LPT9");
 
   free(s);
 
@@ -208,7 +209,7 @@ fs_space_available(const char* path)
     return 0;
   }
   ULARGE_INTEGER bytes_available;
-  BOOL ok = GetDiskFreeSpaceExA(r, &bytes_available, NULL, NULL);
+  const BOOL ok = GetDiskFreeSpaceExA(r, &bytes_available, NULL, NULL);
   if(ok)
     return bytes_available.QuadPart;
 
