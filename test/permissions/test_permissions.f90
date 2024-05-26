@@ -5,6 +5,11 @@ use filesystem
 
 implicit none
 
+if(is_wsl() > 0 .and. filesystem_type(".") == "v9fs") then
+  write(stderr, '(a)') "ERROR: WSL with v9fs does not support file permissions"
+  stop 77
+endif
+
 call test_set_permissions()
 print '(a)', "OK: set_permission"
 

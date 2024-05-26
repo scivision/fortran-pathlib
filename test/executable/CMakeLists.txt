@@ -4,7 +4,10 @@ add_executable(test_exe_cpp test_exe.cpp)
 target_link_libraries(test_exe_cpp PRIVATE ffilesystem)
 add_test(NAME Cpp_exe COMMAND test_exe_cpp)
 
-set_property(TEST Cpp_exe PROPERTY LABELS "Cpp")
+set_tests_properties(Cpp_exe PROPERTIES
+LABELS "Cpp"
+SKIP_RETURN_CODE 77
+)
 
 endif()
 
@@ -24,6 +27,10 @@ set_property(TARGET test_${t}_fortran PROPERTY LINKER_LANGUAGE Fortran)
 add_test(NAME Fortran_${t} COMMAND test_${t}_fortran)
 set_property(TEST Fortran_${t} PROPERTY LABELS "Fortran")
 
+set_tests_properties(Fortran_exe PROPERTIES
+SKIP_RETURN_CODE 77
+)
+
 endforeach()
 
 set_property(TEST Fortran_which PROPERTY WORKING_DIRECTORY $<TARGET_FILE_DIR:test_which_fortran>)
@@ -35,6 +42,9 @@ if(CMAKE_VERSION VERSION_LESS 3.22)
 else()
   set_property(TEST Fortran_which_noPath PROPERTY ENVIRONMENT_MODIFICATION "PATH=unset:")
 endif()
-set_property(TEST Fortran_which_noPath PROPERTY WILL_FAIL true)
-set_property(TEST Fortran_which_noPath PROPERTY LABELS "Fortran")
-set_property(TEST Fortran_which_noPath PROPERTY DISABLED $<BOOL:${WIN32}>)  # Windows will give error 135 due to missing PATH
+set_tests_properties(Fortran_which_noPath PROPERTIES
+WILL_FAIL true
+LABELS "Fortran"
+DISABLED $<BOOL:${WIN32}>
+)
+# Windows will give error 135 due to missing PATH

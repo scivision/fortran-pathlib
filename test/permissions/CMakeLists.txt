@@ -21,5 +21,6 @@ add_test(NAME Fortran_permissions COMMAND test_permissions_fortran)
 set_tests_properties(Fortran_permissions PROPERTIES
 LABELS Fortran
 DISABLED $<BOOL:${CYGWIN}>
+SKIP_RETURN_CODE 77
 )
 endif()
