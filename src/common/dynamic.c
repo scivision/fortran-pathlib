@@ -34,7 +34,7 @@ size_t fs_exe_path(FFS_MUNUSED char* path, FFS_MUNUSED const size_t buffer_size)
 
   FFS_MUNUSED size_t L;
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__CYGWIN__)
  // https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
   L = GetModuleFileNameA(NULL, path, (DWORD) buffer_size);
   if(L == 0 || L >= buffer_size){
@@ -42,7 +42,7 @@ size_t fs_exe_path(FFS_MUNUSED char* path, FFS_MUNUSED const size_t buffer_size)
     return 0;
   }
   path[L] = '\0';
-#elif defined(__linux__) || defined(__CYGWIN__)
+#elif defined(__linux__)
   // https://man7.org/linux/man-pages/man2/readlink.2.html
   L = readlink("/proc/self/exe", path, buffer_size);
   if(!L)
