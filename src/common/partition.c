@@ -69,24 +69,22 @@ size_t fs_filesystem_type(const char* path, char* name, const size_t buffer_size
   // return name of filesystem type if known
 
 #if defined(_WIN32) || defined(__CYGWIN__)
-  const DWORD L = MAX_PATH+1;
-  if(L < buffer_size){
-    fprintf(stderr, "ERROR:fs_get_type: buffer_size too small\n");
-    return 0;
-  }
-
   const size_t MP = fs_get_max_path();
 
-  char* buf = (char*) malloc(MP);
-  if(!buf) return 0;
-
   char r[4];
+  if(fs_is_cygwin()){
+    // assume user input Windows path root directly.
+    fs_strncpy(path, r, 4);
+  } else {
+    char* buf = (char*) malloc(MP);
+    if(!buf) return 0;
 
-  if (!fs_canonical(path, true, buf, MP) || !fs_root(buf, r, 4)) {
+    if (!fs_canonical(path, true, buf, MP) || !fs_root(buf, r, 4)) {
+      free(buf);
+      return 0;
+    }
     free(buf);
-    return 0;
   }
-  free(buf);
 
   // GetVolumeInformationA requires a trailing backslash
   if(isalpha(r[0]) && r[1] == ':') {
@@ -98,8 +96,12 @@ size_t fs_filesystem_type(const char* path, char* name, const size_t buffer_size
 
   if(FS_TRACE) printf("TRACE:get_type(%s) root: %s\n", path, r);
 
-  if(GetVolumeInformationA(r, NULL, 0, NULL, NULL, NULL, name, L))
-    return strlen(name);
+  size_t L;
+  if(GetVolumeInformationA(r, NULL, 0, NULL, NULL, NULL, name, MAX_PATH+1)){
+    L = strlen(name);
+    if(L > 0 && L < buffer_size)
+      return L;
+  }
 
   fs_win32_print_error(path, "filesystem_type");
   return 0;

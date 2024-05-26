@@ -11,11 +11,15 @@ valgrind : block
 character(:), allocatable :: exp(:)
 character(:), allocatable :: fsname
 
-fsname = filesystem_type(".")
+if(is_cygwin()) then
+  fsname = filesystem_type(getenv("SYSTEMDRIVE"))
+else
+  fsname = filesystem_type(".")
+end if
 
 print '(a)', fsname
 
-if(is_windows()) then
+if(is_windows() .or. is_cygwin()) then
   exp = [character(5) :: "NTFS", "EXFAT"]
 elseif (is_wsl() > 0) then
   exp = [character(4) :: "ext4", "nfs", "v9fs"]
