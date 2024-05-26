@@ -31,6 +31,9 @@ add_test(NAME Fortran_libpath COMMAND test_libpath_fortran $<BOOL:${BUILD_SHARED
 
 if(NOT BUILD_SHARED_LIBS)
   set(_p $<TARGET_FILE_DIR:test_libpath_fortran>)
+  if(CYGWIN)
+    set(_p "$<PATH:GET_FILENAME,${_p}>")
+  endif()
 endif()
 
 set_tests_properties(Fortran_libpath PROPERTIES
