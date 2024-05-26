@@ -104,7 +104,16 @@ bool fs_setenv(const char* name, const char* value)
 
 size_t fs_get_tempdir(char* path, const size_t buffer_size)
 {
-  const size_t L = fs_getenv(fs_is_windows() ? "TEMP" : "TMPDIR", path, buffer_size);
+#ifdef _WIN32
+  DWORD L = GetTempPathA((DWORD) buffer_size, path);
+  if (L == 0 || L >= buffer_size){
+    fs_win32_print_error(path, "get_tempdir");
+    return 0;
+  }
+  L++;
+#else
+  const size_t L = fs_getenv("TMPDIR", path, buffer_size);
+#endif
 
   if(L){
     fs_as_posix(path);
