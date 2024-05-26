@@ -13,7 +13,7 @@ CFLAGS := -Wall $(INC)
 FFLAGS := -Wall
 
 cdir = src/common/
-COMM_SRCS = $(cdir)common.c $(cdir)dynamic.c $(cdir)partition.c
+COMM_SRCS = $(cdir)common.c $(cdir)cygwin.c $(cdir)dynamic.c $(cdir)partition.c
 SRCS = $(cdir)filesystem.cpp $(cdir)c_ifc.cpp $(cdir)ifc.cpp $(cdir)inquire.cpp $(cdir)pure.cpp $(cdir)platform.cpp $(cdir)resolve.cpp $(cdir)symlink.cpp
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o) $(COMM_SRCS:%=$(BUILD_DIR)/%.o)
 

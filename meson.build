@@ -10,7 +10,10 @@ endif
 
 fsrcs = fortran ? files('src/common/fortran/filesystem.F90') : []
 
-csrcs = files('src/common/common.c', 'src/common/partition.c', 'src/common/dynamic.c')
+csrcs = files('src/common/common.c',
+'src/common/cygwin.c',
+'src/common/partition.c',
+'src/common/dynamic.c')
 
 cppsrcs = files(
 'src/common/filesystem.cpp',
