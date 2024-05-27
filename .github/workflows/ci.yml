@@ -208,12 +208,5 @@ jobs:
       FC: gfortran-13
 
     steps:
-    - run: sudo xcode-select --switch /Applications/Xcode_15.1.app
-      if: ${{ matrix.compiler.c == 'gcc-13' }}
-      # https://docs.brew.sh/Xcode
-      # https://github.com/Homebrew/brew/blob/HEAD/Library/Homebrew/os/mac/xcode.rb#L20
-
-    - run: brew install ninja
-
     - uses: actions/checkout@v4
     - uses: ./.github/workflows/composite-action
