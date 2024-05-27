@@ -198,9 +198,10 @@ jobs:
 
     strategy:
       matrix:
-        compiler: [ {cpp: g++-13, c: gcc-13}, {cpp: clang++, c: clang} ]
+        compiler: [ {cpp: clang++, c: clang} ]
         shared: [true, false]
         cpp: [true, false]
+    # {cpp: g++-13, c: gcc-13}, unstable on CI (good on real mac)
 
     env:
       CC: ${{ matrix.compiler.c }}
