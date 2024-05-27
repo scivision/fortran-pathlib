@@ -127,8 +127,7 @@ size_t fs_strncpy(const char* path, char* result, const size_t buffer_size)
 }
 
 
-void
-fs_win32_print_error(FFS_MUNUSED const char* path, FFS_MUNUSED const char* fname)
+void fs_win32_print_error(FFS_MUNUSED const char* path, FFS_MUNUSED const char* fname)
 {
 #ifdef _WIN32
   DWORD error = GetLastError();

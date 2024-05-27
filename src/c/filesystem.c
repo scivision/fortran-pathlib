@@ -24,6 +24,10 @@
 #include <io.h>
 #include <direct.h> // _mkdir
 #include <sys/utime.h>
+#define mkdir(dir, mode) _mkdir(dir)
+#ifndef S_IRWXU
+#define S_IRWXU (_S_IREAD | _S_IWRITE | _S_IEXEC)
+#endif
 #else
 #include <unistd.h>
 #include <sys/time.h> // utimes
@@ -38,98 +42,56 @@
 #include <cwalk.h>
 
 
-static inline bool _mkdir_segment(char* buf, size_t L)
-{
-  // use mkdir() building up directory components using strtok()
-// strtok_r, strtok_s not necessarily available, and non-C++ is fallback
-  char* q = strtok(buf, "/");  // NOSONAR
-  char* dir = (char*) malloc(L + 2);
-  // + 2 to account for \0 and leading /
-  if (!dir) {
-    free(buf);
-    return false;
-  }
-
-  dir[1] = '\0';
-  dir[0] = (fs_is_windows()) ? '\0' : '/';
-
-  while (q) {
-    strcat(dir, q);
-    if (FS_TRACE) printf("TRACE: mkdir %s\n", dir);
-
-    if (
-#ifdef _WIN32
-      _mkdir(dir)
-#else
-      mkdir(dir, S_IRWXU)
-#endif
-        && !(errno == EEXIST || errno == EACCES)) {
-      fprintf(stderr, "ERROR:ffilesystem:create_directories: %s %s => %s\n", buf, dir, strerror(errno));
-      free(buf);
-      free(dir);
-      return false;
-    }
-    strcat(dir, "/");
-    q = strtok(NULL, "/"); // NOSONAR
-  }
-
-  free(dir);
-
-  return true;
-}
-
-
-bool
-fs_mkdir(const char* path)
+bool fs_mkdir(const char* path)
 {
 
-  if(fs_exists(path)){
-    if(fs_is_dir(path))
-      return true;
+  if(fs_is_dir(path))
+    return true;
 
-    fprintf(stderr, "ERROR:filesystem:create_directories: %s already exists but is not a directory\n", path);
+  struct cwk_segment segment;
+  if(!cwk_path_get_first_segment(path, &segment))
     return false;
-  }
 
   const size_t m = fs_get_max_path();
 
-  // To disambiguate, use an absolute path -- must resolve multiple times because realpath only gives one level of non-existent path
-  char* buf = (char*) malloc(m);
+  char *buf = (char*)malloc(m);
   if(!buf) return false;
 
-  size_t L = fs_resolve(path, false, buf, m);
-  if(L == 0){
-    free(buf);
-    return false;
-  }
+  char r[4];
+  size_t L = 0;
 
-  if (FS_TRACE) printf("TRACE: mkdir %s resolved => %s\n", path, buf);
-  if(!_mkdir_segment(buf, L))
-    return false;
+  if(fs_is_windows())
+    r[0] = '\0';
+  else
+    fs_root(path, r, 4);
+    // root may be empty for relative paths
 
-  /* check that path was adequately resolved and created */
-  size_t L1 = fs_resolve(path, false, buf, m);
-
-  const size_t max_depth = 1000;  // sanity check in case algorithm fails
-  size_t i = 1;
-  while (L1 != L) {
-    if(!_mkdir_segment(buf, L1))
-      return false;
-    i++;
-    if(i > max_depth) {
-      fprintf(stderr, "ERROR:ffilesystem:create_directories: %s => too many iterations\n", path);
+  // printf("TRACE: mkdir(%s) %s %.*s\n", path, buf, (int)segment.size, segment.begin);
+  do {
+    if(L + segment.size + 1 >= m){
+      fprintf(stderr, "ERROR:ffilesystem:mkdir: path too long %s\n", path);
       free(buf);
       return false;
     }
-    L = L1;
-    L1 = fs_resolve(path, false, buf, m);
-    if (FS_TRACE) printf("TRACE: mkdir %s iteration %zu resolved => %s   L1 %zu  L %zu\n", path, i, buf, L1, L);
-  }
+    L += snprintf(buf+L, m-L, "%s%.*s", r, (int)segment.size, segment.begin);
+    if(r[0] != '/') {
+      r[0] = '/';
+      r[1] = '\0';
+    }
 
-  bool ok = fs_is_dir(buf);
+    if(FS_TRACE) printf("TRACE: mkdir(%s) %.*s %zu %zu\n", buf, (int)segment.size, segment.begin, L, strlen(buf));
+
+    if(mkdir(buf, S_IRWXU) && !(errno == EEXIST || errno == EACCES)) {
+      fprintf(stderr, "ERROR:ffilesystem:mkdir: %s => %s\n", buf, strerror(errno));
+      free(buf);
+      return false;
+    }
+
+  } while(cwk_path_get_next_segment(&segment));
+
   free(buf);
 
-  return ok;
+  return fs_is_dir(path);
 }
 
 
