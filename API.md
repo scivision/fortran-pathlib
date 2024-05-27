@@ -456,6 +456,18 @@ join("a/b", "c/d") ! "a/b/c/d"
 
 ---
 
+Cygwin-specific:
+
+```fortran
+character(:), allocatable :: to_cygpath(winpath)
+
+character(:), allocatable :: to_winpath(cygpath)
+---
+
+transform to/from Windows path to Cygwin POSIX path
+
+---
+
 Find executable file on environment variable PATH if present.
 Windows must include the ".exe" suffix.
 Windows prioritizes CWD.
