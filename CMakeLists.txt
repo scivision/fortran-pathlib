@@ -12,7 +12,7 @@ endif()
 
 project(ffilesystem
 LANGUAGES C
-VERSION 5.6.5
+VERSION 5.6.6
 )
 
 include(CTest) # needed for "ctest -T memcheck"
@@ -60,13 +60,10 @@ if(NOT HAVE_CXX_FILESYSTEM)
   set(FETCHCONTENT_QUIET OFF)
   set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 
-  FetchContent_Declare(cwalk
+  FetchContent_Populate(cwalk
   URL https://github.com/likle/cwalk/archive/refs/tags/v1.2.9.tar.gz
   TLS_VERIFY ${CMAKE_TLS_VERIFY}
   )
-  if(NOT cwalk_POPULATED)
-    FetchContent_Populate(cwalk)
-  endif()
 endif()
 
 # use separate object for Fortran to work with Visual Studio generator
