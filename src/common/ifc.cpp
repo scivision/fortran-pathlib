@@ -48,3 +48,23 @@ std::string Ffs::longname(std::string_view in)
 
   return {};
 }
+
+
+std::string Ffs::to_cygpath(std::string_view in)
+{
+  if(std::string buf(fs_get_max_path(), '\0');
+      fs_to_cygpath(in.data(), buf.data(), buf.size())) FFS_LIKELY
+    return buf.c_str();
+
+  return {};
+}
+
+
+std::string Ffs::to_winpath(std::string_view in)
+{
+  if(std::string buf(fs_get_max_path(), '\0');
+      fs_to_winpath(in.data(), buf.data(), buf.size())) FFS_LIKELY
+    return buf.c_str();
+
+  return {};
+}

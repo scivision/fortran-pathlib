@@ -56,7 +56,19 @@ void fs_as_posix(char* path)
 
 std::string Ffs::as_posix(std::string_view path){
   // force posix file separator on Windows
-  return std::filesystem::path(path).generic_string();
+  if (fs_is_windows())
+    return std::filesystem::path(path).generic_string();
+
+  std::string r(path);
+
+  if (fs_is_cygwin())
+#ifdef __cpp_lib_ranges
+    std::ranges::replace(r, '\\', '/');
+#else
+    std::replace(r.begin(), r.end(), '\\', '/');
+#endif
+
+  return r;
 }
 
 

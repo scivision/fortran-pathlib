@@ -18,6 +18,15 @@ set_property(TARGET test_Fortran_windows PROPERTY LINKER_LANGUAGE Fortran)
 add_test(NAME Fortran_Ffilesystem_windows COMMAND test_Fortran_windows)
 set_property(TEST Fortran_Ffilesystem_windows PROPERTY LABELS Fortran)
 
+if(CYGWIN)
+  add_executable(test_cygwin test_cygwin.f90)
+  target_link_libraries(test_cygwin PRIVATE ffilesystem)
+  set_property(TARGET test_cygwin PROPERTY LINKER_LANGUAGE Fortran)
+
+  add_test(NAME Fortran_cygwin COMMAND test_cygwin)
+  set_property(TEST Fortran_cygwin PROPERTY LABELS Fortran)
+endif()
+
 endif()
 
 get_property(test_names DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)

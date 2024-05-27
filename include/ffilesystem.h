@@ -115,6 +115,9 @@ public:
 
   [[nodiscard]] static std::string filesystem_type(std::string_view);
 
+  [[nodiscard]] static std::string to_cygpath(std::string_view);
+  [[nodiscard]] static std::string to_winpath(std::string_view);
+
   // Disallow creating an instance of this object
   Ffs() = delete;
 };
@@ -258,8 +261,8 @@ size_t fs_filesystem_type(const char*, char*, const size_t);
 
 void fs_win32_print_error(const char*, const char*);
 
-size_t to_cygpath(const char*, char*, const size_t);
-size_t to_winpath(const char*, char*, const size_t);
+size_t fs_to_cygpath(const char*, char*, const size_t);
+size_t fs_to_winpath(const char*, char*, const size_t);
 
 #ifdef __cplusplus
 }

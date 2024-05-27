@@ -25,7 +25,8 @@ is_admin, is_bsd, is_macos, is_windows, is_cygwin, is_wsl, is_mingw, is_linux, i
 max_path, get_max_path, &
 exe_path, lib_path, compiler, compiler_c, &
 longname, shortname, getenv, setenv, &
-is_alpha, filesystem_type, devnull
+is_alpha, filesystem_type, devnull, &
+to_cygpath, to_winpath
 
 interface get_max_path
 !! deprecated
@@ -408,6 +409,20 @@ integer(C_SIZE_T) function fs_filesystem_type(path, name, buffer_size) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: path(*)
 character(kind=C_CHAR), intent(out) :: name(*)
+integer(C_SIZE_T), intent(in), value :: buffer_size
+end function
+
+integer(C_SIZE_T) function fs_to_cygpath(path, result, buffer_size) bind(C)
+import
+character(kind=c_char), intent(in) :: path(*)
+character(kind=c_char), intent(out) :: result(*)
+integer(C_SIZE_T), intent(in), value :: buffer_size
+end function
+
+integer(C_SIZE_T) function fs_to_winpath(path, result, buffer_size) bind(C)
+import
+character(kind=c_char), intent(in) :: path(*)
+character(kind=c_char), intent(out) :: result(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
 
@@ -866,6 +881,26 @@ character(*), intent(in) :: path
 
 include "ifc0a.inc"
 N = fs_longname(trim(path) // C_NULL_CHAR, cbuf, N)
+include "ifc0b.inc"
+end function
+
+
+function to_cygpath(path) result (r)
+!! convert native Windows to Cygwin path
+character(*), intent(in) :: path
+
+include "ifc0a.inc"
+N = fs_to_cygpath(trim(path) // C_NULL_CHAR, cbuf, N)
+include "ifc0b.inc"
+end function
+
+
+function to_winpath(path) result (r)
+!! convert Cygwin path to native Windows
+character(*), intent(in) :: path
+
+include "ifc0a.inc"
+N = fs_to_winpath(trim(path) // C_NULL_CHAR, cbuf, N)
 include "ifc0b.inc"
 end function
 
