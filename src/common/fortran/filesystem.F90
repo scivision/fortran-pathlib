@@ -42,6 +42,11 @@ logical(C_BOOL) function fs_cpp() bind(C)
 import C_BOOL
 end function
 
+logical(C_BOOL) function fs_is_optimized() bind(C)
+!! ffilesystem is optimized for speed?
+import C_BOOL
+end function
+
 integer(C_LONG) function fs_lang() bind(C)
 !! C `__STDC_VERSION__` or C++ level of macro `__cplusplus`
 import C_LONG

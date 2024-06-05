@@ -46,6 +46,16 @@ size_t fs_get_max_path(){
 }
 
 
+bool fs_is_optimized(){
+// This is a heuristic, trusting the build system or user to set NDEBUG if optimized.
+#if defined(NDEBUG)
+  return true;
+#else
+  return false;
+#endif
+}
+
+
 bool fs_is_macos(){
 #if defined(__APPLE__) && defined(__MACH__)
   return true;

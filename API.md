@@ -61,6 +61,12 @@ Logical: ffilesystem is using C++ backend
 fs_cpp()
 ```
 
+Logical: ffilesystem was compiled with optimizations:
+
+```fortran
+fs_is_optimized()
+```
+
 integer (long): the C `__STDC_VERSION__` or C++ level of macro `__cplusplus`
 
 ```fortran

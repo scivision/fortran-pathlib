@@ -1,6 +1,6 @@
 project('ffilesystem', ['c', 'cpp'],
 version: '5.6.6',
-default_options: ['cpp_std=c++20', 'buildtype=release'],
+default_options: ['cpp_std=c++20', 'buildtype=release', 'b_ndebug=if-release'],
 meson_version : '>=1.4.0')
 
 fortran = get_option('fortran')
@@ -109,4 +109,7 @@ if not meson.is_subproject()
       ]
     subdir('test/' + d)
   endforeach
+
+  executable('ffilesystem_bench', 'test/bench/ffilesystem_bench.cpp',
+    link_with: filesystem, include_directories: inc, install: true)
 endif

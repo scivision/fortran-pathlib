@@ -1,6 +1,5 @@
 set_property(DIRECTORY PROPERTY LABELS "bench")
 
-
 add_executable(ffilesystem_bench ffilesystem_bench.cpp)
 
 target_include_directories(ffilesystem_bench PRIVATE ${PROJECT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR})

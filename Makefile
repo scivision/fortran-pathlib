@@ -8,9 +8,10 @@ FC := gfortran
 BUILD_DIR := build
 
 INC := -Iinclude/
-CXXFLAGS := -std=c++20 -Wall $(INC)
-CFLAGS := -Wall $(INC)
-FFLAGS := -Wall
+
+CXXFLAGS := -std=c++20 -Wall -O3 -DNDEBUG $(INC)
+CFLAGS := -Wall -O3 -DNDEBUG $(INC)
+FFLAGS := -Wall -O3 -DNDEBUG
 
 cdir = src/common/
 COMM_SRCS = $(cdir)common.c $(cdir)cygwin.c $(cdir)dynamic.c $(cdir)partition.c

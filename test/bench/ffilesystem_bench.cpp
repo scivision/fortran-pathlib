@@ -248,6 +248,9 @@ return t;
 
 int main(int argc, char** argv){
 
+if (!fs_is_optimized())
+  std::cerr << "WARNING: ffilesystem might not have been compiled with optimizations\n";
+
 int n = 1000;
 if(argc > 1)
     n = std::stoi(argv[1]);
