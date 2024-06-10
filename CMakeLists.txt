@@ -89,6 +89,7 @@ $<$<TARGET_EXISTS:ffilesystem_Fortran>:$<TARGET_OBJECTS:ffilesystem_Fortran>>
 )
 if(HAVE_CXX_FILESYSTEM)
   target_sources(ffilesystem PRIVATE
+    src/common/copy.cpp
     src/common/filesystem.cpp
     src/common/c_ifc.cpp
     src/common/ifc.cpp
@@ -102,6 +103,7 @@ if(HAVE_CXX_FILESYSTEM)
     )
 else()
   target_sources(ffilesystem PRIVATE
+  src/c/copy.c
   src/c/filesystem.c
   src/c/inquire.c
   src/c/mkdir.c

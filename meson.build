@@ -16,6 +16,7 @@ csrcs = files('src/common/common.c',
 'src/common/dynamic.c')
 
 cppsrcs = files(
+  'src/common/copy.cpp',
 'src/common/filesystem.cpp',
 'src/common/c_ifc.cpp',
 'src/common/ifc.cpp',
