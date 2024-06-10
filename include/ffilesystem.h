@@ -137,8 +137,17 @@ extern "C" {
 #include <stddef.h>
 #include <stdint.h>
 #include <time.h>
+#include <sys/types.h> // mode_t
 
+// mostly internal use functions only for C
 size_t fs_strncpy(const char*, char*, const size_t);
+
+#if defined(_MSC_VER)
+int
+#else
+mode_t
+#endif
+fs_st_mode(const char*);
 
 #endif
 

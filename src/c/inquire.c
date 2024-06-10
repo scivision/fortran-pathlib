@@ -32,8 +32,7 @@
 #include <errno.h>
 
 
-static
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
 int
 #else
 mode_t

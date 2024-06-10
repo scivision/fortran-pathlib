@@ -8,9 +8,7 @@
 #endif
 
 #include <string.h> // strerror
-#include <stdlib.h>
 #include <stdbool.h>
-#include <stdint.h>
 #include <stdio.h>  // remove()
 
 // preferred import order for stat()
@@ -51,18 +49,13 @@ bool fs_set_permissions(const char* path, int readable, int writable, int execut
 {
   // on POSIX, only sets permission for user, not group or others
 
-  struct stat s;
-  if(stat(path, &s) || (s.st_mode & S_IFCHR))
-    return false;
-  // special POSIX file character device like /dev/null
-
 #ifdef _MSC_VER
-  int m = s.st_mode;
+  int m = fs_st_mode(path);
   const int r = _S_IREAD;
   const int w = _S_IWRITE;
   const int x = _S_IEXEC;
 #else
-  mode_t m = s.st_mode;
+  mode_t m = fs_st_mode(path);
   const mode_t r = S_IRUSR;
   const mode_t w = S_IWUSR;
   const mode_t x = S_IXUSR;

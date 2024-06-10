@@ -10,7 +10,7 @@
 #include <windows.h>
 #endif
 
-#include <stdlib.h>
+#include <stdlib.h>  // malloc, free
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
