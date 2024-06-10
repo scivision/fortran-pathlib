@@ -16,12 +16,12 @@ foreach(t IN ITEMS canonical_resolve cpp fortran core empty environment
 
 add_subdirectory(${t})
 
-# tests run much faster in serial, especially on Windows
-get_property(n DIRECTORY ${t} PROPERTY TESTS)
-
 # --- Windows shared DLLs
 if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.28)
 
+  get_property(n DIRECTORY ${t} PROPERTY TESTS)
+
+  # tests run much faster in serial, especially on Windows
   set_property(TEST ${n} DIRECTORY ${t} PROPERTY RUN_SERIAL true)
 
   if(BUILD_SHARED_LIBS AND (CYGWIN OR WIN32))
