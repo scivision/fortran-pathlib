@@ -177,7 +177,7 @@ if(ffilesystem_cli)
   if(HAVE_CXX_FILESYSTEM AND ${PROJECT_NAME}_cpp_map_contains AND cxx_std GREATER_EQUAL 20)
     add_executable(fs_cli app/main.cpp)
     target_link_libraries(fs_cli PRIVATE ffilesystem)
-    target_compile_features(fs_cli PRIVATE cxx_std_20)
+    target_compile_features(fs_cli PRIVATE cxx_std_${cxx_std})
 
     install(TARGETS fs_cli EXPORT ${PROJECT_NAME}-targets)
   endif()
