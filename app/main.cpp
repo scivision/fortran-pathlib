@@ -74,6 +74,8 @@ static void no_arg(std::string_view fun){
     std::cout << mchar[fun]() << "\n";
   else if (mlong.contains(fun))
     std::cout << mlong[fun]() << "\n";
+  else if (fun == "cpu_arch")
+    std::cout << Ffs::cpu_arch() << "\n";
   else
     std::cerr << fun << " not a known function\n";
 

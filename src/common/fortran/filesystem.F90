@@ -25,7 +25,7 @@ is_admin, is_bsd, is_macos, is_windows, is_cygwin, is_wsl, is_mingw, is_linux, i
 max_path, get_max_path, &
 exe_path, lib_path, compiler, compiler_c, &
 longname, shortname, getenv, setenv, &
-is_alpha, filesystem_type, devnull, &
+is_alpha, filesystem_type, devnull, cpu_arch, &
 to_cygpath, to_winpath
 
 interface get_max_path
@@ -414,6 +414,12 @@ integer(C_SIZE_T) function fs_filesystem_type(path, name, buffer_size) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: path(*)
 character(kind=C_CHAR), intent(out) :: name(*)
+integer(C_SIZE_T), intent(in), value :: buffer_size
+end function
+
+integer(C_SIZE_T) function fs_cpu_arch(arch, buffer_size) bind(C)
+import
+character(kind=C_CHAR), intent(out) :: arch(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
 
@@ -1098,15 +1104,25 @@ include "ifc0b.inc"
 end function
 
 
-function devnull() result (r)
+function devnull()
 !! get path to /dev/null or equivalent
-character(:), allocatable :: r
+character(:), allocatable :: devnull
 
 if(is_windows()) then
-  r = "nul"
+  devnull = "nul"
 else
-  r = "/dev/null"
+  devnull = "/dev/null"
 endif
+end function
+
+
+function cpu_arch() result(r)
+!! get CPU architecture
+
+include "ifc0a.inc"
+N = fs_cpu_arch(cbuf, N)
+include "ifc0b.inc"
+
 end function
 
 

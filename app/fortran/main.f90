@@ -49,6 +49,8 @@ main : do
     print '(A)', compiler()
   case ("compiler_c")
     print '(A)', compiler_c()
+  case ("cpu_arch")
+    print '(A)', cpu_arch()
   case ("homedir")
     print '(A)', get_homedir()
   case ("cwd")

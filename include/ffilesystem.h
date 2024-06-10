@@ -118,6 +118,8 @@ public:
   [[nodiscard]] static std::string to_cygpath(std::string_view);
   [[nodiscard]] static std::string to_winpath(std::string_view);
 
+  [[nodiscard]] static std::string cpu_arch();
+
   // Disallow creating an instance of this object
   Ffs() = delete;
 };
@@ -277,6 +279,8 @@ void fs_win32_print_error(const char*, const char*);
 
 size_t fs_to_cygpath(const char*, char*, const size_t);
 size_t fs_to_winpath(const char*, char*, const size_t);
+
+size_t fs_cpu_arch(char*, const size_t);
 
 #ifdef __cplusplus
 }

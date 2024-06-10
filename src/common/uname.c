@@ -1,6 +1,14 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "ffilesystem.h"
+
+#if defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+
+
 #if __has_include(<sys/utsname.h>)
 #include <sys/utsname.h>
 
@@ -34,4 +42,35 @@ int fs_is_wsl()
   return -1;
 #endif
 
+}
+
+
+size_t fs_cpu_arch(char* arch, const size_t buffer_size)
+{
+#if __has_include(<sys/utsname.h>)
+  struct utsname buf;
+  if (uname(&buf) == 0)
+    return fs_strncpy(buf.machine, arch, buffer_size);
+#elif defined(_WIN32)
+// https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-system_info
+    SYSTEM_INFO si;
+    GetNativeSystemInfo(&si);
+    switch (si.wProcessorArchitecture) {
+    case PROCESSOR_ARCHITECTURE_AMD64:
+        return fs_strncpy("x86_64", arch, buffer_size);
+    case PROCESSOR_ARCHITECTURE_ARM:
+        return fs_strncpy("arm", arch, buffer_size);
+    case PROCESSOR_ARCHITECTURE_ARM64:
+        return fs_strncpy("arm64", arch, buffer_size);
+    case PROCESSOR_ARCHITECTURE_IA64:
+        return fs_strncpy("ia64", arch, buffer_size);
+    case PROCESSOR_ARCHITECTURE_INTEL:
+        return fs_strncpy("x86", arch, buffer_size);
+    case PROCESSOR_ARCHITECTURE_UNKNOWN:
+    default:
+        return fs_strncpy("unknown", arch, buffer_size);
+    }
+#endif
+
+  return 0;
 }

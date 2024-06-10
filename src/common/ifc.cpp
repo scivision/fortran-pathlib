@@ -3,6 +3,16 @@
 #include <string>
 
 
+std::string Ffs::cpu_arch()
+{
+  if(std::string buf(fs_get_max_path(), '\0');
+      fs_cpu_arch(buf.data(), buf.size()) > 0)  FFS_LIKELY
+    return buf.c_str();
+
+  return {};
+}
+
+
 std::string Ffs::exe_path()
 {
   if(std::string buf(fs_get_max_path(), '\0');
