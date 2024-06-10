@@ -15,16 +15,12 @@
 
 // preferred import order for stat()
 #include <sys/types.h>
-#include <sys/stat.h>
+#include <sys/stat.h>  // chmod, stat
 #include <errno.h>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <sys/utime.h>
-#else
-#include <unistd.h>
-#include <sys/time.h> // utimes
 #endif
 
 
@@ -100,38 +96,6 @@ bool fs_copy_file(const char* source, const char* dest, bool overwrite)
 #endif
 
   return fs_is_file(dest);
-}
-
-
-bool fs_set_modtime(const char* path)
-{
-  if (
-#ifdef _WIN32
-    // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/utime-utime32-utime64-wutime-wutime32-wutime64
-    _utime(path, NULL)
-#else
-    utimes(path, NULL)
-#endif
-    ){
-      fprintf(stderr, "ERROR:Ffilesystem:set_modtime: %s => %s\n", path, strerror(errno));
-      return false;
-    }
-
-  return true;
-}
-
-
-bool fs_touch(const char* path)
-{
-  if(fs_exists(path))
-    return fs_set_modtime(path);
-
-  FILE* fid = fopen(path, "a+b");
-  if(fid && fclose(fid) == 0)
-    return true;
-
-  fprintf(stderr, "ERROR:Ffilesystem:touch: %s => %s\n", path, strerror(errno));
-  return false;
 }
 
 

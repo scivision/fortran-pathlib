@@ -24,7 +24,8 @@ cppsrcs = files(
 'src/common/pure.cpp',
 'src/common/platform.cpp',
 'src/common/resolve.cpp',
-'src/common/symlink.cpp'
+'src/common/symlink.cpp',
+'src/common/touch.cpp'
 )
 
 inc = include_directories('include')

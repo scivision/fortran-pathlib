@@ -98,6 +98,7 @@ if(HAVE_CXX_FILESYSTEM)
     src/common/pure.cpp
     src/common/resolve.cpp
     src/common/symlink.cpp
+    src/common/touch.cpp
     )
 else()
   target_sources(ffilesystem PRIVATE
@@ -108,6 +109,7 @@ else()
   src/c/pure.c
   src/c/resolve.c
   src/c/symlink.c
+  src/c/touch.c
   ${cwalk_SOURCE_DIR}/src/cwalk.c
   )
 endif()
