@@ -148,13 +148,7 @@ bool Ffs::is_reserved(std::string_view path)
 
   std::ranges::transform(s.begin(), s.end(), s.begin(), ::toupper);
 
-  return
-#ifdef __cpp_lib_ranges
-    std::ranges::find(r, s)
-#else
-    std::find(r.begin(), r.end(), s)
-#endif
-    != r.end();
+  return std::ranges::find(r, s) != r.end();
 
 #else
   std::cerr << "ERROR:ffilesystem:is_reserved: C++20 required for reserved names check\n";
