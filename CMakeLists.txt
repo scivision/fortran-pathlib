@@ -22,11 +22,15 @@ include(GNUInstallDirs)
 set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 # This project isn't using C++ modules; avoid bugs in module scanning CMake 3.28, 3.29 with GCC >= 14.
 
+# https://cmake.org/cmake/help/latest/prop_gbl/CMAKE_CXX_KNOWN_FEATURES.html
 get_property(cxx_features GLOBAL PROPERTY CMAKE_CXX_KNOWN_FEATURES)
 if("cxx_std_20" IN_LIST cxx_features)
   set(cxx_std 20)
+elseif("cxx_std_17" IN_LIST cxx_features)
+  set(cxx_std 17)
 else()
   set(cxx_std 17)
+  message(WARNING "${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION} may not support at least C++17 standard")
 endif()
 
 message(STATUS "${PROJECT_NAME} ${PROJECT_VERSION} C++${cxx_std} CMake ${CMAKE_VERSION} ${CMAKE_SYSTEM_NAME} Toolchain ${CMAKE_TOOLCHAIN_FILE}")
