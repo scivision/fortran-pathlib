@@ -93,6 +93,7 @@ if(HAVE_CXX_FILESYSTEM)
     src/common/c_ifc.cpp
     src/common/ifc.cpp
     src/common/inquire.cpp
+    src/common/mkdir.cpp
     src/common/platform.cpp
     src/common/pure.cpp
     src/common/resolve.cpp
@@ -102,6 +103,7 @@ else()
   target_sources(ffilesystem PRIVATE
   src/c/filesystem.c
   src/c/inquire.c
+  src/c/mkdir.c
   src/c/platform.c
   src/c/pure.c
   src/c/resolve.c

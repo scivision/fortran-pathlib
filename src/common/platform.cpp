@@ -19,7 +19,7 @@
 #include <cstring> // std::strerror
 #include <string>
 #include <iostream>
-#include <system_error>
+#include <system_error> // for error_code
 
 #if __has_include(<format>)
 #include <format>
@@ -32,7 +32,7 @@
 #include <Windows.h>
 #else
 #include <sys/types.h>
-#include <pwd.h>  // getpwuid
+#include <pwd.h>      // for getpwuid, passwd
 #include <cerrno>
 #include <unistd.h> // for mac too
 #endif

@@ -3,7 +3,9 @@
 
 #include "ffilesystem.h"
 
-#include <algorithm>
+#include <algorithm>  // for __fn, all_of, find, replace
+#include <cctype> // for std::isalnum
+#include <string>
 #include <vector>
 #include <iostream>
 
@@ -11,7 +13,6 @@
 #include <ranges>
 #endif
 
-#include <cctype> // std::isalnum
 
 
 // tell if Ffilesystme core is C or C++

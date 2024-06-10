@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <cstring> // std::streerror
+#include <system_error>         // for error_code
 
 #if __has_include(<ranges>)
 #include <ranges>
@@ -18,6 +19,7 @@
 // this include can break even when functions not used if C++ ABI problem e.g. Clang 14 with GCC 13
 #include <chrono>
 #endif
+#include <ctime>                // for time_t
 
 #include <cerrno>
 

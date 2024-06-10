@@ -7,6 +7,7 @@
 #include "ffilesystem.h"
 #include <cwalk.h>
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stddef.h> // size_t
 

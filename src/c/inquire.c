@@ -10,6 +10,8 @@
 #include "ffilesystem.h"
 
 #include <stdbool.h>
+#include <stdint.h>  // uintmax_t
+#include <stdlib.h> // malloc, free
 #include <string.h>
 #include <ctype.h> // toupper
 

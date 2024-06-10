@@ -20,6 +20,7 @@ cppsrcs = files(
 'src/common/c_ifc.cpp',
 'src/common/ifc.cpp',
 'src/common/inquire.cpp',
+'src/common/mkdir.cpp',
 'src/common/pure.cpp',
 'src/common/platform.cpp',
 'src/common/resolve.cpp',
