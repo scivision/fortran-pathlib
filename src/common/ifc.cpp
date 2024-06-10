@@ -31,6 +31,15 @@ std::string Ffs::filesystem_type(std::string_view path)
   return {};
 }
 
+std::string Ffs::get_homedir()
+{
+  if(std::string buf(fs_get_max_path(), '\0');
+      fs_get_homedir(buf.data(), buf.size()) > 0)  FFS_LIKELY
+    return buf.c_str();
+
+  return {};
+}
+
 std::string Ffs::lib_path()
 {
   if(std::string buf(fs_get_max_path(), '\0');

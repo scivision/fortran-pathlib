@@ -21,19 +21,6 @@
 #include <format>
 #endif
 
-// for get_homedir backup method
-#ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <UserEnv.h>
-#include <Windows.h>
-#else
-#include <sys/types.h>
-#include <pwd.h>      // for getpwuid, passwd
-#include <cerrno>
-#include <unistd.h> // for mac too
-#endif
-// end get_homedir backup method
-
 
 std::string Ffs::compiler()
 {
@@ -121,39 +108,6 @@ bool Ffs::chdir(std::string_view path)
 
   std::cerr << "ERROR:ffilesystem:chdir: " << ec.message() << "\n";
   return false;
-}
-
-
-std::string Ffs::get_homedir()
-{
-  // must be std::string to avoid dangling pointer -- GCC doesn't detect this but Clang does.
-
-  if(std::string h = Ffs::get_env(fs_is_windows() ? "USERPROFILE" : "HOME"); !h.empty()) FFS_LIKELY
-    return Ffs::as_posix(h);
-
-#if defined(_WIN32)
-  // works on MSYS2, MSVC, oneAPI.
-  auto L = static_cast<DWORD>(fs_get_max_path());
-  std::string buf(L, '\0');
-  // process with query permission
-  HANDLE hToken = nullptr;
-  const bool ok = OpenProcessToken( GetCurrentProcess(), TOKEN_QUERY, &hToken) != 0 &&
-            GetUserProfileDirectoryA(hToken, buf.data(), &L);
-
-  CloseHandle(hToken);
-
-  if (ok) FFS_LIKELY
-    return Ffs::as_posix(buf.c_str());
-
-  std::cerr << "ERROR: Ffilesystem::homedir " << std::system_category().message(GetLastError()) << "\n";
-  return {};
-#elif !defined(_WIN32)
-  if (const char *h = getpwuid(geteuid())->pw_dir; h)
-    return h;
-#endif
-
-  std::cerr << "ERROR:ffilesystem:homedir: could not get home directory: " << std::strerror(errno) << "\n";
-  return {};
 }
 
 

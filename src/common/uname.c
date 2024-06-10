@@ -1,11 +1,14 @@
 #include <string.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "ffilesystem.h"
 
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#else
+#include <errno.h>
 #endif
 
 
@@ -51,6 +54,8 @@ size_t fs_cpu_arch(char* arch, const size_t buffer_size)
   struct utsname buf;
   if (uname(&buf) == 0)
     return fs_strncpy(buf.machine, arch, buffer_size);
+
+  fprintf(stderr, "ERROR:ffilesystem:fs_cpu_arch: %s\n", strerror(errno));
 #elif defined(_WIN32)
 // https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-system_info
     SYSTEM_INFO si;

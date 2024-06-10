@@ -57,10 +57,6 @@ std::string::size_type fs_getenv(const char* name,
   return fs_str2char(Ffs::get_env(std::string_view(name)), result, buffer_size);
 }
 
-std::string::size_type fs_get_homedir(char* path, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::get_homedir(), path, buffer_size);
-}
-
 std::string::size_type fs_get_permissions(const char* path,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::get_permissions(std::string_view(path)), result, buffer_size);

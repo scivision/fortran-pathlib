@@ -15,14 +15,12 @@
 #include <stdlib.h> // getenv, setenv, putenv
 #include <errno.h>
 
-#ifdef _WIN32
+#if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
-#include <direct.h>  // getcwd, chdir
-#include <Windows.h>
-#include <UserEnv.h>
+#include <direct.h> // _getcwd, _chdir
+#include <windows.h> // GetTempPathA
 #else
-#include <pwd.h>  /* getpwuid */
-#include <unistd.h>
+#include <unistd.h> // getcwd, chdir
 #endif
 
 
@@ -112,40 +110,6 @@ bool fs_set_cwd(const char* path)
 
   fprintf(stderr, "ERROR:ffilesystem:set_cwd: %s    %s\n", path, strerror(errno));
   return false;
-}
-
-
-size_t fs_get_homedir(char* path, const size_t buffer_size)
-{
-  const size_t L = fs_getenv(fs_is_windows() ? "USERPROFILE" : "HOME", path, buffer_size);
-  if (L){
-    fs_as_posix(path);
-    return L;
-  }
-
-#ifdef _WIN32
-  // works on MSYS2, MSVC, oneAPI
-  DWORD N = (DWORD) buffer_size;
-  HANDLE hToken = NULL;
-  bool ok = OpenProcessToken( GetCurrentProcess(), TOKEN_QUERY, &hToken) != 0 &&
-            GetUserProfileDirectoryA(hToken, path, &N);
-
-  CloseHandle(hToken);
-
-  if (!ok){
-    fs_win32_print_error(path, "get_homedir");
-    return 0;
-  }
-
-  fs_as_posix(path);
-  return strlen(path);
-#else
-  const char *h = getpwuid(geteuid())->pw_dir;
-  if (!h)
-    return 0;
-
-  return fs_strncpy(h, path, buffer_size);
-#endif
 }
 
 

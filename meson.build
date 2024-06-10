@@ -14,6 +14,7 @@ csrcs = files('src/common/common.c',
 'src/common/cygwin.c',
 'src/common/partition.c',
 'src/common/dynamic.c',
+'src/common/home.c',
 'src/common/uname.c')
 
 cppsrcs = files(

@@ -87,6 +87,7 @@ endif()
 
 add_library(ffilesystem src/common/common.c
 src/common/cygwin.c
+src/common/home.c
 src/common/partition.c
 src/common/dynamic.c
 src/common/uname.c
