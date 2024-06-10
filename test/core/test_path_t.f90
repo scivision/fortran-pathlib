@@ -2,7 +2,7 @@
 !> program-contains to workaround bug in NVHPC through at least 24.3
 
 module dummy
-use filesystem, only : path_t
+use filesystem, only : path_t, devnull
 implicit none
 
 contains
@@ -205,7 +205,7 @@ if (.not. p1%same_file(p2)) error stop "ERROR:test: same_file"
 call p2%remove()
 
 !> is_reserved, is_char_device
-p1 = path_t("/dev/null")
+p1 = path_t(devnull())
 b = p1%is_reserved()
 b = p1%is_char_device()
 

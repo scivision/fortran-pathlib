@@ -13,7 +13,8 @@ fsrcs = fortran ? files('src/common/fortran/filesystem.F90') : []
 csrcs = files('src/common/common.c',
 'src/common/cygwin.c',
 'src/common/partition.c',
-'src/common/dynamic.c')
+'src/common/dynamic.c',
+'src/common/uname.c')
 
 cppsrcs = files(
   'src/common/copy.cpp',

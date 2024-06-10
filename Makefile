@@ -14,7 +14,7 @@ CFLAGS := -Wall -O3 -DNDEBUG $(INC)
 FFLAGS := -Wall -O3 -DNDEBUG
 
 cdir = src/common/
-COMM_SRCS = $(cdir)common.c $(cdir)cygwin.c $(cdir)dynamic.c $(cdir)partition.c
+COMM_SRCS = $(cdir)common.c $(cdir)cygwin.c $(cdir)dynamic.c $(cdir)partition.c $(cdir)uname.c
 SRCS = $(cdir)filesystem.cpp $(cdir)c_ifc.cpp $(cdir)/copy.cpp $(cdir)ifc.cpp $(cdir)inquire.cpp $(cdir)mkdir.cpp $(cdir)pure.cpp $(cdir)platform.cpp $(cdir)resolve.cpp $(cdir)symlink.cpp $(cdir)touch.cpp
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o) $(COMM_SRCS:%=$(BUILD_DIR)/%.o)
 

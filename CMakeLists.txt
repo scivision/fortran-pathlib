@@ -89,6 +89,7 @@ add_library(ffilesystem src/common/common.c
 src/common/cygwin.c
 src/common/partition.c
 src/common/dynamic.c
+src/common/uname.c
 $<$<TARGET_EXISTS:ffilesystem_Fortran>:$<TARGET_OBJECTS:ffilesystem_Fortran>>
 )
 if(HAVE_CXX_FILESYSTEM)

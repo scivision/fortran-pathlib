@@ -10,10 +10,6 @@
 
 #include "ffilesystem.h"
 
-#if __has_include(<sys/utsname.h>)
-#include <sys/utsname.h>
-#endif
-
 #include <cstdlib>
 
 #include <cstring> // std::strerror
@@ -63,37 +59,6 @@ std::string Ffs::compiler()
 
 #else
   return {};
-#endif
-}
-
-
-int fs_is_wsl() {
-#if __has_include(<sys/utsname.h>)
-  struct utsname buf;
-  if (uname(&buf) != 0) FFS_UNLIKELY
-    return -1;
-
-  std::string_view sysname(buf.sysname);
-  std::string_view release(buf.release);
-
-  if (sysname != "Linux")
-    return 0;
-
-#ifdef __cpp_lib_starts_ends_with
-  if (release.ends_with("microsoft-standard-WSL2"))
-    return 2;
-  if (release.ends_with("-Microsoft"))
-    return 1;
-#else
-  if (release.find("microsoft-standard-WSL2") != std::string::npos)
-    return 2;
-  if (release.find("-Microsoft") != std::string::npos)
-    return 1;
-#endif
-
-  return 0;
-#else
-  return -1;
 #endif
 }
 
