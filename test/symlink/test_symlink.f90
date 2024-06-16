@@ -105,18 +105,23 @@ call create_symlink(tgt_dir, link_dir)
 ! call create_symlink("", "")  !< this error stops
 
 !> file symlinks
-if(is_symlink(tgt)) error stop "is_symlink() should be false for non-symlink file"
-if(.not. is_file(link)) then
-  write(stderr, "(a)") "is_file() should be true for existing regular file: " // link
+if(.not. is_file(tgt)) then
+  write(stderr, "(a)") "is_file("//tgt//") should be true for existing regular file target"
+  error stop
+endif
+
+if(is_symlink(tgt)) then
+  write(stderr, '(a)') "is_symlink("//tgt//") should be false for non-symlink target"
   error stop
 endif
 
 if(.not. is_symlink(link)) then
-  write(stderr, '(a)') "is_symlink() should be true for symlink file: " // link
+  write(stderr, '(a)') "is_symlink("//link//") should be true"
   error stop
 endif
+
 if(.not. is_file(link)) then
-  write(stderr, '(a)') "is_file() should be true for existing symlink file: " // link
+  write(stderr, "(a)") "is_file("//link//") should be true for existing regular file target " // tgt
   error stop
 endif
 
@@ -125,16 +130,12 @@ print '(a)', "PASSED: test_symlink: file"
 !> directory symlinks
 if(is_symlink(tgt_dir)) error stop "is_symlink() should be false for non-symlink dir"
 if(.not. is_dir(link_dir)) then
-  write(stderr, '(a)') "is_dir() should be true for existing regular dir" // link_dir
+  write(stderr, '(a)') "is_dir("//link_dir//") should be true for existing regular dir"
   error stop
 endif
 
 if(.not. is_symlink(link_dir)) then
   write(stderr, '(a)') "is_symlink() should be true for symlink dir: " // link_dir
-  error stop
-endif
-if(.not. is_dir(link_dir)) then
-  write(stderr,'(a)') "is_dir() should be true for existing symlink dir: " // link_dir
   error stop
 endif
 
