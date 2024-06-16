@@ -66,7 +66,7 @@ constexpr bool strict = false;
 std::string_view w;
 auto t = std::chrono::duration<double>::max();
 size_t L=0;
-bool b;
+bool b=false;
 
 std::string buf(fs_get_max_path(), '\0');
 if (b_s.contains(fname))
