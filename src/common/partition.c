@@ -38,13 +38,16 @@ bool fs_is_reserved(const char* path)
     *p = (char) toupper(*p);
 
   // check if the stem is a reserved device name
-  const bool r =
-    !strcmp(s, "CON") || !strcmp(s, "PRN") || !strcmp(s, "AUX") || !strcmp(s, "NUL") ||
-    !strcmp(s, "COM1") || !strcmp(s, "COM2") || !strcmp(s, "COM3") || !strcmp(s, "COM4") ||
-    !strcmp(s, "COM5") || !strcmp(s, "COM6") || !strcmp(s, "COM7") || !strcmp(s, "COM8") ||
-    !strcmp(s, "COM9") || !strcmp(s, "LPT1") || !strcmp(s, "LPT2") || !strcmp(s, "LPT3") ||
-    !strcmp(s, "LPT4") || !strcmp(s, "LPT5") || !strcmp(s, "LPT6") || !strcmp(s, "LPT7") ||
-    !strcmp(s, "LPT8") || !strcmp(s, "LPT9");
+  const size_t N = 22;
+  const char* reserved_names[] = {"CON", "PRN", "AUX", "NUL",
+    "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+    "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
+
+  bool r = false;
+  for (size_t i = 0; i < N; i++) {
+    r = strcmp(s, reserved_names[i]);
+    if(r) break;
+  }
 
   free(s);
 
