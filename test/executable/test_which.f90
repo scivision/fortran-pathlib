@@ -35,7 +35,13 @@ s1 = which(s2)
 
 print '(a)', "which(" // s2 // ") " // s1
 
-if (len_trim(s1) == 0) write(stderr,'(a)') "ERROR:test_exe: which("//s2//") failed. This can happen on CI systems."
+if (len_trim(s1) == 0) then
+  if(is_windows()) then
+    write(stderr,'(a)') "ERROR:test_exe: which("//s2//") failed. This can happen on CI systems."
+  else
+    error stop "ERROR:test_exe: which("//s2//") failed"
+  end if
+endif
 
 deallocate(s2)
 

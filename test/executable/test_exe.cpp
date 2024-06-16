@@ -127,18 +127,21 @@ if(!fs_is_windows())
 }
 
 // test Ffs::which
-if(fs_is_windows()){
-    std::string which = Ffs::which("cmd.exe");
-    if(which.length() == 0)
-        err("test_exe: Ffs::which('cmd.exe') should return a path");
-    std::cout << "Ffs::which('cmd.exe') = " << which << "\n";
-    }
-else{
-    std::string which = Ffs::which("ls");
-    if(which.length() == 0)
-        err("test_exe: Ffs::which('ls') should return a path");
-    std::cout << "Ffs::which('ls') = " << which << "\n";
-}
+std::string_view name = (fs_is_windows()) ? "cmd.exe" : "ls";
+
+std::string r = Ffs::which(name);
+if(r.length() == 0)
+  std::cerr << "ERROR:test_exe: Ffs::which(" << name << ") should return a path. This can happen on CI systems.\n";
+
+std::cout << "Ffs::which(" << name << ") " << r << "\n";
+
+// our own chmod(exe)
+r = Ffs::which(exe);
+if(r.length() == 0)
+  err("test_exe: Ffs::which(" + exe + ") should return a path.");
+
+std::cout << "Ffs::which(" << exe << ") " << r << "\n";
+
 
 Ffs::remove(exe);
 Ffs::remove(noexe);
