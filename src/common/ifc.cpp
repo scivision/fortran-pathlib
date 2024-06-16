@@ -3,9 +3,18 @@
 #include <string>
 
 
+std::string Ffs::as_posix(std::string_view path)
+{
+  std::string buf(path);
+
+  fs_as_posix(buf.data());
+  return buf;
+}
+
+
 std::string Ffs::cpu_arch()
 {
-  if(std::string buf(fs_get_max_path(), '\0');
+  if(std::string buf(80, '\0');
       fs_cpu_arch(buf.data(), buf.size()) > 0)  FFS_LIKELY
     return buf.c_str();
 
@@ -24,7 +33,7 @@ std::string Ffs::exe_path()
 
 std::string Ffs::filesystem_type(std::string_view path)
 {
-  if(std::string name(fs_get_max_path(), '\0');
+  if(std::string name(80, '\0');
       fs_filesystem_type(path.data(), name.data(), name.size()))
     return name.c_str();
 

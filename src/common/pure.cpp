@@ -49,30 +49,6 @@ std::string fs_drop_slash(std::string_view sv)
 }
 
 
-void fs_as_posix(char* path)
-{
-  const std::string p = Ffs::as_posix(std::string_view(path));
-  fs_str2char(p, path, p.length()+1);
-}
-
-std::string Ffs::as_posix(std::string_view path){
-  // force posix file separator on Windows
-  if (fs_is_windows())
-    return std::filesystem::path(path).generic_string();
-
-  std::string r(path);
-
-  if (fs_is_cygwin())
-#ifdef __cpp_lib_ranges
-    std::ranges::replace(r, '\\', '/');
-#else
-    std::replace(r.begin(), r.end(), '\\', '/');
-#endif
-
-  return r;
-}
-
-
 std::string Ffs::lexically_normal(std::string_view path){
   return std::filesystem::path(path).lexically_normal().generic_string();
 }

@@ -121,6 +121,19 @@ const char* fs_devnull(){
 }
 
 
+void fs_as_posix(char* path)
+{
+// force posix file seperator on Windows
+  if(!(fs_is_windows() || fs_is_cygwin()))
+    return;
+
+  for (char* p = path; *p != '\0'; p++) {
+    if (*p == '\\')
+      *p = '/';
+  }
+}
+
+
 size_t fs_strncpy(const char* path, char* result, const size_t buffer_size)
 {
 // check size before copy
