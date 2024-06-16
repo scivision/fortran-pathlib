@@ -134,6 +134,23 @@ void fs_as_posix(char* path)
 }
 
 
+bool fs_is_subdir(const char* subdir, const char* dir)
+{
+  // is subdir a subdirectory of dir
+  const size_t m = fs_get_max_path();
+
+  char* buf = (char*) malloc(m);
+  if(!buf) return false;
+
+  const size_t L = fs_relative_to(dir, subdir, buf, m);
+  const bool yes = L > 0 && !(L==1 && buf[0] == '.') && strncmp(buf, "..", 2) != 0;
+
+  free(buf);
+
+  return yes;
+}
+
+
 size_t fs_strncpy(const char* path, char* result, const size_t buffer_size)
 {
 // check size before copy

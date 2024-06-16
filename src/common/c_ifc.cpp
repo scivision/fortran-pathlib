@@ -17,10 +17,6 @@ bool fs_is_reserved(const char* path){ return Ffs::is_reserved(std::string_view(
 
 bool fs_is_readable(const char* path){ return Ffs::is_readable(std::string_view(path)); }
 
-bool fs_is_subdir(const char* subdir, const char* dir){
-  return Ffs::is_subdir(std::string_view(subdir), std::string_view(dir));
-}
-
 bool fs_is_symlink(const char* path){ return Ffs::is_symlink(std::string_view(path)); }
 
 bool fs_is_writable(const char* path){ return Ffs::is_writable(std::string_view(path)); }

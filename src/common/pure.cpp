@@ -126,16 +126,3 @@ std::string Ffs::relative_to(std::string_view base, std::string_view other){
 std::string Ffs::proximate_to(std::string_view base, std::string_view other){
   return std::filesystem::path(other).lexically_proximate(base).lexically_normal().generic_string();
 }
-
-
-bool Ffs::is_subdir(std::string_view subdir, std::string_view dir)
-{
-  const std::string r = Ffs::relative_to(dir, subdir);
-
-  return !r.empty() && r != "." &&
-#ifdef __cpp_lib_starts_ends_with
-    !r.starts_with("..");
-#else
-    (r[0] != '.' || (r.length() > 1 && r[1] != '.'));
-#endif
-}

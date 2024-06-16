@@ -56,6 +56,12 @@ bool Ffs::is_safe_name(std::string_view filename)
 }
 
 
+bool Ffs::is_subdir(std::string_view subdir, std::string_view dir)
+{
+  return fs_is_subdir(subdir.data(), dir.data());
+}
+
+
 std::string Ffs::lib_path()
 {
   if(std::string buf(fs_get_max_path(), '\0');

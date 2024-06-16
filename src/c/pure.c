@@ -244,21 +244,3 @@ size_t fs_proximate_to(const char* base, const char* other, char* result, const 
 
   return fs_strncpy(other, result, buffer_size);
 }
-
-
-bool fs_is_subdir(const char* subdir, const char* dir)
-{
-  // is subdir a subdirectory of dir
-  const size_t m = fs_get_max_path();
-
-  char* buf = (char*) malloc(m);
-  if(!buf) return false;
-
-  size_t L = fs_relative_to(dir, subdir, buf, m);
-  const bool yes = L > 0 && !(L==1 && buf[0] == '.') && strncmp(buf, "..", 2) != 0;
-
-  free(buf);
-
-  return yes;
-
-}
