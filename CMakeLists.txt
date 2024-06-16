@@ -95,6 +95,7 @@ src/common/os.c
 src/common/partition.c
 src/common/uid.c
 src/common/uname.c
+src/common/which.c
 src/common/windows.c
 $<$<TARGET_EXISTS:ffilesystem_Fortran>:$<TARGET_OBJECTS:ffilesystem_Fortran>>
 )

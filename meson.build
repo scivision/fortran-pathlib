@@ -20,6 +20,7 @@ csrcs = files('src/common/common.c',
 'src/common/home.c',
 'src/common/uid.c',
 'src/common/uname.c',
+'src/common/which.c',
 'src/common/windows.c'
 )
 

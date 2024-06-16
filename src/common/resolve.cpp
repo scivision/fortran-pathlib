@@ -72,54 +72,6 @@ bool Ffs::equivalent(std::string_view path1, std::string_view path2)
 }
 
 
-std::string Ffs::which(std::string_view name)
-// find full path to executable name on Path
-{
-  std::string n(name);
-
-  if (Ffs::is_exe(n))
-    return Ffs::as_posix(n);
-
-  // relative directory component, but path was not a file
-  if(Ffs::file_name(n) != n)
-    return {};
-
-  // Windows gives priority to cwd, so check that first
-  if(fs_is_windows()){
-    if(std::string t = Ffs::get_cwd() + "/" + n; Ffs::is_exe(t))
-      return Ffs::as_posix(t);
-  }
-  const char pathsep = fs_pathsep();
-
-  const std::string path = Ffs::get_env("PATH");
-  if (path.empty()) FFS_UNLIKELY
-  {
-    std::cerr << "ERROR:ffilesystem:which: Path environment variable not set\n";
-    return {};
-  }
-
-  std::string::size_type start = 0;
-  std::string::size_type end = path.find_first_of(pathsep, start);
-  std::string p;
-
-  while (end != std::string::npos) {
-    p = path.substr(start, end - start) + "/" + n;
-    if (FS_TRACE) std::cout << "TRACE:ffilesystem:which: " << p << "\n";
-    if (Ffs::is_exe(p))
-      return Ffs::as_posix(p);
-
-    start = end + 1;
-    end = path.find_first_of(pathsep, start);
-  }
-
-  p = path.substr(start) + "/" + n;
-  if(Ffs::is_exe(p))
-    return Ffs::as_posix(p);
-
-  return {};
-}
-
-
 std::string Ffs::make_absolute(std::string_view path, std::string_view base)
 {
   const std::string out = Ffs::expanduser(path);

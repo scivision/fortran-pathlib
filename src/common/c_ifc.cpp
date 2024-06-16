@@ -112,11 +112,6 @@ std::string::size_type fs_suffix(const char* path,
   return fs_str2char(Ffs::suffix(std::string_view(path)), result, buffer_size);
 }
 
-std::string::size_type fs_which(const char* name,
-                         char* result, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::which(std::string_view(name)), result, buffer_size);
-}
-
 std::string::size_type fs_with_suffix(const char* path, const char* new_suffix,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::with_suffix(std::string_view(path), std::string_view(new_suffix)), result, buffer_size);
