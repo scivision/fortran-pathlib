@@ -11,8 +11,8 @@ bool fs_touch(const char* path)
   if(fs_exists(path))
     return fs_set_modtime(path);
 
-  FILE* fid = fopen(path, "a+b");
-  if(!fid){
+  FILE* fid = fopen(path, "w");
+  if(fid == NULL){
     fprintf(stderr, "ERROR:ffilesystem:touch:fopen %s => %s\n", path, strerror(errno));
     return false;
   }
