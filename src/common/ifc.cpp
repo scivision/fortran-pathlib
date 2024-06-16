@@ -49,6 +49,13 @@ std::string Ffs::get_homedir()
   return {};
 }
 
+
+bool Ffs::is_safe_name(std::string_view filename)
+{
+  return fs_is_safe_name(filename.data());
+}
+
+
 std::string Ffs::lib_path()
 {
   if(std::string buf(fs_get_max_path(), '\0');

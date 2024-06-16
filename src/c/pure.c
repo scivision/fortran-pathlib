@@ -13,8 +13,6 @@
 #include <stdlib.h> // malloc
 #include <string.h>
 
-#include <ctype.h> // isalnum
-
 
 bool fs_cpp(){
 // tell if fs core is C or C++
@@ -221,35 +219,6 @@ bool fs_is_absolute(const char* path)
   cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
 
   return cwk_path_is_absolute(path);
-}
-
-
-bool fs_is_safe_name(const char* filename)
-{
-
-const size_t L = strlen(filename);
-
-if(L == 0)
-  return false;
-
-if(fs_is_windows() && filename[L-1] == '.')
-  return false;
-
-for (size_t i = 0; i < L; i++) {
-  if(isalnum(filename[i]))
-    continue;
-
-  switch (filename[i]) {
-    case '_': case '-': case '.': case '~': case '@': case '#': case '$':
-    case '%': case '^': case '&': case '(': case ')': case '[': case ']':
-    case '{': case '}': case '+': case '=': case ',': case '!':
-      continue;
-    default:
-      return false;
-  }
-}
-
-return true;
 }
 
 

@@ -3,16 +3,8 @@
 
 #include "ffilesystem.h"
 
-#include <algorithm>  // for __fn, all_of, find, replace
-#include <cctype> // for std::isalnum
 #include <string>
-#include <vector>
 #include <iostream>
-
-#if __has_include(<ranges>)
-#include <ranges>
-#endif
-
 
 
 // tell if Ffilesystme core is C or C++
@@ -121,44 +113,6 @@ std::string Ffs::root(std::string_view path){
 
 bool Ffs::is_absolute(std::string_view path){
   return std::filesystem::path(path).is_absolute();
-}
-
-
-static bool fs_is_safe_char(const char c)
-{
-  // unordered_set<char>  8us
-  // set<char, std::less<>>  6us
-  // vector<char> 0.3us so much faster!
-  const std::vector<char> safe {'_', '-', '.', '~', '@', '#', '$', '%', '^', '&', '(', ')', '[', ']', '{', '}', '+', '=', ',', '!'};
-
-  return std::isalnum(c) ||
-#ifdef __cpp_lib_ranges
-    std::ranges::find(safe, c)
-#else
-    std::find(safe.begin(), safe.end(), c)
-#endif
-    != safe.end();
-}
-
-
-bool Ffs::is_safe_name(std::string_view filename)
-{
-  // check that only shell-safe characters are in filename using std::isalnum and a c++ set
-  // hasn't been fully tested yet across operating systems and file systems--let us know if character(s) should be unsafe
-  // does NOT check for reserved or device names
-  // => filenames only, not paths
-  // https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file
-  // we do not consider whitespaces, quotes, or ticks safe, as they can be confusing in shell scripts and command line usage
-
-  // empty check for MSVC
-  if(fs_is_windows() && !filename.empty() && filename.back() == '.') FFS_UNLIKELY
-    return false;
-
-#ifdef __cpp_lib_ranges
-  return std::ranges::all_of(filename, fs_is_safe_char);
-#else
-  return std::all_of(filename.begin(), filename.end(), fs_is_safe_char);
-#endif
 }
 
 

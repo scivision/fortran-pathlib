@@ -19,6 +19,41 @@
 #include "ffilesystem.h"
 
 
+bool fs_is_safe_name(const char* filename)
+{
+// check that only shell-safe characters are in filename using std::isalnum and a c++ set
+// hasn't been fully tested yet across operating systems and file systems--let us know if character(s) should be unsafe
+// does NOT check for reserved or device names
+// => filenames only, not paths
+// https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file
+// we do not consider whitespaces, quotes, or ticks safe, as they can be confusing in shell scripts and command line usage
+
+const size_t L = strlen(filename);
+
+if(L == 0)
+  return false;
+
+if(fs_is_windows() && filename[L-1] == '.')
+  return false;
+
+for (size_t i = 0; i < L; i++) {
+  if(isalnum(filename[i]))
+    continue;
+
+  switch (filename[i]) {
+    case '_': case '-': case '.': case '~': case '@': case '#': case '$':
+    case '%': case '^': case '&': case '(': case ')': case '[': case ']':
+    case '{': case '}': case '+': case '=': case ',': case '!':
+      continue;
+    default:
+      return false;
+  }
+}
+
+return true;
+}
+
+
 #ifdef __linux__
 static inline const char* fs_type_linux(const char* path)
 {

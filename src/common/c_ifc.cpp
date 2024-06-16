@@ -17,8 +17,6 @@ bool fs_is_reserved(const char* path){ return Ffs::is_reserved(std::string_view(
 
 bool fs_is_readable(const char* path){ return Ffs::is_readable(std::string_view(path)); }
 
-bool fs_is_safe_name(const char* filename){ return Ffs::is_safe_name(std::string_view(filename)); }
-
 bool fs_is_subdir(const char* subdir, const char* dir){
   return Ffs::is_subdir(std::string_view(subdir), std::string_view(dir));
 }
