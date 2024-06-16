@@ -73,6 +73,7 @@ jobs:
     timeout-minutes: 15
 
     strategy:
+      fail-fast: false
       matrix:
         gcc-version: [9, 10, 11]
         shared: [false]

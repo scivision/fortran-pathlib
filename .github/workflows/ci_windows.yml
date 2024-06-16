@@ -57,6 +57,7 @@ jobs:
     timeout-minutes: 10
 
     strategy:
+      fail-fast: false
       matrix:
         cpp: [false, true]
       # github actions generally broken for shared lib, even when exe in cwd
