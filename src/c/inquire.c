@@ -27,9 +27,9 @@
 // preferred import order for stat()
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <errno.h>
 
 #include <stdio.h>
-#include <errno.h>
 
 
 #if defined(_MSC_VER)
@@ -171,18 +171,6 @@ fs_is_reserved(const char* path)
   free(s);
 
   return r;
-}
-
-
-time_t
-fs_get_modtime(const char* path)
-{
-  struct stat s;
-  if (!stat(path, &s))
-    return s.st_mtime;
-
-  fprintf(stderr, "ERROR:ffilesystem:fs_get_modtime: %s => %s\n", path, strerror(errno));
-  return 0;
 }
 
 

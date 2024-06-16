@@ -23,11 +23,14 @@ else
   if (fn2 /= "/foo/rel") error stop "did not make_absolute Unix /foo/rel, got: " // fn2
 endif
 
-if(make_absolute("rel", "") /= "rel") error stop "make_absolute empty base: " // make_absolute("rel", "")
+fn2 = make_absolute("rel", "")
+if(fn2 /= "rel") error stop "make_absolute empty base: " // fn2
 
-if(make_absolute("", "") /= "") error stop "make_absolute empty both: " // make_absolute("", "")
+fn2 = make_absolute("", "")
+if(fn2 /= "") error stop "make_absolute empty both: " // fn2
 
-if(make_absolute("", "rel") /= "rel") error stop "make_absolute empty path: " //make_absolute("", "rel")
+fn2 = make_absolute("", "rel")
+if(fn2 /= "rel") error stop "make_absolute empty path: " // fn2
 
 end subroutine test_make_absolute
 

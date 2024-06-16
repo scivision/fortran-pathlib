@@ -1,3 +1,6 @@
+#include <cstdint>
+#include <string>
+
 #include "ffilesystem.h"
 
 
@@ -54,12 +57,6 @@ std::string::size_type fs_getenv(const char* name,
 std::string::size_type fs_get_permissions(const char* path,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::get_permissions(std::string_view(path)), result, buffer_size);
-}
-
-
-std::string::size_type fs_expanduser(const char* path,
-                         char* result, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::expanduser(std::string_view(path)), result, buffer_size);
 }
 
 std::string::size_type fs_file_name(const char* path,

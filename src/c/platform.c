@@ -111,22 +111,3 @@ bool fs_set_cwd(const char* path)
   fprintf(stderr, "ERROR:ffilesystem:set_cwd: %s    %s\n", path, strerror(errno));
   return false;
 }
-
-
-size_t fs_expanduser(const char* path, char* result, const size_t buffer_size)
-{
-  // The path is also normalized by defintion
-  if(path[0] != '~')
-    return fs_normal(path, result, buffer_size);
-  if(strlen(path) > 1 && path[1] != '/')
-    return fs_normal(path, result, buffer_size);
-
-  if (!fs_get_homedir(result, buffer_size))
-    return 0;
-
-  // ~ alone
-  if (strlen(path) < 3)
-    return strlen(result);
-
-  return fs_join(result, path+2, result, buffer_size);
-}

@@ -29,7 +29,7 @@ std::string::size_type fs_str2char(std::string_view s, char* result, const std::
 }
 
 
-std::string fs_drop_slash(std::string_view sv)
+std::string Ffs::drop_slash(std::string_view sv)
 {
   // drop single final "/" if present
   std::string s(sv);
@@ -52,7 +52,7 @@ std::string Ffs::make_preferred(std::string_view path){
 
 
 std::string Ffs::normal(std::string_view path){
-  return fs_drop_slash(std::filesystem::path(path).lexically_normal().generic_string());
+  return Ffs::drop_slash(std::filesystem::path(path).lexically_normal().generic_string());
 }
 
 
@@ -67,14 +67,14 @@ std::string Ffs::stem(std::string_view path){
 
 
 std::string Ffs::join(std::string_view path, std::string_view other){
-  return fs_drop_slash((std::filesystem::path(path) / other).lexically_normal().generic_string());
+  return Ffs::drop_slash((std::filesystem::path(path) / other).lexically_normal().generic_string());
 }
 
 
 std::string Ffs::parent(std::string_view path)
 {
   // have to drop_slash on input to get expected parent path
-  const std::string p = std::filesystem::path(fs_drop_slash(path)).parent_path().generic_string();
+  const std::string p = std::filesystem::path(Ffs::drop_slash(path)).parent_path().generic_string();
 
   if(FS_TRACE) std::cout << "TRACE:parent(" << path << ") => " << p << "\n";
 

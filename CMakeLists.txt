@@ -86,11 +86,15 @@ endif()
 
 
 add_library(ffilesystem src/common/common.c
+src/common/compiler.c
 src/common/cygwin.c
-src/common/home.c
-src/common/partition.c
 src/common/dynamic.c
+src/common/home.c
+src/common/os.c
+src/common/partition.c
+src/common/uid.c
 src/common/uname.c
+src/common/windows.c
 $<$<TARGET_EXISTS:ffilesystem_Fortran>:$<TARGET_OBJECTS:ffilesystem_Fortran>>
 )
 if(HAVE_CXX_FILESYSTEM)
@@ -105,6 +109,7 @@ if(HAVE_CXX_FILESYSTEM)
     src/common/pure.cpp
     src/common/resolve.cpp
     src/common/symlink.cpp
+    src/common/time.cpp
     src/common/touch.cpp
     )
 else()
@@ -117,6 +122,7 @@ else()
   src/c/pure.c
   src/c/resolve.c
   src/c/symlink.c
+  src/c/time.c
   src/c/touch.c
   ${cwalk_SOURCE_DIR}/src/cwalk.c
   )

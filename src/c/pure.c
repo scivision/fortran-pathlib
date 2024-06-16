@@ -8,7 +8,6 @@
 #include <cwalk.h>
 
 #include <stdbool.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h> // malloc
 #include <string.h>
@@ -176,14 +175,14 @@ size_t fs_with_suffix(const char* path, const char* suffix,
     return fs_stem(path, result, buffer_size);
 
   if(path[0] == '.'){
-    const size_t L = strlen(path) + strlen(suffix);
-    if (L >= buffer_size){
+    // workaround for leading dot filename
+    const int L = snprintf(result, buffer_size, "%s%s", path, suffix);
+    if (L >= (int) buffer_size){
       fprintf(stderr, "ERROR:ffilesystem:fs_with_suffix: buffer_size too small for string\n");
       return 0;
     }
-    // workaround for leading dot filename
-    snprintf(result, buffer_size, "%s%s", path, suffix);
-    return L;
+
+    return (size_t) L;
   }
 
   cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);

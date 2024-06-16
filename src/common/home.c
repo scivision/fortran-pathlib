@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <errno.h>
 
 // get_homedir backup method
 #ifdef _WIN32
@@ -43,9 +44,57 @@ size_t fs_get_homedir(char* path, const size_t buffer_size)
   return strlen(path);
 #else
   const char *h = getpwuid(geteuid())->pw_dir;
-  if (!h)
+  if (!h){
+    fprintf(stderr, "ERROR:ffilesystem:fs_get_homedir:getpwuid: %s\n", strerror(errno));
     return 0;
+  }
 
   return fs_strncpy(h, path, buffer_size);
 #endif
+}
+
+
+size_t fs_expanduser(const char* path, char* result, const size_t buffer_size)
+{
+  const size_t L = strlen(path);
+  if(L < 1){
+    result[0] = '\0';  // avoid problem with hanging old buffer info
+    return 0;
+  }
+  if(path[0] != '~')
+    return fs_strncpy(path, result, buffer_size);
+  if(L > 1 && !(path[1] == '/' || (fs_is_windows() && path[1] == '\\')))
+    return fs_strncpy(path, result, buffer_size);
+
+  char* buf = (char*) malloc(buffer_size);
+  if(!buf) return 0;
+
+  const size_t L1 = fs_get_homedir(buf, buffer_size);
+  if(L1 == 0){
+    free(buf);
+    return 0;
+  }
+  if (L < 3){
+    fs_strncpy(buf, result, buffer_size);
+    free(buf);
+    return L1;
+  }
+
+  // handle initial duplicated file separators
+  size_t i = 2;
+  while (i < L && (path[i] == '/' || (fs_is_windows() && path[i] == '\\')))
+    i++;
+
+  const int N = snprintf(result, buffer_size, "%s/%s", buf, path+i);
+
+  free(buf);
+
+  if (N < 0 || N >= (int) buffer_size){
+    fprintf(stderr, "ERROR:ffilesystem:fs_expanduser: buffer overflow %s\n", strerror(errno));
+    return 0;
+  }
+
+  fs_drop_slash(result);
+
+  return strlen(result);
 }

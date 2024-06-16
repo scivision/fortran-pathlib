@@ -13,7 +13,7 @@ if(expanduser("~P") /= "~P") error stop "expanduser ~P failed: " // expanduser("
 
 valgrind: block
 
-character(:), allocatable :: s1, s2
+character(:), allocatable :: s1, s2, s3
 
 !> does expanduser() get homedir correctly
 s1 = expanduser("~")
@@ -36,24 +36,24 @@ if (s1 /= s2) error stop "expanduser trailing separator failed: " // s1 // " /= 
 if (expanduser("~//") /= s2) error stop "expanduser double separator failed: " // &
    expanduser("~//") // " /= " // s2
 
-!> the C code is drastically simpler by using CWalk join that normalizes
-if(fs_cpp()) then
-  s1 = get_homedir() // "/.."
-else
-  s1 = parent(get_homedir())
-endif
+s1 = get_homedir() // "/.."
 
 !> double dot
-s2 = expanduser("~/..")
+s3 = "~/.."
+s2 = expanduser(s3)
+if (s2 /= s1) error stop "expanduser(" // s3 // ") failed: " // s2 // " /= " // s1
+print *, "PASS: expanduser("//s3//")  ", s2
 
-if (s2 /= s1) error stop "expanduser(~/..) failed: " // s2 // " /= " // s1
-
-s2 = expanduser("~/../")
-if (s2 /= s1) error stop "expanduser(~/../) failed: " // s2 // " /= " // s1
+s3 = "~/../"
+s2 = expanduser(s3)
+if (s2 /= s1) error stop "expanduser(" // s3 // ") failed: " // s2 // " /= " // s1
+print *, "PASS: expanduser("//s3//")  ", s2
 
 !> double dot separator
-s2 = expanduser("~//..")
-if(s2 /= s1) error stop "expanduser ~//.. failed: " // s2 // " /= " // s1
+s3 = "~//.."
+s2 = expanduser(s3)
+if(s2 /= s1) error stop "expanduser("//s3//") failed: " // s2 // " /= " // s1
+print *, "PASS: expanduser("//s3//")  ", s2
 
 
 end block valgrind

@@ -34,7 +34,7 @@ int main(void){
 
   r = Ffs::expanduser(".");
   if (r != ".")
-    err("expanduser('.') != '.'");
+    err("expanduser('.') != '.'" + r);
 
   r = Ffs::expanduser("~");
   h = Ffs::get_homedir();

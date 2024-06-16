@@ -12,6 +12,16 @@ std::string Ffs::as_posix(std::string_view path)
 }
 
 
+std::string Ffs::compiler()
+{
+  if(std::string buf(80, '\0');
+      fs_compiler(buf.data(), buf.size()) > 0)  FFS_LIKELY
+    return buf.c_str();
+
+  return {};
+}
+
+
 std::string Ffs::cpu_arch()
 {
   if(std::string buf(80, '\0');
@@ -31,6 +41,17 @@ std::string Ffs::exe_path()
   return {};
 }
 
+
+std::string Ffs::expanduser(std::string_view path)
+{
+  if(std::string buf(fs_get_max_path(), '\0');
+      fs_expanduser(path.data(), buf.data(), buf.size())) FFS_LIKELY
+    return buf.c_str();
+
+  return {};
+}
+
+
 std::string Ffs::filesystem_type(std::string_view path)
 {
   if(std::string name(80, '\0');
@@ -39,6 +60,7 @@ std::string Ffs::filesystem_type(std::string_view path)
 
   return {};
 }
+
 
 std::string Ffs::get_homedir()
 {

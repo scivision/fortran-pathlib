@@ -17,38 +17,6 @@
 #include <iostream>
 #include <system_error> // for error_code
 
-#if __has_include(<format>)
-#include <format>
-#endif
-
-
-std::string Ffs::compiler()
-{
-#ifdef __cpp_lib_format
-
-#if defined(__INTEL_LLVM_COMPILER)
-  return std::format("Intel LLVM {} {}", __INTEL_LLVM_COMPILER,  __VERSION__);
-#elif defined(__NVCOMPILER_LLVM__)
-  return std::format("NVIDIA nvc {}.{}.{}", __NVCOMPILER_MAJOR__, __NVCOMPILER_MINOR__, __NVCOMPILER_PATCHLEVEL__);
-#elif defined(__clang__)
-  #ifdef __VERSION__
-    return std::format("Clang {}", __VERSION__);
-  #else
-    return std::format("Clang {}.{}.{}", __clang_major__, __clang_minor__, __clang_patchlevel__);
-  #endif
-#elif defined(__GNUC__)
-  return std::format("GNU GCC {}.{}.{}", __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__);
-#elif defined(_MSC_VER)
-  return std::format("MSVC {}", _MSC_FULL_VER);
-#else
-  return {};
-#endif
-
-#else
-  return {};
-#endif
-}
-
 
 std::string Ffs::get_env(std::string_view name)
 {
@@ -108,36 +76,4 @@ bool Ffs::chdir(std::string_view path)
 
   std::cerr << "ERROR:ffilesystem:chdir: " << ec.message() << "\n";
   return false;
-}
-
-
-std::string Ffs::expanduser(std::string_view path)
-{
-  if(path.empty()) FFS_UNLIKELY
-    return {};
-  // cannot call .front() on empty string_view() (MSVC)
-
-  if(path.front() != '~')
-    return std::string(path);
-
-  const std::string filesep = {'/', std::filesystem::path::preferred_separator};
-
-  // second character is not a file separator
-  if(path.length() > 1 && filesep.find(path[1]) == std::string::npos)
-    return std::string(path);
-
-  const std::string h = Ffs::get_homedir();
-  if (h.empty()) FFS_UNLIKELY
-    return {};
-
-  const std::string p = fs_drop_slash(path);
-  if (p.length() < 3)
-    return h;
-
-// handle initial duplicated file separators. NOT .lexical_normal to handle "~/.."
-  std::string::size_type i = 2;
-  while(i < p.length() && filesep.find(p[i]) != std::string::npos)
-    i++;
-
-  return (std::filesystem::path(h) / p.substr(i)).generic_string();
 }

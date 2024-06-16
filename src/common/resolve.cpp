@@ -1,6 +1,8 @@
 #include "ffilesystem.h"
 
 #include <iostream>
+#include <string>
+#include <system_error>
 
 
 std::string Ffs::canonical(std::string_view path, const bool strict)

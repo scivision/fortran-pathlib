@@ -11,11 +11,16 @@ endif
 fsrcs = fortran ? files('src/common/fortran/filesystem.F90') : []
 
 csrcs = files('src/common/common.c',
+'src/common/compiler.c',
 'src/common/cygwin.c',
-'src/common/partition.c',
 'src/common/dynamic.c',
+'src/common/os.c',
+'src/common/partition.c',
 'src/common/home.c',
-'src/common/uname.c')
+'src/common/uid.c',
+'src/common/uname.c',
+'src/common/windows.c'
+)
 
 cppsrcs = files(
   'src/common/copy.cpp',
@@ -28,6 +33,7 @@ cppsrcs = files(
 'src/common/platform.cpp',
 'src/common/resolve.cpp',
 'src/common/symlink.cpp',
+'src/common/time.cpp',
 'src/common/touch.cpp'
 )
 

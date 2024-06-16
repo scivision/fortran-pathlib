@@ -120,13 +120,13 @@ public:
 
   [[nodiscard]] static std::string cpu_arch();
 
+  [[nodiscard]] static std::string drop_slash(std::string_view);
+
   // Disallow creating an instance of this object
   Ffs() = delete;
 };
 
 std::string::size_type fs_str2char(std::string_view, char*, const std::string::size_type);
-std::string fs_drop_slash(std::string_view);
-
 
 #endif // __cpp_lib_filesystem
 
@@ -183,6 +183,7 @@ FFS_NODISCARD char fs_pathsep();
 FFS_NODISCARD const char* fs_devnull();
 
 FFS_NODISCARD bool fs_is_admin();
+FFS_NODISCARD bool fs_is_android();
 FFS_NODISCARD bool fs_is_bsd();
 FFS_NODISCARD bool fs_is_macos();
 FFS_NODISCARD bool fs_is_linux();
@@ -195,6 +196,7 @@ FFS_NODISCARD bool fs_is_cygwin();
 FFS_NODISCARD bool fs_is_safe_name(const char*);
 
 void fs_as_posix(char*);
+void fs_drop_slash(char*);
 
 size_t fs_normal(const char*, char*, const size_t);
 

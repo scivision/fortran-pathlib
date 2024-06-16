@@ -5,21 +5,18 @@
 #endif
 
 #include "ffilesystem.h"
-#include <cwalk.h>
 
 #include <stdbool.h>
 #include <stdio.h>
-#include <stddef.h> // size_t
-
 #include <limits.h> // realpath()
 #include <stdlib.h> // malloc(), free(), realpath(), _fullpath()
 
 #include <string.h>
-#include <errno.h>
 
 // preferred import order for stat()
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <errno.h>
 
 
 size_t fs_canonical(const char* path, const bool strict, char* result, const size_t buffer_size)
@@ -28,13 +25,14 @@ size_t fs_canonical(const char* path, const bool strict, char* result, const siz
   // distinct from resolve()
 
   // distinct from resolve
-  if(strlen(path) == 0)
+  size_t L = strlen(path);
+  if(L == 0)
     return 0;
 
-  if(strlen(path) == 1 && path[0] == '.')
+  if(L == 1 && path[0] == '.')
     return fs_get_cwd(result, buffer_size);
 
-  size_t L = fs_expanduser(path, result, buffer_size);
+  L = fs_expanduser(path, result, buffer_size);
   if(!L)
     return 0;
 
@@ -44,7 +42,7 @@ size_t fs_canonical(const char* path, const bool strict, char* result, const siz
       return 0;
     }
   } else if (!fs_exists(result))
-    return L;
+    return fs_normal(result, result, buffer_size);
 
   char* buf = (char*) malloc(buffer_size);
   if(!buf) return 0;
@@ -79,7 +77,8 @@ size_t fs_resolve(const char* path, const bool strict, char* result, const size_
   // also expands ~
   // distinct from canonical()
 
-  if(strlen(path) == 0 || (strlen(path) == 1 && path[0] == '.'))
+  size_t L = strlen(path);
+  if(L == 0 || (L == 1 && path[0] == '.'))
     return fs_get_cwd(result, buffer_size);
 
   if(!fs_expanduser(path, result, buffer_size))
@@ -102,7 +101,7 @@ size_t fs_resolve(const char* path, const bool strict, char* result, const size_
 #endif
   free(buf);
 
-  size_t L = strlen(result);
+  L = strlen(result);
   if(L >= buffer_size){
     fprintf(stderr, "ERROR:ffilesystem:resolve: buffer overflow\n");
     L = 0;
@@ -172,11 +171,15 @@ size_t fs_which(const char* name, char* result, const size_t buffer_size)
   char* p = strtok(path, sep);  // NOSONAR
 
   while (p) {
-    snprintf(result, buffer_size, "%s/%s", p, name);
+    const int N = snprintf(result, buffer_size, "%s/%s", p, name);
+    if(N < 0 || N >= (int) buffer_size){
+      fprintf(stderr, "ERROR:ffilesystem:which: buffer overflow\n");
+      return 0;
+    }
 
     if(fs_is_exe(result)){
       fs_as_posix(result);
-      return strlen(result);
+      return (size_t) N;
     }
     p = strtok(NULL, sep);  // NOSONAR
   }
