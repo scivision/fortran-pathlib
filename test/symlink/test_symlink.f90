@@ -29,8 +29,16 @@ endif
 
 tgt_dir = parent(tgt_dir)
 
+!> create and verify target file
 tgt = join(tgt_dir, "test.txt")
+
 call touch(tgt)
+print '(a)', "created target file " // tgt
+
+if(.not. is_file(tgt)) then
+  write(stderr, "(a)") "ERROR: is_file("//tgt//") should be true for existing regular file target"
+  error stop
+endif
 
 link = join(tgt_dir, "test.link")
 linko = join(tgt_dir, "test_oo.link")
@@ -105,23 +113,18 @@ call create_symlink(tgt_dir, link_dir)
 ! call create_symlink("", "")  !< this error stops
 
 !> file symlinks
-if(.not. is_file(tgt)) then
-  write(stderr, "(a)") "is_file("//tgt//") should be true for existing regular file target"
-  error stop
-endif
-
 if(is_symlink(tgt)) then
-  write(stderr, '(a)') "is_symlink("//tgt//") should be false for non-symlink target"
+  write(stderr, '(a)') "ERROR: is_symlink("//tgt//") should be false for non-symlink target"
   error stop
 endif
 
 if(.not. is_symlink(link)) then
-  write(stderr, '(a)') "is_symlink("//link//") should be true"
+  write(stderr, '(a)') "ERROR: is_symlink("//link//") should be true"
   error stop
 endif
 
 if(.not. is_file(link)) then
-  write(stderr, "(a)") "is_file("//link//") should be true for existing regular file target " // tgt
+  write(stderr, "(a)") "ERROR: is_file("//link//") should be true for existing regular file target " // tgt
   error stop
 endif
 
@@ -130,12 +133,12 @@ print '(a)', "PASSED: test_symlink: file"
 !> directory symlinks
 if(is_symlink(tgt_dir)) error stop "is_symlink() should be false for non-symlink dir"
 if(.not. is_dir(link_dir)) then
-  write(stderr, '(a)') "is_dir("//link_dir//") should be true for existing regular dir"
+  write(stderr, '(a)') "ERROR: is_dir("//link_dir//") should be true for existing regular dir"
   error stop
 endif
 
 if(.not. is_symlink(link_dir)) then
-  write(stderr, '(a)') "is_symlink() should be true for symlink dir: " // link_dir
+  write(stderr, '(a)') "ERROR: is_symlink() should be true for symlink dir: " // link_dir
   error stop
 endif
 

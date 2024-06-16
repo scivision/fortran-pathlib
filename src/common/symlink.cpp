@@ -50,27 +50,7 @@ bool Ffs::create_symlink(std::string_view target, std::string_view link)
   }
 
 #ifdef WIN32_SYMLINK
-// https://gcc.gnu.org/onlinedocs/libstdc++/manual/status.html#iso.2017.specific
-// 30.10.2.1 [fs.conform.9945] The behavior of the filesystem library implementation
-// will depend on the target operating system. Some features will not be supported
-// on some targets.
-// Symbolic links and file permissions are not supported on Windows.
-
-  DWORD p = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
-
-  if(Ffs::is_dir(target))
-    p |= SYMBOLIC_LINK_FLAG_DIRECTORY;
-
-  if (CreateSymbolicLinkA(link.data(), target.data(), p)) FFS_LIKELY
-    return true;
-
-  const DWORD err = GetLastError();
-  std::string msg = "ERROR:Ffs:CreateSymbolicLink";
-  if(err == ERROR_PRIVILEGE_NOT_HELD)
-    msg += "Enable Windows developer mode to use symbolic links: https://learn.microsoft.com/en-us/windows/apps/get-started/developer-mode-features-and-debugging";
-
-  std::cerr << msg << ": " << link << " => " << target << " " << std::system_category().message(GetLastError()) << "\n";
-  return false;
+  return fs_win32_create_symlink(target.data(), link.data());
 #else
   std::error_code ec;
 

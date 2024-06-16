@@ -68,16 +68,7 @@ bool fs_create_symlink(const char* target, const char* link)
   }
 
 #ifdef _WIN32
-  DWORD p = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
-
-  if(fs_is_dir(target))
-    p |= SYMBOLIC_LINK_FLAG_DIRECTORY;
-
-  const bool ok = CreateSymbolicLinkA(link, target, p);
-  if(!ok)
-    fs_win32_print_error(target, "create_symlink");
-
-  return ok;
+  return fs_win32_create_symlink(target, link);
 #else
   return symlink(target, link) == 0;
 #endif

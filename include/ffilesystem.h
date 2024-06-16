@@ -265,7 +265,7 @@ size_t fs_lib_path(char*, const size_t);
 
 size_t fs_compiler(char*, const size_t);
 
-FFS_NODISCARD bool fs_win32_is_symlink(const char*);
+bool fs_win32_create_symlink(const char*, const char*);
 
 size_t fs_make_tempdir(char*, const size_t);
 
