@@ -6,6 +6,8 @@
 
 #include "ffilesystem.h"
 
+#include <stdbool.h>
+#include <stdlib.h> // malloc, free
 #include <stdio.h>  // snprintf
 #include <string.h>
 

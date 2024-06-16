@@ -12,6 +12,7 @@
 
 #include <stdlib.h>  // malloc, free
 #include <string.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <errno.h>
 #include <ctype.h> // isalpha, toupper

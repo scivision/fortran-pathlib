@@ -6,6 +6,7 @@
 #include <map>
 #include <set>
 #include <cstdlib>
+#include <vector>
 
 #include "ffilesystem.h"
 #include "ffilesystem_bench.h"

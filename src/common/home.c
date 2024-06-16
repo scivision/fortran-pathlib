@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <errno.h>
+#include <stdlib.h> // malloc, free
 
 // get_homedir backup method
 #ifdef _WIN32

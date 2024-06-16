@@ -89,6 +89,7 @@ add_library(ffilesystem src/common/common.c
 src/common/compiler.c
 src/common/cygwin.c
 src/common/dynamic.c
+src/common/env.c
 src/common/home.c
 src/common/os.c
 src/common/partition.c

@@ -72,6 +72,22 @@ std::string Ffs::get_homedir()
 }
 
 
+bool Ffs::set_env(std::string_view name, std::string_view value)
+{
+  return fs_setenv(name.data(), value.data());
+}
+
+
+std::string Ffs::get_env(std::string_view name)
+{
+  if(std::string buf(fs_get_max_path(), '\0');
+      fs_getenv(name.data(), buf.data(), buf.size())) FFS_LIKELY
+    return buf.c_str();
+
+  return {};
+}
+
+
 bool Ffs::is_reserved(std::string_view filename)
 {
   return fs_is_reserved(filename.data());

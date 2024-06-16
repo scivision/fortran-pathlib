@@ -47,11 +47,6 @@ std::string::size_type fs_get_cwd(char* path, const std::string::size_type buffe
   return fs_str2char(Ffs::get_cwd(), path, buffer_size);
 }
 
-std::string::size_type fs_getenv(const char* name,
-                         char* result, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::get_env(std::string_view(name)), result, buffer_size);
-}
-
 std::string::size_type fs_get_permissions(const char* path,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::get_permissions(std::string_view(path)), result, buffer_size);
@@ -126,8 +121,6 @@ std::string::size_type fs_with_suffix(const char* path, const char* new_suffix,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::with_suffix(std::string_view(path), std::string_view(new_suffix)), result, buffer_size);
 }
-
-bool fs_setenv(const char* name, const char* value){ return Ffs::set_env(std::string_view(name), std::string_view(value)); }
 
 bool fs_set_cwd(const char *path){ return Ffs::chdir(path); }
 
