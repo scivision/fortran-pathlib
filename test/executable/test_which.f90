@@ -5,6 +5,22 @@ use filesystem
 
 implicit none
 
+integer :: argc, i
+character(2) :: argv
+
+argc = command_argument_count()
+
+if(argc > 0) then
+  call get_command_argument(1, argv, status=i)
+  if(i /= 0) error stop "could not get command argument 1"
+  read(argv, "(i2)") i
+else
+  i = 0
+endif
+
+
+if(i /= 0) call setenv("PATH", "")
+
 valgrind : block
 
 character(:), allocatable :: s1, s2, s3

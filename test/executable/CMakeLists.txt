@@ -36,15 +36,18 @@ endforeach()
 set_property(TEST Fortran_which PROPERTY WORKING_DIRECTORY $<TARGET_FILE_DIR:test_which_fortran>)
 # Windows CWD priority test with multi-config generators
 
-add_test(NAME Fortran_which_noPath COMMAND test_which_fortran)
+add_test(NAME Fortran_which_noPath COMMAND test_which_fortran 1)
+
+if(NOT WIN32)
+# windows emits error 135 since it can't find DLL.
 if(CMAKE_VERSION VERSION_LESS 3.22)
   set_property(TEST Fortran_which_noPath PROPERTY ENVIRONMENT "PATH=")
 else()
   set_property(TEST Fortran_which_noPath PROPERTY ENVIRONMENT_MODIFICATION "PATH=unset:")
 endif()
+endif()
+
 set_tests_properties(Fortran_which_noPath PROPERTIES
 WILL_FAIL true
 LABELS "Fortran"
-DISABLED $<BOOL:${WIN32}>
 )
-# Windows will give error 135 due to missing PATH
