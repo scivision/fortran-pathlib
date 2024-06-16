@@ -26,14 +26,17 @@ valgrind : block
 character(:), allocatable :: s1, s2, s3
 
 if (is_windows()) then
-    s1 = which("cmd.exe")
+    s2 = "cmd.exe"
 else
-    s1 = which("ls")
+    s2 = "ls"
 endif
 
-print '(a)', "which: " // s1
+s1 = which(s2)
 
-if (len_trim(s1) == 0) error stop "ERROR:test_exe: which() failed"
+print '(a)', "which(" // s2 // ") " // s1
+
+if (len_trim(s1) == 0) error stop "ERROR:test_exe: which("//s2//") failed"
+deallocate(s2)
 
 if(s1 /= which(s1)) then
   write(stderr,'(a)') "ERROR:test_exe: which(absolute) failed: " // s1 // " /= " // which(s1)
