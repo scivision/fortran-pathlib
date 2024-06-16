@@ -141,39 +141,6 @@ fs_is_file(const char* path)
 }
 
 
-bool
-fs_is_reserved(const char* path)
-{
-  if(!fs_is_windows())
-    return false;
-
-  char* s = (char*) malloc(fs_get_max_path());
-  if(!s) return false;
-
-  if(!fs_stem(path, s, fs_get_max_path())){
-    free(s);
-    return false;
-  }
-
-  // convert to upper case
-  for (char* p = s; *p; ++p)
-    *p = (char) toupper(*p);
-
-  // check if the stem is a reserved device name
-  const bool r =
-    !strcmp(s, "CON") || !strcmp(s, "PRN") || !strcmp(s, "AUX") || !strcmp(s, "NUL") ||
-    !strcmp(s, "COM1") || !strcmp(s, "COM2") || !strcmp(s, "COM3") || !strcmp(s, "COM4") ||
-    !strcmp(s, "COM5") || !strcmp(s, "COM6") || !strcmp(s, "COM7") || !strcmp(s, "COM8") ||
-    !strcmp(s, "COM9") || !strcmp(s, "LPT1") || !strcmp(s, "LPT2") || !strcmp(s, "LPT3") ||
-    !strcmp(s, "LPT4") || !strcmp(s, "LPT5") || !strcmp(s, "LPT6") || !strcmp(s, "LPT7") ||
-    !strcmp(s, "LPT8") || !strcmp(s, "LPT9");
-
-  free(s);
-
-  return r;
-}
-
-
 uintmax_t
 fs_file_size(const char* path)
 {

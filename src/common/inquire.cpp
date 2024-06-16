@@ -7,10 +7,6 @@
 #include <cstring> // std::streerror
 #include <system_error>         // for error_code
 
-#if __has_include(<ranges>)
-#include <ranges>
-#endif
-
 
 bool Ffs::exists(std::string_view path)
 {
@@ -109,39 +105,6 @@ bool Ffs::is_file(std::string_view path)
   std::error_code ec;
   // disqualify reserved names
   return std::filesystem::is_regular_file(path, ec) && !ec && !Ffs::is_reserved(path);
-}
-
-
-bool Ffs::is_reserved(std::string_view path)
-// https://learn.microsoft.com/en-gb/windows/win32/fileio/naming-a-file#naming-conventions
-{
-  if (path.empty()) FFS_UNLIKELY
-    return false;
-
-  if (!fs_is_windows())
-    return false;
-
-#if defined(__cpp_lib_ranges)
-
-  // set<std::string_view, std::less<>> 2.5us
-  // unordered_set<std::string_view> 1.5us
-  // vector<std::string_view> 0.2us  so much faster!
-
-  const std::vector<std::string_view> r {
-      "CON", "PRN", "AUX", "NUL",
-      "COM0", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
-      "LPT0", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
-
-  std::string s = Ffs::stem(path);
-
-  std::ranges::transform(s.begin(), s.end(), s.begin(), ::toupper);
-
-  return std::ranges::find(r, s) != r.end();
-
-#else
-  std::cerr << "ERROR:ffilesystem:is_reserved: C++20 required for reserved names check\n";
-  return false;
-#endif
 }
 
 

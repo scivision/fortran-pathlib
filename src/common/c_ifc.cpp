@@ -16,8 +16,6 @@ bool fs_is_exe(const char* path){ return Ffs::is_exe(std::string_view(path)); }
 
 bool fs_is_file(const char* path){ return Ffs::is_file(std::string_view(path)); }
 
-bool fs_is_reserved(const char* path){ return Ffs::is_reserved(std::string_view(path)); }
-
 bool fs_is_readable(const char* path){ return Ffs::is_readable(std::string_view(path)); }
 
 bool fs_is_symlink(const char* path){ return Ffs::is_symlink(std::string_view(path)); }

@@ -72,6 +72,12 @@ std::string Ffs::get_homedir()
 }
 
 
+bool Ffs::is_reserved(std::string_view filename)
+{
+  return fs_is_reserved(filename.data());
+}
+
+
 bool Ffs::is_safe_name(std::string_view filename)
 {
   return fs_is_safe_name(filename.data());
