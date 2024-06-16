@@ -45,3 +45,17 @@ std::filesystem::file_time_type Ffs::get_modtime(std::string_view path)
   std::cerr << "ERROR:Ffs:get_modtime: " << ec.message() << "\n";
   return std::filesystem::file_time_type::min();
 }
+
+
+bool Ffs::set_modtime(std::string_view path)
+{
+  std::error_code ec;
+
+  std::filesystem::last_write_time(path, std::filesystem::file_time_type::clock::now(), ec);
+  if(!ec) FFS_LIKELY
+    return true;
+  // techinically IWYU <chrono> but that can break some compilers, and it works without the include.
+
+  std::cerr << "ERROR:ffilesystem:set_modtime: " << ec.message() << "\n";
+  return false;
+}

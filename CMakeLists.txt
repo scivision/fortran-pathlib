@@ -93,6 +93,7 @@ src/common/env.c
 src/common/home.c
 src/common/os.c
 src/common/partition.c
+src/common/touch.c
 src/common/uid.c
 src/common/uname.c
 src/common/which.c
@@ -112,7 +113,6 @@ if(HAVE_CXX_FILESYSTEM)
     src/common/resolve.cpp
     src/common/symlink.cpp
     src/common/time.cpp
-    src/common/touch.cpp
     )
 else()
   target_sources(ffilesystem PRIVATE
@@ -125,7 +125,6 @@ else()
   src/c/resolve.c
   src/c/symlink.c
   src/c/time.c
-  src/c/touch.c
   ${cwalk_SOURCE_DIR}/src/cwalk.c
   )
 endif()

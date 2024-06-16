@@ -135,6 +135,12 @@ std::string Ffs::longname(std::string_view in)
 }
 
 
+bool Ffs::touch(std::string_view path)
+{
+  return fs_touch(path.data());
+}
+
+
 std::string Ffs::to_cygpath(std::string_view in)
 {
   if(std::string buf(fs_get_max_path(), '\0');

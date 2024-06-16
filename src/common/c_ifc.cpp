@@ -141,5 +141,3 @@ std::string::size_type fs_make_tempdir(char* result, const std::string::size_typ
 bool fs_set_permissions(const char* path, int readable, int writable, int executable){
     return Ffs::set_permissions(std::string_view(path), readable, writable, executable);
 }
-
-bool fs_touch(const char* path){ return Ffs::touch(std::string_view(path)); }
