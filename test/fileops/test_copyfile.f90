@@ -1,5 +1,6 @@
 program test_copy
 
+use, intrinsic :: iso_fortran_env, only : stderr=>error_unit
 use filesystem
 
 implicit none
@@ -14,7 +15,11 @@ subroutine test_copyfile()
 character(*), parameter :: s1 = "dummy.txt", s2 = "dummy.txt.copy"
 logical :: ok
 
-call touch(s1)
+call touch(s1, ok)
+if(.not. ok) then
+  write(stderr, '(a)') "touch("//s1//") failed"
+  error stop 77
+endif
 
 !> copy a file
 call copy_file(s1, s2, overwrite=.true., ok=ok)

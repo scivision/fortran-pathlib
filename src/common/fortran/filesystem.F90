@@ -840,11 +840,17 @@ include "ifc0b.inc"
 end function
 
 
-subroutine touch(path)
+subroutine touch(path, ok)
 character(*), intent(in) :: path
+logical, intent(out), optional :: ok
 
-if(.not. fs_touch(trim(path) // C_NULL_CHAR)) then
-  write(stderr, '(a)') "filesystem:touch: " // trim(path)
+logical(C_BOOL) :: s
+s = fs_touch(trim(path) // C_NULL_CHAR)
+
+if(present(ok)) then
+  ok = s
+elseif(.not. s) then
+  write(stderr, '(a)') "ERROR:Ffilesystem: touch(" // trim(path) // ") failed."
   error stop
 end if
 end subroutine
@@ -935,7 +941,7 @@ s = fs_setenv(trim(name) // C_NULL_CHAR, trim(val) // C_NULL_CHAR)
 if(present(ok)) then
   ok = s
 elseif (.not. s) then
-  write(stderr,'(a,1x,i0)') "ERROR:Ffilesystem:setenv: " // trim(name)
+  write(stderr,'(a,1x,i0)') "ERROR:Ffilesystem: setenv(" // trim(name) // ") failed."
   error stop
 endif
 end subroutine

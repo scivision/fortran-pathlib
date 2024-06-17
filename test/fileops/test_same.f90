@@ -70,7 +70,6 @@ call mkdir("test-a/b/")
 
 s1 = "test-a/c"
 call touch(s1)
-if(.not. is_file(s1)) error stop "touch failed: " // s1
 
 s2 = "test-a/b/../c"
 

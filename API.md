@@ -123,9 +123,12 @@ The directories containing the file must already exist.
 Also updates the file access/modification times to current time.
 
 ```fortran
-call p%touch()
-! or
-call touch("myfile.ext")
+logical, optional :: ok
+type(path_t) :: p
+
+call p%touch(ok)
+
+call touch("myfile.ext", ok)
 ```
 
 Get last modified time of path.

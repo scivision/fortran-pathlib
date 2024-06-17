@@ -295,9 +295,10 @@ r = suffix(self%path_str)
 end function
 
 
-subroutine m_touch(self)
+subroutine m_touch(self, ok)
 class(path_t), intent(in) :: self
-call touch(self%path_str)
+logical, intent(out), optional :: ok
+call touch(self%path_str, ok)
 end subroutine
 
 

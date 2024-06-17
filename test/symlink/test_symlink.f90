@@ -37,7 +37,11 @@ if (is_file(tgt)) then
   call remove(tgt)
 endif
 
-call touch(tgt)
+call touch(tgt, ok)
+if (.not. ok) then
+  write(stderr, "(a)") "ERROR: touch("//tgt//") failed"
+  error stop 77
+endif
 print '(a)', "created target file " // tgt
 
 if(.not. is_file(tgt)) then

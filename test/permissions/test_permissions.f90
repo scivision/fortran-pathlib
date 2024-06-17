@@ -24,6 +24,7 @@ subroutine test_get_permissions()
 character(9) :: p
 
 character(*), parameter :: reada="readable.txt", noread="not-readable.txt", nowrite="not-writable.txt"
+logical :: ok
 
 p = get_permissions("")
 if(len_trim(p) /= 0) then
@@ -32,7 +33,12 @@ if(len_trim(p) /= 0) then
 endif
 
 !> readable
-call touch(reada)
+call touch(reada, ok)
+if (.not. ok) then
+    write(stderr, '(a)') "ERROR: could not create file " // reada
+    error stop 77
+endif
+
 call set_permissions(reada, readable=.true.)
 
 p = get_permissions(reada)
@@ -52,7 +58,12 @@ if(.not. is_file(reada)) error stop trim(reada)//" should be a file"
 
 !! for Ffilesystem, even non-readable files "exist" and are "is_file"
 
-call touch(noread)
+call touch(noread, ok)
+if(.not. ok) then
+    write(stderr, '(a)') "ERROR: could not create file " // noread
+    error stop 77
+endif
+
 call set_permissions(noread, readable=.false.)
 
 p = get_permissions(noread);

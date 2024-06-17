@@ -114,7 +114,7 @@ case ("set_perm")
   end block
 case ("touch")
   print *, "touch: " // trim(buf)
-  call touch(buf)
+  call touch(buf, ok)
 case ("remove")
   print *, "remove: " // trim(buf)
   call remove(buf)

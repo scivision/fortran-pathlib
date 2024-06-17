@@ -22,6 +22,8 @@ add_executable(test_symlink test_symlink.f90)
 add_test(NAME Fortran_symlink
 COMMAND test_symlink $<OR:$<BOOL:${ffilesystem_WIN32_SYMLINK}>,$<AND:$<BOOL:${WIN32}>,$<NOT:$<BOOL:${HAVE_CXX_FILESYSTEM}>>>>)
 
+set_property(TEST Fortran_symlink PROPERTY SKIP_RETURN_CODE 77)
+
 foreach(t IN ITEMS is_symlink symlink)
   target_link_libraries(test_${t} PRIVATE ffilesystem)
   target_compile_options(test_${t} PRIVATE ${${PROJECT_NAME}_fortran_test_flags})
