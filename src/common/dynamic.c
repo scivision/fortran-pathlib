@@ -32,7 +32,7 @@ size_t fs_exe_path(FFS_MUNUSED char* path, FFS_MUNUSED const size_t buffer_size)
   // https://stackoverflow.com/a/4031835
   // https://stackoverflow.com/a/1024937
 
-  FFS_MUNUSED size_t L;
+  size_t L=0;
 
 #if defined(_WIN32) || defined(__CYGWIN__)
  // https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
@@ -57,7 +57,7 @@ size_t fs_exe_path(FFS_MUNUSED char* path, FFS_MUNUSED const size_t buffer_size)
   L = strlen(path);
 #else
   fprintf(stderr, "ERROR:ffilesystem:exe_path: not implemented for this platform\n");
-  return 0;
+  return L;
 #endif
   fs_as_posix(path);
   return L;
@@ -66,7 +66,7 @@ size_t fs_exe_path(FFS_MUNUSED char* path, FFS_MUNUSED const size_t buffer_size)
 size_t fs_lib_path(FFS_MUNUSED char* path, FFS_MUNUSED const size_t buffer_size)
 {
 
-  FFS_MUNUSED size_t L;
+  size_t L=0;
 
 #if (defined(_WIN32) || defined(__CYGWIN__)) && defined(FS_DLL_NAME)
  // https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
@@ -83,9 +83,8 @@ size_t fs_lib_path(FFS_MUNUSED char* path, FFS_MUNUSED const size_t buffer_size)
   L = fs_strncpy(info.dli_fname, path, buffer_size);
 #else
   fprintf(stderr, "ERROR:ffilesystem:lib_path: not implemented for this platform\n");
-  return 0;
+  return L;
 #endif
-
   fs_as_posix(path);
   return L;
 }

@@ -954,14 +954,14 @@ character(:), allocatable :: r
 integer :: i, L
 
 call get_environment_variable(name, length=L, status=i)
-if (i/=0) then
-  r = ""
-  return
+
+if (i==0) then
+  allocate(character(L) :: r)
+  call get_environment_variable(name, value=r, status=i)
 endif
 
-allocate(character(L) :: r)
-call get_environment_variable(name, value=r, status=i)
 if (i/=0) r = ""
+
 end function
 
 
