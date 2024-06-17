@@ -1,5 +1,5 @@
 project('ffilesystem', ['c', 'cpp'],
-version: '5.6.6',
+version: '5.6.7',
 default_options: ['cpp_std=c++20', 'buildtype=release', 'b_ndebug=if-release'],
 meson_version : '>=1.4.0')
 
@@ -13,8 +13,9 @@ fsrcs = fortran ? files('src/common/fortran/filesystem.F90') : []
 csrcs = files('src/common/common.c',
 'src/common/compiler.c',
 'src/common/cygwin.c',
-'src/common/dynamic.c',
+'src/common/exepath.c',
 'src/common/env.c',
+'src/common/libpath.c',
 'src/common/os.c',
 'src/common/partition.c',
 'src/common/home.c',

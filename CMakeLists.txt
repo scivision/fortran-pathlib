@@ -12,7 +12,7 @@ endif()
 
 project(ffilesystem
 LANGUAGES C
-VERSION 5.6.6
+VERSION 5.6.7
 )
 
 include(CTest) # needed for "ctest -T memcheck"
@@ -88,9 +88,10 @@ endif()
 add_library(ffilesystem src/common/common.c
 src/common/compiler.c
 src/common/cygwin.c
-src/common/dynamic.c
+src/common/exepath.c
 src/common/env.c
 src/common/home.c
+src/common/libpath.c
 src/common/os.c
 src/common/partition.c
 src/common/touch.c
