@@ -39,12 +39,8 @@ int fs_is_wsl()
     return 2;
   if (str_ends_with(buf.release, "-Microsoft"))
     return 1;
-
-  return 0;
-#else
-  return -1;
 #endif
-
+  return 0;
 }
 
 
