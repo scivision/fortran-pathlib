@@ -29,10 +29,12 @@ t0 = get_modtime(fn)
 if(t0 < 0) error stop "absolute path: Could not get modtime - is negative integer"
 if(t0 == 0) error stop "absolute Path: Could not get modtime - integer 0 value"
 
-print '(a)', "PASSED: touch absolute path"
+print '(a)', "PASSED: touch absolute path: " // fn
 
 
 !> touch relative path
+print '(a)', "touch relative path, cwd: " // get_cwd()
+
 fn = "test_fileop.h5"
 
 call touch(fn)
@@ -49,7 +51,7 @@ if(t1 < t0) error stop "get_modtime: Could not set modtime"
 
 if(set_modtime('not-exist-tile')) error stop "set_modtime: Could set modtime for non-existing file"
 
-print '(a)', "PASSED: touch relative path"
+print '(a)', "PASSED: touch relative path: " // fn
 
 end block valgrind
 

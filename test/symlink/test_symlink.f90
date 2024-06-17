@@ -32,6 +32,11 @@ tgt_dir = parent(tgt_dir)
 !> create and verify target file
 tgt = join(tgt_dir, "test.txt")
 
+if (is_file(tgt)) then
+  print *, "deleting old target " // tgt
+  call remove(tgt)
+endif
+
 call touch(tgt)
 print '(a)', "created target file " // tgt
 
