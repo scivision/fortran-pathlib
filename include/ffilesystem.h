@@ -252,7 +252,10 @@ bool fs_set_modtime(const char*);
 
 size_t fs_get_cwd(char*, const size_t);
 bool fs_set_cwd(const char*);
+
 size_t fs_get_homedir(char*, const size_t);
+size_t fs_get_profile_dir(char*, const size_t);
+
 size_t fs_get_tempdir(char*, const size_t);
 
 size_t fs_expanduser(const char*, char*, const size_t);

@@ -27,7 +27,13 @@ size_t fs_get_homedir(char* path, const size_t buffer_size)
     return L;
   }
 
-#ifdef _WIN32
+  return fs_get_profile_dir(path, buffer_size);
+}
+
+
+size_t fs_get_profile_dir(char* path, const size_t buffer_size)
+{
+  #ifdef _WIN32
   // works on MSYS2, MSVC, oneAPI
   DWORD N = (DWORD) buffer_size;
   HANDLE hToken = NULL;
@@ -44,13 +50,15 @@ size_t fs_get_homedir(char* path, const size_t buffer_size)
   fs_as_posix(path);
   return strlen(path);
 #else
-  const char *h = getpwuid(geteuid())->pw_dir;
-  if (!h){
-    fprintf(stderr, "ERROR:ffilesystem:fs_get_homedir:getpwuid: %s\n", strerror(errno));
+  uid_t eff_uid = geteuid();
+
+  struct passwd *pw = getpwuid(eff_uid);
+  if (pw == NULL){
+    fprintf(stderr, "ERROR:ffilesystem:fs_get_homedir:getpwuid: UID %u %s\n", eff_uid, strerror(errno));
     return 0;
   }
 
-  return fs_strncpy(h, path, buffer_size);
+  return fs_strncpy(pw->pw_dir, path, buffer_size);
 #endif
 }
 

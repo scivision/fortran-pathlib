@@ -29,8 +29,7 @@ end subroutine
 
 subroutine test_homedir()
 
-character(:), allocatable :: h, k, buf
-
+character(:), allocatable :: h, p, k, buf
 
 if(is_windows()) then
   k = "USERPROFILE"
@@ -46,8 +45,14 @@ else
 endif
 
 h = get_homedir()
+if (len_trim(h) == 0) error stop "get_homedir failed"
+
+p = get_profile_dir()
+if (len_trim(p) == 0) error stop "get_profile_dir failed"
 
 if(.not. is_dir(h)) error stop "get_homedir failed: not a directory: " // h
+
+if (p /= h) error stop "get_profile_dir failed: " // p // " /= " // h
 
 print '(a)', "OK: get_homedir: " // h
 

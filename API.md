@@ -645,6 +645,13 @@ Get home directory, or empty string if not found.
 character(:), allocatable :: get_homedir()
 ```
 
+Get profile/pw directory. `get_homedir()` is normally preferred.
+This method uses getpwuid() on Unix, and GetUserProfileDirectory() on Windows.
+
+```fortran
+character(:), allocatable :: get_profiledir()
+```
+
 Get full path of main executable, regardless of current working directory
 
 ```fortran
