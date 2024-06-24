@@ -14,6 +14,9 @@ print '(a)', "OK fs: homedir"
 if (len_trim(get_tempdir()) == 0) error stop "get_tempdir failed"
 print '(a)', "OK: get_tempdir: " // get_tempdir()
 
+call test_user_config_dir()
+print '(a)', "OK fs: user_config_dir"
+
 
 contains
 
@@ -55,6 +58,18 @@ if(.not. is_dir(h)) error stop "get_homedir failed: not a directory: " // h
 if (p /= h) error stop "get_profile_dir failed: " // p // " /= " // h
 
 print '(a)', "OK: get_homedir: " // h
+
+end subroutine
+
+
+subroutine test_user_config_dir()
+
+character(:), allocatable :: d
+
+d = user_config_dir()
+if (len_trim(d) == 0) error stop "get_user_config_dir failed"
+
+print '(a)', "OK: get_user_config_dir: " // d
 
 end subroutine
 

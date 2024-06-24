@@ -164,9 +164,12 @@ $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 target_link_libraries(ffilesystem PUBLIC
 ${GNU_stdfs}
 ${CMAKE_DL_LIBS}
-"$<$<BOOL:${WIN32}>:Userenv;Advapi32>"
+"$<$<BOOL:${WIN32}>:Ole32;Shell32;uuid;Userenv;Advapi32>"
 )
 # both Advapi32 and Userenv must be linked
+# Ole32 is needed for CoTaskMemFree
+# Shell32: SHGetKnownFolderPath
+# uuid is needed for KnownFolderID
 
 if(HAVE_Fortran_FILESYSTEM)
   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/include/filesystem.mod TYPE INCLUDE)

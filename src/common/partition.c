@@ -1,3 +1,9 @@
+#ifdef _MSC_VER
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+#endif
+
 #if defined(__linux__)
 #include <sys/vfs.h>
 #include <linux/magic.h>

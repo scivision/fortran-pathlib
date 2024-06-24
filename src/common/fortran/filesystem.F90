@@ -6,7 +6,8 @@ use, intrinsic:: iso_fortran_env, only: int64, compiler_version, stderr=>error_u
 implicit none
 private
 !! utility procedures
-public :: get_homedir, get_profile_dir, canonical, resolve, get_cwd, set_cwd, make_tempdir, which
+public :: get_homedir, get_profile_dir, user_config_dir, canonical, resolve, &
+ get_cwd, set_cwd, make_tempdir, which
 public :: normal, expanduser, as_posix, &
 is_absolute, is_char_device, is_dir, is_file, is_exe, is_subdir, is_readable, is_writable, is_reserved, &
 is_symlink, read_symlink, create_symlink, &
@@ -223,6 +224,12 @@ end function
 logical(C_BOOL) function fs_set_cwd(path) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: path(*)
+end function
+
+integer (C_SIZE_T) function fs_user_config_dir(path, buffer_size) bind(C)
+import
+character(kind=C_CHAR), intent(out) :: path(*)
+integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
 
 integer(C_SIZE_T) function fs_get_homedir(path, buffer_size) bind(C)
@@ -1070,6 +1077,14 @@ logical function set_cwd(path)
 character(*), intent(in) :: path
 
 set_cwd = fs_set_cwd(trim(path) // C_NULL_CHAR)
+end function
+
+
+function user_config_dir() result (r)
+!! get user configuration directory
+include "ifc0a.inc"
+N = fs_user_config_dir(cbuf, N)
+include "ifc0b.inc"
 end function
 
 

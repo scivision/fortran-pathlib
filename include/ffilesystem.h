@@ -255,6 +255,7 @@ bool fs_set_cwd(const char*);
 
 size_t fs_get_homedir(char*, const size_t);
 size_t fs_get_profile_dir(char*, const size_t);
+size_t fs_user_config_dir(char*, const size_t);
 
 size_t fs_get_tempdir(char*, const size_t);
 

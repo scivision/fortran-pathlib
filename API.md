@@ -652,6 +652,16 @@ This method uses getpwuid() on Unix, and GetUserProfileDirectory() on Windows.
 character(:), allocatable :: get_profiledir()
 ```
 
+Get user configuration directory.
+On Linux systems, this looks to XDG Base Directory Specification.
+On Windows, this is the user's AppData directory.
+On MacOS, this is the user's home directory.
+
+```fortran
+character(:), allocatable :: user_config_dir()
+```
+
+
 Get full path of main executable, regardless of current working directory
 
 ```fortran
