@@ -16,6 +16,8 @@
 #endif
 // end get_homedir backup method
 
+#include <string.h>
+
 #include "ffilesystem.h"
 
 
