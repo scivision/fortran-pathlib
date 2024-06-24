@@ -28,7 +28,7 @@ int main(int argc, char *argv[]){
 #endif
 
   if(argc != 1){
-    fprintf(stderr, "Usage: %s\n", argv[0]);
+    std::cerr << "Usage: " << argv[0] << "\n";
     return EXIT_FAILURE;
   }
 
