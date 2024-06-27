@@ -489,6 +489,8 @@ Windows prioritizes CWD.
 Does not resolve path--if Windows CWD or relative path is in PATH, may output relative path.
 Does not expanduser tilde.
 
+On Windows, security / virus scanners may block cmd.exe and similar under `%SYSTEMROOT%` from being found.
+
 ```fortran
 character(:), allocatable :: which("myprog")
 ```

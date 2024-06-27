@@ -127,7 +127,7 @@ if(!fs_is_windows())
 }
 
 // test Ffs::which
-std::string_view name = (fs_is_windows()) ? "cmd.exe" : "ls";
+std::string_view name = (fs_is_windows()) ? "cmake.exe" : "ls";
 
 std::string r = Ffs::which(name);
 if(r.length() == 0)

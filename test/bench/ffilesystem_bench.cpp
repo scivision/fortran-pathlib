@@ -279,7 +279,7 @@ for (std::set<std::string_view, std::less<>> funcs = fset; std::string_view func
     if (tildef.contains(func))
       path = "~/..";
     else if (func == "which")
-      path = (fs_is_windows()) ? "cmd.exe" : "sh";
+      path = (fs_is_windows()) ? "cmake.exe" : "sh";
     else
       path = "";
   }

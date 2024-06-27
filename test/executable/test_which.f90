@@ -26,7 +26,7 @@ valgrind : block
 character(:), allocatable :: s1, s2, s3
 
 if (is_windows()) then
-    s2 = "cmd.exe"
+    s2 = "cmake.exe"
 else
     s2 = "ls"
 endif
