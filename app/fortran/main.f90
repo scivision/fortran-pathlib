@@ -158,6 +158,8 @@ main : do
     print '(i0)', file_size(arg1)
   case ("space")
     print '(i0)', space_available(arg1)
+  case ("username")
+    print '(A)', get_username()
   case ("mkdir")
     call mkdir(arg1, ok)
     if (ok) then

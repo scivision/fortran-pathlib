@@ -648,10 +648,9 @@ character(:), allocatable :: get_homedir()
 ```
 
 Get profile/pw directory. `get_homedir()` is normally preferred.
-This method uses getpwuid() on Unix, and GetUserProfileDirectory() on Windows.
 
 ```fortran
-character(:), allocatable :: get_profiledir()
+character(:), allocatable :: get_profile_dir()
 ```
 
 Get user configuration directory.
@@ -661,6 +660,12 @@ On MacOS, this is the user's home directory.
 
 ```fortran
 character(:), allocatable :: user_config_dir()
+```
+
+Get username of the current user.
+
+```fortran
+character(:), allocatable :: get_username()
 ```
 
 

@@ -21,6 +21,20 @@
 #include "ffilesystem.h"
 
 
+#ifndef _WIN32
+static struct passwd* fs_getpwuid()
+{
+  uid_t eff_uid = geteuid();
+
+  struct passwd *pw = getpwuid(eff_uid);
+  if (pw == NULL)
+    fprintf(stderr, "ERROR:ffilesystem:fs_getpwuid: UID %u %s\n", eff_uid, strerror(errno));
+
+  return pw;
+}
+#endif
+
+
 size_t fs_get_homedir(char* path, const size_t buffer_size)
 {
   const size_t L = fs_getenv(fs_is_windows() ? "USERPROFILE" : "HOME", path, buffer_size);
@@ -52,13 +66,9 @@ size_t fs_get_profile_dir(char* path, const size_t buffer_size)
   fs_as_posix(path);
   return strlen(path);
 #else
-  uid_t eff_uid = geteuid();
-
-  struct passwd *pw = getpwuid(eff_uid);
-  if (pw == NULL){
-    fprintf(stderr, "ERROR:ffilesystem:fs_get_homedir:getpwuid: UID %u %s\n", eff_uid, strerror(errno));
+  const struct passwd *pw = fs_getpwuid();
+  if (pw == NULL)
     return 0;
-  }
 
   return fs_strncpy(pw->pw_dir, path, buffer_size);
 #endif
@@ -108,4 +118,30 @@ size_t fs_expanduser(const char* path, char* result, const size_t buffer_size)
   fs_drop_slash(result);
 
   return strlen(result);
+}
+
+
+size_t fs_get_username(char *name, const size_t buffer_size)
+{
+#ifdef _WIN32
+    DWORD L = buffer_size;
+    // Windows.h
+    if(!GetUserNameA(name, &L))
+    {
+      fs_win32_print_error(name, "get_username");
+      return 0;
+    }
+
+    if (L < buffer_size)
+      return (size_t) L;
+
+    fprintf(stderr, "ERROR:Ffilesystem:get_username: Buffer %zu too small for %lu\n", buffer_size, L);
+    return 0;
+#else
+    const struct passwd *pw = fs_getpwuid();
+    if (pw == NULL)
+      return 0;
+
+    return fs_strncpy(pw->pw_name, name, buffer_size);
+#endif
 }

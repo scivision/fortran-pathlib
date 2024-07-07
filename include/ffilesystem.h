@@ -38,6 +38,9 @@ class Ffs
 public:
   [[nodiscard]] static std::string compiler();
   [[nodiscard]] static std::string get_homedir();
+  [[nodiscard]] static std::string get_profile_dir();
+  [[nodiscard]] static std::string get_username();
+  [[nodiscard]] static std::string user_config_dir();
   [[nodiscard]] static std::string get_tempdir();
   [[nodiscard]] static std::string get_cwd();
 
@@ -256,6 +259,7 @@ bool fs_set_cwd(const char*);
 size_t fs_get_homedir(char*, const size_t);
 size_t fs_get_profile_dir(char*, const size_t);
 size_t fs_user_config_dir(char*, const size_t);
+size_t fs_get_username(char*, const size_t);
 
 size_t fs_get_tempdir(char*, const size_t);
 

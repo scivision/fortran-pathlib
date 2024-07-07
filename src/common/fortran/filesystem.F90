@@ -6,7 +6,8 @@ use, intrinsic:: iso_fortran_env, only: int64, compiler_version, stderr=>error_u
 implicit none
 private
 !! utility procedures
-public :: get_homedir, get_profile_dir, user_config_dir, canonical, resolve, &
+public :: get_homedir, get_profile_dir, user_config_dir, get_username, &
+ canonical, resolve, &
  get_cwd, set_cwd, make_tempdir, which
 public :: normal, expanduser, as_posix, &
 is_absolute, is_char_device, is_dir, is_file, is_exe, is_subdir, is_readable, is_writable, is_reserved, &
@@ -224,6 +225,12 @@ end function
 logical(C_BOOL) function fs_set_cwd(path) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: path(*)
+end function
+
+integer (C_SIZE_T) function fs_get_username(name, buffer_size) bind(C)
+import
+character(kind=C_CHAR), intent(out) :: name(*)
+integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
 
 integer (C_SIZE_T) function fs_user_config_dir(path, buffer_size) bind(C)
@@ -1100,11 +1107,20 @@ end function
 
 
 function get_profile_dir() result (r)
-!! returns profile directory via GetUserProfileDirectory or getpwuid
+!! returns profile directory
 !! normally prefer to use get_homedir(), which falls back to get_profile_dir()
 
 include "ifc0a.inc"
 N = fs_get_profile_dir(cbuf, N)
+include "ifc0b.inc"
+end function
+
+
+function get_username() result (r)
+!! get username
+
+include "ifc0a.inc"
+N = fs_get_username(cbuf, N)
 include "ifc0b.inc"
 end function
 

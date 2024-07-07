@@ -72,6 +72,37 @@ std::string Ffs::get_homedir()
 }
 
 
+std::string Ffs::get_profile_dir()
+{
+  if(std::string buf(fs_get_max_path(), '\0');
+      fs_get_profile_dir(buf.data(), buf.size()) > 0)  FFS_LIKELY
+    return buf.c_str();
+
+  return {};
+}
+
+
+std::string Ffs::user_config_dir()
+{
+  if(std::string buf(fs_get_max_path(), '\0');
+      fs_user_config_dir(buf.data(), buf.size()) > 0)  FFS_LIKELY
+    return buf.c_str();
+
+  return {};
+}
+
+
+std::string Ffs::get_username()
+{
+  if(std::string buf(fs_get_max_path(), '\0');
+      fs_get_username(buf.data(), buf.size()) > 0)  FFS_LIKELY
+    return buf.c_str();
+
+  return {};
+
+}
+
+
 bool Ffs::set_env(std::string_view name, std::string_view value)
 {
   return fs_setenv(name.data(), value.data());

@@ -17,6 +17,9 @@ print '(a)', "OK: get_tempdir: " // get_tempdir()
 call test_user_config_dir()
 print '(a)', "OK fs: user_config_dir"
 
+call test_username()
+print '(a)', "OK fs: username"
+
 
 contains
 
@@ -70,6 +73,18 @@ d = user_config_dir()
 if (len_trim(d) == 0) error stop "get_user_config_dir failed"
 
 print '(a)', "OK: get_user_config_dir: " // d
+
+end subroutine
+
+
+subroutine test_username()
+
+character(:), allocatable :: u
+
+u = get_username()
+if (len_trim(u) == 0) error stop "get_username failed"
+
+print '(a)', "OK: get_username: " // u
 
 end subroutine
 

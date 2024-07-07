@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <errno.h>
-#include <stdlib.h> // putenv, setenv, malloc, free
+#include <stdlib.h> // putenv, setenv, malloc, free, wcstombs
 #include <string.h>
 
 #ifdef _WIN32
