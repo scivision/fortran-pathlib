@@ -5,15 +5,10 @@ use filesystem
 
 implicit none
 
-integer :: i
-
 character(:), allocatable :: s1, s2, s3
 
-allocate(character(max_path()) :: s1, s2, s3)
-
-
-call get_environment_variable("PROGRAMFILES", s1, status=i)
-if (i /= 0) then
+s1 = getenv("PROGRAMFILES")
+if (len(s1) == 0) then
     write(stderr, '(a)') "Error getting PROGRAMFILES"
     error stop 77
 endif
