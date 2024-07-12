@@ -56,8 +56,7 @@ size_t fs_longname(const char* in, char* out, const size_t buffer_size)
 // the path must exist
 #ifdef _WIN32
 // size includes null terminator
-  DWORD Lb = (DWORD) buffer_size;
-  DWORD L = GetLongPathNameA(in, out, Lb);
+  const DWORD L = GetLongPathNameA(in, out, (DWORD) buffer_size);
   if(L > 0)
     return L;
 
@@ -75,8 +74,7 @@ size_t fs_shortname(const char* in, char* out, const size_t buffer_size)
 // the path must exist
 #ifdef _WIN32
 // size includes null terminator
-  DWORD Lb = (DWORD) buffer_size;
-  DWORD L = GetShortPathNameA(in, out, Lb);
+  const DWORD L = GetShortPathNameA(in, out, (DWORD) buffer_size);
   if(L > 0)
     return L;
 
