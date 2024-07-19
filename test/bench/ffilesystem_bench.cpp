@@ -274,7 +274,7 @@ for (std::set<std::string_view, std::less<>> funcs = fset; std::string_view func
   std::set <std::string_view, std::less<>> tildef = {"canonical", "resolve", "normal", "expanduser", "parent"};
 
   if (argc > 2)
-    path = std::string_view(argv[2]);
+    path = argv[2];
   else {
     if (tildef.contains(func))
       path = "~/..";

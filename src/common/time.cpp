@@ -22,7 +22,7 @@ std::time_t fs_get_modtime(const char* path)
 {
 
 #ifdef HAVE_CLOCK_CAST
-  const auto t_fs = Ffs::get_modtime(std::string_view(path));
+  const auto t_fs = Ffs::get_modtime(path);
   const auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs);
   return std::chrono::system_clock::to_time_t(t_sys);
 #else
