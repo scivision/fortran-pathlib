@@ -68,7 +68,14 @@ bool Ffs::equivalent(std::string_view path1, std::string_view path2)
     p1 = p1.lexically_normal();
     p2 = p2.lexically_normal();
   }
-  return std::filesystem::equivalent(p1, p2, ec) && !ec;
+
+  bool e = std::filesystem::equivalent(p1, p2, ec);
+  if(ec){
+    std::cerr << "ERROR:ffilesystem:equivalent(" << path1 << ", " << path2 << ") " << ec.message() << "\n";
+    e = false;
+  }
+
+  return e;
 }
 
 
