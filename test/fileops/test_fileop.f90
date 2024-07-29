@@ -13,13 +13,9 @@ logical :: ok
 
 character(:), allocatable :: old_cwd, cwd
 
-integer :: i, L
 character(:), allocatable :: s1, s2
 
-call get_command_argument(0, length=L, status=i)
-if(i/=0) error stop "failed to get command argument"
-allocate(character(L) :: s1)
-call get_command_argument(0, s1)
+s1 = getarg(0)
 print '(a)', 'program name: '// s1
 
 s2 = parent(parent(s1))

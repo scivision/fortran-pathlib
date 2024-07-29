@@ -5,7 +5,7 @@ use filesystem
 
 implicit none
 
-integer :: argc, i, L
+integer :: argc, i
 character(2) :: argv
 
 argc = command_argument_count()
@@ -49,10 +49,8 @@ if(which("/not/a/path") /= "") error stop "ERROR:test_exe: which(not_a_path) fai
 if(which("") /= "") error stop "ERROR:test_exe: which(empty) failed"
 
 !> relative path (directory component, not just filename)
-call get_command_argument(0, length=L, status=i)
-if(i /= 0) error stop "ERROR:test_exe: get_command_argument(0) failed"
-allocate(character(L) :: s2)
-call get_command_argument(0, s2)
+s2 = getarg(0)
+if(len_trim(s2) == 0) error stop "could not get own program name"
 s1 = "./" // file_name(s2)
 s3 = which(s1)
 print '(a)', "which(" // s1 // ") = " // s3

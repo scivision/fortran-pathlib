@@ -6,7 +6,6 @@ use filesystem
 implicit none
 
 integer(C_LONG_LONG) :: t0, t1
-integer :: i, L
 
 
 ! call touch("")  !< error stops
@@ -15,12 +14,7 @@ valgrind : block
 
 character(:), allocatable :: fn, dir
 
-call get_command_argument(0, length=L, status=i)
-if(i /= 0) error stop "Could not get command argument"
-allocate(character(L) :: dir)
-call get_command_argument(0, dir)
-
-dir = parent(dir)
+dir = parent(getarg(0))
 
 !> touch absolute path
 fn = dir // "/test_fileop.h5"

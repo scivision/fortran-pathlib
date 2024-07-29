@@ -27,7 +27,7 @@ fs_cpp, fs_lang, pathsep, is_safe_name, &
 is_admin, is_bsd, is_macos, is_windows, is_cygwin, is_wsl, is_mingw, is_linux, is_unix, &
 max_path, get_max_path, &
 exe_path, lib_path, compiler, compiler_c, &
-longname, shortname, getenv, setenv, &
+longname, shortname, getenv, setenv, getarg, &
 is_alpha, filesystem_type, devnull, cpu_arch, &
 to_cygpath, to_winpath
 
@@ -967,6 +967,25 @@ endif
 end subroutine
 
 
+function getarg(index) result(r)
+!! get command argument
+integer, intent(in) :: index
+character(:), allocatable :: r
+integer :: i, L
+
+call get_command_argument(index, length=L, status=i)
+
+if (i/=0) then
+  r = ""
+  return
+endif
+
+allocate(character(L) :: r)
+call get_command_argument(index, value=r)
+
+end function
+
+
 function getenv(name) result(r)
 !! get environment variable
 character(*), intent(in) :: name
@@ -975,12 +994,13 @@ integer :: i, L
 
 call get_environment_variable(name, length=L, status=i)
 
-if (i==0) then
-  allocate(character(L) :: r)
-  call get_environment_variable(name, value=r, status=i)
+if (i/=0) then
+  r = ""
+  return
 endif
 
-if (i/=0) r = ""
+allocate(character(L) :: r)
+call get_environment_variable(name, value=r)
 
 end function
 

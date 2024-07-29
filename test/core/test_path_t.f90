@@ -36,7 +36,7 @@ print '(a)', "OK: setter/getter"
 valgrind : block
 
 type(path_t) :: p1, p2
-integer :: L1, i, L
+integer :: L1
 integer(int64) :: i64
 character(:), allocatable :: s1, s2
 character(9) :: c9
@@ -101,10 +101,8 @@ p1 = path_t("a/b/c")
 if (p1%file_name() /= "c") error stop "filename"
 
 !> is_dir, is_file, exists
-call get_command_argument(0, length=L, status=i)
-if (i /= 0) error stop "ERROR: get_command_argument"
-allocate(character(L) :: s2)
-call get_command_argument(0, value=s2)
+s2 = getarg(0)
+if (len_trim(s2) == 0) error stop "could not get own program name"
 
 p1 = path_t(s2)
 if (.not. p1%exists()) error stop "ERROR:test: exists(file)"

@@ -38,17 +38,12 @@ end subroutine
 
 subroutine test_file_size()
 
-integer :: u, d(10), ierr, L
+integer :: u, d(10)
 integer(int64) :: i64
 
 character(:), allocatable :: s1
 
-call get_command_argument(0, length=L, status=ierr)
-if (ierr /= 0) error stop "failed to get command line argument for test_file_size"
-allocate(character(L) :: s1)
-call get_command_argument(0, s1)
-
-s1 = parent(s1) // "/test_filesize.dat"
+s1 = parent(getarg(0)) // "/test_filesize.dat"
 
 print '(a)', "file_size path: " // trim(s1)
 

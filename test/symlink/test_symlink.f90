@@ -5,8 +5,6 @@ use filesystem
 
 implicit none
 
-integer :: i, L
-character :: s
 logical :: win32_symlink
 
 valgrind: block
@@ -15,19 +13,10 @@ logical :: ok
 
 character(:), allocatable :: tgt, rtgt, link, linko, tgt_dir, link_dir
 
-call get_command_argument(0, status=i, length=L)
-if(i /= 0) error stop "could not get command line arg 0"
-allocate(character(L) :: tgt_dir)
-call get_command_argument(0, tgt_dir)
-
 win32_symlink = .false.
-if(command_argument_count() > 0) then
-  call get_command_argument(1, s, status=i)
-  if(i /= 0) error stop "could not get command line arg 1"
-  if(s /= '0') win32_symlink = .true.
-endif
+if(command_argument_count() > 0) win32_symlink = getarg(1) /= '0'
 
-tgt_dir = parent(tgt_dir)
+tgt_dir = parent(getarg(0))
 
 !> create and verify target file
 tgt = join(tgt_dir, "test.txt")

@@ -6,18 +6,13 @@ use filesystem
 
 implicit none
 
-integer :: i, L
-
 valgrind : block
 
 character(:), allocatable :: tfile, tdir
 
 if (command_argument_count() == 0) error stop "please give test link file"
 
-call get_command_argument(1, status=i, length=L)
-if(i /= 0) error stop "could not get test link file from command line"
-allocate(character(L) :: tfile)
-call get_command_argument(1, tfile)
+tfile = getarg(1)
 
 if(is_symlink("not-exist-file")) error stop "is_symlink() should be false for non-existent file"
 if(is_symlink("")) error stop "is_symlink('') should be false"

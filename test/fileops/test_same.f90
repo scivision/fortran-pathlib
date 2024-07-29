@@ -13,12 +13,8 @@ contains
 subroutine test_same_file()
 
 character(:), allocatable :: c1, s1, s2
-integer :: i, L
 
-call get_command_argument(0, length=L, status=i)
-if (i /= 0) error stop 'ERROR: get_command_argument(0)'
-allocate(character(L) :: c1)
-call get_command_argument(0, c1)
+c1 = getarg(0)
 
 print '(a)', "own command: " // trim(c1)
 print '(a)', "current directory: " // get_cwd()

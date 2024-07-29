@@ -696,6 +696,15 @@ logical :: ok
 ok = set_cwd("my/path")
 ```
 
+Get command argument (allocatable character function vs. Fortran 2003 subroutine get_command_argument()).
+If the argument does not exist, returns empty string.
+
+```fortran
+character(:), allocatable :: get_arg(i)
+```
+
+---
+
 Get environment variable (allocatable character function vs. Fortran 2003 subroutine get_environment variable()):
 
 ```fortran

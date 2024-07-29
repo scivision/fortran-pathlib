@@ -39,17 +39,14 @@ subroutine test_is_exe()
 character(*), parameter :: noexe = "test_noexe"
 
 character(:), allocatable :: exe
-integer :: i, L
 
 if(is_wsl() > 0 .and. filesystem_type(".") == "v9fs") then
   print '(a)', "XFAIL:test_exe: WSL with VFS does not support permissions."
   stop 77
 endif
 
-call get_command_argument(0, length=L, status=i)
-if(i/=0) error stop "ERROR:test_exe: get_command_argument(0) failed"
-allocate(character(L) :: exe)
-call get_command_argument(0, exe)
+exe = getarg(0)
+if(len_trim(exe) == 0 ) error stop "could not get own program name"
 
 print '(a)', "test_is_exe: touch(" // noexe // ")"
 call touch(noexe)
