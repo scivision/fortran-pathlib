@@ -19,8 +19,7 @@ character(:), allocatable :: s1, s2
 call get_command_argument(0, length=L, status=i)
 if(i/=0) error stop "failed to get command argument"
 allocate(character(L) :: s1)
-call get_command_argument(0, s1, status=i)
-if(i/=0) error stop "failed to get command argument"
+call get_command_argument(0, s1)
 print '(a)', 'program name: '// s1
 
 s2 = parent(parent(s1))

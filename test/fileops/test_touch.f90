@@ -6,7 +6,7 @@ use filesystem
 implicit none
 
 integer(C_LONG_LONG) :: t0, t1
-integer :: i
+integer :: i, L
 
 
 ! call touch("")  !< error stops
@@ -15,9 +15,10 @@ valgrind : block
 
 character(:), allocatable :: fn, dir
 
-allocate(character(max_path()) :: dir)
-call get_command_argument(0, dir, status=i)
+call get_command_argument(0, length=L, status=i)
 if(i /= 0) error stop "Could not get command argument"
+allocate(character(L) :: dir)
+call get_command_argument(0, dir)
 
 dir = parent(dir)
 

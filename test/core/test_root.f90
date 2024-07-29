@@ -14,8 +14,6 @@ if(root("a/b") /= "") error stop "relative root should be empty"
 if(root("./a/b") /= "") error stop "relative root ./a should be empty"
 if(root("../a/b") /= "") error stop "relative root ../a should be empty"
 
-allocate(character(max_path()) :: r)
-
 if(is_windows()) then
   r = root("/etc")
   if(r /= "/") then

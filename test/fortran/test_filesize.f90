@@ -38,14 +38,15 @@ end subroutine
 
 subroutine test_file_size()
 
-integer :: u, d(10), ierr
+integer :: u, d(10), ierr, L
 integer(int64) :: i64
 
 character(:), allocatable :: s1
-allocate(character(len=max_path()) :: s1)
 
-call get_command_argument(0, s1, status=ierr)
+call get_command_argument(0, length=L, status=ierr)
 if (ierr /= 0) error stop "failed to get command line argument for test_file_size"
+allocate(character(L) :: s1)
+call get_command_argument(0, s1)
 
 s1 = join(parent(s1), "test_filesize.dat")
 

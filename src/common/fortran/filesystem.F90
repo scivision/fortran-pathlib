@@ -498,7 +498,6 @@ N = len_trim(path)
 allocate(character(N+1) :: cbuf)
 cbuf = trim(path) // C_NULL_CHAR
 call fs_as_posix(cbuf)
-allocate(character(N) :: r)
 r = cbuf(:N)
 end function
 

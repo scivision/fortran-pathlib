@@ -15,10 +15,10 @@ logical :: ok
 
 character(:), allocatable :: tgt, rtgt, link, linko, tgt_dir, link_dir
 
-allocate(character(max_path()) :: tgt_dir)
-
-call get_command_argument(0, tgt_dir, status=i, length=L)
-if(i /= 0 .or. L == 0) error stop "could not get command line arg 0"
+call get_command_argument(0, status=i, length=L)
+if(i /= 0) error stop "could not get command line arg 0"
+allocate(character(L) :: tgt_dir)
+call get_command_argument(0, tgt_dir)
 
 win32_symlink = .false.
 if(command_argument_count() > 0) then
