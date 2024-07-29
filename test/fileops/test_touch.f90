@@ -23,14 +23,15 @@ call get_command_argument(0, dir)
 dir = parent(dir)
 
 !> touch absolute path
-fn = join(dir, "test_fileop.h5")
+fn = dir // "/test_fileop.h5"
+print '(a)', "touch(" // fn // ")"
 call touch(fn)
 call assert_is_file(fn)
 t0 = get_modtime(fn)
 if(t0 < 0) error stop "absolute path: Could not get modtime - is negative integer"
 if(t0 == 0) error stop "absolute Path: Could not get modtime - integer 0 value"
 
-print '(a)', "PASSED: touch absolute path: " // fn
+print '(a,i0)', "PASSED: touch absolute path: " // fn // " mod time (posix): ", t0
 
 
 !> touch relative path
