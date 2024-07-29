@@ -119,6 +119,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"lexically_normal", Ffs::lexically_normal},
     {"make_preferred", Ffs::make_preferred},
     {"mkdtemp", Ffs::mkdtemp},
+    {"owner", Ffs::get_owner},
     {"shortname", Ffs::shortname},
     {"longname", Ffs::longname},
     {"getenv", Ffs::get_env},

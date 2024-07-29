@@ -138,6 +138,13 @@ r = file_name(self%path_str)
 end function
 
 
+function m_get_owner(self) result (r)
+class(path_t), intent(in) :: self
+character(:), allocatable :: r
+r = get_owner(self%path_str)
+end function
+
+
 logical function m_is_safe_name(self) result(r)
 !! is path a safe name for this filesystem
 class(path_t), intent(in) :: self

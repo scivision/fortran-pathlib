@@ -44,6 +44,8 @@ public:
   [[nodiscard]] static std::string get_tempdir();
   [[nodiscard]] static std::string get_cwd();
 
+  [[nodiscard]] static std::string get_owner(std::string_view);
+
   [[nodiscard]] static std::string exe_path();
   [[nodiscard]] static std::string lib_path();
 
@@ -260,6 +262,8 @@ size_t fs_get_homedir(char*, const size_t);
 size_t fs_get_profile_dir(char*, const size_t);
 size_t fs_user_config_dir(char*, const size_t);
 size_t fs_get_username(char*, const size_t);
+
+size_t fs_get_owner(const char*, char*, const size_t);
 
 size_t fs_get_tempdir(char*, const size_t);
 

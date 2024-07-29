@@ -10,7 +10,7 @@
 #include <errno.h>
 #include <stdlib.h> // malloc, free
 
-// get_homedir backup method
+// get_profile_dir
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <UserEnv.h> // GetUserProfileDirectoryA
@@ -20,7 +20,6 @@
 #include <pwd.h>      // for getpwuid, passwd
 #include <unistd.h> // for mac too
 #endif
-// end get_homedir backup method
 
 #include <string.h>
 
@@ -138,8 +137,8 @@ size_t fs_get_username(char *name, const size_t buffer_size)
       return 0;
     }
 
-    if (L < buffer_size)
-      return (size_t) L;
+    if (L <= buffer_size)
+      return (size_t) L-1;
 
     fprintf(stderr, "ERROR:Ffilesystem:get_username: Buffer %zu too small for %lu\n", buffer_size, L);
     return 0;

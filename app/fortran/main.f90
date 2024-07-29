@@ -114,6 +114,8 @@ main : do
     print '(i0)', get_modtime(arg1)
   case ("expanduser")
     print '(A)', expanduser(arg1)
+  case ("owner")
+    print '(A)', get_owner(arg1)
   case ("which")
     print '(A)', which(arg1)
   case ("canonical")

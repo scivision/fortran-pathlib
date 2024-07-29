@@ -93,6 +93,7 @@ src/common/env.c
 src/common/home.c
 src/common/libpath.c
 src/common/os.c
+src/common/owner.c
 src/common/partition.c
 src/common/touch.c
 src/common/uid.c
