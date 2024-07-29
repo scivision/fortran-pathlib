@@ -48,9 +48,9 @@ if (ierr /= 0) error stop "failed to get command line argument for test_file_siz
 allocate(character(L) :: s1)
 call get_command_argument(0, s1)
 
-s1 = join(parent(s1), "test_filesize.dat")
+s1 = parent(s1) // "/test_filesize.dat"
 
-print '(a)', "file_size path: ", trim(s1)
+print '(a)', "file_size path: " // trim(s1)
 
 d = 0
 
