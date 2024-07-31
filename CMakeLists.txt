@@ -66,7 +66,6 @@ if(NOT HAVE_CXX_FILESYSTEM)
 
   FetchContent_Populate(cwalk
   URL https://github.com/likle/cwalk/archive/refs/tags/v1.2.9.tar.gz
-  TLS_VERIFY ${CMAKE_TLS_VERIFY}
   )
 endif()
 

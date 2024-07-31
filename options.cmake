@@ -20,8 +20,6 @@ option(${PROJECT_NAME}_tidy "Run clang-tidy on the code")
 option(${PROJECT_NAME}_cppcheck "Run cppcheck on the code")
 option(${PROJECT_NAME}_iwyu "Run include-what-you-use on the code")
 
-option(CMAKE_TLS_VERIFY "Verify TLS certificates" on)
-
 option(${PROJECT_NAME}_BUILD_TESTING "Build tests" ${${PROJECT_NAME}_IS_TOP_LEVEL})
 
 file(GENERATE OUTPUT .gitignore CONTENT "*")
