@@ -17,7 +17,7 @@ buf = getenv(k)
 if (buf /= v) then
   write(stderr, '(a)') "ERROR: setenv/getenv failed: " // buf // " /= " // v
   error stop
-endif
+end if
 
 end block valgrind
 

@@ -26,7 +26,7 @@ end do
 if(is_windows()) then
   i = i + check("C:/", "")
   i = i + check("C:\ab\asb", "asb")
-endif
+end if
 
 if(i /= 0) error stop "FAIL: file_name()"
 

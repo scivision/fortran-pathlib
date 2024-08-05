@@ -29,9 +29,9 @@ if(is_windows()) then
   if (all([check("x:/", "x:/"), check("x:/", "x:")] == 1)) then
     write(stderr, '(a)') "ERROR: parent(x:/)"
     i = i+1
-  endif
+  end if
   !! Python also may give either result
-endif
+end if
 
 if(i /= 0) error stop "FAIL: parent()"
 

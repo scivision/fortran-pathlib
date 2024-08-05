@@ -21,7 +21,7 @@ if (is_windows()) then
 else
   fn2 = make_absolute("rel", "/foo")
   if (fn2 /= "/foo/rel") error stop "did not make_absolute Unix /foo/rel, got: " // fn2
-endif
+end if
 
 fn2 = make_absolute("rel", "")
 if(fn2 /= "rel") error stop "make_absolute empty base: " // fn2

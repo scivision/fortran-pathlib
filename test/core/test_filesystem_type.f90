@@ -19,7 +19,7 @@ end if
 if(len_trim(fsname) == 0) then
   write(stderr, '(a)') "Unknown filesystem type, see type ID in stderr to update fs_get_type()"
   error stop 77
-endif
+end if
 
 print '(a)', "OK: filesystem_type: " // fsname
 

@@ -21,14 +21,14 @@ if(is_symlink("")) error stop "is_symlink('') should be false"
 if(.not.is_symlink(tfile)) then
   write(stderr, '(a)') "is_symlink() should be true for symlink file: " // tfile
   error stop
-endif
+end if
 
 !> symlink directory
 tdir = parent(tfile)
 if (.not.is_symlink(tdir)) then
   write(stderr, '(a)') "is_symlink() should be true for symlink directory: " // tdir
   error stop
-endif
+end if
 
 end block valgrind
 

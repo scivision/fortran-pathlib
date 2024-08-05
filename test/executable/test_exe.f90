@@ -43,7 +43,7 @@ character(:), allocatable :: exe
 if(is_wsl() > 0 .and. filesystem_type(".") == "v9fs") then
   print '(a)', "XFAIL:test_exe: WSL with VFS does not support permissions."
   stop 77
-endif
+end if
 
 exe = getarg(0)
 if(len_trim(exe) == 0 ) error stop "could not get own program name"
@@ -57,14 +57,14 @@ call set_permissions(noexe, executable=.false.)
 if(is_exe(parent(exe))) then
   write(stderr, '(a)') "ERROR:test_exe: directory" // parent(exe) // " should not be executable"
   error stop
-endif
+end if
 
 print '(a)', "permissions: " // trim(exe) // " = " // get_permissions(exe)
 
 if (.not. is_exe(exe)) then
   write(stderr,'(a)') "ERROR:test_exe: " // trim(exe) // " is not executable."
   error stop
-endif
+end if
 
 print '(a)', "permissions: " // trim(noexe) // " = " // get_permissions(noexe)
 
@@ -74,8 +74,8 @@ if (is_exe(noexe)) then
   else
     write(stderr,'(a)') "ERROR:test_exe: " // trim(noexe) // " is executable and should not be."
     error stop
-  endif
-endif
+  end if
+end if
 
 print '(a)', "remove(" // trim(noexe) // ")"
 call remove(noexe)

@@ -35,7 +35,7 @@ else
   do j = 1, N
     i = i + check(in1(j), in2(j), ref(j))
   end do
-endif
+end if
 
 if(i /= 0) error stop "FAIL: relative_to()"
 

@@ -48,7 +48,7 @@ if (len_trim(buf) == 0) then
   print '(a)', "env var " // k // " not set"
 else
   print '(a)', "getenv: " // k // " = " // trim(buf)
-endif
+end if
 
 h = get_homedir()
 if (len_trim(h) == 0) error stop "get_homedir failed"

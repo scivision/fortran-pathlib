@@ -16,7 +16,7 @@ s1 = get_cwd()
 if(.not. is_dir(s1)) then
   write(stderr, '(a)') "is_dir(get_cwd()) failed: " // s1
   error stop
-endif
+end if
 
 if(is_windows()) then
   s1 = root(s1)
@@ -24,7 +24,7 @@ if(is_windows()) then
   if(.not. is_dir(s1)) error stop "is_dir('" // s1 // "') failed"
 else
   if(.not. is_dir("/")) error stop "is_dir('/') failed"
-endif
+end if
 
 if(.not. is_dir(".")) error stop "did not detect '.' as directory"
 if(is_file(".")) error stop "detected '.' as file"

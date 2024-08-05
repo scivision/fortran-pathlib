@@ -38,7 +38,7 @@ else
   end do
 
   i = i + check("c", "/a/b", "/a/b")
-endif
+end if
 
 if(i /= 0) error stop "FAIL: proximate_to()"
 

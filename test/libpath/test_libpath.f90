@@ -19,7 +19,7 @@ if(is_dir(path)) then
   if(shared) error stop "test_libpath: for shared libraries a full path to the library file is expected: " // path
   print '(a)', path
   stop
-endif
+end if
 
 if (.not. is_file(path)) error stop path // " is neither a file nor a directory"
 

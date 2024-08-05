@@ -20,14 +20,14 @@ s1 = expanduser("~")
 if(s1 /= get_homedir()) then
    write(stderr, '(a)') "expanduser(~) failed: " // s1 // " /= " // get_homedir()
    error stop
-endif
+end if
 
 !> idempotent
 s2 = expanduser(s1)
 if (s1 /= s2) then
   write(stderr, '(a)') "expanduser() idempotent failed: " // s1 // " /= " // s2
   error stop
-endif
+end if
 
 !> separator
 s2 = expanduser("~/")

@@ -25,7 +25,7 @@ if(stem("./.stem.txt") /= ".stem") error stop "stem leading dot filename w/ext a
 if(stem("../.stem.txt") /= ".stem") then
     write(stderr,*) "stem leading dot filename w/ext up ", stem("../.stem.txt")
     error stop
-endif
+end if
 
 end block valgrind
 

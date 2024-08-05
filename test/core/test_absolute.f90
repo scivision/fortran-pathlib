@@ -15,7 +15,7 @@ if (is_windows()) then
 else
   if (.not. is_absolute("/")) error stop "/ on Unix should be absolute"
   if (is_absolute("j:/")) error stop "j:/ on Unix is not absolute"
-endif
+end if
 
 end block valgrind
 

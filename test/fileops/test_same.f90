@@ -25,19 +25,19 @@ s2 = "./" // s1
 if(.not. is_file(s2)) then
   write(stderr, '(a)') "ERROR: file name: " // s2 // " is not a file"
   error stop
-endif
+end if
 
 if(.not. is_file(s1)) then
   write(stderr, '(a)') "ERROR: file name: " // s1 // " is not a file"
   error stop
-endif
+end if
 
 print '(a)', "Testing same_file(" // s1 // ", " // s2 // ")"
 
 if(.not. same_file(s1, s2)) then
   write(stderr, '(a)') "ERROR: same_file(" // s1 // " /= " // s2 // ")"
   error stop
-endif
+end if
 
 s1 = parent(s1)
 s2 = "./" // s1
@@ -47,7 +47,7 @@ print '(a)', "Testing same_file(" // s1 // ", " // s2 // ")"
 if(.not. same_file(s1, s2)) then
   write(stderr, '(a)') "ERROR: same_file(" // s1 // " /= " // s2 // ")"
   error stop
-endif
+end if
 
 s1 = ".."
 s2 = parent(get_cwd())

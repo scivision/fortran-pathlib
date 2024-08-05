@@ -15,13 +15,13 @@ if(with_suffix(".h5", "") /= ".h5") error stop "with_suffix .h5 to .h5"
 if(with_suffix(".h5", ".h5") /= ".h5.h5") then
   write(stderr,*) "ERROR: with_suffix .h5.h5: " // with_suffix(".h5", ".h5")
   error stop
-endif
+end if
 
 b = with_suffix('c:/a/hi.nc', '.h5')
 if(b /= 'c:/a/hi.h5') then
   write(stderr,'(a)') "ERROR: with_suffix c:/a/hi.nc to .h5: " // b
   error stop
-endif
+end if
 
 b = with_suffix("my/file.h5", ".hdf5")
 if ("my/file.hdf5" /= b) error stop "with_suffix() failed: " // b

@@ -8,7 +8,7 @@ implicit none
 if(is_wsl() > 0 .and. filesystem_type(".") == "v9fs") then
   write(stderr, '(a)') "ERROR: WSL with v9fs does not support file permissions"
   stop 77
-endif
+end if
 
 call test_set_permissions()
 print '(a)', "OK: set_permission"
@@ -30,14 +30,14 @@ p = get_permissions("")
 if(len_trim(p) /= 0) then
     write(stderr, '(a)') "get_permissions('') should be empty: " // p
     error stop
-endif
+end if
 
 !> readable
 call touch(reada, ok)
 if (.not. ok) then
     write(stderr, '(a)') "ERROR: could not create file " // reada
     error stop 77
-endif
+end if
 
 call set_permissions(reada, readable=.true.)
 
@@ -49,7 +49,7 @@ if (len_trim(p) == 0) error stop "get_permissions('"//trim(reada)//"') should no
 if (p(1:1) /= "r") then
     write(stderr, '(a)') "ERROR: "//trim(reada)//" should be readable"
     error stop
-endif
+end if
 if(.not. is_readable(reada)) error stop trim(reada)//" should be readable"
 
 if(.not. exists(reada)) error stop trim(reada)//" should exist"
@@ -62,7 +62,7 @@ call touch(noread, ok)
 if(.not. ok) then
     write(stderr, '(a)') "ERROR: could not create file " // noread
     error stop 77
-endif
+end if
 
 call set_permissions(noread, readable=.false.)
 
@@ -75,8 +75,8 @@ if(.not. is_windows()) then
 if (p(1:1) == "r") error stop trim(noread)//" should not be readable " // p
 if (index(p, "r") == 0) then
   if (is_readable(noread)) error stop "is_readable: "//trim(noread)//" should not be readable"
-endif
-endif
+end if
+end if
 
 if (.not. exists(noread)) error stop trim(noread)//" should exist"
 if (.not. is_file(noread)) error stop trim(noread)//" should be a file"
@@ -94,11 +94,11 @@ if (len_trim(p) == 0) error stop "get_permissions('"//trim(nowrite)//"') should 
 if (p(2:2) == "w") then
     write(stderr, '(a)') "get_permissions: " //trim(nowrite)//" should not be writable"
     if(.not. is_windows()) error stop
-endif
+end if
 
 if(index(p, "w") == 0) then
   if(is_writable(nowrite)) error stop "is_writable: " // trim(nowrite)//" should not be writable"
-endif
+end if
 
 if (.not. exists(nowrite)) error stop trim(nowrite)//" should exist"
 
@@ -142,14 +142,14 @@ print '(a)', "permissions after set_permissions(exe=true): " // perm
 if (.not. is_exe(exe)) then
     write(stderr,'(a)') "ERROR: is_exe() did not detect executable file " // trim(exe)
     if(.not. is_windows()) error stop
-endif
+end if
 
 if(.not. is_windows()) then
 if(perm(3:3) /= "x") then
     write(stderr,'(a)') "ERROR: get_permissions() " // trim(exe) // " is not executable"
     error stop
-endif
-endif
+end if
+end if
 
 !> chmod(.false.)
 
@@ -157,7 +157,7 @@ call touch(noexe)
 if(.not. is_file(noexe)) then
     write(stderr,'(a)') "ERROR: " // trim(noexe) // " is not a file."
     error stop
-endif
+end if
 
 perm = get_permissions(noexe)
 print '(a)', "permissions: " // trim(noexe) // " = " // perm
@@ -173,9 +173,9 @@ if(.not. is_windows()) then
     if(perm(3:3) /= "-") then
     write(stderr,'(a)') "ERROR:get_permissions() " // trim(noexe) // " is executable"
     error stop
-    endif
+    end if
 
-endif
+end if
 
 end subroutine test_set_permissions
 

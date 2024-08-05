@@ -51,14 +51,14 @@ else
   p1 = path_t("/a")
   p1 = p1%as_posix()
   if(p1%path() /= "/a") error stop "as_posix"
-endif
+end if
 
 !> absolute
 if(is_windows()) then
   p1 = path_t("C:/a")
 else
   p1 = path_t("/a")
-endif
+end if
 p2 = path_t("a/b")
 if(.not. p1%is_absolute()) error stop "is_absolute(abs)"
 if(p2%is_absolute()) error stop "is_absolute(rel)"
@@ -75,12 +75,12 @@ L1 = p1%length()
 if (L1 == 0) then
   write(stderr,*) "ERROR: canonical(.) " // p1%path()
   error stop
-endif
+end if
 
 if (p1%path() /= get_cwd()) then
   write(stderr,*) "ERROR: canonical(.) " // p1%path() // " /= get_cwd: " // get_cwd()
   error stop
-endif
+end if
 
 !> resolve
 p1 = path_t(".")
@@ -89,12 +89,12 @@ L1 = p1%length()
 if (L1 == 0) then
   write(stderr,*) "ERROR: resolve(.) " // p1%path()
   error stop
-endif
+end if
 
 if (p1%path() /= get_cwd()) then
   write(stderr,*) "ERROR: resolve(.) " // p1%path() // " /= get_cwd: " // get_cwd()
   error stop
-endif
+end if
 
 !> filename
 p1 = path_t("a/b/c")
@@ -127,7 +127,7 @@ i64 = p1%space_available()
 if (i64 == 0) then
   write(stderr, '(a,i0)') "ERROR:test: space_available: " // p1%root() // ' ', i64
   error stop
-endif
+end if
 
 !> modtime
 i64 = p1%modtime()
@@ -162,7 +162,7 @@ if(is_windows()) then
   p1 = path_t("X:/a/b")
 else
   p1 = path_t("/a/b")
-endif
+end if
 s1 = p1%proximate_to("c")
 if (s1 /= "c") error stop "ERROR:test: proximate_to: " // s1
 
@@ -183,7 +183,7 @@ s1 = p1%suffix()
 if (s1 /= ".txt") then
   write(stderr,'(a)') "ERROR:test: suffix: " // s1 // " /= .txt"
   error stop
-endif
+end if
 print '(a)', "PASS: %suffix: " // s1
 
 !> touch
@@ -225,7 +225,7 @@ if (.not. p2%is_symlink()) error stop "ERROR:test: create_symlink: " // p2%path(
 if (.not. is_windows()) then
 p2 = p2%read_symlink()
 if (p2%path() /= p1%path()) error stop "ERROR:test: read_symlink " // p2%path()
-endif
+end if
 
 !> cleanup
 call p2%remove()

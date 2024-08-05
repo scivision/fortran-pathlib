@@ -25,12 +25,12 @@ L1 = len_trim(p1)
 if (L1 < 1) then
   write(stderr,*) "ERROR: resolve '.' " // p1
   error stop
-endif
+end if
 
 if (p1 /= get_cwd()) then
   write(stderr,*) "ERROR: resolve('.') " // p1 // " /= get_cwd: " // get_cwd()
   error stop
-endif
+end if
 
 print *, "OK: current dir = ", p1
 
@@ -51,7 +51,7 @@ L3 = len_trim(p1)
 if (L2 /= L3) then
   write(stderr,*) 'ERROR:resolve:relative: up dir not resolved: ~/.. => ' // p1, L3, L2
   error stop
-endif
+end if
 print *, 'OK: canon_dir = ', p1
 
 ! -- relative, non-existing file
@@ -68,8 +68,8 @@ if (L2 > 1) L1 = L1 + 1  !< when L2==1, $HOME is like /root instead of /home/use
 if (L3 - L2 /= L1) then
   write(stderr,*) 'ERROR relative file was not resolved: ' // p1
   error stop
-endif
-endif
+end if
+end if
 
 !> empty
 if(resolve("") /= get_cwd()) then

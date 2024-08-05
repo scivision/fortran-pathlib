@@ -19,7 +19,7 @@ call touch(s1, ok)
 if(.not. ok) then
   write(stderr, '(a)') "touch("//s1//") failed"
   error stop 77
-endif
+end if
 
 !> copy a file
 call copy_file(s1, s2, overwrite=.true., ok=ok)

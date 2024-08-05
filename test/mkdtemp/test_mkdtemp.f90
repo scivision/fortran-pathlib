@@ -14,7 +14,7 @@ temp_dir = make_tempdir()
 if(.not. is_dir(temp_dir)) then
   write(stderr,'(a)') "test_mkdtemp: temp dir not created " // temp_dir
   error stop
-endif
+end if
 
 print '(a)', "OK: Fortran mkdtemp: " // temp_dir
 

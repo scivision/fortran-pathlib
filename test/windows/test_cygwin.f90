@@ -12,13 +12,13 @@ character(:), allocatable :: cp, wp, buf
 if(.not.is_cygwin()) then
   write(stderr, '(a)') "this test only for Cygwin"
   stop 77
-endif
+end if
 
 buf = getenv("SYSTEMDRIVE")
 if (len_trim(buf) == 0) then
   write(stderr, '(a)') "SYSTEMDRIVE not found"
   stop 77
-endif
+end if
 
 cp = to_cygpath(buf)
 print '(a)', "to_cygpath(" // buf // "): " // cp
@@ -30,7 +30,7 @@ buf = getenv("HOME")
 if (len_trim(buf) == 0) then
   write(stderr, '(a)') "HOME not found"
   stop 77
-endif
+end if
 
 wp = to_winpath(buf)
 print '(a)', "to_winpath(" // buf // "): " // wp

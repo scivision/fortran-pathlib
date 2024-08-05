@@ -27,6 +27,6 @@ write(stderr, '(a)') "User and owner didn't match"
 
 if(getenv("CI") == "true") then
   write(stderr, '(a)') "mismatched username and owner can happen on CI systems"
-endif
+end if
 
 end program

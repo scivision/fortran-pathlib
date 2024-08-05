@@ -16,7 +16,7 @@ if(argc > 0) then
   read(argv, "(i2)") i
 else
   i = 0
-endif
+end if
 
 
 if(i /= 0) call setenv("PATH", "")
@@ -29,7 +29,7 @@ if (is_windows()) then
     s2 = "cmake.exe"
 else
     s2 = "ls"
-endif
+end if
 
 s1 = which(s2)
 
@@ -42,7 +42,7 @@ deallocate(s2)
 if(s1 /= which(s1)) then
   write(stderr,'(a)') "ERROR:test_exe: which(absolute) failed: " // s1 // " /= " // which(s1)
   error stop
-endif
+end if
 
 if(which("/not/a/path") /= "") error stop "ERROR:test_exe: which(not_a_path) failed"
 
@@ -68,7 +68,7 @@ if(is_windows()) then
   s1 = which(s3)
   print '(a)', "cwd: which(" // s3 // ")" // " = " // s1
   if (len_trim(s1) == 0) error stop "ERROR:test_exe: which(cwd) failed"
-endif
+end if
 
 end block valgrind
 

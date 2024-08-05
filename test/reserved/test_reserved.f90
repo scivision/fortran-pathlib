@@ -19,7 +19,7 @@ if (is_windows()) then
     if (.not. b) error stop "nul is reserved on Windows"
 else
     if (b) error stop "nul is not reserved on Unix"
-endif
+end if
 
 if(is_char_device("a")) error stop "a is not a char device"
 
@@ -28,7 +28,7 @@ if(is_unix()) then
     if (.not. b) error stop "/dev/null is a char device on Unix"
 else
     if (b) error stop "/dev/null is not a char device on non-Unix systems"
-endif
+end if
 
 end block valgrind
 

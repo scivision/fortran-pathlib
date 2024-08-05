@@ -46,7 +46,7 @@ L2 = len_trim(p1)
 if (L2 >= L1) then
   write(stderr,*) 'ERROR:canonical:relative: up dir not canonicalized: ~/.. => ' // p1
   error stop
-endif
+end if
 print *, 'OK: canon_dir = ', p1
 
 ! -- relative, non-existing file
@@ -61,7 +61,7 @@ if (L2 > 1) L1 = L1 + 1  !< when L2==1, $HOME is like /root instead of /home/use
 if (L3 - L2 /= L1) then
   write(stderr,*) 'ERROR relative file was not canonicalized: ' // p1, L2, L3, len(dummy)
   error stop
-endif
+end if
 
 p1 = canonical('../' // dummy)
 

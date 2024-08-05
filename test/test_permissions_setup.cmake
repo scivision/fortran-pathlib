@@ -1,8 +1,3 @@
-if(CMAKE_VERSION VERSION_LESS 3.19)
-  return()
-endif()
-
-
 if(DEFINED perm_noread)
 
   file(REMOVE ${perm_noread})
