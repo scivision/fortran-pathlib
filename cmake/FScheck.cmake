@@ -23,23 +23,6 @@ endif()
 
 endif()
 
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.25 AND HAVE_Fortran_FILESYSTEM AND NOT DEFINED HAVE_CXX_TRYCATCH)
-
-message(CHECK_START "checking that C++ exception handling works")
-try_compile(exception_compile
-    PROJECT exception
-    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/exception_check
-    OUTPUT_VARIABLE abi_output
-)
-if(abi_output MATCHES "ld: warning: could not create compact unwind for")
-    message(CHECK_FAIL "no")
-    set(HAVE_CXX_TRYCATCH false CACHE BOOL "C++ exception handling broken")
-else()
-    message(CHECK_PASS "yes")
-    set(HAVE_CXX_TRYCATCH true CACHE BOOL "C++ exception handling works")
-endif()
-
-endif()
 
 if(MINGW AND NOT DEFINED ${PROJECT_NAME}_symlink_code)
 
