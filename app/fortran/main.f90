@@ -93,7 +93,7 @@ main : do
     if (i1 == 0) then
       write(stderr, '(a)') "unterminated quoted argument"
       cycle
-    endif
+    end if
     arg1 = inp(i0:i1-2)
     i0 = i1 + 1
   else
@@ -101,7 +101,7 @@ main : do
     if(i1 == 0) then
       write(stderr, '(a)') "not enough arguments for " // trim(cmd)
       cycle
-    endif
+    end if
     arg1 = inp(i0:i1-1)
     i0 = i1
   end if
@@ -168,7 +168,7 @@ main : do
       print '(a)', "created directory " // trim(arg1)
     else
       write(stderr, "(a)") "ERROR: failed to create directory " // trim(arg1)
-    endif
+    end if
   case ("chdir")
     print '(l1)', set_cwd(arg1)
   case ("longname")
@@ -192,13 +192,13 @@ main : do
     if (i1 == 0) then
       write(stderr, '(a)') "unterminated quoted argument"
       cycle
-    endif
+    end if
     arg2 = inp(i0:i1-2)
   else
     i1 = i0 + index(inp(i0:), delim)
     if(i1 == 0) error stop "not enough arguments for " // trim(cmd)
     arg2 = inp(i0:i1-1)
-  endif
+  end if
 
   done = .true.
   select case (cmd)
@@ -210,7 +210,7 @@ main : do
       print '(a)', "set environment variable " // trim(arg1) // " = " // trim(arg2)
     else
       write(stderr, "(a)") "ERROR: failed to set environment variable " // trim(arg1) // " = " // trim(arg2)
-    endif
+    end if
   case ("join")
     print '(A)', join(arg1, arg2)
   case ("relative_to")
@@ -223,7 +223,7 @@ main : do
       print '(a)', "created symlink " // trim(arg1) // " -> " // trim(arg2)
     else
       write(stderr, "(a)") "ERROR: failed to create symlink " // trim(arg1) // " -> " // trim(arg2)
-    endif
+    end if
   case ("copy_file")
     print '(a)', "copying " // trim(arg1) // " -> " // trim(arg2)
     call copy_file(arg1, arg2, ok=ok)
