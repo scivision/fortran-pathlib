@@ -1,5 +1,7 @@
 function(fs_check)
 
+set(CMAKE_TRY_COMPILE_TARGET_TYPE EXECUTABLE)
+
 if(NOT DEFINED ${PROJECT_NAME}_abi_ok)
 
 message(CHECK_START "checking that compilers can link C++ Filesystem together")

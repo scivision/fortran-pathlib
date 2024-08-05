@@ -2,9 +2,9 @@
 
 function(cpp_check)
 
-# use 17 for the essential filesystem test to avoid compiler
-# with shaky C++20 from breaking essential test
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_TRY_COMPILE_TARGET_TYPE EXECUTABLE)
+
+set(CMAKE_CXX_STANDARD 20)
 
 # some compilers e.g. Cray claim to have filesystem, but their libstdc++ doesn't have it.
 check_source_compiles(CXX
@@ -30,12 +30,6 @@ if(NOT HAVE_CXX_FILESYSTEM)
   message(WARNING "C++ stdlib filesystem is broken in libstdc++ ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
   return()
 endif()
-
-set(CMAKE_CXX_STANDARD 20)
-
-# e.g. AppleClang 15 doesn't yet have this, maybe not worth the bother
-# i.e. benchmarking may reveal miniscule benefit.
-# check_cxx_symbol_exists(__cpp_lib_smart_ptr_for_overwrite "memory" cpp20_smart_ptr_for_overwrite)
 
 # for Ffs::get_modtime
 check_source_compiles(CXX
@@ -64,6 +58,8 @@ endif()
 
 
 if(${PROJECT_NAME}_trace)
+  set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+
   check_cxx_symbol_exists(__cpp_lib_starts_ends_with "string" cpp20_string_ends_with)
   check_cxx_symbol_exists(__cpp_using_enum "" cpp20_using_enum)
   check_cxx_symbol_exists(__cpp_deduction_guides "" cpp17_deduction_guides)
@@ -75,8 +71,7 @@ if(${PROJECT_NAME}_trace)
   check_source_compiles(CXX
   "#if !__has_cpp_attribute(likely)
   #error \"no likely attribute\"
-  #endif
-  int main(){ return 0; }"
+  #endif"
   cpp20_likely
   )
 
