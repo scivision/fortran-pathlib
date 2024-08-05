@@ -534,15 +534,15 @@ e = 0
 if(present(readable)) then
   r = -1
   if(readable) r = 1
-endif
+end if
 if(present(writable)) then
   w = -1
   if(writable) w = 1
-endif
+end if
 if(present(executable)) then
   e = -1
   if(executable) e = 1
-endif
+end if
 
 s = fs_set_permissions(trim(path) // C_NULL_CHAR, r, w, e)
 if(present(ok)) then
@@ -551,7 +551,7 @@ elseif (.not. s) then
   write(stderr, '(/,A,L1,1x,L1,1x,L1,1x,A)') "ERROR: set_permissions: failed to set permission ", &
     readable,writable,executable, trim(path)
   error stop
-endif
+end if
 end subroutine
 
 
@@ -582,7 +582,7 @@ if (present(ok)) then
 elseif(.not. s) then
   write(stderr, '(a)') "ERROR:Ffilesystem:copy_file: failed to copy file: " // trim(src) // " to " // trim(dest)
   error stop
-endif
+end if
 end subroutine
 
 
@@ -599,7 +599,7 @@ if(present(ok)) then
 elseif (.not. s) then
   write(stderr,'(a,i0)') "ERROR:Ffilesystem:mkdir: failed to create directory: " // trim(path)
   error stop
-endif
+end if
 end subroutine
 
 
@@ -625,7 +625,7 @@ if(present(ok)) then
 elseif (.not. s) then
   write(stderr,'(a,1x,i0)') "ERROR:Ffilesystem:create_symlink: " // trim(link)
   error stop
-endif
+end if
 end subroutine
 
 
@@ -964,7 +964,7 @@ if(present(ok)) then
 elseif (.not. s) then
   write(stderr,'(a,1x,i0)') "ERROR:Ffilesystem: setenv(" // trim(name) // ") failed."
   error stop
-endif
+end if
 end subroutine
 
 
@@ -979,7 +979,7 @@ call get_command_argument(index, length=L, status=i)
 if (i/=0) then
   r = ""
   return
-endif
+end if
 
 allocate(character(L) :: r)
 call get_command_argument(index, value=r)
@@ -998,7 +998,7 @@ call get_environment_variable(name, length=L, status=i)
 if (i/=0) then
   r = ""
   return
-endif
+end if
 
 allocate(character(L) :: r)
 call get_environment_variable(name, value=r)
@@ -1022,7 +1022,7 @@ character(*), intent(in) :: path
 if (.not. is_file(path)) then
   write(stderr, '(a)') 'File does not exist: ' // path
   error stop
-endif
+end if
 end subroutine
 
 
@@ -1032,7 +1032,7 @@ character(*), intent(in) :: path
 if (.not. is_dir(path)) then
   write(stderr, '(a)') 'Directory does not exist: ' // path
   error stop
-endif
+end if
 end subroutine
 
 
@@ -1072,7 +1072,7 @@ if (is_windows()) then
   pathsep = ";"
 else
   pathsep = ":"
-endif
+end if
 end function
 
 
@@ -1196,7 +1196,7 @@ if(is_windows()) then
   devnull = "nul"
 else
   devnull = "/dev/null"
-endif
+end if
 end function
 
 
