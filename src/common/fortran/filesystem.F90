@@ -25,17 +25,11 @@ remove, get_tempdir, &
 set_permissions, get_permissions, &
 fs_cpp, fs_lang, pathsep, is_safe_name, &
 is_admin, is_bsd, is_macos, is_windows, is_cygwin, is_wsl, is_mingw, is_linux, is_unix, &
-max_path, get_max_path, &
+max_path, &
 exe_path, lib_path, compiler, compiler_c, &
 longname, shortname, getenv, setenv, getarg, &
 is_alpha, filesystem_type, devnull, cpu_arch, &
 to_cygpath, to_winpath
-
-interface get_max_path
-!! deprecated
-procedure :: max_path
-end interface
-
 
 
 interface
