@@ -171,6 +171,13 @@ ${CMAKE_DL_LIBS}
 # Shell32: SHGetKnownFolderPath
 # uuid is needed for KnownFolderID
 
+get_property(_ffs_defs TARGET ffilesystem PROPERTY COMPILE_DEFINITIONS)
+message(VERBOSE "Ffilesystem COMPILE_DEFINITIONS: ${_ffs_defs}")
+get_property(_ffs_flags TARGET ffilesystem PROPERTY COMPILE_OPTIONS)
+message(VERBOSE "Ffilesystem COMPILE_OPTIONS: ${_ffs_flags}")
+get_property(_ffs_libs TARGET ffilesystem PROPERTY LINK_LIBRARIES)
+message(VERBOSE "Ffilesystem LINK_LIBRARIES: ${_ffs_libs}")
+
 if(HAVE_Fortran_FILESYSTEM)
   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/include/filesystem.mod TYPE INCLUDE)
 endif()
@@ -185,6 +192,7 @@ set_property(TARGET ffilesystem::filesystem PROPERTY IMPORTED_LINK_INTERFACE_LAN
 # https://cmake.org/cmake/help/latest/prop_tgt/IMPORTED_LINK_INTERFACE_LANGUAGES.html
 # imported targets use above instead of LINKER_LANGUAGE
 # target_link_libraries(ffilesystem::filesystem INTERFACE stdc++)  # did not help
+
 
 # --- CLI
 

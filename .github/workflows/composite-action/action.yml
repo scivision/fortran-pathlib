@@ -24,7 +24,7 @@ runs:
       cmake --preset multi
       -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
       -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
-
+      --log-level=VERBOSE
 
   - name: log if fail
     shell: bash
