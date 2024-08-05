@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15...3.30)
+cmake_minimum_required(VERSION 3.20...3.30)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "Please use out of source build like:
@@ -181,12 +181,10 @@ install(TARGETS ffilesystem EXPORT ${PROJECT_NAME}-targets)
 add_library(ffilesystem::filesystem INTERFACE IMPORTED GLOBAL)
 
 target_link_libraries(ffilesystem::filesystem INTERFACE ffilesystem)
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.19)
-  set_property(TARGET ffilesystem::filesystem PROPERTY IMPORTED_LINK_INTERFACE_LANGUAGE CXX)
-  # https://cmake.org/cmake/help/latest/prop_tgt/IMPORTED_LINK_INTERFACE_LANGUAGES.html
-  # imported targets use above instead of LINKER_LANGUAGE
-  # target_link_libraries(ffilesystem::filesystem INTERFACE stdc++)  # did not help
-endif()
+set_property(TARGET ffilesystem::filesystem PROPERTY IMPORTED_LINK_INTERFACE_LANGUAGE CXX)
+# https://cmake.org/cmake/help/latest/prop_tgt/IMPORTED_LINK_INTERFACE_LANGUAGES.html
+# imported targets use above instead of LINKER_LANGUAGE
+# target_link_libraries(ffilesystem::filesystem INTERFACE stdc++)  # did not help
 
 # --- CLI
 

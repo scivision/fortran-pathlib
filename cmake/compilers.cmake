@@ -1,9 +1,7 @@
 include(CheckIncludeFile)
 include(CheckSymbolExists)
 include(CheckCXXSymbolExists)
-include(CheckCSourceCompiles)
-include(CheckCXXSourceCompiles)
-include(CheckFortranSourceCompiles)
+include(CheckSourceCompiles)
 
 include(${CMAKE_CURRENT_LIST_DIR}/CppCheck.cmake)
 
@@ -35,15 +33,15 @@ else()
   check_symbol_exists(__has_include "" c23_has_include)
   check_symbol_exists(__has_c_attribute "" c23_has_c_attribute)
   if(c23_has_c_attribute)
-    check_c_source_compiles("
-    #if !__has_c_attribute(maybe_unused)
+    check_source_compiles(C
+    "#if !__has_c_attribute(maybe_unused)
     #error \"no maybe_unused\"
     #endif
     int main(void) { return 0; }"
     c23_maybe_unused)
 
-    check_c_source_compiles("
-    #if !__has_c_attribute(nodiscard)
+    check_source_compiles(C
+    "#if !__has_c_attribute(nodiscard)
     #error \"no nodiscard\"
     #endif
     int main(void) { return 0; }"
@@ -52,15 +50,15 @@ else()
     # [[reproducible]] [[unsequenced]] support by compilers:
     # https://en.cppreference.com/w/c/compiler_support/23
 
-    # check_c_source_compiles("
-    # #if !__has_c_attribute(reproducible)
+    # check_source_compiles(C
+    # "#if !__has_c_attribute(reproducible)
     # #error \"no reproducible\"
     # #endif
     # int main(void) { return 0; }"
     # c23_reproducible)
 
-    # check_c_source_compiles("
-    # #if !__has_c_attribute(unsequenced)
+    # check_source_compiles(C
+    # "#if !__has_c_attribute(unsequenced)
     # #error \"no unsequenced\"
     # #endif
     # int main(void) { return 0; }"
@@ -93,8 +91,8 @@ endif()
 
 if(HAVE_Fortran_FILESYSTEM)
 
-check_fortran_source_compiles("
-module dummy
+check_source_compiles(Fortran
+"module dummy
 type :: path_t
 private
 character(:), allocatable :: path_str
@@ -128,7 +126,6 @@ type(path_t) :: p
 p = path_t('.')
 end program"
 HAVE_F03TYPE
-SRC_EXT .f90
 )
 
 endif()

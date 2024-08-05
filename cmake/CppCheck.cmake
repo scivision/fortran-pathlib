@@ -7,7 +7,8 @@ function(cpp_check)
 set(CMAKE_CXX_STANDARD 17)
 
 # some compilers e.g. Cray claim to have filesystem, but their libstdc++ doesn't have it.
-check_cxx_source_compiles([=[
+check_source_compiles(CXX
+[=[
 #include <cstdlib>
 #include <filesystem>
 
@@ -37,8 +38,8 @@ set(CMAKE_CXX_STANDARD 20)
 # check_cxx_symbol_exists(__cpp_lib_smart_ptr_for_overwrite "memory" cpp20_smart_ptr_for_overwrite)
 
 # for Ffs::get_modtime
-check_cxx_source_compiles("
-#include <chrono>
+check_source_compiles(CXX
+"#include <chrono>
 #include <filesystem>
 
 int main(){
@@ -51,7 +52,8 @@ ${PROJECT_NAME}_HAVE_CLOCK_CAST
 )
 
 if(${PROJECT_NAME}_cli)
-  check_cxx_source_compiles("#include <map>
+  check_source_compiles(CXX
+  "#include <map>
    int main(){
     std::map<int, char> m{{1, 'a'}, {2, 'b'}};
     return m.contains(2);
@@ -70,7 +72,8 @@ if(${PROJECT_NAME}_trace)
 
   if(cpp20_has_cpp_attribute)
 
-  check_cxx_source_compiles("#if !__has_cpp_attribute(likely)
+  check_source_compiles(CXX
+  "#if !__has_cpp_attribute(likely)
   #error \"no likely attribute\"
   #endif
   int main(){ return 0; }"

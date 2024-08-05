@@ -6,7 +6,7 @@
 #
 # ctest -DMEMCHECK_ROOT=/path/to/bin/valgrind -S memcheck.cmake
 
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.20)
 
 list(APPEND opts -DCMAKE_BUILD_TYPE=Debug)
 
