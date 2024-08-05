@@ -14,13 +14,7 @@ if(GNU_stdfs)
   message(STATUS "fs_check: applying flags ${GNU_stdfs}")
 endif()
 
-# fixes errors about needing -fPIE
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  include(CheckPIESupported)
-  check_pie_supported()
-  set(CMAKE_POSITION_INDEPENDENT_CODE true)
-endif()
-
+set(CMAKE_CXX_STANDARD 17)
 
 add_library(fs_cpp OBJECT lib_fs.cpp)
 target_include_directories(fs_cpp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

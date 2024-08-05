@@ -1,26 +1,23 @@
 // Check that filesystem is capable of symbolic links with this compiler.
 #include <iostream>
 #include <cstdlib>
+#include <string_view>
 
 #include <filesystem>
 
 static_assert(__cpp_lib_filesystem, "No C++ filesystem support");
 
-[[noreturn]] void err(std::string_view m){
-    std::cerr << "ERROR: " << m << "\n";
-    std::exit(EXIT_FAILURE);
-}
-
 
 int main(int argc, char **argv){
 
-if(argc < 2)
-  err("missing argument for target");
+std::string_view exe = argv[0];
 
-auto tgt = std::filesystem::canonical(argv[1]);
+auto tgt = std::filesystem::path(exe);
 
-if(!std::filesystem::is_regular_file(tgt))
-  err("target " + tgt.generic_string() + " is not a regular file");
+if(!std::filesystem::is_regular_file(tgt)){
+  std::cerr << tgt << " is not a regular file\n";
+  return 77;
+}
 
 auto lnk = tgt.parent_path() / "test.lnk";
 
@@ -30,11 +27,17 @@ if(!std::filesystem::exists(lnk)) {
 }
 auto l = std::filesystem::symlink_status(lnk);
 
-if(!std::filesystem::exists(l))
-  err("symlink not created: " + lnk.generic_string());
+if(!std::filesystem::exists(l)){
+  std::cerr << "symlink not created: " << lnk << "\n";
+  return EXIT_FAILURE;
+}
 
-if(!std::filesystem::is_symlink(l))
-  err("is not a symlink: " + lnk.generic_string());
+if(!std::filesystem::is_symlink(l)){
+  std::cerr << "is not a symlink: " << lnk << "\n";
+  return EXIT_FAILURE;
+}
+
+std::cout << "OK: symlink: " << lnk << " => " << tgt << "\n";
 
 return EXIT_SUCCESS;
 }
