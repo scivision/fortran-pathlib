@@ -8,6 +8,8 @@ if fortran
   add_languages('fortran', native: false, required: true)
 endif
 
+fs = import('fs')
+
 fsrcs = fortran ? files('src/common/fortran/filesystem.F90') : []
 
 csrcs = files('src/common/common.c',
@@ -93,8 +95,14 @@ f03type_def = have_f03type ? [] : '-DNO_F03TYPE'
 is_windows = host_machine.system() == 'windows'
 
 libwin = []
+win32_symlink_def = []
 if is_windows
   libwin = cpp.find_library('Userenv', required: true)
+
+  symlink_run = cpp.run(fs.read('cmake/fs_check/check_fs_symlink.cpp'), name: 'Symlink')
+  if symlink_run.returncode() != 0
+    win32_symlink_def = '-DWIN32_SYMLINK'
+  endif
 endif
 
 # main library
@@ -102,7 +110,7 @@ filesystem = library('filesystem',
 sources: [fsrcs, csrcs, cppsrcs],
 include_directories: inc,
 install: true,
-cpp_args: chrono_def,
+cpp_args: [chrono_def, win32_symlink_def],
 fortran_args: f03type_def,
 dependencies: libwin,
 )
