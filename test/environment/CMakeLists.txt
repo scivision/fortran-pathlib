@@ -4,14 +4,14 @@ if(HAVE_Fortran_FILESYSTEM)
 
 add_executable(test_setenv test_setenv.f90)
 target_link_libraries(test_setenv PRIVATE ffilesystem)
-target_compile_options(test_setenv PRIVATE ${${PROJECT_NAME}_fortran_test_flags})
+target_compile_options(test_setenv PRIVATE ${ffilesystem_fortran_test_flags})
 set_property(TARGET test_setenv PROPERTY LINKER_LANGUAGE Fortran)
 
 add_test(NAME SetEnv COMMAND test_setenv)
 
 add_executable(test_env test_env.f90)
 target_link_libraries(test_env PRIVATE ffilesystem)
-target_compile_options(test_env PRIVATE ${${PROJECT_NAME}_fortran_test_flags})
+target_compile_options(test_env PRIVATE ${ffilesystem_fortran_test_flags})
 set_property(TARGET test_env PROPERTY LINKER_LANGUAGE Fortran)
 
 add_test(NAME FortranHomedirEnv COMMAND test_env)

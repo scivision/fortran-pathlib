@@ -42,22 +42,22 @@ std::filesystem::file_time_type t_fs;
 auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs);
 return 0;
 }"
-${PROJECT_NAME}_HAVE_CLOCK_CAST
+ffilesystem_HAVE_CLOCK_CAST
 )
 
-if(${PROJECT_NAME}_cli)
+if(ffilesystem_cli)
   check_source_compiles(CXX
   "#include <map>
    int main(){
     std::map<int, char> m{{1, 'a'}, {2, 'b'}};
     return m.contains(2);
    }"
-  ${PROJECT_NAME}_cpp_map_contains
+  ffilesystem_cpp_map_contains
   )
 endif()
 
 
-if(${PROJECT_NAME}_trace)
+if(ffilesystem_trace)
   set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
   check_cxx_symbol_exists(__cpp_lib_starts_ends_with "string" cpp20_string_ends_with)

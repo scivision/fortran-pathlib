@@ -12,7 +12,7 @@ endif()
 
 project(ffilesystem
 LANGUAGES C
-VERSION 5.7.0
+VERSION 5.7.1
 )
 
 include(CTest) # needed for "ctest -T memcheck"
@@ -51,7 +51,7 @@ endif()
 include(cmake/compilers.cmake)
 
 # CPPcheck
-if(${PROJECT_NAME}_cppcheck)
+if(ffilesystem_cppcheck)
   find_program(cppcheck_exe NAMES cppcheck REQUIRED)
   set(cppcheck_opts --enable=all --inline-suppr --quiet --suppressions-list=${PROJECT_SOURCE_DIR}/cppcheck.supp)
   set(CMAKE_C_CPPCHECK ${cppcheck_exe} --std=c++20 ${cppcheck_opts})
@@ -137,7 +137,7 @@ $<$<NOT:$<BOOL:${HAVE_CXX_FILESYSTEM}>>:${cwalk_SOURCE_DIR}/include>
 target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:C>,$<NOT:$<BOOL:${HAVE_CXX_FILESYSTEM}>>>:CWK_EXPORTS>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_WIN32_SYMLINK}>>:WIN32_SYMLINK>"
-"$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${${PROJECT_NAME}_HAVE_CLOCK_CAST}>>:HAVE_CLOCK_CAST>"
+"$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_CLOCK_CAST}>>:HAVE_CLOCK_CAST>"
 "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${ffilesystem_trace}>>:FS_TRACE=1>"
 )
 target_compile_features(ffilesystem PRIVATE cxx_std_${cxx_std} c_std_99)
@@ -197,7 +197,7 @@ set_property(TARGET ffilesystem::filesystem PROPERTY IMPORTED_LINK_INTERFACE_LAN
 # --- CLI
 
 if(ffilesystem_cli)
-  if(HAVE_CXX_FILESYSTEM AND ${PROJECT_NAME}_cpp_map_contains AND cxx_std GREATER_EQUAL 20)
+  if(HAVE_CXX_FILESYSTEM AND ffilesystem_cpp_map_contains AND cxx_std GREATER_EQUAL 20)
     add_executable(fs_cli app/main.cpp)
     target_link_libraries(fs_cli PRIVATE ffilesystem)
     target_compile_features(fs_cli PRIVATE cxx_std_${cxx_std})
@@ -217,7 +217,7 @@ if(ffilesystem_cli)
 endif()
 
 # --- Tests
-if(${PROJECT_NAME}_BUILD_TESTING)
+if(ffilesystem_BUILD_TESTING)
   add_subdirectory(test)
 endif()
 

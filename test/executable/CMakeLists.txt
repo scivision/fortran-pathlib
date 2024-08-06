@@ -21,17 +21,15 @@ foreach(t IN ITEMS exe which)
 
 add_executable(test_${t}_fortran test_${t}.f90)
 target_link_libraries(test_${t}_fortran PRIVATE ffilesystem)
-target_compile_options(test_${t}_fortran PRIVATE ${${PROJECT_NAME}_fortran_test_flags})
+target_compile_options(test_${t}_fortran PRIVATE ${ffilesystem_fortran_test_flags})
 set_property(TARGET test_${t}_fortran PROPERTY LINKER_LANGUAGE Fortran)
 
 add_test(NAME Fortran_${t} COMMAND test_${t}_fortran)
 set_property(TEST Fortran_${t} PROPERTY LABELS "Fortran")
 
-set_tests_properties(Fortran_exe PROPERTIES
-SKIP_RETURN_CODE 77
-)
-
 endforeach()
+
+set_tests_properties(Fortran_exe PROPERTIES SKIP_RETURN_CODE 77)
 
 set_property(TEST Fortran_which PROPERTY WORKING_DIRECTORY $<TARGET_FILE_DIR:test_which_fortran>)
 # Windows CWD priority test with multi-config generators

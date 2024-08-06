@@ -114,14 +114,14 @@ elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "NVHPC")
 endif()
 
 # --- code coverage
-if(${PROJECT_NAME}_coverage)
+if(ffilesystem_coverage)
   include(CodeCoverage)
   append_coverage_compiler_flags()
   set(COVERAGE_EXCLUDES ${PROJECT_SOURCE_DIR}/src/tests)
 endif()
 
 # --- clang-tidy
-if(${PROJECT_NAME}_tidy)
+if(ffilesystem_tidy)
   find_program(CLANG_TIDY_EXE NAMES clang-tidy REQUIRED
   PATHS /opt/homebrew/opt/llvm/bin
   )
@@ -131,7 +131,7 @@ if(${PROJECT_NAME}_tidy)
 endif()
 
 # --- IWYU
-if(${PROJECT_NAME}_iwyu)
+if(ffilesystem_iwyu)
   find_program(IWYU_EXE NAMES include-what-you-use REQUIRED)
   message(STATUS "IWYU_EXE: ${IWYU_EXE}")
   set(iwyu_cmd ${IWYU_EXE})

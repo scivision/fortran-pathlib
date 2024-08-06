@@ -6,11 +6,11 @@ option(ffilesystem_trace "debug trace output" off)
 option(ffilesystem_bench "enable benchmark tests")
 
 option(BUILD_SHARED_LIBS "Build shared libraries")
-option(${PROJECT_NAME}_coverage "Code coverage tests")
-option(${PROJECT_NAME}_tidy "Run clang-tidy on the code")
-option(${PROJECT_NAME}_cppcheck "Run cppcheck on the code")
-option(${PROJECT_NAME}_iwyu "Run include-what-you-use on the code")
+option(ffilesystem_coverage "Code coverage tests")
+option(ffilesystem_tidy "Run clang-tidy on the code")
+option(ffilesystem_cppcheck "Run cppcheck on the code")
+option(ffilesystem_iwyu "Run include-what-you-use on the code")
 
-option(${PROJECT_NAME}_BUILD_TESTING "Build tests" ${ffilesystem_IS_TOP_LEVEL})
+option(ffilesystem_BUILD_TESTING "Build tests" ${ffilesystem_IS_TOP_LEVEL})
 
 file(GENERATE OUTPUT .gitignore CONTENT "*")
