@@ -39,7 +39,7 @@ bool fs_is_unix() {
 }
 
 bool fs_is_bsd() {
-#ifdef BSD
+#if defined(BSD)
   return true;
 #else
   return false;
