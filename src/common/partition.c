@@ -4,12 +4,16 @@
 #endif
 #endif
 
+#if defined(__unix__)
+// https://github.com/cpredef/predef/blob/master/OperatingSystems.md#bsd-environment
+#include <sys/param.h>
+#endif
+
 #if defined(__linux__)
 #include <sys/vfs.h>
 #include <linux/magic.h>
 // https://github.com/torvalds/linux/blob/master/include/uapi/linux/magic.h
 #elif defined(__APPLE__) || defined(BSD)
-#include <sys/param.h>
 #include <sys/mount.h>
 #elif defined(_WIN32) || defined(__CYGWIN__)
 #define WIN32_LEAN_AND_MEAN
