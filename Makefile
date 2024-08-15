@@ -5,6 +5,9 @@ CC := gcc
 CXX := g++
 FC := gfortran
 
+# For Apple where AppleClang masquerades as gcc, do:
+# make CC=clang CXX=clang++
+
 BUILD_DIR := build
 
 INC := -Iinclude/
@@ -38,6 +41,12 @@ else
 	RM := rm -rf
 endif
 
+ifeq (clang++,$(findstring clang++,$(CXX)))
+  CXXLIBS := -lc++
+else ifeq  (g++,$(findstring g++,$(CXX)))
+  CXXLIBS := -lstdc++
+endif
+
 MKDIR := mkdir -p
 
 .PHONY: $(main)
@@ -54,7 +63,7 @@ $(main): app/main.cpp $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $< $(LDFLAGS)
 
 $(main_f): app/fortran/main.f90 $(FOBJS) $(OBJS)
-	$(FC) $(FFLAGS) $(FOBJS) $(OBJS) -o $@ $< $(LDFLAGS) -lstdc++
+	$(FC) $(FFLAGS) $(FOBJS) $(OBJS) -o $@ $< $(LDFLAGS) $(CXXLIBS)
 
 $(BUILD_DIR)/%.c.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
