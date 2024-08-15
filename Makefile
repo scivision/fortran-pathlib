@@ -5,20 +5,26 @@ CC := gcc
 CXX := g++
 FC := gfortran
 
-# For Apple where AppleClang masquerades as gcc, do:
+# Clang, including AppleClang:
 # make CC=clang CXX=clang++
+
+# NVHPC:
+# make CC=nvc CXX=nvc++ FC=nvfortran
+
+# Intel oneAPI
+# make CC=icx CXX=icpx FC=ifx
 
 BUILD_DIR := build
 
 INC := -Iinclude/
 
-CXXFLAGS := -std=c++20 -Wall -O3 -DNDEBUG $(INC)
-CFLAGS := -Wall -O3 -DNDEBUG $(INC)
-FFLAGS := -Wall -O3 -DNDEBUG
+CXXFLAGS := -std=c++20 -O3 -DNDEBUG $(INC)
+CFLAGS := -O3 -DNDEBUG $(INC)
+FFLAGS := -O3 -DNDEBUG
 
 cdir = src/common/
 COMM_SRCS = $(cdir)common.c $(cdir)compiler.c $(cdir)cygwin.c $(cdir)exepath.c $(cdir)env.c $(cdir)home.c $(cdir)libpath.c $(cdir)owner.c $(cdir)os.c $(cdir)partition.c $(cdir)touch.c $(cdir)uid.c $(cdir)uname.c $(cdir)which.c $(cdir)windows.c
-SRCS = $(cdir)filesystem.cpp $(cdir)c_ifc.cpp $(cdir)/copy.cpp $(cdir)ifc.cpp $(cdir)inquire.cpp $(cdir)mkdir.cpp $(cdir)pure.cpp $(cdir)platform.cpp $(cdir)resolve.cpp $(cdir)symlink.cpp $(cdir)time.cpp
+SRCS = $(cdir)filesystem.cpp $(cdir)c_ifc.cpp $(cdir)copy.cpp $(cdir)ifc.cpp $(cdir)inquire.cpp $(cdir)mkdir.cpp $(cdir)pure.cpp $(cdir)platform.cpp $(cdir)resolve.cpp $(cdir)symlink.cpp $(cdir)time.cpp
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o) $(COMM_SRCS:%=$(BUILD_DIR)/%.o)
 
 fdir = $(cdir)fortran/
@@ -41,10 +47,18 @@ else
 	RM := rm -rf
 endif
 
-ifeq (clang++,$(findstring clang++,$(CXX)))
+ifeq (icpx,$(findstring icpx,$(CXX)))
+  CXXLIBS := -lstdc++
+else ifeq (nvc++, $(findstring nvc++,$(CXX)))
+  CXXLIBS := -lstdc++
+else ifeq (clang++,$(findstring clang++,$(CXX)))
   CXXLIBS := -lc++
 else ifeq  (g++,$(findstring g++,$(CXX)))
   CXXLIBS := -lstdc++
+endif
+
+ifeq (gfortran,$(findstring gfortran,$(FC)))
+  FFLAGS += -J$(BUILD_DIR)
 endif
 
 MKDIR := mkdir -p
