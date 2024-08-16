@@ -11,6 +11,8 @@ integer :: m
 m = max_path()
 ```
 
+For Windows the top-level drive "D:/" and similar requires a trailing slash, as in numerous other programs.
+
 ## path_t
 
 `path_t` can be manually disabled with CMake by setting `cmake -DHAVE_F03TYPE=0`.

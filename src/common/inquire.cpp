@@ -24,13 +24,9 @@ bool Ffs::is_char_device(std::string_view path)
 
 bool Ffs::is_dir(std::string_view path)
 {
-  std::filesystem::path p(path);
-
-  if (fs_is_windows() && !path.empty() && p.root_name() == p)
-    return true;
-
+// NOTE: Windows top-level drive "C:" needs a trailing slash "C:/"
   std::error_code ec;
-  return std::filesystem::is_directory(p, ec) && !ec;
+  return std::filesystem::is_directory(path, ec) && !ec;
 }
 
 

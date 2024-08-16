@@ -83,7 +83,7 @@ fs_is_char_device(const char* path)
 bool
 fs_is_dir(const char* path)
 {
-// NOTE: root() e.g. "C:" needs a trailing slash
+// NOTE: Windows top-level drive "C:" needs a trailing slash "C:/"
   return fs_st_mode(path) & S_IFDIR;
   // S_ISDIR not available with MSVC
 }
