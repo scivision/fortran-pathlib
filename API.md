@@ -656,9 +656,11 @@ character(:), allocatable :: get_profile_dir()
 ```
 
 Get user configuration directory.
-On Linux systems, this looks to XDG Base Directory Specification.
-On Windows, this is the user's AppData directory.
-On MacOS, this is the user's home directory.
+[Reference](https://github.com/dirs-dev/directories-rs?tab=readme-ov-file#basedirs)
+
+* Linux: `$XDG_CONFIG_HOME` or $HOME/.config
+* Windows: `%LOCALAPPDATA%`
+* macOS: `$HOME/.config`
 
 ```fortran
 character(:), allocatable :: user_config_dir()

@@ -83,6 +83,9 @@ size_t fs_user_config_dir(char* path, const size_t buffer_size)
     return fs_strncpy(xdg, path, buffer_size);
   }
 
-  return fs_get_homedir(path, buffer_size);
+  if(!fs_get_homedir(path, buffer_size))
+    return 0;
+
+  return fs_join(path, ".config", path, buffer_size);
 #endif
 }
