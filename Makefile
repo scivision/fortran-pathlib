@@ -40,7 +40,7 @@ main_f = $(BUILD_DIR)/$(FNAME)
 ifeq ($(OS),Windows_NT)
 	SHELL := pwsh.exe
 	.SHELLFLAGS := -Command
-	LDFLAGS := -lOle32 -luuid -lUserenv
+	LDFLAGS := -lOle32 -lShell32 -luuid -lUserenv
 	RM := Remove-Item -Recurse
 	COMMENT = ".SHELLFLAGS -Command needed to get Make to use powershell rather than cmd"
 else
