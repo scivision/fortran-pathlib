@@ -23,9 +23,14 @@ std::string Ffs::canonical(std::string_view path, const bool strict)
     return Ffs::normal(ex.generic_string());
   }
 
-  const auto c = strict
+  const auto c =
+#ifdef __cpp_lib_filesystem
+    strict
     ? std::filesystem::canonical(ex, ec)
     : std::filesystem::weakly_canonical(ex, ec);
+#else
+    std::filesystem::canonical(ex, ec);
+#endif
 
   if(!ec) FFS_LIKELY
     return c.generic_string();
@@ -46,9 +51,14 @@ std::string Ffs::resolve(std::string_view path, const bool strict)
 
   std::error_code ec;
 
-  const auto c = strict
+  const auto c =
+#ifdef __cpp_lib_filesystem
+    strict
     ? std::filesystem::canonical(ex, ec)
     : std::filesystem::weakly_canonical(ex, ec);
+#else
+    std::filesystem::canonical(ex, ec);
+#endif
 
   if(!ec) FFS_LIKELY
     return c.generic_string();
@@ -65,8 +75,10 @@ bool Ffs::equivalent(std::string_view path1, std::string_view path2)
   std::filesystem::path p1(path1);
   std::filesystem::path p2(path2);
   if(fs_is_mingw()){
+#ifdef __cpp_lib_filesystem
     p1 = p1.lexically_normal();
     p2 = p2.lexically_normal();
+#endif
   }
 
   bool e = std::filesystem::equivalent(p1, p2, ec);

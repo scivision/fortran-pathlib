@@ -7,11 +7,20 @@
 #include <iostream>
 
 
-// tell if Ffilesystme core is C or C++
+// tell if Ffilesystem core is C or C++
 bool fs_cpp(){ return true; }
 
 // C++ version compiler claims to support with given options
 long fs_lang(){ return __cplusplus; }
+
+// is Ffilesystem using C++ stdlib std::filesystem vs. std::experimental::filesystem
+bool fs_stdlib(){
+#ifdef __cpp_lib_filesystem
+  return true;
+#else
+  return false;
+#endif
+}
 
 
 std::string::size_type fs_str2char(std::string_view s, char* result, const std::string::size_type buffer_size)
@@ -42,7 +51,11 @@ std::string Ffs::drop_slash(std::string_view sv)
 
 
 std::string Ffs::lexically_normal(std::string_view path){
+#ifdef __cpp_lib_filesystem
   return std::filesystem::path(path).lexically_normal().generic_string();
+#else
+  return std::string(path);
+#endif
 }
 
 
@@ -52,7 +65,11 @@ std::string Ffs::make_preferred(std::string_view path){
 
 
 std::string Ffs::normal(std::string_view path){
+#ifdef __cpp_lib_filesystem
   return Ffs::drop_slash(std::filesystem::path(path).lexically_normal().generic_string());
+#else
+  return Ffs::drop_slash(std::filesystem::path(path).generic_string());
+#endif
 }
 
 
@@ -67,7 +84,11 @@ std::string Ffs::stem(std::string_view path){
 
 
 std::string Ffs::join(std::string_view path, std::string_view other){
+#ifdef __cpp_lib_filesystem
   return Ffs::drop_slash((std::filesystem::path(path) / other).lexically_normal().generic_string());
+#else
+  return Ffs::drop_slash((std::filesystem::path(path) / other).generic_string());
+#endif
 }
 
 
@@ -118,11 +139,19 @@ bool Ffs::is_absolute(std::string_view path){
 
 // relative_to is LEXICAL operation
 std::string Ffs::relative_to(std::string_view base, std::string_view other){
+#ifdef __cpp_lib_filesystem
   return std::filesystem::path(other).lexically_relative(base).lexically_normal().generic_string();
+#else
+  return std::string(other);
+#endif
 }
 
 
 // proximate_to is LEXICAL operation
 std::string Ffs::proximate_to(std::string_view base, std::string_view other){
+#ifdef __cpp_lib_filesystem
   return std::filesystem::path(other).lexically_proximate(base).lexically_normal().generic_string();
+#else
+  return std::string(other);
+#endif
 }

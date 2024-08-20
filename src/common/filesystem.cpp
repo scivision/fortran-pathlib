@@ -33,15 +33,17 @@ bool Ffs::remove(std::string_view path)
 
 bool Ffs::set_permissions(std::string_view path, int readable, int writable, int executable)
 {
-  std::filesystem::path pth(path);
 
 #if defined(__cpp_using_enum)
   using enum std::filesystem::perms;
-#else
+#elif defined(__cpp_lib_filesystem)
   constexpr std::filesystem::perms owner_read = std::filesystem::perms::owner_read;
   constexpr std::filesystem::perms owner_write = std::filesystem::perms::owner_write;
   constexpr std::filesystem::perms owner_exec = std::filesystem::perms::owner_exec;
 #endif
+
+#if defined(__cpp_lib_filesystem)
+  std::filesystem::path pth(path);
 
   std::error_code ec;
   // need to error if path doesn't exist and no operations are requested
@@ -68,4 +70,8 @@ bool Ffs::set_permissions(std::string_view path, int readable, int writable, int
 
   std::cerr << "ERROR:ffilesystem:set_permissions: " << ec.message() << "\n";
   return false;
+#else
+  std::cerr << "ERROR:ffilesystem:set_permissions: filesystem not available\n";
+  return false;
+#endif
 }

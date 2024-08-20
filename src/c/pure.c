@@ -13,10 +13,8 @@
 #include <string.h>
 
 
-bool fs_cpp(){
 // tell if fs core is C or C++
-  return false;
-}
+bool fs_cpp(){ return false; }
 
 
 long fs_lang(){
@@ -26,6 +24,9 @@ long fs_lang(){
   return 0L;
 #endif
 }
+
+
+bool fs_stdlib(){ return false; }
 
 
 size_t fs_normal(const char* path, char* result, const size_t buffer_size)

@@ -43,6 +43,8 @@ main : do
     print '(L1)', fs_cpp()
   case ("lang")
     print '(i0)', fs_lang()
+  case ("fs_stdlib")
+    print '(L1)', fs_stdlib()
   case ("pathsep")
     print '(A)', pathsep()
   case ("compiler")

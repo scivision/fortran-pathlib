@@ -10,9 +10,18 @@ set(CMAKE_CXX_STANDARD 20)
 check_source_compiles(CXX
 [=[
 #include <cstdlib>
-#include <filesystem>
 
-static_assert(__cpp_lib_filesystem, "No C++ filesystem support");
+#if __has_include(<filesystem>)
+#include <filesystem>
+#elif __has_include(<experimental/filesystem>)
+#include <experimental/filesystem>
+namespace std {
+  namespace filesystem = experimental::filesystem;
+}
+#else
+#error "No C++ <filesystem> header available."
+#endif
+
 
 namespace fs = std::filesystem;
 
@@ -27,7 +36,7 @@ HAVE_CXX_FILESYSTEM
 )
 
 if(NOT HAVE_CXX_FILESYSTEM)
-  message(WARNING "C++ stdlib filesystem is broken in libstdc++ ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
+  message(WARNING "C++ stdlib filesystem not detected: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
   return()
 endif()
 

@@ -23,7 +23,8 @@ assert_is_file, assert_is_dir, &
 touch, get_modtime, set_modtime, &
 remove, get_tempdir, &
 set_permissions, get_permissions, &
-fs_cpp, fs_lang, pathsep, is_safe_name, &
+fs_cpp, fs_lang, fs_stdlib, &
+pathsep, is_safe_name, &
 is_admin, is_bsd, is_macos, is_windows, is_cygwin, is_wsl, is_mingw, is_linux, is_unix, &
 max_path, &
 exe_path, lib_path, compiler, compiler_c, &
@@ -41,6 +42,11 @@ end function
 
 logical(C_BOOL) function fs_is_optimized() bind(C)
 !! ffilesystem is optimized for speed?
+import C_BOOL
+end function
+
+logical(C_BOOL) function fs_stdlib() bind(C)
+!! ffilesystem is using C++ standard library filesystem?
 import C_BOOL
 end function
 

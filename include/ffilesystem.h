@@ -29,9 +29,18 @@
 #include <string>
 #include <ctime> // time_t
 
+#if __has_include(<filesystem>)
 #include <filesystem>
+#elif __has_include(<experimental/filesystem>)
+#include <experimental/filesystem>
+namespace std {
+  namespace filesystem = experimental::filesystem;
+}
+#else
+#error "No C++ <filesystem> header available."
+#endif
 
-#ifdef __cpp_lib_filesystem
+#if defined(__cpp_lib_filesystem) || __has_include(<experimental/filesystem>)
 
 class Ffs
 {
@@ -133,7 +142,7 @@ public:
 
 std::string::size_type fs_str2char(std::string_view, char*, const std::string::size_type);
 
-#endif // __cpp_lib_filesystem
+#endif // using C++ filesystem
 
 extern "C" {
 
@@ -181,6 +190,8 @@ fs_st_mode(const char*);
 
 FFS_NODISCARD bool fs_cpp();
 FFS_NODISCARD long fs_lang();
+FFS_NODISCARD bool fs_stdlib();
+
 FFS_NODISCARD size_t fs_get_max_path();
 FFS_NODISCARD bool fs_is_optimized();
 

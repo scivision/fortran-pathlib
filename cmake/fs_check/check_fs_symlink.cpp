@@ -5,8 +5,6 @@
 
 #include <filesystem>
 
-static_assert(__cpp_lib_filesystem, "No C++ filesystem support");
-
 
 int main(int argc, char **argv){
 
