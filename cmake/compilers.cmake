@@ -3,6 +3,23 @@ include(CheckSymbolExists)
 include(CheckCXXSymbolExists)
 include(CheckSourceCompiles)
 
+# --- compiler standard setting
+# https://gitlab.kitware.com/cmake/cmake/-/issues/26233
+# CMAKE_CXX_KNOWN_FEATURES doesn't work as expected
+
+set(cxx_std 17)
+
+if(
+  (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 8) OR
+  (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 15) OR
+  (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang") OR
+  (CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 23) OR
+  (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") OR
+  (CMAKE_CXX_COMPILER_ID STREQUAL "NVHPC" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 23)
+)
+  set(cxx_std 20)
+endif()
+
 
 unset(CMAKE_REQUIRED_FLAGS)
 # --- some compilers require these manual settings
