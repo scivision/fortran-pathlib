@@ -35,6 +35,7 @@ Advanced / conceptual development takes place in [ffilesystem-concepts](https://
 Ffilesystem supports compilers including:
 
 * GCC &ge; 8 (gcc/g++, gfortran)
+    * GCC 7.x works with `cmake -Dffilesystem_cpp=off`
 * LLVM Clang &ge; 9 (clang/clang++, flang or gfortran)
 * Intel oneAPI (icx, icpx, ifx)
 * AMD AOCC (clang/clang++, flang)
@@ -43,14 +44,14 @@ Ffilesystem supports compilers including:
 * Cray: using Cray compilers alone (cc, CC, ftn) or using GCC or Intel backend
 
 C++ interface requires compiler to support `<filesystem>`.
-The older `<experimental/filesystem>` is NOT supported.
-To manually disable C++ support:
+The older `<experimental/filesystem>` is NOT supported, because it is missing vital lexical operations fundamental to many filesystem operations.
+To use such compilers, disable C++ support:
 
 ```sh
 cmake -Bbuild -Dffilesystem_cpp=off
 ```
 
-GCC 7.x and Clang 7.x, 8.x may work with option `cmake -Dffilesystem_cpp=off`.
+For other/older compilers that don't have C++ `<filesystem>` try `cmake -Dffilesystem_cpp=off`.
 
 ### libstdc++
 

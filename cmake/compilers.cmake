@@ -3,9 +3,8 @@ include(CheckSymbolExists)
 include(CheckCXXSymbolExists)
 include(CheckSourceCompiles)
 
-
-unset(CMAKE_REQUIRED_FLAGS)
 # --- some compilers require these manual settings
+unset(CMAKE_REQUIRED_FLAGS)
 unset(CMAKE_REQUIRED_LIBRARIES)
 unset(CMAKE_REQUIRED_DEFINITIONS)
 unset(GNU_stdfs)
@@ -47,6 +46,17 @@ if(ffilesystem_cpp AND NOT ffilesystem_fallback AND NOT HAVE_CXX_FILESYSTEM)
   cmake -Dffilesystem_fallback=on -B build"
   )
 endif()
+
+# --- compiler standard setting
+set(cxx_std 17)
+# https://cmake.org/cmake/help/latest/variable/CMAKE_CXX_COMPILE_FEATURES.html
+if("cxx_std_20" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
+  set(cxx_std 20)
+elseif(HAVE_CXX_FILESYSTEM AND NOT "cxx_std_17" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
+  message(WARNING "${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION} may not support at least C++17 standard")
+endif()
+
+
 
 # fixes errors about needing -fPIE
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
