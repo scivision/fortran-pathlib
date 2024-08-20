@@ -94,15 +94,20 @@ jobs:
     - uses: ./.github/workflows/composite-action
 
 
-  gcc-8:
+  gcc-7-8:
     runs-on: ubuntu-20.04
     timeout-minutes: 15
 
     strategy:
+      fail-fast: false
       matrix:
         gcc-version: [8]
         shared: [false]
         cpp: [true, false]
+        include:
+        - gcc-version: 7
+          shared: false
+          cpp: false
 
     env:
       CC: gcc-${{ matrix.gcc-version }}
