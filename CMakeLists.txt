@@ -5,11 +5,6 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   cmake -Bbuild")
 endif()
 
-get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
-if(NOT is_multi_config AND NOT (CMAKE_BUILD_TYPE OR DEFINED ENV{CMAKE_BUILD_TYPE}))
-  set(CMAKE_BUILD_TYPE Release CACHE STRING "Release default")
-endif()
-
 project(ffilesystem
 LANGUAGES C
 VERSION 5.7.1
