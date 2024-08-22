@@ -27,6 +27,11 @@ if(stem("../.stem.txt") /= ".stem") then
     error stop
 end if
 
+if (stem("stem.") /= "stem") error stop "stem trailing dot filename idempotent: " // stem("stem.")
+if (stem("a/..") /= "..") error stop "stem parent directory: " // stem("a/..")
+if (stem("a/../") /= "") error stop "stem parent directory trailing slash: " // stem("a/../")
+if (stem("a/.") /= ".") error stop "stem parent directory ." // stem("a/.")
+
 end block valgrind
 
 end program
