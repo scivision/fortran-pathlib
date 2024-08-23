@@ -109,7 +109,7 @@ fs_is_readable(const char* path)
 {
 /* directory or file readable */
 
-#ifdef _WIN32
+#ifdef _MSC_VER
   // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/access-s-waccess-s
   return !_access_s(path, 4);
 #else
@@ -123,7 +123,7 @@ fs_is_writable(const char* path)
 {
 /* directory or file writable */
 
-#ifdef _WIN32
+#ifdef _MSC_VER
   // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/access-s-waccess-s
   return !_access_s(path, 2);
 #else
