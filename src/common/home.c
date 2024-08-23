@@ -29,7 +29,7 @@
 #ifndef _WIN32
 static struct passwd* fs_getpwuid()
 {
-  uid_t eff_uid = geteuid();
+  const uid_t eff_uid = geteuid();
 
   struct passwd *pw = getpwuid(eff_uid);
   if (pw == NULL)
@@ -129,7 +129,7 @@ size_t fs_expanduser(const char* path, char* result, const size_t buffer_size)
 size_t fs_get_username(char *name, const size_t buffer_size)
 {
 #ifdef _WIN32
-    DWORD L = buffer_size;
+    DWORD L = (DWORD) buffer_size;
     // Windows.h
     if(!GetUserNameA(name, &L))
     {
@@ -148,5 +148,27 @@ size_t fs_get_username(char *name, const size_t buffer_size)
       return 0;
 
     return fs_strncpy(pw->pw_name, name, buffer_size);
+#endif
+}
+
+
+size_t fs_get_shell(char *name, const size_t buffer_size)
+{
+#ifdef _WIN32
+  // taken from https://gitlab.kitware.com/utils/kwsys/-/commit/0d6eac1feb8615fe59e8f972d41d1eaa8bc9baf8
+  int const L = GetClassNameA(GetConsoleWindow(), name, (int) buffer_size);
+  // Windows Console Host: ConsoleWindowClass
+  // Windows Terminal / ConPTY: PseudoConsoleWindow (undocumented)
+  if(L > 0)
+    return L;
+
+  fs_win32_print_error(name, "get_shell");
+  return 0;
+#else
+    const struct passwd *pw = fs_getpwuid();
+    if (pw == NULL)
+      return 0;
+
+    return fs_strncpy(pw->pw_shell, name, buffer_size);
 #endif
 }

@@ -26,7 +26,7 @@ set_permissions, get_permissions, &
 fs_cpp, fs_lang, pathsep, is_safe_name, &
 is_admin, is_bsd, is_macos, is_windows, is_cygwin, is_wsl, is_mingw, is_linux, is_unix, &
 max_path, &
-exe_path, lib_path, compiler, compiler_c, &
+exe_path, lib_path, compiler, compiler_c, get_shell, &
 longname, shortname, getenv, setenv, getarg, &
 is_alpha, filesystem_type, devnull, cpu_arch, &
 to_cygpath, to_winpath
@@ -149,6 +149,12 @@ character(kind=C_CHAR), intent(in) :: path(*)
 end function
 
 integer(C_SIZE_T) function fs_compiler(path, buffer_size) bind(C)
+import
+character(kind=C_CHAR), intent(out) :: path(*)
+integer(C_SIZE_T), intent(in), value :: buffer_size
+end function
+
+integer(C_SIZE_T) function fs_get_shell(path, buffer_size) bind(C)
 import
 character(kind=C_CHAR), intent(out) :: path(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
@@ -1060,6 +1066,14 @@ function compiler_c() result(r)
 !! get C/C++ compiler name and version
 include "ifc0a.inc"
 N = fs_compiler(cbuf, N)
+include "ifc0b.inc"
+end function
+
+
+function get_shell() result(r)
+!! get shell name
+include "ifc0a.inc"
+N = fs_get_shell(cbuf, N)
 include "ifc0b.inc"
 end function
 

@@ -23,6 +23,16 @@ std::string Ffs::compiler()
 }
 
 
+std::string Ffs::get_shell()
+{
+  if(std::string buf(80, '\0');
+      fs_get_shell(buf.data(), buf.size()) > 0)  FFS_LIKELY
+    return buf.c_str();
+
+  return {};
+}
+
+
 std::string Ffs::cpu_arch()
 {
   if(std::string buf(80, '\0');

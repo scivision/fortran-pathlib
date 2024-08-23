@@ -42,6 +42,7 @@ static void no_arg(std::string_view fun){
   std::map<std::string_view, std::function<std::string()>> mstring =
   {
     {"compiler", Ffs::compiler},
+    {"shell", Ffs::get_shell},
     {"homedir", Ffs::get_homedir},
     {"profile_dir", Ffs::get_profile_dir},
     {"username", Ffs::get_username},

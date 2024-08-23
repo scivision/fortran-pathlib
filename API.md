@@ -47,6 +47,8 @@ Character, allocatable: the Fortran compiler name and version
 compiler()
 ```
 
+---
+
 Character, allocatable: the C/C++ compiler name and version.
 
 * C++ backend: output is non-empty if c++20 std::format is available
@@ -55,6 +57,19 @@ Character, allocatable: the C/C++ compiler name and version.
 ```
 compiler_c()
 ```
+
+---
+
+Character, allocatable: the Terminal shell that called the program
+
+```
+get_shell()
+```
+
+The shell on Windows is typically either "ConsoleWindowClass" for legacy COMSPEC or "PseudoConsoleWindow" for Windows Terminal.
+On non-Windows systems (or WSL) the shell is typically like "bash" or "zsh".
+
+---
 
 Character, allocatable: the CPU architecture
 
