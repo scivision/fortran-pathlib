@@ -45,7 +45,7 @@ size_t fs_compiler(char* name, const size_t buffer_size)
 #endif
 
 if (L < 0 || L >= (int) buffer_size){
-  fprintf(stderr, "ERROR:ffilesystem:fs_compiler: snprintf failed %s\n", strerror(errno));
+  fprintf(stderr, "ERROR:ffilesystem:fs_compiler: snprintf failed %d %s\n", L, strerror(errno));
   return 0;
 }
 

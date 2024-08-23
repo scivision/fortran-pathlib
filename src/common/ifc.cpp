@@ -14,7 +14,8 @@ std::string Ffs::as_posix(std::string_view path)
 
 std::string Ffs::compiler()
 {
-  if(std::string buf(80, '\0');
+  // 1000 is arbitrary
+  if(std::string buf(1000, '\0');
       fs_compiler(buf.data(), buf.size()) > 0)  FFS_LIKELY
     return buf.c_str();
 
