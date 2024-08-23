@@ -11,6 +11,9 @@ add_test(NAME Cpp_libpath COMMAND test_libpath_cpp $<BOOL:${BUILD_SHARED_LIBS}>)
 
 if(NOT BUILD_SHARED_LIBS)
   set(_p $<TARGET_FILE_DIR:test_libpath_cpp>)
+  if(CYGWIN)
+    set(_p "$<PATH:GET_FILENAME,${_p}>")
+  endif()
 endif()
 
 set_tests_properties(Cpp_libpath PROPERTIES
