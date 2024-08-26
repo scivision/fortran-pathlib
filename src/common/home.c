@@ -15,6 +15,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <UserEnv.h> // GetUserProfileDirectoryA
 #include <Windows.h>
+#include <tlhelp32.h> // for CreateToolhelp32Snapshot
+#include <psapi.h>  // for EnumProcessModules
 #else
 #include <sys/types.h>
 #include <pwd.h>      // for getpwuid, passwd
@@ -155,15 +157,34 @@ size_t fs_get_username(char *name, const size_t buffer_size)
 size_t fs_get_shell(char *name, const size_t buffer_size)
 {
 #ifdef _WIN32
-  // taken from https://gitlab.kitware.com/utils/kwsys/-/commit/0d6eac1feb8615fe59e8f972d41d1eaa8bc9baf8
-  int const L = GetClassNameA(GetConsoleWindow(), name, (int) buffer_size);
-  // Windows Console Host: ConsoleWindowClass
-  // Windows Terminal / ConPTY: PseudoConsoleWindow (undocumented)
-  if(L > 0)
-    return L;
+    name[0] = '\0';
+    const HANDLE h = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    // 0: current process
+    PROCESSENTRY32 pe = { 0 };
+    pe.dwSize = sizeof(PROCESSENTRY32);
+    HMODULE hMod;
+    DWORD cbNeeded;
 
-  fs_win32_print_error(name, "get_shell");
-  return 0;
+    if( Process32First(h, &pe)) {
+      const int pid = GetCurrentProcessId();
+      do {
+        if (pe.th32ProcessID == (DWORD) pid) {
+          HANDLE hProcess = OpenProcess( PROCESS_QUERY_INFORMATION |
+                                PROCESS_VM_READ,
+                                FALSE, pe.th32ParentProcessID );
+          if ( EnumProcessModules( hProcess, &hMod, sizeof(hMod), &cbNeeded) ) {
+              GetModuleBaseName( hProcess, hMod, name, (DWORD) buffer_size );
+              CloseHandle( hProcess );
+              break;
+          }
+          CloseHandle( hProcess );
+if(FS_TRACE) printf("TRACE: get_shell: %s PID: %i; PPID: %li\n", name, pid, pe.th32ParentProcessID);
+        }
+      } while( Process32Next(h, &pe));
+    }
+
+    CloseHandle(h);
+    return strlen(name);
 #else
     const struct passwd *pw = fs_getpwuid();
     if (pw == NULL)
