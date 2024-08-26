@@ -33,6 +33,16 @@ std::string Ffs::get_shell()
 }
 
 
+std::string Ffs::get_terminal()
+{
+  if(std::string buf(fs_get_max_path(), '\0');
+      fs_get_terminal(buf.data(), buf.size()) > 0)  FFS_LIKELY
+    return buf.c_str();
+
+  return {};
+}
+
+
 std::string Ffs::cpu_arch()
 {
   if(std::string buf(80, '\0');

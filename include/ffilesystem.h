@@ -38,6 +38,7 @@ class Ffs
 public:
   [[nodiscard]] static std::string compiler();
   [[nodiscard]] static std::string get_shell();
+  [[nodiscard]] static std::string get_terminal();
   [[nodiscard]] static std::string get_homedir();
   [[nodiscard]] static std::string get_profile_dir();
   [[nodiscard]] static std::string get_username();
@@ -278,6 +279,7 @@ size_t fs_lib_path(char*, const size_t);
 
 size_t fs_compiler(char*, const size_t);
 size_t fs_get_shell(char*, const size_t);
+size_t fs_get_terminal(char*, const size_t);
 
 bool fs_win32_create_symlink(const char*, const char*);
 

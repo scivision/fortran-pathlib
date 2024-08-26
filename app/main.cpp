@@ -43,6 +43,7 @@ static void no_arg(std::string_view fun){
   {
     {"compiler", Ffs::compiler},
     {"shell", Ffs::get_shell},
+    {"terminal", Ffs::get_terminal},
     {"homedir", Ffs::get_homedir},
     {"profile_dir", Ffs::get_profile_dir},
     {"username", Ffs::get_username},

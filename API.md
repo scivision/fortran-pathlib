@@ -66,8 +66,19 @@ Character, allocatable: the Terminal shell that called the program
 get_shell()
 ```
 
-The shell on Windows is typically either "ConsoleWindowClass" for legacy COMSPEC or "PseudoConsoleWindow" for Windows Terminal.
+On Windows systems the shell is typically "cmd" or "powershell" (pwsh).
 On non-Windows systems (or WSL) the shell is typically like "bash" or "zsh".
+
+---
+
+Character, allocatable: the Terminal emulator that called the program
+
+```
+get_terminal()
+```
+
+The Terminal on Windows is "ConsoleWindowClass" for legacy COMSPEC or "PseudoConsoleWindow" for Windows Terminal.
+On non-Windows systems (or WSL) the Terminal may represent itself like "xterm" or "gnome-terminal".
 
 ---
 

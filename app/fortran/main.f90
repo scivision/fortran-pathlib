@@ -51,6 +51,8 @@ main : do
     print '(A)', compiler_c()
   case ("shell")
     print '(A)', get_shell()
+  case ("terminal")
+    print '(A)', get_terminal()
   case ("cpu_arch")
     print '(A)', cpu_arch()
   case ("homedir")
