@@ -39,7 +39,7 @@ bool fs_copy_file(const char* source, const char* dest, bool overwrite)
     FILE *rid = fopen(source, "r");
     FILE *wid = fopen(dest, "w");
 
-    if (rid == NULL || wid == NULL) {
+    if (!rid || !wid ) {
       fprintf(stderr, "ERROR:ffilesystem:copy_file: could not open file %s or %s\n", source, dest);
       return false;
     }

@@ -27,7 +27,6 @@ size_t fs_get_owner(const char* path, char* name, const size_t buffer_size)
   DWORD Ldomain = 0;
   PSECURITY_DESCRIPTOR pSD = NULL;
   PSID pOwnerSid = NULL;
-  LPTSTR OwnerName = NULL;
   SID_NAME_USE eUse = SidTypeUnknown;
 
   DWORD dwResult = GetNamedSecurityInfoA(path, SE_FILE_OBJECT, OWNER_SECURITY_INFORMATION, &pOwnerSid, NULL, NULL, NULL, &pSD);
@@ -48,8 +47,8 @@ size_t fs_get_owner(const char* path, char* name, const size_t buffer_size)
     }
   }
 
-  OwnerName = (LPTSTR)GlobalAlloc(GMEM_FIXED, Lowner*sizeof(TCHAR));
-  if (OwnerName == NULL) {
+  const LPTSTR OwnerName = (LPTSTR)GlobalAlloc(GMEM_FIXED, Lowner*sizeof(TCHAR));
+  if (!OwnerName) {
     fs_win32_print_error(path, "owner:GlobalAlloc: failed to allocate memory");
     return 0;
   }
@@ -72,8 +71,8 @@ size_t fs_get_owner(const char* path, char* name, const size_t buffer_size)
     return 0;
   }
 
-  struct passwd *pw = getpwuid(s.st_uid);
-  if(pw == NULL){
+  const struct passwd *pw = getpwuid(s.st_uid);
+  if(!pw){
     fprintf(stderr, "ERROR:ffilesystem:fs_get_owner:getpwuid %s => %s\n", path, strerror(errno));
     return 0;
   }

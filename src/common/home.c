@@ -34,7 +34,7 @@ static struct passwd* fs_getpwuid()
   const uid_t eff_uid = geteuid();
 
   struct passwd *pw = getpwuid(eff_uid);
-  if (pw == NULL)
+  if (!pw)
     fprintf(stderr, "ERROR:ffilesystem:fs_getpwuid: UID %u %s\n", eff_uid, strerror(errno));
 
   return pw;
@@ -74,7 +74,7 @@ size_t fs_get_profile_dir(char* path, const size_t buffer_size)
   return strlen(path);
 #else
   const struct passwd *pw = fs_getpwuid();
-  if (pw == NULL)
+  if (!pw)
     return 0;
 
   return fs_strncpy(pw->pw_dir, path, buffer_size);
@@ -146,7 +146,7 @@ size_t fs_get_username(char *name, const size_t buffer_size)
     return 0;
 #else
     const struct passwd *pw = fs_getpwuid();
-    if (pw == NULL)
+    if (!pw)
       return 0;
 
     return fs_strncpy(pw->pw_name, name, buffer_size);
@@ -187,7 +187,7 @@ if(FS_TRACE) printf("TRACE: get_shell: %s PID: %i; PPID: %li\n", name, pid, pe.t
     return strlen(name);
 #else
     const struct passwd *pw = fs_getpwuid();
-    if (pw == NULL)
+    if (!pw)
       return 0;
 
     return fs_strncpy(pw->pw_shell, name, buffer_size);
