@@ -142,7 +142,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"weakly_resolve", Ffs::resolve}
   };
 
-  std::map<std::string_view, std::function<uintmax_t(std::string_view)>> mmax =
+  std::map<std::string_view, std::function<std::optional<uintmax_t>(std::string_view)>> mmax =
   {
     {"size", Ffs::file_size},
     {"space", Ffs::space_available}
@@ -153,6 +153,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"touch", Ffs::touch}
   };
 
+  std::error_code ec;
+
   if(mbool.contains(fun))
     std::cout << mbool[fun](a1) << "\n";
   else if (mstring.contains(fun))
@@ -161,16 +163,18 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << mstrb[fun](a1, true) << "\n";
   else if (mstrbw.contains(fun))
     std::cout << mstrbw[fun](a1, false) << "\n";
-  else if (mmax.contains(fun))
-    std::cout << mmax[fun](a1) << "\n";
+  else if (mmax.contains(fun)){
+    if(const auto &s = mmax[fun](a1); s)
+      std::cout << *s << "\n";
+  }
   else if (mvoid.contains(fun))
     mvoid[fun](a1);
   else if (fun == "modtime"){
 #if defined(__cpp_lib_format)
-    auto t = Ffs::get_modtime(a1);
-    std::cout << std::format("{}\n", t);
+    if(const auto &t = Ffs::get_modtime(a1); t)
+      std::cout << std::format("{}\n", t.value());
 #else
-    auto t = fs_get_modtime(a1.data());
+    const auto t = fs_get_modtime(a1.data());
     std::cout << std::ctime(&t) << "\n";
 #endif
   } else if (fun == "fs_modtime")
@@ -182,9 +186,9 @@ static void one_arg(std::string_view fun, std::string_view a1){
   } else if (fun == "ls") {
     for (auto const& dir_entry : std::filesystem::directory_iterator{Ffs::expanduser(a1)}){
       std::filesystem::path p = dir_entry.path();
-      std::cout << p;
-      if (Ffs::is_file(p.generic_string()))
-        std::cout << " " << Ffs::file_size(p.generic_string());
+      std::cout << p;;
+      if (const auto &s = std::filesystem::file_size(p, ec); s && !ec)
+        std::cout << " " << s;
 
       std::cout << " " << Ffs::get_permissions(p.generic_string()) << "\n";
     }

@@ -22,9 +22,17 @@ bool fs_is_symlink(const char* path){ return Ffs::is_symlink(path); }
 
 bool fs_is_writable(const char* path){ return Ffs::is_writable(path); }
 
-uintmax_t fs_file_size(const char* path){ return Ffs::file_size(path); }
+uintmax_t fs_file_size(const char* path){
+  if (auto s = Ffs::file_size(path); s)
+    return s.value();
+  return 0;
+}
 
-uintmax_t fs_space_available(const char* path){ return Ffs::space_available(path); }
+uintmax_t fs_space_available(const char* path){
+  if (auto s = Ffs::space_available(path); s)
+    return s.value();
+  return 0;
+}
 
 
 std::string::size_type fs_canonical(const char* path, const bool strict,

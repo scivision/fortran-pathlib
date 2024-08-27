@@ -28,6 +28,7 @@
 #include <algorithm> // std::min
 #include <string>
 #include <ctime> // time_t
+#include <optional>
 
 #include <filesystem>
 
@@ -81,7 +82,7 @@ public:
   [[nodiscard]] static std::string which(std::string_view);
 
   static bool touch(std::string_view);
-  [[nodiscard]] static std::filesystem::file_time_type get_modtime(std::string_view);
+  [[nodiscard]] static std::optional<std::filesystem::file_time_type> get_modtime(std::string_view);
   static bool set_modtime(std::string_view);
 
   [[nodiscard]] static std::string canonical(std::string_view, const bool);
@@ -90,8 +91,8 @@ public:
   [[nodiscard]] static std::string read_symlink(std::string_view);
   [[nodiscard]] static std::string get_permissions(std::string_view);
 
-  [[nodiscard]] static uintmax_t file_size(std::string_view);
-  [[nodiscard]] static uintmax_t space_available(std::string_view);
+  [[nodiscard]] static std::optional<uintmax_t> file_size(std::string_view);
+  [[nodiscard]] static std::optional<uintmax_t> space_available(std::string_view);
 
   [[nodiscard]] static std::string mkdtemp(std::string_view);
 
@@ -162,7 +163,7 @@ mode_t
 #endif
 fs_st_mode(const char*);
 
-#endif
+#endif  // end C-only
 
 
 #if !defined(__has_c_attribute)

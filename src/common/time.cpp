@@ -7,6 +7,7 @@
 #include "ffilesystem.h"
 
 #include <iostream>
+#include <optional>
 #include <system_error>
 
 #ifdef HAVE_CLOCK_CAST
@@ -28,9 +29,11 @@ std::time_t fs_get_modtime(const char* path)
 {
 
 #ifdef HAVE_CLOCK_CAST
-  const auto t_fs = Ffs::get_modtime(path);
-  const auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs);
-  return std::chrono::system_clock::to_time_t(t_sys);
+  if(const auto &t_fs = Ffs::get_modtime(path); t_fs){
+    const auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs.value());
+    return std::chrono::system_clock::to_time_t(t_sys);
+  }
+  return {};
 #else
   if (struct stat s; !stat(path, &s))
     return s.st_mtime;
@@ -41,7 +44,7 @@ std::time_t fs_get_modtime(const char* path)
 
 }
 
-std::filesystem::file_time_type Ffs::get_modtime(std::string_view path)
+std::optional<std::filesystem::file_time_type> Ffs::get_modtime(std::string_view path)
 {
   std::error_code ec;
 
@@ -49,7 +52,7 @@ std::filesystem::file_time_type Ffs::get_modtime(std::string_view path)
     return t_fs;
 
   std::cerr << "ERROR:Ffs:get_modtime: " << ec.message() << "\n";
-  return std::filesystem::file_time_type::min();
+  return {};
 }
 
 

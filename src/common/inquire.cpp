@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <optional>
 #include <string>
 #include <cstring> // std::streerror
 #include <system_error>         // for error_code
@@ -104,18 +105,18 @@ bool Ffs::is_file(std::string_view path)
 }
 
 
-uintmax_t Ffs::file_size(std::string_view path)
+std::optional<uintmax_t> Ffs::file_size(std::string_view path)
 {
   std::error_code ec;
   if(auto s = std::filesystem::file_size(path, ec); !ec)  FFS_LIKELY
     return s;
 
   std::cerr << "ERROR:ffilesystem:file_size: " << ec.message() << "\n";
-  return 0;
+  return {};
 }
 
 
-uintmax_t Ffs::space_available(std::string_view path)
+std::optional<uintmax_t> Ffs::space_available(std::string_view path)
 {
   // filesystem space available for device holding path
 
@@ -124,7 +125,7 @@ uintmax_t Ffs::space_available(std::string_view path)
     return s.available;
 
   std::cerr << "ERROR:ffilesystem:space_available: " << ec.message() << "\n";
-  return 0;
+  return {};
 }
 
 

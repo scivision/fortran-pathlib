@@ -34,14 +34,14 @@ int main(int argc, char *argv[]){
 
   std::string drive(argv[0]);
 
-  if(Ffs::file_size(drive) == 0)
+  if(!Ffs::file_size(drive))
     err("failed to get own file size");
 
-  uintmax_t avail = Ffs::space_available(drive);
-  if(avail == 0)
+  auto avail = Ffs::space_available(drive);
+  if(!avail)
     err("failed to get space available of own drive " + drive);
 
-  float avail_GB = (float) avail / 1073741824;
+  float avail_GB = (float) avail.value() / 1073741824;
   std::cout << "OK space available on drive of " << drive <<  " (GB) " <<  avail_GB << "\n";
 
   return EXIT_SUCCESS;
