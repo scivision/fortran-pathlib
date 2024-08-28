@@ -129,7 +129,7 @@ std::optional<uintmax_t> Ffs::space_available(std::string_view path)
 }
 
 
-std::string Ffs::get_permissions(std::string_view path)
+std::optional<std::string> Ffs::get_permissions(std::string_view path)
 {
 
   std::error_code ec;

@@ -27,9 +27,8 @@ int main()
   _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-std::string p = Ffs::get_permissions("");
-if(p.length() != 0)
-    err("get_permissions('') should be empty, got: " + p);
+if(auto p = Ffs::get_permissions(""); p)
+    err("get_permissions('') should fail, but got: " + p.value());
 
 std::string read = "readable.txt";
 std::string noread = "nonreadable.txt";
@@ -38,11 +37,11 @@ std::string nowrite = "nonwritable.txt";
 Ffs::touch(read);
 Ffs::set_permissions(read, 1, 0, 0);
 
-p = Ffs::get_permissions(read);
-std::cout << "Permissions for " << read << ": " << p << "\n";
+auto p = Ffs::get_permissions(read);
+if(!p)
+    err("get_permissions('" + read + "') failed");
 
-if(p.length() == 0)
-    err("get_permissions('" + read + "') should not be empty");
+std::cout << "Permissions for " << read << ": " << p.value() << "\n";
 
 if(!Ffs::is_readable(read))
     err(read + " should be readable");
@@ -58,12 +57,12 @@ Ffs::touch(noread);
 Ffs::set_permissions(noread, -1, 0, 0);
 
 p = Ffs::get_permissions(noread);
-std::cout << "Permissions for " << noread << ": " << p << "\n";
+if(!p)
+    err("get_permissions('" + noread + "') failed");
 
-if(p.length() == 0)
-    err(noread + "') should not be empty");
+std::cout << "Permissions for " << noread << ": " << p.value() << "\n";
 
-if(p.find("r") == std::string::npos && Ffs::is_readable(noread)){
+if(p.value().find("r") == std::string::npos && Ffs::is_readable(noread)){
 
 if(!Ffs::exists(noread))
     err(noread + " should exist");
@@ -78,9 +77,11 @@ if(!Ffs::is_file(nowrite))
 Ffs::set_permissions(nowrite, 0, -1, 0);
 
 p = Ffs::get_permissions(nowrite);
-std::cout << "Permissions for " << nowrite << " " << p << "\n";
+if(!p)
+    err("get_permissions('" + nowrite + "') failed");
+std::cout << "Permissions for " << nowrite << " " << p.value() << "\n";
 
-if(p.find("w") == std::string::npos && Ffs::is_writable(nowrite)){
+if(p.value().find("w") == std::string::npos && Ffs::is_writable(nowrite)){
   std::cerr << "ERROR:  " << nowrite << " should not be writable\n";
   if(!fs_is_windows())
     return EXIT_FAILURE;

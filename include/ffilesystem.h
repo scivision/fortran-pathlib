@@ -89,7 +89,7 @@ public:
   [[nodiscard]] static std::string resolve(std::string_view, const bool);
 
   [[nodiscard]] static std::string read_symlink(std::string_view);
-  [[nodiscard]] static std::string get_permissions(std::string_view);
+  [[nodiscard]] static std::optional<std::string> get_permissions(std::string_view);
 
   [[nodiscard]] static std::optional<uintmax_t> file_size(std::string_view);
   [[nodiscard]] static std::optional<uintmax_t> space_available(std::string_view);

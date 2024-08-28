@@ -117,7 +117,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"stem", Ffs::stem},
     {"suffix", Ffs::suffix},
     {"filename", Ffs::file_name},
-    {"perm", Ffs::get_permissions},
     {"read_symlink", Ffs::read_symlink},
     {"normal", Ffs::normal},
     {"lexically_normal", Ffs::lexically_normal},
@@ -128,6 +127,11 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"longname", Ffs::longname},
     {"getenv", Ffs::get_env},
     {"type", Ffs::filesystem_type}
+  };
+
+    std::map<std::string_view, std::function<std::optional<std::string>(std::string_view)>> mostring =
+  {
+    {"perm", Ffs::get_permissions}
   };
 
   std::map<std::string_view, std::function<std::string(std::string_view, bool)>> mstrb =
@@ -159,6 +163,10 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << mbool[fun](a1) << "\n";
   else if (mstring.contains(fun))
     std::cout << mstring[fun](a1) << "\n";
+  else if (mostring.contains(fun)){
+    if(const auto &s = mostring[fun](a1); s)
+      std::cout << *s << "\n";
+  }
   else if (mstrb.contains(fun))
     std::cout << mstrb[fun](a1, true) << "\n";
   else if (mstrbw.contains(fun))
@@ -190,7 +198,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
       if (const auto &s = std::filesystem::file_size(p, ec); s && !ec)
         std::cout << " " << s;
 
-      std::cout << " " << Ffs::get_permissions(p.generic_string()) << "\n";
+      if (const auto &pm = Ffs::get_permissions(p.generic_string()); pm)
+        std::cout << " " << pm.value() << "\n";
     }
   } else {
     std::cerr << fun << " requires more arguments or is unknown function\n";
@@ -238,11 +247,19 @@ static void four_arg(std::string_view fun, std::string_view a1, std::string_view
     int w = std::stoi(a3.data());
     int x = std::stoi(a4.data());
 
-    std::cout << "before chmod " << a1 << " " << Ffs::get_permissions(a1) << "\n";
+    auto p = Ffs::get_permissions(a1);
+    if(!p)
+      std::cerr << "ERROR get_permissions(" << a1 << ") before chmod\n";
+    else
+      std::cout << "before chmod " << a1 << " " << p.value() << "\n";
 
     Ffs::set_permissions(a1, r, w, x);
 
-    std::cout << "after chmod " << a1 << " " << Ffs::get_permissions(a1) << "\n";
+    if(!p)
+      std::cerr << "ERROR get_permissions(" << a1 << ") after chmod\n";
+    else
+      std::cout << "after chmod " << a1 << " " << p.value() << "\n";
+
   } else {
     std::cerr << fun << " requires more arguments or is unknown function\n";
   }

@@ -31,6 +31,7 @@ uintmax_t fs_file_size(const char* path){
 uintmax_t fs_space_available(const char* path){
   if (auto s = Ffs::space_available(path); s)
     return s.value();
+
   return 0;
 }
 
@@ -57,7 +58,10 @@ std::string::size_type fs_get_cwd(char* path, const std::string::size_type buffe
 
 std::string::size_type fs_get_permissions(const char* path,
                          char* result, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::get_permissions(path), result, buffer_size);
+  if(auto p = Ffs::get_permissions(path); p)
+    return fs_str2char(p.value(), result, buffer_size);
+
+  return 0;
 }
 
 std::string::size_type fs_file_name(const char* path,
