@@ -31,6 +31,17 @@ if(NOT HAVE_CXX_FILESYSTEM)
   return()
 endif()
 
+# for Ffs::mkdtemp
+check_source_compiles(CXX
+"#include <random>
+
+int main(){
+  std::mt19937 mt_rand(0);
+  return 0;
+}"
+ffilesystem_HAVE_MERSENNE_TWISTER
+)
+
 # for Ffs::get_modtime
 check_source_compiles(CXX
 "#include <chrono>

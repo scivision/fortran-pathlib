@@ -5,9 +5,12 @@
 #include <array>                // for array
 #include <functional>           // for ref
 #include <iterator>             // for begin, end
-#include <random>
 #include <string>
 #include <system_error>         // for error_code
+
+#if defined(HAVE_MERSENNE_TWISTER)
+#include <random>
+#endif
 
 
 bool Ffs::mkdir(std::string_view path)
@@ -21,7 +24,7 @@ bool Ffs::mkdir(std::string_view path)
   return false;
 }
 
-#ifdef __cpp_deduction_guides
+#if defined(__cpp_deduction_guides) && defined(HAVE_MERSENNE_TWISTER)
 // CTAD C++17 random string generator
 // https://stackoverflow.com/a/444614
 // https://en.cppreference.com/w/cpp/language/class_template_argument_deduction
@@ -56,7 +59,7 @@ static std::string fs_generate_random_alphanumeric_string(const std::string::siz
 std::string Ffs::mkdtemp(std::string_view prefix)
 {
   // make unique temporary directory starting with prefix
-#ifdef __cpp_deduction_guides
+#if defined(__cpp_deduction_guides) && defined(HAVE_MERSENNE_TWISTER)
   std::error_code ec;
   std::filesystem::path t;
   constexpr std::string::size_type Lname = 16;  // arbitrary length for random string
@@ -75,7 +78,7 @@ std::string Ffs::mkdtemp(std::string_view prefix)
 
   std::cerr << "Ffs::mkdtemp:mkdir: could not create temporary directory " << ec.message() << "\n";
 #else
-  std::cerr << "Ffs::mkdtemp not available without C++17 CTAD\n";
+  std::cerr << "Ffs::mkdtemp not available without C++17 CTAD and std::mt19937\n";
 #endif
   return {};
 }
