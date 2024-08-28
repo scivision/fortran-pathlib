@@ -151,10 +151,14 @@ std::map<std::string_view, std::function<std::string()>> s_ =
   {
     {"compiler", Ffs::compiler},
     {"homedir", Ffs::get_homedir},
-    {"cwd", Ffs::get_cwd},
-    {"tempdir", Ffs::get_tempdir},
     {"exe_path", Ffs::exe_path},
     {"lib_path", Ffs::lib_path}
+  };
+
+std::map<std::string_view, std::function<std::optional<std::string>()>> so_ =
+  {
+    {"tempdir", Ffs::get_tempdir},
+    {"cwd", Ffs::get_cwd}
   };
 
 std::map<std::string_view, std::function<std::string(std::string_view)>> s_s =
@@ -167,8 +171,6 @@ std::map<std::string_view, std::function<std::string(std::string_view)>> s_s =
     {"stem", Ffs::stem},
     {"suffix", Ffs::suffix},
     {"filename", Ffs::file_name},
-    {"perm", Ffs::get_permissions},
-    {"read_symlink", Ffs::read_symlink},
     {"normal", Ffs::normal},
     {"lexically_normal", Ffs::lexically_normal},
     {"make_preferred", Ffs::make_preferred},
@@ -176,6 +178,12 @@ std::map<std::string_view, std::function<std::string(std::string_view)>> s_s =
     {"shortname", Ffs::shortname},
     {"longname", Ffs::longname},
     {"getenv", Ffs::get_env}
+  };
+
+std::map<std::string_view, std::function<std::optional<std::string>(std::string_view)>> s_so =
+  {
+    {"perm", Ffs::get_permissions},
+    {"read_symlink", Ffs::read_symlink}
   };
 
 std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool)>> ssb =
@@ -211,10 +219,14 @@ if (b_s.contains(fname))
   b = b_s[fname](path);
 else if (s_.contains(fname))
   h = s_[fname]();
+else if (so_.contains(fname))
+  h = so_[fname]().value_or("");
 else if (ssb.contains(fname))
-  h = ssb[fname](path, strict);
+  h = ssb[fname](path, strict).value_or("");
 else if (s_s.contains(fname))
   h = s_s[fname](path);
+else if (s_so.contains(fname))
+  h = s_so[fname](path).value_or("");
 else
   {
     std::cerr << "Error: unknown function " << fname << "\n";
@@ -229,10 +241,14 @@ for (int i = 0; i < n; ++i)
     b = b_s[fname](path);
   else if (s_.contains(fname))
     h = s_[fname]();
+  else if (so_.contains(fname))
+    h = so_[fname]().value_or("");
   else if (ssb.contains(fname))
-    h = ssb[fname](path, strict);
+    h = ssb[fname](path, strict).value_or("");
   else if (s_s.contains(fname))
     h = s_s[fname](path);
+  else if (s_so.contains(fname))
+    h = s_so[fname](path).value_or("");
 
   auto t1 = std::chrono::steady_clock::now();
   t = std::min(t, std::chrono::duration_cast<std::chrono::duration<double>>(t1 - t0));

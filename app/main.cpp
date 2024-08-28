@@ -77,10 +77,8 @@ static void no_arg(std::string_view fun){
     std::cout << mbool[fun]() << "\n";
   else if (mstring.contains(fun))
     std::cout << mstring[fun]() << "\n";
-  else if (mostring.contains(fun)){
-    if(const auto &s = mostring[fun](); s)
-      std::cout << *s << "\n";
-  }
+  else if (mostring.contains(fun))
+    std::cout << mostring[fun]().value_or("") << "\n";
   else if (mint.contains(fun))
     std::cout << mint[fun]() << "\n";
   else if (mchar.contains(fun))
@@ -125,7 +123,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"stem", Ffs::stem},
     {"suffix", Ffs::suffix},
     {"filename", Ffs::file_name},
-    {"read_symlink", Ffs::read_symlink},
     {"normal", Ffs::normal},
     {"lexically_normal", Ffs::lexically_normal},
     {"make_preferred", Ffs::make_preferred},
@@ -139,7 +136,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
 
     std::map<std::string_view, std::function<std::optional<std::string>(std::string_view)>> mostring =
   {
-    {"perm", Ffs::get_permissions}
+    {"perm", Ffs::get_permissions},
+    {"read_symlink", Ffs::read_symlink}
   };
 
   std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool)>> mstrb =
@@ -170,28 +168,20 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << mbool[fun](a1) << "\n";
   else if (mstring.contains(fun))
     std::cout << mstring[fun](a1) << "\n";
-  else if (mostring.contains(fun)){
-    if(const auto &s = mostring[fun](a1); s)
-      std::cout << *s << "\n";
-  }
-  else if (mstrb.contains(fun)){
-    if(const auto &s = mstrb[fun](a1, true); s)
-      std::cout << *s << "\n";
-  }
-  else if (mstrbw.contains(fun)){
-    if(const auto &s = mstrbw[fun](a1, false); s)
-      std::cout << *s << "\n";
-  }
-  else if (mmax.contains(fun)){
-    if(const auto &s = mmax[fun](a1); s)
-      std::cout << *s << "\n";
-  }
+  else if (mostring.contains(fun))
+    std::cout << mostring[fun](a1).value_or("") << "\n";
+  else if (mstrb.contains(fun))
+    std::cout << mstrb[fun](a1, true).value_or("") << "\n";
+  else if (mstrbw.contains(fun))
+    std::cout << mstrbw[fun](a1, false).value_or("") << "\n";
+  else if (mmax.contains(fun))
+    std::cout <<  mmax[fun](a1).value_or(0) << "\n";
   else if (mvoid.contains(fun))
     mvoid[fun](a1);
   else if (fun == "modtime"){
 #if defined(__cpp_lib_format)
-    if(const auto &t = Ffs::get_modtime(a1); t)
-      std::cout << std::format("{}\n", t.value());
+    const auto t = Ffs::get_modtime(a1);
+    std::cout << std::format("{}\n", t.value_or(""));
 #else
     const auto t = fs_get_modtime(a1.data());
     std::cout << std::ctime(&t) << "\n";
@@ -219,8 +209,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
       if (const auto &s = std::filesystem::file_size(p, ec); s && !ec)
         std::cout << " " << s;
 
-      if (const auto &pm = Ffs::get_permissions(p.generic_string()); pm)
-        std::cout << " " << pm.value() << "\n";
+      std::cout << " " << Ffs::get_permissions(p.generic_string()).value_or("") << "\n";
     }
   } else {
     std::cerr << fun << " requires more arguments or is unknown function\n";

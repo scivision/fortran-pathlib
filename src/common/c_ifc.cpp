@@ -102,7 +102,10 @@ std::string::size_type fs_proximate_to(const char* base, const char* other,
 
 std::string::size_type fs_read_symlink(const char* path,
                          char* result, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::read_symlink(path), result, buffer_size);
+  if(auto p = Ffs::read_symlink(path); p)
+    return fs_str2char(p.value(), result, buffer_size);
+
+  return 0;
 }
 
 std::string::size_type fs_relative_to(const char* base, const char* other,

@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include <string>
+
+#include <optional>
 #include <system_error>
 
 
@@ -22,7 +24,7 @@ bool Ffs::is_symlink(std::string_view path)
 }
 
 
-std::string Ffs::read_symlink(std::string_view path)
+std::optional<std::string> Ffs::read_symlink(std::string_view path)
 {
   std::error_code ec;
   if(auto p = std::filesystem::read_symlink(path, ec); !ec) FFS_LIKELY

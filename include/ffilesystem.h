@@ -88,7 +88,7 @@ public:
   [[nodiscard]] static std::optional<std::string> canonical(std::string_view, const bool);
   [[nodiscard]] static std::optional<std::string> resolve(std::string_view, const bool);
 
-  [[nodiscard]] static std::string read_symlink(std::string_view);
+  [[nodiscard]] static std::optional<std::string> read_symlink(std::string_view);
   [[nodiscard]] static std::optional<std::string> get_permissions(std::string_view);
 
   [[nodiscard]] static std::optional<uintmax_t> file_size(std::string_view);
