@@ -23,25 +23,17 @@ bool fs_is_symlink(const char* path){ return Ffs::is_symlink(path); }
 bool fs_is_writable(const char* path){ return Ffs::is_writable(path); }
 
 uintmax_t fs_file_size(const char* path){
-  if (auto s = Ffs::file_size(path); s)
-    return s.value();
-  return 0;
+  return Ffs::file_size(path).value_or(0);
 }
 
 uintmax_t fs_space_available(const char* path){
-  if (auto s = Ffs::space_available(path); s)
-    return s.value();
-
-  return 0;
+  return Ffs::space_available(path).value_or(0);
 }
 
 
 std::string::size_type fs_canonical(const char* path, const bool strict,
                           char* result, const std::string::size_type buffer_size){
-  if(auto p = Ffs::canonical(path, strict); p)
-    return fs_str2char(p.value(), result, buffer_size);
-
-  return 0;
+  return fs_str2char(Ffs::canonical(path, strict).value_or(""), result, buffer_size);
 }
 
 
@@ -56,18 +48,12 @@ bool fs_equivalent(const char* path1, const char* path2){
 
 
 std::string::size_type fs_get_cwd(char* path, const std::string::size_type buffer_size){
-  if(auto p = Ffs::get_cwd(); p)
-    return fs_str2char(p.value(), path, buffer_size);
-
-  return 0;
+  return fs_str2char(Ffs::get_cwd().value_or(""), path, buffer_size);
 }
 
 std::string::size_type fs_get_permissions(const char* path,
                          char* result, const std::string::size_type buffer_size){
-  if(auto p = Ffs::get_permissions(path); p)
-    return fs_str2char(p.value(), result, buffer_size);
-
-  return 0;
+  return fs_str2char(Ffs::get_permissions(path).value_or(""), result, buffer_size);
 }
 
 std::string::size_type fs_file_name(const char* path,
@@ -102,10 +88,7 @@ std::string::size_type fs_proximate_to(const char* base, const char* other,
 
 std::string::size_type fs_read_symlink(const char* path,
                          char* result, const std::string::size_type buffer_size){
-  if(auto p = Ffs::read_symlink(path); p)
-    return fs_str2char(p.value(), result, buffer_size);
-
-  return 0;
+  return fs_str2char(Ffs::read_symlink(path).value_or(""), result, buffer_size);
 }
 
 std::string::size_type fs_relative_to(const char* base, const char* other,
@@ -115,10 +98,7 @@ std::string::size_type fs_relative_to(const char* base, const char* other,
 
 std::string::size_type fs_resolve(const char* path, const bool strict,
                          char* result, const std::string::size_type buffer_size){
-  if(auto p = Ffs::resolve(path, strict); p)
-    return fs_str2char(p.value(), result, buffer_size);
-
-  return 0;
+  return fs_str2char(Ffs::resolve(path, strict).value_or(""), result, buffer_size);
 }
 
 std::string::size_type fs_root(const char* path,
@@ -144,10 +124,7 @@ std::string::size_type fs_with_suffix(const char* path, const char* new_suffix,
 bool fs_set_cwd(const char *path){ return Ffs::chdir(path); }
 
 std::string::size_type fs_get_tempdir(char* path, const std::string::size_type buffer_size){
-  if(auto p = Ffs::get_tempdir(); p)
-    return fs_str2char(p.value(), path, buffer_size);
-
-  return 0;
+  return fs_str2char(Ffs::get_tempdir().value_or(""), path, buffer_size);
 }
 
 
@@ -166,5 +143,5 @@ std::string::size_type fs_make_tempdir(char* result, const std::string::size_typ
 }
 
 bool fs_set_permissions(const char* path, int readable, int writable, int executable){
-    return Ffs::set_permissions(path, readable, writable, executable);
+  return Ffs::set_permissions(path, readable, writable, executable);
 }

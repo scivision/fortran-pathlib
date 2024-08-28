@@ -181,7 +181,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
   else if (fun == "modtime"){
 #if defined(__cpp_lib_format)
     const auto t = Ffs::get_modtime(a1);
-    std::cout << std::format("{}\n", t.value_or(""));
+    if(t)
+      std::cout << std::format("{}\n", t.value());
 #else
     const auto t = fs_get_modtime(a1.data());
     std::cout << std::ctime(&t) << "\n";
