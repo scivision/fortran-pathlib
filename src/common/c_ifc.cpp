@@ -38,7 +38,10 @@ uintmax_t fs_space_available(const char* path){
 
 std::string::size_type fs_canonical(const char* path, const bool strict,
                           char* result, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::canonical(path, strict), result, buffer_size);
+  if(auto p = Ffs::canonical(path, strict); p)
+    return fs_str2char(p.value(), result, buffer_size);
+
+  return 0;
 }
 
 
@@ -53,7 +56,10 @@ bool fs_equivalent(const char* path1, const char* path2){
 
 
 std::string::size_type fs_get_cwd(char* path, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::get_cwd(), path, buffer_size);
+  if(auto p = Ffs::get_cwd(); p)
+    return fs_str2char(p.value(), path, buffer_size);
+
+  return 0;
 }
 
 std::string::size_type fs_get_permissions(const char* path,
@@ -106,7 +112,10 @@ std::string::size_type fs_relative_to(const char* base, const char* other,
 
 std::string::size_type fs_resolve(const char* path, const bool strict,
                          char* result, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::resolve(path, strict), result, buffer_size);
+  if(auto p = Ffs::resolve(path, strict); p)
+    return fs_str2char(p.value(), result, buffer_size);
+
+  return 0;
 }
 
 std::string::size_type fs_root(const char* path,
@@ -132,7 +141,10 @@ std::string::size_type fs_with_suffix(const char* path, const char* new_suffix,
 bool fs_set_cwd(const char *path){ return Ffs::chdir(path); }
 
 std::string::size_type fs_get_tempdir(char* path, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::get_tempdir(), path, buffer_size);
+  if(auto p = Ffs::get_tempdir(); p)
+    return fs_str2char(p.value(), path, buffer_size);
+
+  return 0;
 }
 
 

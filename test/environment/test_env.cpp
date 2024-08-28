@@ -26,19 +26,22 @@ _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
 _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-std::string fpath = Ffs::get_cwd();
-std::cout << "current working dir " << fpath << "\n";
+auto fpath = Ffs::get_cwd();
+if(!fpath)
+  return EXIT_FAILURE;
 
-if(!Ffs::exists(fpath))
-  err("current working dir " + fpath + " does not exist");
+std::cout << "current working dir " << fpath.value() << "\n";
 
-if(!Ffs::is_dir(fpath))
-  err("current working dir " + fpath + " is not a directory");
+if(!Ffs::exists(fpath.value()))
+  err("current working dir " + fpath.value() + " does not exist");
+
+if(!Ffs::is_dir(fpath.value()))
+  err("current working dir " + fpath.value() + " is not a directory");
 
 std::string cpath = std::filesystem::current_path().string();
 
 if (std::string s = Ffs::normal(cpath); fpath != s)
-  err("C cwd " + s + " != Fortran cwd " + fpath);
+  err("C cwd " + s + " != Fortran cwd " + fpath.value());
 
 // --- homedir
 std::string p = Ffs::get_homedir();
@@ -47,10 +50,12 @@ if (p != Ffs::expanduser("~"))
   err("home dir " + p + " != expanduser('~') " + Ffs::expanduser("~"));
 
 // --- tempdir
-std::string t = Ffs::get_tempdir();
-std::cout << "Temp directory " << t << "\n";
-if (!Ffs::exists(t))
-  err("Fortran: temp dir " + t + " does not exist");
+auto t = Ffs::get_tempdir();
+if(!t)
+  return EXIT_FAILURE;
+std::cout << "Temp directory " << t.value() << "\n";
+if (!Ffs::exists(t.value()))
+  err("Fortran: temp dir " + t.value() + " does not exist");
 
 // --- setenv
 std::string k = "FORTtest";

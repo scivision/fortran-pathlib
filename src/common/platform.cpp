@@ -2,10 +2,12 @@
 
 #include <string>
 #include <iostream>
-#include <system_error> // for error_code
+
+#include <optional>
+#include <system_error> // for std::error_code
 
 
-std::string Ffs::get_tempdir()
+std::optional<std::string> Ffs::get_tempdir()
 {
   std::error_code ec;
   if(auto p = std::filesystem::temp_directory_path(ec); !ec) FFS_LIKELY
@@ -16,7 +18,7 @@ std::string Ffs::get_tempdir()
 }
 
 
-std::string Ffs::get_cwd()
+std::optional<std::string> Ffs::get_cwd()
 {
   std::error_code ec;
   if(auto s = std::filesystem::current_path(ec); !ec) FFS_LIKELY

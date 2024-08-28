@@ -87,7 +87,7 @@ int main(){
     if(Ffs::remove(""))
       err("Ffs::remove");
 
-    if(!Ffs::canonical("", false).empty())
+    if(Ffs::canonical("", false))
       err("Ffs::canonical");
 
     if(Ffs::equivalent("", ""))
@@ -116,7 +116,7 @@ int main(){
 
     }
 
-    if(Ffs::get_cwd().empty())
+    if(!Ffs::get_cwd())
       err("get_cwd");
 
     if(Ffs::get_homedir().empty())

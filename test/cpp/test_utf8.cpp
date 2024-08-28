@@ -16,22 +16,25 @@ std::string smiley = "😀";
 std::string wink = "😉";
 std::string hello = "你好";
 
-std::string u1;
-
 // test allocation
-u1 = Ffs::canonical(".", true);
-std::cout << "canonical(.): " << u1 << "\n";
+auto u1 = Ffs::canonical(".", true);
+if(!u1)
+  return EXIT_FAILURE;
+
+std::cout << "canonical(.): " << u1.value() << "\n";
 
 for ( const auto &u : {smiley, wink, hello} ) {
-  u1 = Ffs::file_name("./" + u);
-  if (u1 != u)
-    err("Ffs::file_name(./" + smiley + ") != " + u1 + " " + u);
-
+  auto u2 = Ffs::file_name("./" + u);
+  if (u2 != u)
+    err("Ffs::file_name(./" + smiley + ") != " + u2 + " " + u);
 
   u1 = Ffs::canonical(u, false);
-  std::cout << "canonical(" + u + "): " << u1 << "\n";
-  if (u1 != u)
-    err("canonical UTF8: "  + u1 + " " + u);
+  if(!u1)
+    return EXIT_FAILURE;
+
+  std::cout << "canonical(" + u + "): " << u1.value() << "\n";
+  if (u1.value() != u)
+    err("canonical UTF8: "  + u1.value() + " != " + u);
 }
 
 return EXIT_SUCCESS;

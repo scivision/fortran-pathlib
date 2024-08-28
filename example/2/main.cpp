@@ -14,7 +14,11 @@
 
 int main() {
 
-  std::cout << "current working dir " << Ffs::get_cwd() << "\n";
+  auto cwd = Ffs::get_cwd();
+  if (!cwd)
+    err("current working dir not found");
+
+  std::cout << "current working dir " << cwd.value() << "\n";
 
   std::string h;
   h = Ffs::get_homedir();

@@ -178,7 +178,7 @@ std::map<std::string_view, std::function<std::string(std::string_view)>> s_s =
     {"getenv", Ffs::get_env}
   };
 
-std::map<std::string_view, std::function<std::string(std::string_view, bool)>> ssb =
+std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool)>> ssb =
   {
     {"canonical", Ffs::canonical},
     {"resolve", Ffs::resolve}

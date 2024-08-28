@@ -5,7 +5,7 @@
 #include <system_error>
 
 
-std::string Ffs::canonical(std::string_view path, const bool strict)
+std::optional<std::string> Ffs::canonical(std::string_view path, const bool strict)
 {
   // also expands ~ and normalizes path
 
@@ -35,7 +35,7 @@ std::string Ffs::canonical(std::string_view path, const bool strict)
 }
 
 
-std::string Ffs::resolve(std::string_view path, const bool strict)
+std::optional<std::string> Ffs::resolve(std::string_view path, const bool strict)
 {
   // expands ~ like canonical
   // empty path returns current working directory, which is distinct from canonical that returns empty string

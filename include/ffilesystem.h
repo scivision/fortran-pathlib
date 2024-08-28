@@ -44,8 +44,8 @@ public:
   [[nodiscard]] static std::string get_profile_dir();
   [[nodiscard]] static std::string get_username();
   [[nodiscard]] static std::string user_config_dir();
-  [[nodiscard]] static std::string get_tempdir();
-  [[nodiscard]] static std::string get_cwd();
+  [[nodiscard]] static std::optional<std::string> get_tempdir();
+  [[nodiscard]] static std::optional<std::string> get_cwd();
 
   [[nodiscard]] static std::string get_owner(std::string_view);
 
@@ -85,8 +85,8 @@ public:
   [[nodiscard]] static std::optional<std::filesystem::file_time_type> get_modtime(std::string_view);
   static bool set_modtime(std::string_view);
 
-  [[nodiscard]] static std::string canonical(std::string_view, const bool);
-  [[nodiscard]] static std::string resolve(std::string_view, const bool);
+  [[nodiscard]] static std::optional<std::string> canonical(std::string_view, const bool);
+  [[nodiscard]] static std::optional<std::string> resolve(std::string_view, const bool);
 
   [[nodiscard]] static std::string read_symlink(std::string_view);
   [[nodiscard]] static std::optional<std::string> get_permissions(std::string_view);

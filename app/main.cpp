@@ -48,10 +48,14 @@ static void no_arg(std::string_view fun){
     {"profile_dir", Ffs::get_profile_dir},
     {"username", Ffs::get_username},
     {"user_config_dir", Ffs::user_config_dir},
-    {"cwd", Ffs::get_cwd},
-    {"tempdir", Ffs::get_tempdir},
     {"exe_path", Ffs::exe_path},
     {"lib_path", Ffs::lib_path}
+  };
+
+  std::map<std::string_view, std::function<std::optional<std::string>()>> mostring =
+  {
+    {"tempdir", Ffs::get_tempdir},
+    {"cwd", Ffs::get_cwd}
   };
 
   std::map<std::string_view, std::function<int()>> mint =
@@ -73,6 +77,10 @@ static void no_arg(std::string_view fun){
     std::cout << mbool[fun]() << "\n";
   else if (mstring.contains(fun))
     std::cout << mstring[fun]() << "\n";
+  else if (mostring.contains(fun)){
+    if(const auto &s = mostring[fun](); s)
+      std::cout << *s << "\n";
+  }
   else if (mint.contains(fun))
     std::cout << mint[fun]() << "\n";
   else if (mchar.contains(fun))
@@ -134,16 +142,15 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"perm", Ffs::get_permissions}
   };
 
-  std::map<std::string_view, std::function<std::string(std::string_view, bool)>> mstrb =
+  std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool)>> mstrb =
   {
     {"canonical", Ffs::canonical},
     {"resolve", Ffs::resolve}
   };
 
-  std::map<std::string_view, std::function<std::string(std::string_view, bool)>> mstrbw =
+  std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool)>> mstrbw =
   {
-    {"weakly_canonical", Ffs::canonical},
-    {"weakly_resolve", Ffs::resolve}
+    {"weakly_canonical", Ffs::canonical}
   };
 
   std::map<std::string_view, std::function<std::optional<uintmax_t>(std::string_view)>> mmax =
@@ -167,10 +174,14 @@ static void one_arg(std::string_view fun, std::string_view a1){
     if(const auto &s = mostring[fun](a1); s)
       std::cout << *s << "\n";
   }
-  else if (mstrb.contains(fun))
-    std::cout << mstrb[fun](a1, true) << "\n";
-  else if (mstrbw.contains(fun))
-    std::cout << mstrbw[fun](a1, false) << "\n";
+  else if (mstrb.contains(fun)){
+    if(const auto &s = mstrb[fun](a1, true); s)
+      std::cout << *s << "\n";
+  }
+  else if (mstrbw.contains(fun)){
+    if(const auto &s = mstrbw[fun](a1, false); s)
+      std::cout << *s << "\n";
+  }
   else if (mmax.contains(fun)){
     if(const auto &s = mmax[fun](a1); s)
       std::cout << *s << "\n";
@@ -188,9 +199,19 @@ static void one_arg(std::string_view fun, std::string_view a1){
   } else if (fun == "fs_modtime")
     std::cout << fs_get_modtime(a1.data()) << "\n";
   else if (fun == "chdir" || fun == "set_cwd") {
-    std::cout << "cwd: " << Ffs::get_cwd() << "\n";
-    Ffs::chdir(a1);
-    std::cout << "new cwd: " << Ffs::get_cwd() << "\n";
+    auto cwd = Ffs::get_cwd();
+    if(cwd){
+      std::cout << "cwd: " << cwd.value() << "\n";
+      if(Ffs::chdir(a1)){
+        cwd = Ffs::get_cwd();
+        if(cwd)
+          std::cout << "new cwd: " << cwd.value() << "\n";
+        else
+          std::cerr << "ERROR get_cwd() after chdir\n";
+      }
+    } else {
+      std::cerr << "ERROR get_cwd() before chdir\n";
+    }
   } else if (fun == "ls") {
     for (auto const& dir_entry : std::filesystem::directory_iterator{Ffs::expanduser(a1)}){
       std::filesystem::path p = dir_entry.path();

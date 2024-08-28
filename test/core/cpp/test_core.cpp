@@ -50,7 +50,10 @@ if (Ffs::file_name("a") != "a")
 if(Ffs::file_name("file_name") != "file_name")
   err("file_name plain filename: " + Ffs::file_name("file_name"));
 
-if(std::string nr = Ffs::file_name(Ffs::root(Ffs::get_cwd())); !nr.empty())
+auto cwd = Ffs::get_cwd();
+if(!cwd)
+  err("file_name cwd");
+if(std::string nr = Ffs::file_name(Ffs::root(cwd.value())); !nr.empty())
   err("file_name root: " + nr);
 
 if(Ffs::file_name(".file_name") != ".file_name")
