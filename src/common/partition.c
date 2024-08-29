@@ -9,7 +9,7 @@
 #include <sys/param.h>
 #endif
 
-#if defined(__linux__)
+#if defined(__linux__) && __has_include(<linux/magic.h>)
 #include <sys/vfs.h>
 #include <linux/magic.h>
 // https://github.com/torvalds/linux/blob/master/include/uapi/linux/magic.h
@@ -101,7 +101,7 @@ return true;
 }
 
 
-#ifdef __linux__
+#if defined(__linux__) && __has_include(<linux/magic.h>)
 static inline const char* fs_type_linux(const char* path)
 {
   struct statfs s;
@@ -187,7 +187,7 @@ size_t fs_filesystem_type(const char* path, char* name, const size_t buffer_size
 
   fs_win32_print_error(path, "filesystem_type");
   return 0;
-#elif defined(__linux__)
+#elif defined(__linux__) && __has_include(<linux/magic.h>)
   return fs_strncpy(fs_type_linux(path), name, buffer_size);
 #elif defined(__APPLE__) || defined(BSD)
   struct statfs s;
