@@ -29,7 +29,10 @@ target_compile_options(test_fortran_filesystem_type PRIVATE
 $<$<COMPILE_LANG_AND_ID:Fortran,GNU>:-Wno-uninitialized>
 )
 
-set_property(TEST Fortran_filesystem_type PROPERTY SKIP_RETURN_CODE 77)
+set_tests_properties(Fortran_filesystem_type PROPERTIES
+SKIP_RETURN_CODE 77
+DISABLED $<AND:$<BOOL:${LINUX}>,$<NOT:$<BOOL:${ffilesystem_HAVE_LINUX_MAGIC}>>>
+)
 
 endif()
 
