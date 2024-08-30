@@ -30,7 +30,7 @@ csrcs = files('src/common/common.c',
 )
 
 cppsrcs = files(
-  'src/common/copy.cpp',
+'src/common/copy.cpp',
 'src/common/filesystem.cpp',
 'src/common/c_ifc.cpp',
 'src/common/ifc.cpp',
@@ -45,7 +45,7 @@ cppsrcs = files(
 
 inc = include_directories('include')
 
-# feature checks
+# -- Feature checks
 fs_check = '''
 #include <filesystem>
 static_assert(__cpp_lib_filesystem, "No C++ filesystem support");
@@ -59,6 +59,8 @@ cpp = meson.get_compiler('cpp')
 if not cpp.links(fs_check, name: 'C++ filesystem')
   error('No C++ filesystem support')
 endif
+
+# -- chrono check
 
 chrono_src = '''
 #include <chrono>
@@ -76,6 +78,25 @@ if cpp.links(chrono_src, name: 'C++20 chrono')
 else
   chrono_def = []
 endif
+
+# -- Mersenne mkdtemp check
+
+mkdtemp_src = '''
+#include <random>
+
+int main(){
+  std::mt19937 mt_rand(0);
+  return 0;
+}
+'''
+
+if cpp.links(mkdtemp_src, name: 'C++ Mersenne Twister for mkdtemp()')
+  mkdtemp_def = '-DHAVE_MERSENNE_TWISTER'
+else
+  mkdtemp_def = []
+endif
+
+# -- Fortran feature checks
 
 fc = meson.get_compiler('fortran')
 
@@ -105,12 +126,13 @@ if is_windows
   endif
 endif
 
-# main library
+# -- main library
+
 filesystem = library('filesystem',
 sources: [fsrcs, csrcs, cppsrcs],
 include_directories: inc,
 install: true,
-cpp_args: [chrono_def, win32_symlink_def],
+cpp_args: [chrono_def, mkdtemp_def, win32_symlink_def],
 fortran_args: f03type_def,
 dependencies: libwin,
 )

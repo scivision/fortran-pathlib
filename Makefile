@@ -18,7 +18,10 @@ BUILD_DIR := build
 
 INC := -Iinclude/
 
-CXXFLAGS := -std=c++20 -O3 -DNDEBUG $(INC)
+# optional, but useful
+cppfeat := -DHAVE_MERSENNE_TWISTER
+
+CXXFLAGS := -std=c++20 -O3 -DNDEBUG $(cppfeat) $(INC)
 CFLAGS := -O3 -DNDEBUG $(INC)
 FFLAGS := -O3 -DNDEBUG
 
