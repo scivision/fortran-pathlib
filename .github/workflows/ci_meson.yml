@@ -11,13 +11,17 @@ jobs:
 
   linux:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-24.04, macos-latest]
+        cpp: [true, false]
 
     runs-on: ${{ matrix.os }}
 
     env:
-      FC: gfortran-13
+      FC: gfortran-14
+
+    name: ${{ matrix.os }} cpp=${{ matrix.cpp }}
 
     steps:
     - uses: actions/checkout@v4
@@ -27,7 +31,7 @@ jobs:
 
     - run: pip install meson ninja
 
-    - run: meson setup build
+    - run: meson setup -Dcpp=${{ matrix.cpp }} build
 
     - run: meson compile -C build
 

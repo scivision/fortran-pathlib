@@ -17,5 +17,10 @@ endforeach
 
 endif
 
+
+if use_cpp
+
 t_cpp = executable('core_cpp', 'cpp/test_core.cpp', link_with: filesystem, include_directories: inc)
 test('core_cpp', t_cpp, suite: 'cpp')
+
+endif

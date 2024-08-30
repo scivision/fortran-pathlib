@@ -1,0 +1,13 @@
+[wrap-file]
+directory = cwalk-1.2.9
+source_url = https://github.com/likle/cwalk/archive/refs/tags/v1.2.9.tar.gz
+source_filename = v1.2.9.tar.gz
+source_hash = 54f160031687ec90a414e0656cf6266445207cb91b720dacf7a7c415d6bc7108
+patch_filename = cwalk_1.2.9-1_patch.zip
+patch_url = https://wrapdb.mesonbuild.com/v2/cwalk_1.2.9-1/get_patch
+patch_hash = 08cb868ebc7061e5be0dd9f95d713d4b6a765e6bf6b5bca06f0d0f142f22a9bb
+source_fallback_url = https://github.com/mesonbuild/wrapdb/releases/download/cwalk_1.2.9-1/v1.2.9.tar.gz
+wrapdb_version = 1.2.9-1
+
+[provide]
+cwalk = cwalk_dep

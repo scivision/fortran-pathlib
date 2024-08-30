@@ -1,6 +1,9 @@
+if use_cpp
+
 t_cpp = executable('canonical_cpp', 'test_canonical.cpp', link_with: filesystem, include_directories: inc)
 test('canonical_cpp', t_cpp, suite: 'cpp')
 
+endif
 
 if fortran
 
