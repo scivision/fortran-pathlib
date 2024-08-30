@@ -26,8 +26,8 @@ CFLAGS := -O3 -DNDEBUG $(INC)
 FFLAGS := -O3 -DNDEBUG
 
 cdir = src/common/
-COMM_SRCS = $(cdir)common.c $(cdir)compiler.c $(cdir)cygwin.c $(cdir)exepath.c $(cdir)env.c $(cdir)home.c $(cdir)libpath.c $(cdir)owner.c $(cdir)os.c $(cdir)partition.c $(cdir)touch.c $(cdir)uid.c $(cdir)uname.c $(cdir)which.c $(cdir)windows.c
-SRCS = $(cdir)filesystem.cpp $(cdir)c_ifc.cpp $(cdir)copy.cpp $(cdir)ifc.cpp $(cdir)inquire.cpp $(cdir)mkdir.cpp $(cdir)pure.cpp $(cdir)platform.cpp $(cdir)resolve.cpp $(cdir)symlink.cpp $(cdir)time.cpp
+COMM_SRCS = $(cdir)common.c $(cdir)compiler.c $(cdir)cygwin.c $(cdir)exepath.c $(cdir)env.c $(cdir)home.c $(cdir)libpath.c $(cdir)mkdtemp.c $(cdir)owner.c $(cdir)os.c $(cdir)partition.c $(cdir)touch.c $(cdir)uid.c $(cdir)uname.c $(cdir)which.c $(cdir)windows.c
+SRCS = $(cdir)filesystem.cpp $(cdir)c_ifc.cpp $(cdir)copy.cpp $(cdir)ifc.cpp $(cdir)inquire.cpp $(cdir)mkdir.cpp $(cdir)mkdtemp.cpp $(cdir)pure.cpp $(cdir)platform.cpp $(cdir)resolve.cpp $(cdir)symlink.cpp $(cdir)time.cpp
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o) $(COMM_SRCS:%=$(BUILD_DIR)/%.o)
 
 fdir = $(cdir)fortran/

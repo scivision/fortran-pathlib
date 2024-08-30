@@ -138,9 +138,11 @@ bool fs_remove(const char* path){ return Ffs::remove(path); }
 
 bool fs_set_modtime(const char* path){ return Ffs::set_modtime(path); }
 
-std::string::size_type fs_make_tempdir(char* result, const std::string::size_type buffer_size){
+#ifdef HAVE_MERSENNE_TWISTER
+std::string::size_type fs_mkdtemp(char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::mkdtemp("tmp."), result, buffer_size);
 }
+#endif
 
 bool fs_set_permissions(const char* path, int readable, int writable, int executable){
   return Ffs::set_permissions(path, readable, writable, executable);

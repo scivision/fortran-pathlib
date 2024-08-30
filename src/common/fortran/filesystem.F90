@@ -407,7 +407,7 @@ character(kind=C_CHAR), intent(out) :: result(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
 
-integer(C_SIZE_T) function fs_make_tempdir(result, buffer_size) bind(C)
+integer(C_SIZE_T) function fs_mkdtemp(result, buffer_size) bind(C)
 import
 character(kind=C_CHAR), intent(out) :: result(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
@@ -959,7 +959,7 @@ function make_tempdir() result (r)
 !! make unique temporary directory
 
 include "ifc0a.inc"
-N = fs_make_tempdir(cbuf, N)
+N = fs_mkdtemp(cbuf, N)
 include "ifc0b.inc"
 end function
 

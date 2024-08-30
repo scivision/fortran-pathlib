@@ -9,6 +9,5 @@ set_property(TARGET test_fortran_mkdtemp PROPERTY LINKER_LANGUAGE Fortran)
 add_test(NAME Fortran_mkdtemp COMMAND test_fortran_mkdtemp)
 set_tests_properties(Fortran_mkdtemp PROPERTIES
 LABELS Fortran
-DISABLED $<AND:$<BOOL:${HAVE_CXX_FILESYSTEM}>,$<NOT:$<BOOL:${ffilesystem_HAVE_MERSENNE_TWISTER}>>>
 )
 endif()

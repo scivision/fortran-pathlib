@@ -284,7 +284,7 @@ size_t fs_get_terminal(char*, const size_t);
 
 bool fs_win32_create_symlink(const char*, const char*);
 
-size_t fs_make_tempdir(char*, const size_t);
+size_t fs_mkdtemp(char*, const size_t);
 
 size_t fs_shortname(const char*, char*, const size_t);
 size_t fs_longname(const char*, char*, const size_t);

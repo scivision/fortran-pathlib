@@ -5,7 +5,7 @@
 
 // preferred import order for stat()
 #include <sys/types.h>
-#include <sys/stat.h>
+#include <sys/stat.h>  // mkdir
 #include <errno.h>
 
 #ifdef _WIN32
@@ -75,38 +75,4 @@ bool fs_mkdir(const char* path)
   free(buf);
 
   return fs_is_dir(path);
-}
-
-
-size_t fs_make_tempdir(char* result, const size_t buffer_size)
-{
-  char tmpl[] = "tmp.XXXXXX";
-  const char* tmp;
-
-#ifdef _WIN32
-  tmp = _mktemp(tmpl);
-  if(!tmp){
-    fprintf(stderr, "ERROR:filesystem:fs_make_tempdir:_mktemp: could not generate tempdir name %s\n", strerror(errno));
-    return 0;
-  }
-  if(!fs_get_tempdir(result, buffer_size))
-    return 0;
-
-  const size_t L = fs_join(result, tmp, result, buffer_size);
-  if(L == 0)
-    return 0;
-
-  fs_mkdir(result);
-  return L;
-#else
-  tmp = mkdtemp(tmpl);
-  /* Linux: stdlib.h  macOS: unistd.h */
-  if (!tmp){
-    fprintf(stderr, "ERROR:filesystem:fs_make_tempdir:mkdtemp: could not create temporary directory %s\n", strerror(errno));
-    return 0;
-  }
-
-  return fs_strncpy(tmp, result, buffer_size);
-#endif
-
 }
