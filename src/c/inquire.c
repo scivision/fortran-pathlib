@@ -18,13 +18,11 @@
 #include <string.h>
 #include <ctype.h> // toupper
 
-#ifdef _WIN32
+#if defined(_MSC_VER)
 #define WIN32_LEAN_AND_MEAN
 #include <io.h> // _access_s
-#include <Windows.h> // GetDiskFreeSpaceEx
 #else
 #include <unistd.h>
-#include <sys/statvfs.h>
 #endif
 
 // preferred import order for stat()
@@ -153,36 +151,6 @@ fs_file_size(const char* path)
 
   fprintf(stderr, "ERROR:ffilesystem:file_size: %s => %s\n", path, strerror(errno));
   return 0;
-}
-
-
-uintmax_t
-fs_space_available(const char* path)
-{
-
-#ifdef _WIN32
-  // Windows MinGW and oneAPI need root() or space is zero.
-  char r[4];
-  if(!fs_root(path, r, 4)){
-    fprintf(stderr, "ERROR:ffilesystem:space_available: %s => root() failed\n", path);
-    return 0;
-  }
-  ULARGE_INTEGER bytes_available;
-  const BOOL ok = GetDiskFreeSpaceExA(r, &bytes_available, NULL, NULL);
-  if(ok)
-    return bytes_available.QuadPart;
-
-  fs_win32_print_error(path, "space_available");
-  return 0;
-#else
-  // https://unix.stackexchange.com/a/703650
-  struct statvfs stat;
-  if (!statvfs(path, &stat))
-    return (stat.f_frsize ? stat.f_frsize : stat.f_bsize) * stat.f_bavail;
-
-  fprintf(stderr, "ERROR:ffilesystem:space_available(%s) => %s\n", path, strerror(errno));
-  return 0;
-#endif
 }
 
 

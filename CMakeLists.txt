@@ -98,6 +98,7 @@ if(HAVE_CXX_FILESYSTEM)
     src/common/platform.cpp
     src/common/pure.cpp
     src/common/resolve.cpp
+    src/common/space.cpp
     src/common/symlink.cpp
     src/common/time.cpp
     )
@@ -110,6 +111,7 @@ else()
   src/c/platform.c
   src/c/pure.c
   src/c/resolve.c
+  src/c/space.c
   src/c/symlink.c
   src/c/time.c
   ${cwalk_SOURCE_DIR}/src/cwalk.c

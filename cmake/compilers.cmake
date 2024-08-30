@@ -56,24 +56,16 @@ elseif(HAVE_CXX_FILESYSTEM AND NOT "cxx_std_17" IN_LIST CMAKE_CXX_COMPILE_FEATUR
   message(WARNING "${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION} may not support at least C++17 standard")
 endif()
 
-
-
-# fixes errors about needing -fPIE
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  include(CheckPIESupported)
-  check_pie_supported()
-  set(CMAKE_POSITION_INDEPENDENT_CODE true)
-endif()
-
-# to disable test that needs magic.h on Linux
 if(CMAKE_VERSION VERSION_LESS 3.25 AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
   set(LINUX true)
 endif()
 
+# fixes errors about needing -fPIE
 if(LINUX)
-  check_include_file("linux/magic.h" ffilesystem_HAVE_LINUX_MAGIC)
+  include(CheckPIESupported)
+  check_pie_supported()
+  set(CMAKE_POSITION_INDEPENDENT_CODE true)
 endif()
-
 
 if(HAVE_Fortran_FILESYSTEM)
   include(${CMAKE_CURRENT_LIST_DIR}/FortranCheck.cmake)

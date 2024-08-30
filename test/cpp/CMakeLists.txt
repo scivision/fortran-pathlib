@@ -20,3 +20,7 @@ foreach(t IN ITEMS file utf8)
   add_test(NAME Cpp_${t} COMMAND test_cpp_${t})
   set_property(TEST Cpp_${t} PROPERTY LABELS "Cpp")
 endforeach()
+
+set_tests_properties(Cpp_file PROPERTIES
+DISABLED $<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${ffilesystem_HAVE_SYS_STATVFS}>>>
+)

@@ -1,3 +1,13 @@
+include(CheckIncludeFile)
+
+if(LINUX)
+  check_include_file("linux/magic.h" ffilesystem_HAVE_LINUX_MAGIC)
+endif()
+
+if(UNIX)
+  check_include_file("sys/statvfs.h" ffilesystem_HAVE_SYS_STATVFS)
+endif()
+
 set(CMAKE_CXX_STANDARD ${cxx_std})
 
 add_compile_definitions($<$<BOOL:${WIN32}>:_CRT_SECURE_NO_WARNINGS>)
