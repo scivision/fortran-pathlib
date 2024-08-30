@@ -7,27 +7,40 @@
 [![ci_fpm](https://github.com/scivision/fortran-filesystem/actions/workflows/ci_fpm.yml/badge.svg)](https://github.com/scivision/fortran-filesystem/actions/workflows/ci_fpm.yml)
 [![ci_meson](https://github.com/scivision/fortran-filesystem/actions/workflows/ci_meson.yml/badge.svg)](https://github.com/scivision/fortran-filesystem/actions/workflows/ci_meson.yml)
 
-Platform independent (Linux, macOS, Windows, Cygwin, WSL, BSD, ...), object-oriented Fortran filesystem "Ffilesystem" path manipulation library.
+Platform independent (Linux, macOS, Windows, Cygwin, WSL, BSD, ...) Fortran filesystem "Ffilesystem" path manipulation library.
+Ffilesystem core functions are implemented in C, and by default
+[C++ standard library filesystem](https://en.cppreference.com/w/cpp/filesystem).
+However, Ffilesystem can be used with C alone if desired.
+The Fortran interface is also built by default, as the main purpose of this library is to bring full filesystem functionality to Fortran.
+However, the Fortran interface itself is optional.
 Ffilesystem header
 [ffilesystem.h](./include/ffilesystem.h)
 can be used from C and C++ project code--see
 [example](./example).
 
-For C++ users, **C++17 standard** is required.
-For C users, **C99 standard** is required.
-Fortran uses **Fortran 2003 standard** and either the C or C++ Ffilesystem backend.
+The language standards required are at least:
 
-For full features, Ffilesystem uses
-[C++ stdlib filesystem](https://en.cppreference.com/w/cpp/filesystem).
-If a compatible C++ compiler isn't available, Ffilesystem downloads and uses
-[CWalk](https://github.com/likle/cwalk)
-and C runtime library.
+* C++ interface / backend (optional, default): C++17 standard
+* C interface / backend (required): C99
+* Fortran interface (optional, default): 2003
+
+Ffilesystem uses
+[C++ stdlib filesystem](https://en.cppreference.com/w/cpp/filesystem)
+and
+[C standard library](https://en.wikipedia.org/wiki/C_standard_library).
+Ffilesystem works with several popular C standard library implementations, including
+[glibc](https://sourceware.org/glibc/),
+[musl](https://musl.libc.org/),
+BSD libc,
+[Microsoft CRT](https://en.wikipedia.org/wiki/Microsoft_Windows_library_files#CRT),
+among others.
+
+If a compatible C++ compiler isn't available, Ffilesystem uses
+[CWalk](https://github.com/likle/cwalk).
 
 Inspired by (and benchmarked against)
 [Python pathlib](https://docs.python.org/3/library/pathlib.html).
-
 Important Ffilesystem functions are [benchmarked](./test/bench/bench.md) to help improve performance.
-
 Advanced / conceptual development takes place in [ffilesystem-concepts](https://github.com/scivision/ffilesystem-concepts) repo.
 
 ## Compiler support
@@ -39,19 +52,17 @@ Ffilesystem supports compilers including:
 * LLVM Clang &ge; 9 (clang/clang++, flang or gfortran)
 * Intel oneAPI (icx, icpx, ifx)
 * AMD AOCC (clang/clang++, flang)
-* NVidia HPC SDK (nvc++, nvfortran)
+* NVIDIA HPC SDK (nvc++, nvfortran)
 * Visual Studio (C/C++)
 * Cray: using Cray compilers alone (cc, CC, ftn) or using GCC or Intel backend
 
-C++ interface requires compiler to support `<filesystem>`.
-The older `<experimental/filesystem>` is NOT supported, because it is missing vital lexical operations fundamental to many filesystem operations.
-To use such compilers, disable C++ support:
+The optional default C++ interface requires the compiler and C++ stdlib to support `<filesystem>`.
+The deprecated `<experimental/filesystem>` is NOT supported, because it is missing vital lexical operations fundamental to many filesystem operations.
+To use older compilers, disable C++ support:
 
 ```sh
 cmake -Bbuild -Dffilesystem_cpp=off
 ```
-
-For other/older compilers that don't have C++ `<filesystem>` try `cmake -Dffilesystem_cpp=off`.
 
 ### libstdc++
 
