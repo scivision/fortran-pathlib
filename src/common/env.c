@@ -7,6 +7,10 @@
 #endif
 #endif
 
+#if defined(__linux__) && !defined(_DEFAULT_SOURCE)
+#define _DEFAULT_SOURCE
+#endif
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <errno.h>

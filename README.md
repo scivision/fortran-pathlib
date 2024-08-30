@@ -34,6 +34,9 @@ Ffilesystem works with several popular C standard library implementations, inclu
 BSD libc,
 [Microsoft CRT](https://en.wikipedia.org/wiki/Microsoft_Windows_library_files#CRT),
 among others.
+On Linux, symbol
+[_DEFAULT_SOURCE](https://man7.org/linux/man-pages/man7/feature_test_macros.7.html)
+is defined if needed to enable C standard library functions.
 
 If a compatible C++ compiler isn't available, Ffilesystem uses
 [CWalk](https://github.com/likle/cwalk).

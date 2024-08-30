@@ -17,6 +17,10 @@ fs = import('fs')
 
 cc = meson.get_compiler('c')
 
+if ['gcc', 'clang', 'intel-llvm'].contains(cc.get_id())
+  add_project_arguments('-Werror=implicit-function-declaration', language: 'c')
+endif
+
 fsrcs = fortran ? files('src/common/fortran/filesystem.F90') : []
 
 csrcs = files('src/common/common.c',
