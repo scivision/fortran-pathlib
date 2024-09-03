@@ -19,10 +19,11 @@ BUILD_DIR := build
 INC := -Iinclude/
 
 # optional, but useful
+cfeat := -DHAVE_MERSENNE_TWISTER
 cppfeat := -DHAVE_MERSENNE_TWISTER
 
 CXXFLAGS := -std=c++20 -O3 -DNDEBUG $(cppfeat) $(INC)
-CFLAGS := -O3 -DNDEBUG $(INC)
+CFLAGS := -O3 -DNDEBUG $(cfeat) $(INC)
 FFLAGS := -O3 -DNDEBUG
 
 cdir = src/common/
