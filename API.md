@@ -692,6 +692,12 @@ Get user configuration directory.
 character(:), allocatable :: user_config_dir()
 ```
 
+Get hostname of computer
+
+```fortran
+character(:), allocatable :: hostname()
+```
+
 Get username of the current user.
 
 ```fortran

@@ -38,6 +38,7 @@ csrcs = files('src/common/common.c',
 'src/common/uid.c',
 'src/common/uname.c',
 'src/common/which.c',
+'src/common/winsock.c',
 'src/common/windows.c'
 )
 
@@ -166,7 +167,7 @@ win32_symlink_def = []
 
 if is_windows
 
-libwin = cc.find_library('Userenv', required: true)
+libwin = [cc.find_library('Userenv', required: true), cc.find_library('ws2_32', required: true)]
 
 if use_cpp
   symlink_run = cpp.run(fs.read('cmake/fs_check/check_fs_symlink.cpp'), name: 'Symlink')
@@ -186,7 +187,7 @@ install: true,
 c_args: [mkdtemp_def],
 cpp_args: [chrono_def, mkdtemp_def, win32_symlink_def],
 fortran_args: f03type_def,
-dependencies: [libwin],
+dependencies: libwin,
 link_with: cwalk_dep
 )
 

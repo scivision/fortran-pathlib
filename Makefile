@@ -26,7 +26,7 @@ CFLAGS := -O3 -DNDEBUG $(INC)
 FFLAGS := -O3 -DNDEBUG
 
 cdir = src/common/
-COMM_SRCS = $(cdir)common.c $(cdir)compiler.c $(cdir)cygwin.c $(cdir)exepath.c $(cdir)env.c $(cdir)home.c $(cdir)libpath.c $(cdir)mkdtemp.c $(cdir)owner.c $(cdir)os.c $(cdir)partition.c $(cdir)touch.c $(cdir)uid.c $(cdir)uname.c $(cdir)which.c $(cdir)windows.c
+COMM_SRCS = $(cdir)common.c $(cdir)compiler.c $(cdir)cygwin.c $(cdir)exepath.c $(cdir)env.c $(cdir)home.c $(cdir)libpath.c $(cdir)mkdtemp.c $(cdir)owner.c $(cdir)os.c $(cdir)partition.c $(cdir)touch.c $(cdir)uid.c $(cdir)uname.c $(cdir)which.c $(cdir)winsock.c $(cdir)windows.c
 SRCS = $(cdir)filesystem.cpp $(cdir)c_ifc.cpp $(cdir)copy.cpp $(cdir)ifc.cpp $(cdir)inquire.cpp $(cdir)mkdir.cpp $(cdir)mkdtemp.cpp $(cdir)pure.cpp $(cdir)platform.cpp $(cdir)resolve.cpp $(cdir)space.cpp $(cdir)symlink.cpp $(cdir)time.cpp
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o) $(COMM_SRCS:%=$(BUILD_DIR)/%.o)
 
@@ -43,7 +43,7 @@ main_f = $(BUILD_DIR)/$(FNAME)
 ifeq ($(OS),Windows_NT)
 	SHELL := pwsh.exe
 	.SHELLFLAGS := -Command
-	LDFLAGS := -lOle32 -lShell32 -luuid -lUserenv
+	LDFLAGS := -lws2_32 -lOle32 -lShell32 -luuid -lUserenv
 	RM := Remove-Item -Recurse
 	COMMENT = ".SHELLFLAGS -Command needed to get Make to use powershell rather than cmd"
 else

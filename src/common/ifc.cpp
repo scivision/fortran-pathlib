@@ -123,6 +123,16 @@ std::string Ffs::get_owner(std::string_view path)
 }
 
 
+std::string Ffs::get_hostname()
+{
+  if(std::string buf(fs_get_max_path(), '\0');
+      fs_hostname(buf.data(), buf.size()) > 0)  FFS_LIKELY
+    return buf.c_str();
+
+  return {};
+}
+
+
 std::string Ffs::get_username()
 {
   if(std::string buf(fs_get_max_path(), '\0');

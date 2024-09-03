@@ -42,6 +42,7 @@ public:
   [[nodiscard]] static std::string get_terminal();
   [[nodiscard]] static std::string get_homedir();
   [[nodiscard]] static std::string get_profile_dir();
+  [[nodiscard]] static std::string get_hostname();
   [[nodiscard]] static std::string get_username();
   [[nodiscard]] static std::string user_config_dir();
   [[nodiscard]] static std::optional<std::string> get_tempdir();
@@ -285,6 +286,8 @@ size_t fs_get_terminal(char*, const size_t);
 bool fs_win32_create_symlink(const char*, const char*);
 
 size_t fs_mkdtemp(char*, const size_t);
+
+size_t fs_hostname(char*, const size_t);
 
 size_t fs_shortname(const char*, char*, const size_t);
 size_t fs_longname(const char*, char*, const size_t);

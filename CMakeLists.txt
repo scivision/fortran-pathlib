@@ -84,6 +84,7 @@ src/common/uid.c
 src/common/uname.c
 src/common/which.c
 src/common/windows.c
+src/common/winsock.c
 $<$<TARGET_EXISTS:ffilesystem_Fortran>:$<TARGET_OBJECTS:ffilesystem_Fortran>>
 )
 if(HAVE_CXX_FILESYSTEM)
@@ -153,7 +154,7 @@ $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 target_link_libraries(ffilesystem PUBLIC
 ${GNU_stdfs}
 ${CMAKE_DL_LIBS}
-"$<$<BOOL:${WIN32}>:Ole32;Shell32;uuid;Userenv;Advapi32>"
+"$<$<BOOL:${WIN32}>:Ole32;Shell32;uuid;Userenv;Advapi32;ws2_32>"
 )
 # both Advapi32 and Userenv must be linked
 # Ole32 is needed for CoTaskMemFree

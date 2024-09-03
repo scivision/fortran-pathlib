@@ -164,6 +164,8 @@ main : do
     print '(i0)', file_size(arg1)
   case ("space")
     print '(i0)', space_available(arg1)
+  case ("hostname")
+    print '(A)', hostname()
   case ("username")
     print '(A)', get_username()
   case ("mkdir")
