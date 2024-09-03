@@ -28,13 +28,11 @@ size_t fs_hostname(char* name, const size_t buffer_size)
     return strlen(name);
 
   fs_win32_print_error(name, "hostname");
-#elif _POSIX_C_SOURCE >= 200112L
+#else
   if (gethostname(name, (int) buffer_size) == 0)
     return strlen(name);
 
   fprintf(stderr, "ERROR:ffilesystem:fs_hostname: %s\n", strerror(errno));
-#else
-  fprintf(stderr, "ERROR:ffilesystem:fs_hostname: not implemented\n");
 #endif
   return 0;
 }
