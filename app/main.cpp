@@ -61,7 +61,8 @@ static void no_arg(std::string_view fun){
 
   std::map<std::string_view, std::function<int()>> mint =
   {
-    {"is_wsl", fs_is_wsl}
+    {"is_wsl", fs_is_wsl},
+    {"pid", fs_getpid}
   };
 
   std::map<std::string_view, std::function<char()>> mchar =

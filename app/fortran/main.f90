@@ -114,6 +114,8 @@ main : do
   select case (cmd)
   case ("as_posix")
     print '(a)', as_posix(arg1)
+  case ('pid')
+    print '(i0)', fs_getpid()
   case ('modtime')
     print '(i0)', get_modtime(arg1)
   case ("expanduser")

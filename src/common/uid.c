@@ -5,7 +5,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>  // GetTokenInformation
 #else
-#include <unistd.h>  // geteuid, getppid
+#include <unistd.h>  // geteuid, getpid
 #include <sys/types.h>  // geteuid, pid_t
 #endif
 
@@ -29,6 +29,16 @@ bool fs_is_admin(){
   return false;
 #else
   return geteuid() == 0;
+#endif
+}
+
+
+int fs_getpid()
+{
+#ifdef _WIN32
+  return (int) GetCurrentProcessId();
+#else
+  return (int) getpid();
 #endif
 }
 

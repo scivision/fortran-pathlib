@@ -7,7 +7,7 @@ implicit none
 private
 !! utility procedures
 public :: get_homedir, get_profile_dir, user_config_dir, get_username, hostname, get_owner, &
- canonical, resolve, &
+ canonical, resolve, fs_getpid, &
  get_cwd, set_cwd, make_tempdir, which
 public :: normal, expanduser, as_posix, &
 is_absolute, is_char_device, is_dir, is_file, is_exe, is_subdir, is_readable, is_writable, is_reserved, &
@@ -76,6 +76,11 @@ end function
 
 integer(C_INT) function is_wsl() bind(C, name="fs_is_wsl")
 !! Windows Subsystem for Linux (WSL) version (0 is not WSL)
+import
+end function
+
+integer(C_INT) function fs_getpid() bind(C)
+!! process ID
 import
 end function
 

@@ -188,6 +188,8 @@ FFS_NODISCARD long fs_lang();
 FFS_NODISCARD size_t fs_get_max_path();
 FFS_NODISCARD bool fs_is_optimized();
 
+FFS_NODISCARD int fs_getpid();
+
 FFS_NODISCARD char fs_pathsep();
 FFS_NODISCARD const char* fs_devnull();
 

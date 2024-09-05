@@ -166,9 +166,9 @@ size_t fs_get_shell(char *name, const size_t buffer_size)
     DWORD cbNeeded;
 
     if( Process32First(h, &pe)) {
-      const int pid = GetCurrentProcessId();
+      const DWORD pid = GetCurrentProcessId();
       do {
-        if (pe.th32ProcessID == (DWORD) pid) {
+        if (pe.th32ProcessID == pid) {
           HANDLE hProcess = OpenProcess( PROCESS_QUERY_INFORMATION |
                                 PROCESS_VM_READ,
                                 FALSE, pe.th32ParentProcessID );
@@ -178,7 +178,7 @@ size_t fs_get_shell(char *name, const size_t buffer_size)
               break;
           }
           CloseHandle( hProcess );
-if(FS_TRACE) printf("TRACE: get_shell: %s PID: %i; PPID: %li\n", name, pid, pe.th32ParentProcessID);
+if(FS_TRACE) printf("TRACE: get_shell: %s PID: %li; PPID: %li\n", name, pid, pe.th32ParentProcessID);
         }
       } while( Process32Next(h, &pe));
     }

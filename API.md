@@ -810,3 +810,11 @@ is_admin()
 ```fortran
 C_INT  is_wsl()  !< Windows Subsystem for Linux > 0 if true
 ```
+
+We have "fs_getpid()" as the function name to avoid clashes with proprietary compiler function.
+
+```fortran
+fs_getpid()  !< process ID
+```
+
+```fortran
