@@ -166,7 +166,16 @@ It provides the appropriate imported targets for shared or static builds, includ
 
 ## Notes
 
-A few topics on unsupported features:
+Other Fortran libraries that provide interfaces to filesystems include the following.
+Generally they have noticeably fewer functions than Ffilesystem.
+They typically implement many functions in Fortran, where with Ffilesystem we implement in C if possible, except where C++ filesystem is available.
+Ffilesystem Fortran code is optional, and is just a thin wrapper around the C functions.
+
+* [stdlib_os](https://github.com/MarDiehl/stdlib_os)
+* [fortyxima](https://bitbucket.org/aradi/fortyxima/src/develop/)
+* [Fortran-stdlib](https://github.com/fortran-lang/stdlib/issues/201)
+* [M_system](https://github.com/urbanjost/M_system) focuses on interfaces to libc
+
 
 ### non-ASCII characters
 
