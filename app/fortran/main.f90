@@ -160,6 +160,8 @@ main : do
     print '(A)', make_tempdir()
   case ("is_symlink")
     print '(L1)', is_symlink(arg1)
+  case ('realpath')
+    print '(A)', realpath(arg1)
   case ("read_symlink")
     print '(A)', read_symlink(arg1)
   case ("size")

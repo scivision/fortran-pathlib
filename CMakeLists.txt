@@ -79,6 +79,7 @@ src/common/mkdtemp.c
 src/common/os.c
 src/common/owner.c
 src/common/partition.c
+src/common/realpath.c
 src/common/touch.c
 src/common/uid.c
 src/common/uname.c

@@ -7,7 +7,7 @@ implicit none
 private
 !! utility procedures
 public :: get_homedir, get_profile_dir, user_config_dir, get_username, hostname, get_owner, &
- canonical, resolve, fs_getpid, &
+ canonical, resolve, realpath, fs_getpid, &
  get_cwd, set_cwd, make_tempdir, which
 public :: normal, expanduser, as_posix, &
 is_absolute, is_char_device, is_dir, is_file, is_exe, is_subdir, is_readable, is_writable, is_reserved, &
@@ -111,6 +111,13 @@ integer(C_SIZE_T) function fs_canonical(path, strict, result, buffer_size) bind(
 import
 character(kind=C_CHAR), intent(in) :: path(*)
 logical(C_BOOL), intent(in), value :: strict
+character(kind=C_CHAR), intent(out) :: result(*)
+integer(C_SIZE_T), intent(in), value :: buffer_size
+end function
+
+integer(C_SIZE_T) function fs_realpath(path, result, buffer_size) bind(C)
+import
+character(kind=C_CHAR), intent(in) :: path(*)
 character(kind=C_CHAR), intent(out) :: result(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
@@ -529,6 +536,14 @@ end function
 function canonical(path, strict) result (r)
 include "ifc1a.inc"
 N = fs_canonical(trim(path) // C_NULL_CHAR, s, cbuf, N)
+include "ifc0b.inc"
+end function
+
+
+function realpath(path) result (r)
+character(*), intent(in) :: path
+include "ifc0a.inc"
+N = fs_realpath(trim(path) // C_NULL_CHAR, cbuf, N)
 include "ifc0b.inc"
 end function
 

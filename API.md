@@ -224,6 +224,12 @@ target = p%read_symlink()
 target = read_symlink("my/symlink")
 ```
 
+Realpath(): usually users will want resolve() or canonical() instead
+
+```fortran
+character(:), allocatable :: realpath(".././mypath")
+```
+
 Resolve path. This means to canonicalize the path, normalizing, resolving symbolic links, and resolving relative paths when the path exists.
 This is distinct from canonical, which does not pin relative paths to a specific directory when the path does not exist.
 

@@ -32,8 +32,7 @@ size_t fs_canonical(const char* path, const bool strict, char* result, const siz
   if(L == 1 && path[0] == '.')
     return fs_get_cwd(result, buffer_size);
 
-  L = fs_expanduser(path, result, buffer_size);
-  if(!L)
+  if(!fs_expanduser(path, result, buffer_size))
     return 0;
 
   if(strict){
@@ -44,31 +43,7 @@ size_t fs_canonical(const char* path, const bool strict, char* result, const siz
   } else if (!fs_exists(result))
     return fs_normal(result, result, buffer_size);
 
-  char* buf = (char*) malloc(buffer_size);
-  if(!buf) return 0;
-  strcpy(buf, result);
-
-  const char* t =
-#ifdef _WIN32
-  _fullpath(result, buf, buffer_size);
-#else
-  realpath(buf, result);
-#endif
-  free(buf);
-
-  L = strlen(result);
-  if(L >= buffer_size){
-    fprintf(stderr, "ERROR:ffilesystem:resolve: buffer overflow\n");
-    L = 0;
-  } else if (!t) {
-    fprintf(stderr, "ERROR:ffilesystem:canonical: %s   %s\n", result, strerror(errno));
-    L = 0;
-  }
-
-  if(L)
-    fs_as_posix(result);
-
-  return L;
+  return fs_realpath(result, result, buffer_size);
 }
 
 
@@ -89,31 +64,7 @@ size_t fs_resolve(const char* path, const bool strict, char* result, const size_
     return 0;
   }
 
-  char* buf = (char*) malloc(buffer_size);
-  if(!buf) return 0;
-  strcpy(buf, result);
-
-  const char* t =
-#ifdef _WIN32
-    _fullpath(result, buf, buffer_size);
-#else
-    realpath(buf, result);
-#endif
-  free(buf);
-
-  L = strlen(result);
-  if(L >= buffer_size){
-    fprintf(stderr, "ERROR:ffilesystem:resolve: buffer overflow\n");
-    L = 0;
-  } else if (!t && strict) {  // needs && strict unlike canonical()
-    fprintf(stderr, "ERROR:ffilesystem:resolve: %s   %s\n", result, strerror(errno));
-    L = 0;
-  }
-
-  if(L)
-    fs_as_posix(result);
-
-  return L;
+  return fs_realpath(result, result, buffer_size);
 }
 
 

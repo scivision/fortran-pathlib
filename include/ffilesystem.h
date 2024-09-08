@@ -54,6 +54,7 @@ public:
   [[nodiscard]] static std::string lib_path();
 
   [[nodiscard]] static std::string expanduser(std::string_view);
+  [[nodiscard]] static std::string realpath(std::string_view);
 
   [[nodiscard]] static bool is_absolute(std::string_view);
   [[nodiscard]] static bool is_char_device(std::string_view);
@@ -210,6 +211,8 @@ void fs_as_posix(char*);
 void fs_drop_slash(char*);
 
 size_t fs_normal(const char*, char*, const size_t);
+
+size_t fs_realpath(const char*, char*, const size_t);
 
 size_t fs_join(const char*, const char*, char*, const size_t);
 size_t fs_make_absolute(const char*, const char*, char*, const size_t);

@@ -119,6 +119,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
   {
     {"as_posix", Ffs::as_posix},
     {"expanduser", Ffs::expanduser},
+    {"realpath", Ffs::realpath},
     {"which", Ffs::which},
     {"parent", Ffs::parent},
     {"root", Ffs::root},
