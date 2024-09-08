@@ -7,10 +7,9 @@ endif
 
 if fortran
 
-t_canon = executable('canonical_fortran', 'test_canonical.f90', link_with: filesystem, include_directories: inc)
-t_resolve = executable('resolve_fortran', 'test_resolve.f90', link_with: filesystem, include_directories: inc)
-
-test('canonical_fortran', t_canon, suite: 'fortran')
-test('resolve_fortran', t_resolve, suite: 'fortran')
+foreach t : ['canonical', 'realpath', 'resolve']
+  te = executable(t + '_fortran', 'test_' + t + '.f90', link_with: filesystem, include_directories: inc)
+  test(t + '_fortran', te, suite: 'fortran')
+endforeach
 
 endif

@@ -11,6 +11,7 @@ int main(void) {
   const size_t FS_MAX_PATH = fs_get_max_path();
 
   char* d = (char*) malloc(FS_MAX_PATH);
+  if(!d) return EXIT_FAILURE;
 
   fs_get_cwd(d, FS_MAX_PATH);
   printf("current working dir %s\n", d);

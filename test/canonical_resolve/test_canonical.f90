@@ -30,12 +30,17 @@ if(p1 /= p2) error stop "ERROR: canonical '.' failed: " // p1 // " /= " // p2
 print *, "OK: current dir = ", p1
 
 ! -- home directory
+p2 = get_homedir()
 p1 = canonical("~")
 L1 = len_trim(p1)
-if (p1(1:1) == "~") error stop "canonical(~) did not expanduser: " // p1
-
-p2 = get_homedir()
-if(p1 /= p2) error stop "ERROR: canonical(~) failed: " // p1 // " /= " // p2
+if (p1(1:1) == "~") then
+  write(stderr,'(a)') "canonical(~) did not expanduser: " // p1
+  error stop
+end if
+if(p1 /= p2) then
+  write(stderr,*) "ERROR: canonical('~') " // p1 // " /= get_homedir: " // p2
+  error stop
+end if
 
 print *, "OK: home dir = ", p1
 

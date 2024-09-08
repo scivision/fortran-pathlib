@@ -8,12 +8,19 @@
 size_t fs_realpath(const char* path, char* result, const size_t buffer_size)
 {
 
+  char* buf = (char*) malloc(buffer_size);
+  if(!buf) return 0;
+  strcpy(buf, path);
+  // macOS must have this malloc/strcpy else the output is a single character
+  // when fs_realpath is called from fs_canonical or fs_resolve.
+
   const char* t =
 #ifdef _WIN32
-  _fullpath(result, path, buffer_size);
+  _fullpath(result, buf, buffer_size);
 #else
-  realpath(path, result);
+  realpath(buf, result);
 #endif
+  free(buf);
 
   (void) t;
 

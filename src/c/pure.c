@@ -157,6 +157,7 @@ size_t fs_suffix(const char* path, char* result, const size_t buffer_size)
   // failed on some systems in the path_t Fortran type jumbling the string
   char* buf = (char*) malloc(buffer_size);
   if(!buf) return 0;
+
   if(!fs_file_name(path, buf, buffer_size)){
     free(buf);
     return 0;

@@ -35,8 +35,17 @@ end if
 print *, "OK: current dir = ", p1
 
 ! -- home directory
+p2 = get_homedir()
 p1 = resolve("~")
-if (p1(1:1) == "~") error stop "%resolve ~ did not expanduser: " // p1
+
+if (p1(1:1) == "~") then
+  write(stderr,'(a)') "%resolve ~ did not expanduser: " // p1
+  error stop
+end if
+if(p1 /= p2) then
+  write(stderr,*) "ERROR: resolve('~') " // p1 // " /= get_homedir: " // p2
+  error stop
+end if
 print *, "OK: home dir = ", p1
 
 p2 = parent(p1)
