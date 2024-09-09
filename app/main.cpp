@@ -210,7 +210,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
   } else if (fun == "ls") {
     for (auto const& dir_entry : std::filesystem::directory_iterator{Ffs::expanduser(a1)}){
       std::filesystem::path p = dir_entry.path();
-      std::cout << p;;
+      std::cout << p;
       if (const auto &s = std::filesystem::file_size(p, ec); s && !ec)
         std::cout << " " << s;
 
@@ -305,7 +305,13 @@ while (true){
 
   // "\x04" is Ctrl-D on Windows.
   // EOF for non-Windows
-  if (std::cin.eof() || inp == "\x04" || inp == "q" || inp == "quit" || inp == "exit")
+  if (std::cin.eof() || inp ==
+#ifdef __cpp_named_character_escapes
+  "\x{04}"
+#else
+  "\x04"
+#endif
+  || inp == "q" || inp == "quit" || inp == "exit")
     break;
 
   // split variable inp on space-delimiters
