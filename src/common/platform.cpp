@@ -32,7 +32,8 @@ std::optional<std::string> Ffs::get_cwd()
 bool Ffs::chdir(std::string_view path)
 {
   std::error_code ec;
-  if(std::filesystem::current_path(path, ec); !ec) FFS_LIKELY
+  std::filesystem::current_path(path, ec);
+  if(!ec) FFS_LIKELY
     return true;
 
   std::cerr << "ERROR:ffilesystem:chdir: " << ec.message() << "\n";
