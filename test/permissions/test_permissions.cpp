@@ -62,7 +62,8 @@ if(!p)
 
 std::cout << "Permissions for " << noread << ": " << p.value() << "\n";
 
-if(p.value().find("r") == std::string::npos && Ffs::is_readable(noread)){
+#ifdef __cpp_lib_string_contains
+if(!p.value().contains("r") && Ffs::is_readable(noread)){
 
 if(!Ffs::exists(noread))
     err(noread + " should exist");
@@ -70,6 +71,9 @@ if(!Ffs::exists(noread))
 if(!Ffs::is_file(noread))
     err(noread + " should be a file");
 }
+#else
+std::cerr << "SKIP: due to not having C++23 string contains support\n";
+#endif
 
 // writable
 if(!Ffs::is_file(nowrite))
@@ -81,11 +85,15 @@ if(!p)
     err("get_permissions('" + nowrite + "') failed");
 std::cout << "Permissions for " << nowrite << " " << p.value() << "\n";
 
-if(p.value().find("w") == std::string::npos && Ffs::is_writable(nowrite)){
+#ifdef __cpp_lib_string_contains
+if(!p.value().contains("w") && Ffs::is_writable(nowrite)){
   std::cerr << "ERROR:  " << nowrite << " should not be writable\n";
   if(!fs_is_windows())
     return EXIT_FAILURE;
 }
+#else
+std::cerr << "SKIP: due to not having C++23 string contains support\n";
+#endif
 
 if(!Ffs::exists(nowrite))
     err(nowrite + " should exist");
