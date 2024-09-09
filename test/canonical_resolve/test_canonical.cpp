@@ -30,7 +30,7 @@ std::string home = Ffs::get_homedir();
 if(home.empty())
   err("get_homedir() failed");
 
-if (auto h = Ffs::canonical("~", true); !h || home != h)
+if (auto h = Ffs::canonical("~", true, true); !h || home != h)
   err("Ffs::canonical(~) " + h.value() + " != get_homedir() " + home);
 
 std::string homep = Ffs::parent(home);
@@ -39,7 +39,7 @@ if(homep.empty())
 
 // -- relative dir
 
-if(auto h = Ffs::canonical("~/..", true); !h || homep != h)
+if(auto h = Ffs::canonical("~/..", true, true); !h || homep != h)
   err("Ffs::canonical(~/..) != Ffs::parent(get_homedir()) " + h.value() + " != " + homep);
 
 // -- relative file
@@ -47,7 +47,7 @@ if(fs_is_cygwin())
   // Cygwin can't handle non-existing canonical paths
   return EXIT_SUCCESS;
 
-auto h = Ffs::canonical("~/../not-exist.txt", false);
+auto h = Ffs::canonical("~/../not-exist.txt", false, true);
 if(!h)
   err("Ffs::canonical(\"~/../not-exist.txt\") failed weakly canonical");
 

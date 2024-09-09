@@ -233,7 +233,14 @@ character(:), allocatable :: realpath(".././mypath")
 Resolve path. This means to canonicalize the path, normalizing, resolving symbolic links, and resolving relative paths when the path exists.
 This is distinct from canonical, which does not pin relative paths to a specific directory when the path does not exist.
 
+* "strict" if true required the path to exist (default false).
+* "expand_tilde" if true expands the tilde "~" (default true).
+
 ```fortran
+function resolve(path, strict, expand_tilde)
+character(*), intent(in) :: path
+logical, intent(in), optional :: strict, expand_tilde
+
 p = path_t("~/../b")
 p = p%resolve()
 
@@ -246,10 +253,17 @@ p = p%resolve()
 p%path() == "<absolute path of current working directory>/b"
 ```
 
-Canoicalize path. This means to normalize, resolve symbolic links, and resolve relative paths when the path exists.
+Canonicalize path. This means to normalize, resolve symbolic links, and resolve relative paths when the path exists.
 If the path doesn't exist and no absolute path is given, the path is resolved as far as possible with existing path components, and then ".", ".." are lexiographically resolved.
 
+* "strict" if true required the path to exist (default false).
+* "expand_tilde" if true expands the tilde "~" (default true).
+
 ```fortran
+function canonical(path, strict, expand_tilde)
+character(*), intent(in) :: path
+logical, intent(in), optional :: strict, expand_tilde
+
 p = path_t("~/../b")
 p = p%canonical()
 
@@ -617,16 +631,45 @@ With C backend, the path is normalized, to drastically simplify the code.
 expanduser("~/my/path")   !< "/home/user/my/path" on Unix, "<root>/Users/user/my/path" on Windows
 ```
 
-Resolve (canonicalize) path.
+---
+
+Canonicalize path. This means to normalize, resolve symbolic links, and resolve relative paths when the path exists.
+If the path doesn't exist and no absolute path is given, the path is resolved as far as possible with existing path components, and then ".", ".." are lexiographically resolved.
+
+* "strict" if true required the path to exist (default false).
+* "expand_tilde" if true expands the tilde "~" (default true).
+
+```fortran
+function canonical(path, strict, expand_tilde)
+character(*), intent(in) :: path
+logical, intent(in), optional :: strict, expand_tilde
+
+canonical("~/../b")
+
+canonical("../b")
+```
+
+---
+
+Resolve path.
 First attempts to resolve an existing path.
 If that fails, the path is resolved as far as possible with existing path components, and then ".", ".." are lexiographically resolved.
 
+* "strict" if true required the path to exist (default false).
+* "expand_tilde" if true expands the tilde "~" (default true).
+
 ```fortran
+function resolve(path, strict, expand_tilde)
+character(*), intent(in) :: path
+logical, intent(in), optional :: strict, expand_tilde
+
 resolve("~/../b")
 
 ! --- relative path resolved to current working directory
 resolve("../b")
 ```
+
+---
 
 Windows: long to short path
 

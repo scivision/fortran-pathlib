@@ -161,7 +161,7 @@ size_t fs_filesystem_type(const char* path, char* name, const size_t buffer_size
     char* buf = (char*) malloc(MP);
     if(!buf) return 0;
 
-    if (!fs_canonical(path, true, buf, MP) || !fs_root(buf, r, 4)) {
+    if (!fs_canonical(path, true, false, buf, MP) || !fs_root(buf, r, 4)) {
       free(buf);
       return 0;
     }

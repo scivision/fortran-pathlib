@@ -31,9 +31,9 @@ uintmax_t fs_space_available(const char* path){
 }
 
 
-std::string::size_type fs_canonical(const char* path, const bool strict,
+std::string::size_type fs_canonical(const char* path, const bool strict, const bool expand_tilde,
                           char* result, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::canonical(path, strict).value_or(""), result, buffer_size);
+  return fs_str2char(Ffs::canonical(path, strict, expand_tilde).value_or(""), result, buffer_size);
 }
 
 
@@ -96,9 +96,9 @@ std::string::size_type fs_relative_to(const char* base, const char* other,
   return fs_str2char(Ffs::relative_to(base, other), result, buffer_size);
 }
 
-std::string::size_type fs_resolve(const char* path, const bool strict,
+std::string::size_type fs_resolve(const char* path, const bool strict, const bool expand_tilde,
                          char* result, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::resolve(path, strict).value_or(""), result, buffer_size);
+  return fs_str2char(Ffs::resolve(path, strict, expand_tilde).value_or(""), result, buffer_size);
 }
 
 std::string::size_type fs_root(const char* path,

@@ -50,19 +50,19 @@ r%path_str = as_posix(self%path_str)
 end function
 
 
-function m_canonical(self, strict) result(r)
+function m_canonical(self, strict, expand_tilde) result(r)
 class(path_t), intent(in) :: self
-logical, intent(in), optional :: strict
+logical, intent(in), optional :: strict, expand_tilde
 type(path_t) :: r
-r%path_str = canonical(self%path_str, strict)
+r%path_str = canonical(self%path_str, strict, expand_tilde)
 end function
 
 
-function m_resolve(self, strict) result(r)
+function m_resolve(self, strict, expand_tilde) result(r)
 class(path_t), intent(in) :: self
-logical, intent(in), optional :: strict
+logical, intent(in), optional :: strict, expand_tilde
 type(path_t) :: r
-r%path_str = resolve(self%path_str, strict)
+r%path_str = resolve(self%path_str, strict, expand_tilde)
 end function
 
 

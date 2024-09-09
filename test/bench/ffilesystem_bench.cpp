@@ -38,7 +38,7 @@ std::map<std::string_view, std::function<size_t(const char*, char*, size_t)>> s_
     {"getenv", fs_getenv}
   };
 
-std::map<std::string_view, std::function<size_t(const char*, bool, char*, size_t)>> ssb =
+std::map<std::string_view, std::function<size_t(const char*, bool, bool, char*, size_t)>> ssb =
   {
     {"canonical", fs_canonical},
     {"resolve", fs_resolve}
@@ -62,6 +62,7 @@ std::map<std::string_view, std::function<bool(const char*)>> b_s =
   };
 
 constexpr bool strict = false;
+constexpr bool expand_tilde = false;
 
 // warmup
 std::string_view w;
@@ -75,7 +76,7 @@ if (b_s.contains(fname))
 else if (s_.contains(fname))
   L = s_[fname](buf.data(), buf.size());
 else if (ssb.contains(fname))
-  L = ssb[fname](path.data(), strict, buf.data(), buf.size());
+  L = ssb[fname](path.data(), strict, expand_tilde, buf.data(), buf.size());
 else if (s_s.contains(fname))
   L = s_s[fname](path.data(), buf.data(), buf.size());
 else
@@ -95,7 +96,7 @@ for (int i = 0; i < n; ++i){
     else if (s_.contains(fname))
       s_[fname](buf.data(), buf.size());
     else if (ssb.contains(fname))
-      ssb[fname](path.data(), strict, buf.data(), buf.size());
+      ssb[fname](path.data(), strict, expand_tilde, buf.data(), buf.size());
     else if (s_s.contains(fname))
       s_s[fname](path.data(), buf.data(), buf.size());
 
@@ -186,7 +187,7 @@ std::map<std::string_view, std::function<std::optional<std::string>(std::string_
     {"read_symlink", Ffs::read_symlink}
   };
 
-std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool)>> ssb =
+std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool, bool)>> ssb =
   {
     {"canonical", Ffs::canonical},
     {"resolve", Ffs::resolve}
@@ -210,10 +211,11 @@ std::map<std::string_view, std::function<bool(std::string_view)>> b_s =
   };
 
 constexpr bool strict = false;
+constexpr bool expand_tilde = false;
 
 // warmup
 std::string h;
-bool b;
+bool b = false;
 
 if (b_s.contains(fname))
   b = b_s[fname](path);
@@ -222,7 +224,7 @@ else if (s_.contains(fname))
 else if (so_.contains(fname))
   h = so_[fname]().value_or("");
 else if (ssb.contains(fname))
-  h = ssb[fname](path, strict).value_or("");
+  h = ssb[fname](path, strict, expand_tilde).value_or("");
 else if (s_s.contains(fname))
   h = s_s[fname](path);
 else if (s_so.contains(fname))
@@ -244,7 +246,7 @@ for (int i = 0; i < n; ++i)
   else if (so_.contains(fname))
     h = so_[fname]().value_or("");
   else if (ssb.contains(fname))
-    h = ssb[fname](path, strict).value_or("");
+    h = ssb[fname](path, strict, expand_tilde).value_or("");
   else if (s_s.contains(fname))
     h = s_s[fname](path);
   else if (s_so.contains(fname))

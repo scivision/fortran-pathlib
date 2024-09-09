@@ -5,7 +5,7 @@
 #include <system_error>
 
 
-std::optional<std::string> Ffs::canonical(std::string_view path, const bool strict)
+std::optional<std::string> Ffs::canonical(std::string_view path, const bool strict, const bool expand_tilde)
 {
   // also expands ~ and normalizes path
 
@@ -13,7 +13,9 @@ std::optional<std::string> Ffs::canonical(std::string_view path, const bool stri
     return {};
     // need this for macOS otherwise it returns the current working directory instead of empty string
 
-  const auto ex = std::filesystem::path(Ffs::expanduser(path));
+  const auto ex = expand_tilde
+    ? std::filesystem::path(Ffs::expanduser(path))
+    : path;
 
   std::error_code ec;
 
@@ -35,14 +37,16 @@ std::optional<std::string> Ffs::canonical(std::string_view path, const bool stri
 }
 
 
-std::optional<std::string> Ffs::resolve(std::string_view path, const bool strict)
+std::optional<std::string> Ffs::resolve(std::string_view path, const bool strict, const bool expand_tilde)
 {
   // expands ~ like canonical
   // empty path returns current working directory, which is distinct from canonical that returns empty string
   if(path.empty()) FFS_UNLIKELY
     return Ffs::get_cwd();
 
-  const auto ex = std::filesystem::path(Ffs::expanduser(path));
+  const auto ex = expand_tilde
+    ? std::filesystem::path(Ffs::expanduser(path))
+    : path;
 
   std::error_code ec;
 

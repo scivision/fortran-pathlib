@@ -87,7 +87,7 @@ int main(){
     if(Ffs::remove(""))
       err("Ffs::remove");
 
-    if(Ffs::canonical("", false))
+    if(Ffs::canonical("", false, false))
       err("Ffs::canonical");
 
     if(Ffs::equivalent("", ""))

@@ -19,7 +19,8 @@
 #include <errno.h>
 
 
-size_t fs_canonical(const char* path, const bool strict, char* result, const size_t buffer_size)
+size_t fs_canonical(const char* path, const bool strict, const bool expand_tilde,
+                    char* result, const size_t buffer_size)
 {
   // also expands ~
   // distinct from resolve()
@@ -32,8 +33,11 @@ size_t fs_canonical(const char* path, const bool strict, char* result, const siz
   if(L == 1 && path[0] == '.')
     return fs_get_cwd(result, buffer_size);
 
-  if(!fs_expanduser(path, result, buffer_size))
-    return 0;
+  if(expand_tilde){
+    if(!fs_expanduser(path, result, buffer_size))
+      return 0;
+  } else
+    fs_strncpy(path, result, buffer_size);
 
   if(strict){
     if(!fs_exists(result)){
@@ -47,7 +51,8 @@ size_t fs_canonical(const char* path, const bool strict, char* result, const siz
 }
 
 
-size_t fs_resolve(const char* path, const bool strict, char* result, const size_t buffer_size)
+size_t fs_resolve(const char* path, const bool strict, const bool expand_tilde,
+                  char* result, const size_t buffer_size)
 {
   // also expands ~
   // distinct from canonical()
@@ -56,8 +61,11 @@ size_t fs_resolve(const char* path, const bool strict, char* result, const size_
   if(L == 0 || (L == 1 && path[0] == '.'))
     return fs_get_cwd(result, buffer_size);
 
-  if(!fs_expanduser(path, result, buffer_size))
-    return 0;
+  if(expand_tilde){
+    if(!fs_expanduser(path, result, buffer_size))
+      return 0;
+  } else
+    fs_strncpy(path, result, buffer_size);
 
   if(strict && !fs_exists(result)){
     fprintf(stderr, "ERROR:ffilesystem:resolve: %s => does not exist and strict=true\n", result);

@@ -112,6 +112,8 @@ main : do
 
   done = .true.
   select case (cmd)
+  case ("optimized")
+    print '(L1)', fs_is_optimized()
   case ("as_posix")
     print '(a)', as_posix(arg1)
   case ('pid')
@@ -125,9 +127,11 @@ main : do
   case ("which")
     print '(A)', which(arg1)
   case ("canonical")
-    print '(A)', canonical(arg1)
+    print '(A)', canonical(arg1, .true., .false.)
+  case ("weakly_canonical")
+    print '(A)', canonical(arg1, .false., .false.)
   case ("resolve")
-    print '(A)', resolve(arg1)
+    print '(A)', resolve(arg1, .false., .false.)
   case ("parent")
     print '(A)', parent(arg1)
   case ("root")

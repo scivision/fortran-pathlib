@@ -79,7 +79,7 @@ if(!fs_is_windows()){
     if(fs_is_file(s))
       err("is_file", p);
 
-    if(fs_canonical(s, false, p, maxp) == 0)
+    if(fs_canonical(s, false, true, p, maxp) == 0)
       err("canonical", p);
     printf("OK: canonical(%s)\n", p);
 

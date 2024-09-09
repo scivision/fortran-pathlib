@@ -43,9 +43,9 @@ int main(int argc, char* argv[]){
   else if (arg1 == "expanduser")
     std::cout << Ffs::expanduser(arg2) << "\n";
   else if (arg1 == "canonical")
-    std::cout << Ffs::canonical(arg2, false) << "\n";
+    std::cout << Ffs::canonical(arg2, false, false).value() << "\n";
   else if (arg1 == "resolve")
-    std::cout << Ffs::resolve(arg2, false) << "\n";
+    std::cout << Ffs::resolve(arg2, false, false).value() << "\n";
   else if (arg1 == "compiler")
     std::cout << fs_compiler() << "\n";
   else if (arg1 == "chdir" || arg1 == "set_cwd"){

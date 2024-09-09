@@ -23,7 +23,7 @@ assert_is_file, assert_is_dir, &
 touch, get_modtime, set_modtime, &
 remove, get_tempdir, &
 set_permissions, get_permissions, &
-fs_cpp, fs_lang, pathsep, is_safe_name, &
+fs_cpp, fs_lang, fs_is_optimized, pathsep, is_safe_name, &
 is_admin, is_bsd, is_macos, is_windows, is_cygwin, is_wsl, is_mingw, is_linux, is_unix, &
 max_path, &
 exe_path, lib_path, compiler, compiler_c, get_shell, get_terminal, &
@@ -107,10 +107,10 @@ import
 character(kind=C_CHAR), intent(inout) :: path(*)
 end subroutine
 
-integer(C_SIZE_T) function fs_canonical(path, strict, result, buffer_size) bind(C)
+integer(C_SIZE_T) function fs_canonical(path, strict, expand_tilde, result, buffer_size) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: path(*)
-logical(C_BOOL), intent(in), value :: strict
+logical(C_BOOL), intent(in), value :: strict, expand_tilde
 character(kind=C_CHAR), intent(out) :: result(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
@@ -122,10 +122,10 @@ character(kind=C_CHAR), intent(out) :: result(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
 
-integer(C_SIZE_T) function fs_resolve(path, strict, result, buffer_size) bind(C)
+integer(C_SIZE_T) function fs_resolve(path, strict, expand_tilde, result, buffer_size) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: path(*)
-logical(C_BOOL), intent(in), value :: strict
+logical(C_BOOL), intent(in), value :: strict, expand_tilde
 character(kind=C_CHAR), intent(out) :: result(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
@@ -533,9 +533,9 @@ r = cbuf(:N)
 end function
 
 
-function canonical(path, strict) result (r)
+function canonical(path, strict, expand_tilde) result (r)
 include "ifc1a.inc"
-N = fs_canonical(trim(path) // C_NULL_CHAR, s, cbuf, N)
+N = fs_canonical(trim(path) // C_NULL_CHAR, s, e, cbuf, N)
 include "ifc0b.inc"
 end function
 
@@ -548,9 +548,9 @@ include "ifc0b.inc"
 end function
 
 
-function resolve(path, strict) result(r)
+function resolve(path, strict, expand_tilde) result(r)
 include "ifc1a.inc"
-N = fs_resolve(trim(path) // C_NULL_CHAR, s, cbuf, N)
+N = fs_resolve(trim(path) // C_NULL_CHAR, s, e, cbuf, N)
 include "ifc0b.inc"
 end function
 

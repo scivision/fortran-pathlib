@@ -29,6 +29,7 @@ static void no_arg(std::string_view fun){
   std::map<std::string_view, std::function<bool()>> mbool =
   {
     {"cpp", fs_cpp},
+    {"optimized", fs_is_optimized},
     {"is_admin", fs_is_admin},
     {"is_bsd", fs_is_bsd},
     {"is_linux", fs_is_linux},
@@ -143,13 +144,13 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"read_symlink", Ffs::read_symlink}
   };
 
-  std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool)>> mstrb =
+  std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool, bool)>> mstrb =
   {
     {"canonical", Ffs::canonical},
     {"resolve", Ffs::resolve}
   };
 
-  std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool)>> mstrbw =
+  std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool, bool)>> mstrbw =
   {
     {"weakly_canonical", Ffs::canonical}
   };
@@ -174,9 +175,9 @@ static void one_arg(std::string_view fun, std::string_view a1){
   else if (mostring.contains(fun))
     std::cout << mostring[fun](a1).value_or("") << "\n";
   else if (mstrb.contains(fun))
-    std::cout << mstrb[fun](a1, true).value_or("") << "\n";
+    std::cout << mstrb[fun](a1, true, false).value_or("") << "\n";
   else if (mstrbw.contains(fun))
-    std::cout << mstrbw[fun](a1, false).value_or("") << "\n";
+    std::cout << mstrbw[fun](a1, false, false).value_or("") << "\n";
   else if (mmax.contains(fun))
     std::cout <<  mmax[fun](a1).value_or(0) << "\n";
   else if (mvoid.contains(fun))
