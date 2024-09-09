@@ -24,8 +24,7 @@ if(!u1)
 std::cout << "canonical(.): " << u1.value() << "\n";
 
 for ( const auto &u : {smiley, wink, hello} ) {
-  auto u2 = Ffs::file_name("./" + u);
-  if (u2 != u)
+  if (auto u2 = Ffs::file_name("./" + u); u2 != u)
     err("Ffs::file_name(./" + smiley + ") != " + u2 + " " + u);
 
   u1 = Ffs::canonical(u, false, false);

@@ -82,13 +82,12 @@ bool fs_equivalent(const char* path1, const char* path2)
 // note how much more sophisticated Boost.Filesystem is
 // https://github.com/boostorg/filesystem/blob/a0c8edba38a4d31b449fcf7b7ada455977342596/src/operations.cpp#L3813
 
-  struct stat s1, s2;
+  struct stat s1;
+  struct stat s2;
 
   if(stat(path1, &s1) != 0 || stat(path2, &s2) != 0)
     return false;
-  // printf("TRACE: st_dev: %d %d\n", s1.st_dev, s2.st_dev);
-  // printf("TRACE: st_ino: %d %d\n", s1.st_ino, s2.st_ino);
-  // https://www.boost.org/doc/libs/1_85_0/libs/filesystem/doc/reference.html#equivalent
+// https://www.boost.org/doc/libs/1_85_0/libs/filesystem/doc/reference.html#equivalent
   return s1.st_dev == s2.st_dev && s1.st_ino == s2.st_ino;
 }
 

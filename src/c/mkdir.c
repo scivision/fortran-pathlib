@@ -55,7 +55,6 @@ bool fs_mkdir(const char* path)
     fs_root(path, r, 4);
     // root may be empty for relative paths
 
-  // printf("TRACE: mkdir(%s) %s %.*s\n", path, buf, (int)segment.size, segment.begin);
   do {
     if(L + segment.size + 1 >= m){
       fprintf(stderr, "ERROR:ffilesystem:mkdir: path too long %s\n", path);
