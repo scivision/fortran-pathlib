@@ -44,25 +44,28 @@ size_t fs_which(const char* name, char* result, const size_t buffer_size)
 
   if(FS_TRACE) printf("TRACE:which: PATH: %s\n", path);
 
-  const char sep[2] = {fs_pathsep(), '\0'};
+  const char* p = path;
+  const char* end = path + strlen(path);
 
-// strtok_r, strtok_s not necessarily available
-  char* p = strtok(path, sep);  // NOSONAR
+  while (p < end) {
+    const char* next = strchr(p, fs_pathsep());
+    if (!next)
+      next = end;
 
-  while (p) {
-    const int N = snprintf(result, buffer_size, "%s/%s", p, name);
-    if(N < 0 || N >= (int) buffer_size){
+    const int N = snprintf(result, buffer_size, "%.*s/%s", (int)(next - p), p, name);
+    if (N < 0 || N >= (int)buffer_size) {
       fprintf(stderr, "ERROR:ffilesystem:which: buffer overflow\n");
       return 0;
     }
 
-    if(FS_TRACE) printf("TRACE:which: is_file(%s) %d is_exe(%s) %d\n", result, fs_is_file(result), result, fs_is_exe(result));
+    if (FS_TRACE) printf("TRACE:which: is_file(%s) %d is_exe(%s) %d\n", result, fs_is_file(result), result, fs_is_exe(result));
 
-    if(fs_is_exe(result)){
+    if (fs_is_exe(result)) {
       fs_as_posix(result);
-      return (size_t) N;
+      return (size_t)N;
     }
-    p = strtok(NULL, sep);  // NOSONAR
+
+    p = next + 1;
   }
 
   return 0;
