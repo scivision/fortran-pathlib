@@ -65,7 +65,6 @@ constexpr bool strict = false;
 constexpr bool expand_tilde = false;
 
 // warmup
-std::string_view w;
 auto t = std::chrono::duration<double>::max();
 size_t L=0;
 bool b=false;
@@ -84,10 +83,12 @@ else
     std::cerr << "Error: unknown function " << fname << "\n";
     return t;
   }
-if(L == 0)
+if(!b_s.contains(fname) && L == 0){
+  std::cerr << "Error:C: " << fname << " failed on warmup\n";
   return t;
+}
 
-w = buf;
+const std::string first_out = buf;
 
 for (int i = 0; i < n; ++i){
     auto t0 = std::chrono::steady_clock::now();
@@ -105,7 +106,7 @@ for (int i = 0; i < n; ++i){
 }
 
 if(verbose)
-  print_c(t, n, path, fname, w, b);
+  print_c(t, n, path, fname, first_out, b);
 
 return t;
 }
@@ -234,6 +235,10 @@ else
     std::cerr << "Error: unknown function " << fname << "\n";
     return t;
   }
+if (!b_s.contains(fname) && h.empty()){
+  std::cerr << "Error:Cpp: " << fname << " " << path << " failed on warmup\n";
+  return t;
+}
 
 for (int i = 0; i < n; ++i)
 {
