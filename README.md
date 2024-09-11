@@ -51,7 +51,7 @@ Advanced / conceptual development takes place in [ffilesystem-concepts](https://
 Ffilesystem supports compilers including:
 
 * GCC &ge; 8 (gcc/g++, gfortran)
-    * GCC 7.x works with `cmake -Dffilesystem_cpp=off`
+    * GCC &ge; 5.5 works with `cmake -Dffilesystem_cpp=off`
 * LLVM Clang &ge; 9 (clang/clang++, flang or gfortran)
 * Intel oneAPI (icx, icpx, ifx)
 * AMD AOCC (clang/clang++, flang)
