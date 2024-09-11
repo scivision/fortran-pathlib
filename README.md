@@ -26,7 +26,7 @@ The language standards required are at least:
 
 Ffilesystem uses
 [C++ stdlib filesystem](https://en.cppreference.com/w/cpp/filesystem)
-and
+and / or
 [C standard library](https://en.wikipedia.org/wiki/C_standard_library).
 Ffilesystem works with several popular C standard library implementations, including
 [glibc](https://sourceware.org/glibc/),

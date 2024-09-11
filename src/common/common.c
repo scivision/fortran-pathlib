@@ -11,28 +11,6 @@
 #include <stdio.h>  // snprintf
 #include <string.h>
 
-// maximum path length
-#if defined (__APPLE__)
-#include <sys/syslimits.h>
-#elif !defined (_MSC_VER)
-#include <limits.h>
-#endif
-// end maximum path length
-
-
-size_t fs_get_max_path(){
-
-  size_t m = 256;
-#if defined(PATH_MAX)
-  m = PATH_MAX;
-#elif defined (_MAX_PATH)
-  m = _MAX_PATH;
-#elif defined (_POSIX_PATH_MAX)
-  m = _POSIX_PATH_MAX;
-#endif
-  return (m < 4096) ? m : 4096; // arbitrary absolute maximum
-
-}
 
 char fs_pathsep(){
   return fs_is_windows() ? ';' : ':';

@@ -6,9 +6,28 @@
 #include <unistd.h>  // pathconf
 #endif
 
+#if defined (__APPLE__)
+#include <sys/syslimits.h>
+#endif
+
 #include <stddef.h> // size_t
 
 #include "ffilesystem.h"
+
+
+size_t fs_get_max_path(){
+
+  size_t m = 256;
+#if defined(PATH_MAX)
+  m = PATH_MAX;
+#elif defined (_MAX_PATH)
+  m = _MAX_PATH;
+#elif defined (_POSIX_PATH_MAX)
+  m = _POSIX_PATH_MAX;
+#endif
+  return (m < 4096) ? m : 4096; // arbitrary absolute maximum
+
+}
 
 
 size_t fs_max_component(const char* path)
@@ -20,7 +39,7 @@ size_t fs_max_component(const char* path)
 #ifdef _WIN32
   DWORD lpMaximumComponentLength = 0;
 
-  if(!GetVolumeInformationA(drive.c_str(), 0, 0, 0, &lpMaximumComponentLength, 0, 0, 0))
+  if(!GetVolumeInformationA(path, 0, 0, 0, &lpMaximumComponentLength, 0, 0, 0))
     fs_win32_print_error(path, "max_name");
 
   return (size_t) lpMaximumComponentLength;
