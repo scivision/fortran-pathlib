@@ -7,7 +7,7 @@ endif()
 
 project(ffilesystem
 LANGUAGES C
-VERSION 5.7.1
+VERSION 5.7.2
 )
 
 if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.30.0 AND CMAKE_VERSION VERSION_LESS 3.30.4)
@@ -135,6 +135,7 @@ target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_CLOCK_CAST}>>:HAVE_CLOCK_CAST>"
 "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${ffilesystem_HAVE_MERSENNE_TWISTER}>>:HAVE_MERSENNE_TWISTER>"
 "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${ffilesystem_trace}>>:FS_TRACE=1>"
+"$<$<AND:$<COMPILE_LANGUAGE:C>,$<BOOL:${HAVE_DLADDR}>>:HAVE_DLADDR>"
 )
 target_compile_features(ffilesystem PRIVATE cxx_std_${cxx_std} c_std_99)
 target_compile_options(ffilesystem PRIVATE

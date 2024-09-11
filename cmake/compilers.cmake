@@ -32,6 +32,13 @@ else()
   c_check()
 endif()
 
+if(UNIX)
+  list(APPEND CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS})
+  set(CMAKE_REQUIRED_DEFINITIONS -D_GNU_SOURCE)
+  check_symbol_exists(dladdr dlfcn.h HAVE_DLADDR)
+  unset(CMAKE_REQUIRED_DEFINITIONS)
+endif()
+
 # --- deeper filesystem check: C, C++ and Fortran compiler ABI compatibility
 
 if(HAVE_CXX_FILESYSTEM)

@@ -19,7 +19,7 @@ BUILD_DIR := build
 INC := -Iinclude/
 
 # optional, but useful
-cfeat := -DHAVE_MERSENNE_TWISTER
+cfeat := -DHAVE_MERSENNE_TWISTER -DHAVE_DLADDR
 cppfeat := -DHAVE_MERSENNE_TWISTER
 
 CXXFLAGS := -std=c++20 -O3 -DNDEBUG $(cppfeat) $(INC)

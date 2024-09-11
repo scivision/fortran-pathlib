@@ -1,5 +1,5 @@
 project('ffilesystem', ['c'],
-version: '5.7.1',
+version: '5.7.2',
 default_options: ['c_std=c99', 'cpp_std=c++20', 'buildtype=release', 'b_ndebug=if-release'],
 meson_version : '>=1.4.0')
 
@@ -84,11 +84,45 @@ endif
 
 inc = include_directories('include')
 
+is_windows = host_machine.system() == 'windows'
+
+# -- dladdr check
+dladdr_def = []
+dl = []
+
+if not is_windows
+  dl = cc.find_library('dl', required: false)
+
+  have_dladdr = cc.links('''#define _GNU_SOURCE
+  #include <dlfcn.h>
+  static void dl_dummy_func() {}
+
+  int main(void){
+
+  Dl_info info;
+  if(!dladdr( (void*)&dl_dummy_func, &info))
+    return 1;
+  return 0;
+  }
+  ''', dependencies: dl, name: 'dladdr')
+  if have_dladdr
+    dladdr_def = '-DHAVE_DLADDR'
+  endif
+endif
+
 # -- C++ Feature checks
 chrono_def = []
 mkdtemp_def = []
 
+fs_lib = []
+
 if use_cpp
+
+cpp = meson.get_compiler('cpp')
+
+if cpp.get_id() == 'gcc' and cpp.version().version_compare('<9.1.0')
+  fs_lib = [cpp.find_library('stdc++fs'), cpp.find_library('stdc++')]
+endif
 
 fs_check = '''
 #include <filesystem>
@@ -99,8 +133,7 @@ auto h = tgt.has_filename();
 return 0;
 }'''
 
-cpp = meson.get_compiler('cpp')
-if not cpp.links(fs_check, name: 'C++ filesystem')
+if not cpp.links(fs_check, dependencies: fs_lib, name: 'C++ filesystem')
   error('No C++ filesystem support')
 endif
 
@@ -117,7 +150,7 @@ auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs);
 return 0;
 }
 '''
-if cpp.links(chrono_src, name: 'C++20 chrono')
+if cpp.links(chrono_src, dependencies: fs_lib, name: 'C++20 chrono')
   chrono_def = '-DHAVE_CLOCK_CAST'
 endif
 
@@ -135,6 +168,13 @@ int main(){
 if cpp.links(mkdtemp_src, name: 'C++ Mersenne Twister for mkdtemp()')
   mkdtemp_def = '-DHAVE_MERSENNE_TWISTER'
 endif
+
+# -- C++ map.contains
+cpp_map_contains = cpp.compiles('''#include <map>
+int main(){
+std::map<int, char> m{{1, 'a'}, {2, 'b'}};
+return m.contains(2);
+}''', name: 'C++ map.contains')
 
 endif # use_cpp
 
@@ -161,17 +201,15 @@ endif
 endif
 
 # Windows-specific
-is_windows = host_machine.system() == 'windows'
-
 libwin = []
 win32_symlink_def = []
 
 if is_windows
 
-libwin = [cc.find_library('Userenv', required: true), cc.find_library('ws2_32', required: true)]
+libwin = [cc.find_library('Userenv'), cc.find_library('ws2_32')]
 
 if use_cpp
-  symlink_run = cpp.run(fs.read('cmake/fs_check/check_fs_symlink.cpp'), name: 'Symlink')
+  symlink_run = cpp.run(fs.read('cmake/fs_check/check_fs_symlink.cpp'), dependencies: fs_lib, name: 'Symlink')
   if symlink_run.returncode() != 0
     win32_symlink_def = '-DWIN32_SYMLINK'
   endif
@@ -185,14 +223,14 @@ filesystem = library('filesystem',
 sources: [fsrcs, csrcs, cppsrcs],
 include_directories: [cwalk_inc, inc],
 install: true,
-c_args: [mkdtemp_def],
+c_args: [mkdtemp_def, dladdr_def],
 cpp_args: [chrono_def, mkdtemp_def, win32_symlink_def],
 fortran_args: f03type_def,
-dependencies: libwin,
+dependencies: [libwin, fs_lib, dl],
 link_with: cwalk_dep
 )
 
-if use_cpp
+if use_cpp and cpp_map_contains
   executable('fs_cli', sources: 'app/main.cpp', link_with: filesystem, include_directories: inc, install: true)
 endif
 
@@ -213,7 +251,7 @@ if not meson.is_subproject()
     subdir('test/' + d)
   endforeach
 
-  if use_cpp
+  if use_cpp and cpp_map_contains
     executable('ffilesystem_bench', 'test/bench/ffilesystem_bench.cpp', link_with: filesystem, include_directories: inc, install: true)
   endif
 endif

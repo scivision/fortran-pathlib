@@ -8,7 +8,7 @@
 #if defined(_WIN32) || defined(__CYGWIN__)
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h> // GetModuleFileNameA
-#elif __has_include(<dlfcn.h>)
+#elif defined(HAVE_DLADDR)
 #include <dlfcn.h> // dladdr
 static void dl_dummy_func() {}
 #endif
@@ -28,7 +28,7 @@ size_t fs_lib_path(FFS_MUNUSED char* path, FFS_MUNUSED const size_t buffer_size)
     fs_win32_print_error(path, "lib_path");
     return 0;
   }
-#elif __has_include(<dlfcn.h>)
+#elif defined(HAVE_DLADDR)
   Dl_info info;
   if(!dladdr( (void*)&dl_dummy_func, &info))
     return 0;
