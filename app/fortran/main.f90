@@ -123,7 +123,7 @@ main : do
   case ("expanduser")
     print '(A)', expanduser(arg1)
   case ("owner")
-    print '(A)', get_owner(arg1)
+    print '(A,1x,A)', get_owner_name(arg1), get_owner_group(arg1)
   case ("which")
     print '(A)', which(arg1)
   case ("canonical")

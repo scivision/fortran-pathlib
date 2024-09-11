@@ -9,16 +9,15 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <grp.h>     // for getgrgid
 #endif
-
-
 
 #include <string.h>
 #include <stdio.h>
 
 #include "ffilesystem.h"
 
-size_t fs_get_owner(const char* path, char* name, const size_t buffer_size)
+size_t fs_get_owner_name(const char* path, char* name, const size_t buffer_size)
 {
 #ifdef _WIN32
 // https://learn.microsoft.com/en-us/windows/win32/secauthz/finding-the-owner-of-a-file-object-in-c--
@@ -78,5 +77,28 @@ size_t fs_get_owner(const char* path, char* name, const size_t buffer_size)
   }
 
   return fs_strncpy(pw->pw_name, name, buffer_size);
+#endif
+}
+
+
+size_t fs_get_owner_group(FFS_MUNUSED const char* path, FFS_MUNUSED char* name, FFS_MUNUSED const size_t buffer_size)
+{
+#ifdef _WIN32
+  fprintf(stderr, "ERROR:ffilesystem:fs_get_owner_group: not implemented for Windows\n");
+  return 0;
+#else
+  struct stat s;
+  if(stat(path, &s)){
+     fprintf(stderr, "ERROR:ffilesystem:fs_get_owner:stat: %s => %s\n", path, strerror(errno));
+    return 0;
+  }
+
+  const struct group *grp = getgrgid(s.st_gid);
+  if(!grp){
+    fprintf(stderr, "ERROR:ffilesystem:fs_get_owner:getgrgid %s => %s\n", path, strerror(errno));
+    return 0;
+  }
+
+  return fs_strncpy(grp->gr_name, name, buffer_size);
 #endif
 }

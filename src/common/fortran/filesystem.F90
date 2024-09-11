@@ -6,7 +6,8 @@ use, intrinsic:: iso_fortran_env, only: int64, compiler_version, stderr=>error_u
 implicit none
 private
 !! utility procedures
-public :: get_homedir, get_profile_dir, user_config_dir, get_username, hostname, get_owner, &
+public :: get_homedir, get_profile_dir, user_config_dir, get_username, hostname, &
+ get_owner_name, get_owner_group, &
  canonical, resolve, realpath, fs_getpid, &
  get_cwd, set_cwd, make_tempdir, which
 public :: normal, expanduser, as_posix, &
@@ -257,7 +258,14 @@ character(kind=C_CHAR), intent(out) :: name(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
 
-integer (C_SIZE_T) function fs_get_owner(path, name, buffer_size) bind(C)
+integer (C_SIZE_T) function fs_get_owner_name(path, name, buffer_size) bind(C)
+import
+character(kind=C_CHAR), intent(in) :: path(*)
+character(kind=C_CHAR), intent(out) :: name(*)
+integer(C_SIZE_T), intent(in), value :: buffer_size
+end function
+
+integer (C_SIZE_T) function fs_get_owner_group(path, name, buffer_size) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: path(*)
 character(kind=C_CHAR), intent(out) :: name(*)
@@ -1208,12 +1216,22 @@ include "ifc0b.inc"
 end function
 
 
-function get_owner(path) result (r)
-!! get owner of file or directory
+function get_owner_name(path) result (r)
+!! get owner name of file or directory
 character(*), intent(in) :: path
 
 include "ifc0a.inc"
-N = fs_get_owner(trim(path) // C_NULL_CHAR, cbuf, N)
+N = fs_get_owner_name(trim(path) // C_NULL_CHAR, cbuf, N)
+include "ifc0b.inc"
+end function
+
+
+function get_owner_group(path) result (r)
+!! get owner group of file or directory
+character(*), intent(in) :: path
+
+include "ifc0a.inc"
+N = fs_get_owner_group(trim(path) // C_NULL_CHAR, cbuf, N)
 include "ifc0b.inc"
 end function
 

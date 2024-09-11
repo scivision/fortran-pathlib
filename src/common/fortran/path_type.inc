@@ -53,7 +53,8 @@ procedure, public :: get_permissions=>m_get_permissions
 procedure, public :: shortname=>m_shortname
 procedure, public :: longname=>m_longname
 procedure, public :: filesystem_type=>m_filesystem_type
-procedure, public :: get_owner=>m_get_owner
+procedure, public :: get_owner_name=>m_get_owner_name
+procedure, public :: get_owner_group=>m_get_owner_group
 
 final :: destructor
 

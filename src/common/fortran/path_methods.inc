@@ -138,10 +138,17 @@ r = file_name(self%path_str)
 end function
 
 
-function m_get_owner(self) result (r)
+function m_get_owner_name(self) result (r)
 class(path_t), intent(in) :: self
 character(:), allocatable :: r
-r = get_owner(self%path_str)
+r = get_owner_name(self%path_str)
+end function
+
+
+function m_get_owner_group(self) result(r)
+class(path_t), intent(in) :: self
+character(:), allocatable :: r
+r = get_owner_group(self%path_str)
 end function
 
 

@@ -5,7 +5,7 @@ use filesystem
 
 implicit none
 
-character(:), allocatable :: exe, user, owner
+character(:), allocatable :: exe, user, name, group
 
 valgrind : block
 
@@ -15,11 +15,17 @@ print '(a)', "Executable: " // exe
 user = get_username()
 print '(a)', "User: " // user
 
-owner = get_owner(exe)
-print '(a)', "Owner: " //  owner
-if(len_trim(owner) == 0) error stop "error: No owner information"
+name = get_owner_name(exe)
+print '(a)', "Owner name: " // name
+if(len_trim(name) == 0) error stop "error: No owner information"
 
-if(user == owner) stop "OK: User and owner match"
+if(.not. is_windows()) then
+  group = get_owner_group(exe)
+  print '(a)', "Owner group: " // group
+  if(len_trim(group) == 0) error stop "error: No group information"
+endif
+
+if(user == name) stop "OK: User and owner match"
 
 end block valgrind
 

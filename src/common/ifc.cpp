@@ -113,10 +113,20 @@ std::string Ffs::user_config_dir()
 }
 
 
-std::string Ffs::get_owner(std::string_view path)
+std::string Ffs::get_owner_name(std::string_view path)
 {
   if(std::string buf(fs_get_max_path(), '\0');
-      fs_get_owner(path.data(), buf.data(), buf.size()) > 0)  FFS_LIKELY
+      fs_get_owner_name(path.data(), buf.data(), buf.size()) > 0)  FFS_LIKELY
+    return buf.c_str();
+
+  return {};
+}
+
+
+std::string Ffs::get_owner_group(std::string_view path)
+{
+  if(std::string buf(fs_get_max_path(), '\0');
+      fs_get_owner_group(path.data(), buf.data(), buf.size()) > 0)  FFS_LIKELY
     return buf.c_str();
 
   return {};

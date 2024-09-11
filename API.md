@@ -753,10 +753,16 @@ Get username of the current user.
 character(:), allocatable :: get_username()
 ```
 
-Get owner of file or directory.
+Get owner name of file or directory.
 
 ```fortran
-character(:), allocatable :: get_owner("my/file.txt")
+character(:), allocatable :: get_owner_name("my/file.txt")
+```
+
+Get owner group of file or directory.
+
+```fortran
+character(:), allocatable :: get_owner_group("my/file.txt")
 ```
 
 Get full path of main executable, regardless of current working directory
