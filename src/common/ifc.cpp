@@ -83,6 +83,12 @@ std::string Ffs::filesystem_type(std::string_view path)
 }
 
 
+size_t Ffs::max_component(std::string_view path)
+{
+  return fs_max_component(path.data());
+}
+
+
 std::string Ffs::get_homedir()
 {
   if(std::string buf(fs_get_max_path(), '\0');

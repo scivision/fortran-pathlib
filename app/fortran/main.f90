@@ -39,8 +39,14 @@ main : do
 
   done = .true.
   select case (cmd)
+  case ("optimized")
+    print '(L1)', fs_is_optimized()
   case ("cpp")
     print '(L1)', fs_cpp()
+  case ('pid')
+    print '(i0)', fs_getpid()
+  case ("maxpath")
+    print '(i0)', max_path()
   case ("lang")
     print '(i0)', fs_lang()
   case ("pathsep")
@@ -112,12 +118,10 @@ main : do
 
   done = .true.
   select case (cmd)
-  case ("optimized")
-    print '(L1)', fs_is_optimized()
+  case ("max_component")
+    print '(i0)', max_component(arg1)
   case ("as_posix")
     print '(a)', as_posix(arg1)
-  case ('pid')
-    print '(i0)', fs_getpid()
   case ('modtime')
     print '(i0)', get_modtime(arg1)
   case ("expanduser")

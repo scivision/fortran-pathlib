@@ -48,6 +48,8 @@ public:
   [[nodiscard]] static std::optional<std::string> get_tempdir();
   [[nodiscard]] static std::optional<std::string> get_cwd();
 
+  [[nodiscard]] static size_t max_component(std::string_view);
+
   [[nodiscard]] static std::string get_owner_name(std::string_view);
   [[nodiscard]] static std::string get_owner_group(std::string_view);
 
@@ -187,7 +189,10 @@ fs_st_mode(const char*);
 
 FFS_NODISCARD bool fs_cpp();
 FFS_NODISCARD long fs_lang();
+
 FFS_NODISCARD size_t fs_get_max_path();
+FFS_NODISCARD size_t fs_max_component(const char*);
+
 FFS_NODISCARD bool fs_is_optimized();
 
 FFS_NODISCARD int fs_getpid();

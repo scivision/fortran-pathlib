@@ -162,6 +162,11 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"space", Ffs::space_available}
   };
 
+  std::map<std::string_view, std::function<size_t(std::string_view)>> smax =
+  {
+    {"max_component", Ffs::max_component}
+  };
+
   std::map<std::string_view, std::function<void(std::string_view)>> mvoid =
   {
     {"touch", Ffs::touch}
@@ -181,6 +186,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << mstrbw[fun](a1, false, false).value_or("") << "\n";
   else if (mmax.contains(fun))
     std::cout <<  mmax[fun](a1).value_or(0) << "\n";
+  else if (smax.contains(fun))
+    std::cout << smax[fun](a1) << "\n";
   else if (mvoid.contains(fun))
     mvoid[fun](a1);
   else if (fun == "modtime"){

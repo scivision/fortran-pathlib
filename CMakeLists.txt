@@ -80,6 +80,7 @@ src/common/exepath.c
 src/common/env.c
 src/common/home.c
 src/common/libpath.c
+src/common/limits.c
 src/common/mkdtemp.c
 src/common/os.c
 src/common/owner.c

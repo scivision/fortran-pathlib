@@ -11,6 +11,14 @@ integer :: m
 m = max_path()
 ```
 
+The maximium length of path segments are also limited, typically to 255 characters.
+That is, the overall path might be allowed to be thousands of characters long, but each segment is limited individually as well.
+
+```fortran
+integer :: m
+m = max_component("/")
+```
+
 For Windows the top-level drive "D:/" and similar requires a trailing slash, as in numerous other programs.
 
 ## path_t

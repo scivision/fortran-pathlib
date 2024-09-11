@@ -26,7 +26,7 @@ remove, get_tempdir, &
 set_permissions, get_permissions, &
 fs_cpp, fs_lang, fs_is_optimized, pathsep, is_safe_name, &
 is_admin, is_bsd, is_macos, is_windows, is_cygwin, is_wsl, is_mingw, is_linux, is_unix, &
-max_path, &
+max_path, max_component, &
 exe_path, lib_path, compiler, compiler_c, get_shell, get_terminal, &
 longname, shortname, getenv, setenv, getarg, &
 is_alpha, filesystem_type, devnull, cpu_arch, &
@@ -99,8 +99,14 @@ logical(C_BOOL) function is_unix() bind(C, name="fs_is_unix")
 !! operating system is Unix-like
 import C_BOOL
 end function
-integer(C_INT) function fs_get_max_path() bind(c)
+
+integer(C_SIZE_T) function fs_get_max_path() bind(c)
 import
+end function
+
+integer(C_SIZE_T) function fs_max_component(path) bind(C)
+import
+character(kind=C_CHAR), intent(in) :: path(*)
 end function
 
 subroutine fs_as_posix(path) bind(C)
@@ -524,6 +530,14 @@ end function
 #ifndef NO_F03TYPE
 include "path_methods.inc"
 #endif
+
+
+integer function max_component(path) result (r)
+!! returns maximum component length for this filesystem
+!! Maximum component length is dynamically determined for this computer.
+character(*), intent(in) :: path
+r = int(fs_max_component(trim(path) // C_NULL_CHAR))
+end function
 
 
 function as_posix(path) result(r)
