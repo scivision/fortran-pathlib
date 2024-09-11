@@ -1,6 +1,6 @@
 project('ffilesystem', ['c'],
 version: '5.7.2',
-default_options: ['c_std=c99', 'cpp_std=c++20', 'buildtype=release', 'b_ndebug=if-release'],
+default_options: ['c_std=c99', 'cpp_std=c++23,c++20,c++17', 'buildtype=release', 'b_ndebug=if-release'],
 meson_version : '>=1.4.0')
 
 use_cpp = get_option('cpp')
@@ -45,6 +45,9 @@ csrcs = files('src/common/common.c',
 )
 
 if use_cpp
+
+cpp_std = get_option('cpp_std')
+message('C++ standard: ' + cpp_std)
 
 cwalk_dep = []
 cwalk_inc = []
