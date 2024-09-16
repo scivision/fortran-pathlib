@@ -92,6 +92,12 @@ static void no_arg(std::string_view fun){
     std::cout << Ffs::cpu_arch() << "\n";
   else if (fun == "max_path")
     std::cout << fs_get_max_path() << "\n";
+  else if (fun == "loadavg")
+#if defined(__cpp_lib_format)
+    std::cout << std::format("{:0.3f}\n", fs_cpu_loadavg());
+#else
+    std::cout << fs_cpu_loadavg() << "\n";
+#endif
   else
     std::cerr << fun << " not a known function\n";
 

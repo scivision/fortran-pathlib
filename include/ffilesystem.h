@@ -216,6 +216,8 @@ FFS_NODISCARD bool fs_is_safe_name(const char*);
 void fs_as_posix(char*);
 void fs_drop_slash(char*);
 
+FFS_NODISCARD double fs_cpu_loadavg();
+
 size_t fs_normal(const char*, char*, const size_t);
 
 size_t fs_realpath(const char*, char*, const size_t);

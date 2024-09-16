@@ -41,6 +41,8 @@ main : do
   select case (cmd)
   case ("optimized")
     print '(L1)', fs_is_optimized()
+  case ("loadavg")
+    print '(f7.3)', loadavg()
   case ("cpp")
     print '(L1)', fs_cpp()
   case ('pid')

@@ -1,6 +1,6 @@
 module filesystem
 
-use, intrinsic:: iso_c_binding, only: C_BOOL, C_CHAR, C_INT, C_LONG, C_LONG_LONG, C_SIZE_T, C_NULL_CHAR
+use, intrinsic:: iso_c_binding, only: C_BOOL, C_CHAR, C_INT, C_LONG, C_LONG_LONG, C_SIZE_T, C_NULL_CHAR, C_DOUBLE
 use, intrinsic:: iso_fortran_env, only: int64, compiler_version, stderr=>error_unit
 
 implicit none
@@ -13,7 +13,7 @@ public :: get_homedir, get_profile_dir, user_config_dir, get_username, hostname,
 public :: normal, expanduser, as_posix, &
 is_absolute, is_char_device, is_dir, is_file, is_exe, is_subdir, is_readable, is_writable, is_reserved, &
 is_symlink, read_symlink, create_symlink, &
-exists, &
+exists, loadavg, &
 join, &
 copy_file, mkdir, &
 relative_to, proximate_to, &
@@ -77,6 +77,10 @@ end function
 
 integer(C_INT) function is_wsl() bind(C, name="fs_is_wsl")
 !! Windows Subsystem for Linux (WSL) version (0 is not WSL)
+import
+end function
+
+real(C_DOUBLE) function loadavg() bind(C, name="fs_cpu_loadavg")
 import
 end function
 

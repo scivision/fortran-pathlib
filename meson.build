@@ -25,6 +25,7 @@ fsrcs = fortran ? files('src/common/fortran/filesystem.F90') : []
 
 csrcs = files('src/common/common.c',
 'src/common/compiler.c',
+'src/common/cpu.c',
 'src/common/cygwin.c',
 'src/common/exepath.c',
 'src/common/env.c',
@@ -111,6 +112,29 @@ if not is_windows
   ''', dependencies: dl, name: 'dladdr')
   if have_dladdr
     dladdr_def = '-DHAVE_DLADDR'
+  endif
+endif
+
+# -- getloadavg check
+getloadavg_def = []
+
+if not is_windows
+  have_getloadavg = cc.links('''
+  #if defined(__linux__) && !defined(_DEFAULT_SOURCE)
+  #define _DEFAULT_SOURCE
+  #endif
+
+  #include <stdlib.h>
+
+  int main(void){
+    double load[3] = {0.0, 0.0, 0.0};
+    if (getloadavg(load, 3) < 0)
+      return 1;
+    return 0;
+  }
+  ''', name: 'getloadavg')
+  if have_getloadavg
+    getloadavg_def = '-DHAVE_GETLOADAVG'
   endif
 endif
 
@@ -227,7 +251,7 @@ filesystem = library('filesystem',
 sources: [fsrcs, csrcs, cppsrcs],
 include_directories: [cwalk_inc, inc],
 install: true,
-c_args: [mkdtemp_def, dladdr_def],
+c_args: [mkdtemp_def, dladdr_def, getloadavg_def],
 cpp_args: [chrono_def, mkdtemp_def, win32_symlink_def],
 fortran_args: f03type_def,
 dependencies: [libwin, fs_lib, dl],

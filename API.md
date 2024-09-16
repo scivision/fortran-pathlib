@@ -81,7 +81,7 @@ On non-Windows systems (or WSL) the shell is typically like "bash" or "zsh".
 
 Character, allocatable: the Terminal emulator that called the program
 
-```
+```fortran
 get_terminal()
 ```
 
@@ -92,16 +92,27 @@ On non-Windows systems (or WSL) the Terminal may represent itself like "xterm" o
 
 Character, allocatable: the CPU architecture
 
-```
-cpu_arch()
+```fortran
+arch = cpu_arch()
 ```
 
+---
+
+real: CPU load average for last one minute
+
+```fortran
+avg = loadavg()
+```
+
+---
 
 Logical: ffilesystem is using C++ backend
 
 ```fortran
 fs_cpp()
 ```
+
+---
 
 Logical: ffilesystem was compiled with optimizations:
 
