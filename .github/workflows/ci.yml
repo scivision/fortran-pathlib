@@ -118,7 +118,7 @@ jobs:
     - name: install compilers
       run: |
         sudo apt update
-        sudo apt install --no-install-recommends ninja-build ${{ env.CC }} ${{ env.CXX }} ${{ env.FC }}
+        sudo apt install --no-install-recommends ${{ env.CC }} ${{ env.CXX }} ${{ env.FC }}
 
     - uses: actions/checkout@v4
     - uses: ./.github/workflows/composite-action
