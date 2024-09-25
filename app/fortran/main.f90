@@ -224,7 +224,7 @@ main : do
   select case (cmd)
 
   case ("absolute")
-    print '(A)', make_absolute(arg1, arg2, .false.)
+    print '(A)', absolute(arg1, arg2, .false.)
   case ("is_subdir")
     print '(L1)', is_subdir(arg1, arg2)
   case ("setenv")

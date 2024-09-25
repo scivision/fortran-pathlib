@@ -19,7 +19,7 @@ copy_file, mkdir, &
 relative_to, proximate_to, &
 root, same_file, file_size, space_available, &
 file_name, parent, stem, suffix, with_suffix, &
-make_absolute, &
+absolute, &
 assert_is_file, assert_is_dir, &
 touch, get_modtime, set_modtime, &
 remove, get_tempdir, &
@@ -31,6 +31,12 @@ exe_path, lib_path, compiler, compiler_c, get_shell, get_terminal, &
 longname, shortname, getenv, setenv, getarg, &
 is_alpha, filesystem_type, devnull, cpu_arch, &
 to_cygpath, to_winpath
+
+
+!> legacy function name make_absolute() is actually absolute()
+interface make_absolute
+  module procedure absolute
+end interface
 
 
 interface
@@ -1264,7 +1270,7 @@ include "ifc0b.inc"
 end function
 
 
-function make_absolute(path, base, expand_tilde) result(r)
+function absolute(path, base, expand_tilde) result(r)
 !! if path is absolute, return expanded path
 !! if path is relative, base / path
 !!
