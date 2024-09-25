@@ -24,9 +24,7 @@
 size_t fs_canonical(const char* path, const bool strict, const bool expand_tilde,
                     char* result, const size_t buffer_size)
 {
-  // distinct from resolve()
-
-  // distinct from resolve
+  // canonicalize path, i.e. resolve all symbolic links, remove ".", ".." and extra slashes
   const size_t L = strlen(path);
   if(L == 0)
     return 0;
@@ -85,6 +83,7 @@ bool fs_equivalent(const char* path1, const char* path2)
 size_t fs_absolute(const char* path, const char* base, const bool expand_tilde,
                         char* result, const size_t buffer_size)
 {
+  // works mostly like Python pathlib.Path.absolute()
 
   char* ex = (char*) malloc(buffer_size);
   if(!ex) return 0;

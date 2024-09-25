@@ -40,6 +40,7 @@ std::optional<std::string> Ffs::canonical(std::string_view path, const bool stri
 std::string Ffs::absolute(std::string_view path, const bool expand_tilde)
 {
   // wraps std::filesystem::absolute(path).
+  // path need not exist
   // Inspired by Python pathlib.Path.absolute()
   // https://docs.python.org/3/library/pathlib.html#pathlib.Path.absolute
 
@@ -66,6 +67,7 @@ std::string Ffs::absolute(std::string_view path, const bool expand_tilde)
 
 std::string Ffs::absolute(std::string_view path, std::string_view base, const bool expand_tilde)
 {
+  // variant that allow rebasing on base path
   const auto ex = expand_tilde
     ? std::filesystem::path(Ffs::expanduser(path))
     : path;
