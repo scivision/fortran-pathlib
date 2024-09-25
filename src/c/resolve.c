@@ -22,11 +22,10 @@
 size_t fs_canonical(const char* path, const bool strict, const bool expand_tilde,
                     char* result, const size_t buffer_size)
 {
-  // also expands ~
   // distinct from resolve()
 
   // distinct from resolve
-  size_t L = strlen(path);
+  const size_t L = strlen(path);
   if(L == 0)
     return 0;
 
@@ -54,10 +53,11 @@ size_t fs_canonical(const char* path, const bool strict, const bool expand_tilde
 size_t fs_resolve(const char* path, const bool strict, const bool expand_tilde,
                   char* result, const size_t buffer_size)
 {
-  // also expands ~
-  // distinct from canonical()
+  // works like canonical(absolute(path)).
+  // Inspired by Python pathlib.Path.resolve()
+  // https://docs.python.org/3/library/pathlib.html#pathlib.Path.resolve
 
-  size_t L = strlen(path);
+  const size_t L = strlen(path);
   if(L == 0 || (L == 1 && path[0] == '.'))
     return fs_get_cwd(result, buffer_size);
 
@@ -92,21 +92,32 @@ bool fs_equivalent(const char* path1, const char* path2)
 }
 
 
-size_t fs_make_absolute(const char* path, const char* base,
+size_t fs_absolute(const char* path, const char* base, const bool expand_tilde,
                         char* result, const size_t buffer_size)
 {
-  size_t L = fs_expanduser(path, result, buffer_size);
+  size_t L;
 
-  if (fs_is_absolute(result))
+  // path might be empty, no return checks
+  if(expand_tilde)
+    L = fs_expanduser(path, result, buffer_size);
+  else
+    L = fs_strncpy(path, result, buffer_size);
+
+  if (fs_is_absolute(result)){
+    if(FS_TRACE) printf("TRACE: fs_absolute: %s is already absolute\n", result);
     return L;
+  }
 
   char* buf = (char*) malloc(buffer_size);
   if(!buf) return 0;
 
-  if(!fs_expanduser(base, buf, buffer_size)){
-    free(buf);
-    return L;
-  }
+  // base might be empty, no return checks
+  if(expand_tilde){
+    fs_expanduser(base, buf, buffer_size);
+  } else
+    fs_strncpy(base, buf, buffer_size);
+
+  if(FS_TRACE) printf("TRACE: fs_absolute: base=%s path=%s\n", buf, result);
 
   char* buf2 = (char*) malloc(buffer_size);
   if(!buf2){
@@ -119,6 +130,8 @@ size_t fs_make_absolute(const char* path, const char* base,
     free(buf2);
     return 0;
   }
+
+  if(FS_TRACE) printf("TRACE: fs_absolute: joined=%s\n", buf2);
 
   L = fs_strncpy(buf2, result, buffer_size);
   free(buf2);

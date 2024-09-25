@@ -93,6 +93,9 @@ public:
   [[nodiscard]] static std::optional<std::string> canonical(std::string_view, const bool, const bool);
   [[nodiscard]] static std::optional<std::string> resolve(std::string_view, const bool, const bool);
 
+  [[nodiscard]] static std::string absolute(std::string_view, const bool);
+  [[nodiscard]] static std::string absolute(std::string_view, std::string_view, const bool);
+
   [[nodiscard]] static std::optional<std::string> read_symlink(std::string_view);
   [[nodiscard]] static std::optional<std::string> get_permissions(std::string_view);
 
@@ -117,7 +120,6 @@ public:
   [[nodiscard]] static std::string proximate_to(std::string_view, std::string_view);
 
   [[nodiscard]] static std::string with_suffix(std::string_view, std::string_view);
-  [[nodiscard]] static std::string make_absolute(std::string_view, std::string_view);
 
   static bool create_symlink(std::string_view, std::string_view);
   static bool copy_file(std::string_view, std::string_view, bool);
@@ -223,7 +225,7 @@ size_t fs_normal(const char*, char*, const size_t);
 size_t fs_realpath(const char*, char*, const size_t);
 
 size_t fs_join(const char*, const char*, char*, const size_t);
-size_t fs_make_absolute(const char*, const char*, char*, const size_t);
+size_t fs_absolute(const char*, const char*, const bool, char*, const size_t);
 
 size_t fs_file_name(const char*, char*, const size_t);
 size_t fs_stem(const char*, char*, const size_t);

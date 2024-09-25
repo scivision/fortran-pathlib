@@ -159,7 +159,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
 
   std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool, bool)>> mstrbw =
   {
-    {"weakly_canonical", Ffs::canonical}
+    {"weakly_canonical", Ffs::canonical},
+    {"weakly_resolve", Ffs::resolve}
   };
 
   std::map<std::string_view, std::function<std::optional<uintmax_t>(std::string_view)>> mmax =
@@ -196,6 +197,9 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << smax[fun](a1) << "\n";
   else if (mvoid.contains(fun))
     mvoid[fun](a1);
+  else if (fun == "absolute"){
+    std::cout << Ffs::absolute(a1, true)<< "\n";
+  }
   else if (fun == "modtime"){
 #if defined(__cpp_lib_format)
     const auto t = Ffs::get_modtime(a1);

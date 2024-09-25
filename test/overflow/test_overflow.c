@@ -60,8 +60,8 @@ if(fs_cpp()){
     i++;
   }
 
-  if(fs_make_absolute("abcdef", "zyxwvu", buf, N) != 0){
-    fprintf(stderr, "ERROR: fs_make_absolute(abcdef) did not handle overflow properly\n");
+  if(fs_absolute("abcdef", "zyxwvu", false, buf, N) != 0){
+    fprintf(stderr, "ERROR: fs_absolute(abcdef) did not handle overflow properly\n");
     fprintf(stderr, "       buf = %s\n", buf);
     i++;
   }

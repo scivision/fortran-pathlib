@@ -7,7 +7,7 @@
 
 std::optional<std::string> Ffs::canonical(std::string_view path, const bool strict, const bool expand_tilde)
 {
-  // also expands ~ and normalizes path
+  // canonicalizes path, which need not exist
 
   if (path.empty()) FFS_UNLIKELY
     return {};
@@ -37,28 +37,61 @@ std::optional<std::string> Ffs::canonical(std::string_view path, const bool stri
 }
 
 
-std::optional<std::string> Ffs::resolve(std::string_view path, const bool strict, const bool expand_tilde)
+std::string Ffs::absolute(std::string_view path, const bool expand_tilde)
 {
-  // expands ~ like canonical
-  // empty path returns current working directory, which is distinct from canonical that returns empty string
-  if(path.empty()) FFS_UNLIKELY
-    return Ffs::get_cwd();
+  // wraps std::filesystem::absolute(path).
+  // Inspired by Python pathlib.Path.absolute()
+  // https://docs.python.org/3/library/pathlib.html#pathlib.Path.absolute
 
   const auto ex = expand_tilde
     ? std::filesystem::path(Ffs::expanduser(path))
     : path;
 
+  // Linux, MinGW can't handle empty paths
+  if(ex.empty())
+    return Ffs::get_cwd().value_or("");
+
   std::error_code ec;
 
-  const auto c = strict
-    ? std::filesystem::canonical(ex, ec)
-    : std::filesystem::weakly_canonical(ex, ec);
+  const auto a = std::filesystem::absolute(ex, ec);
 
   if(!ec) FFS_LIKELY
-    return c.generic_string();
+    return a.generic_string();
 
-  std::cerr << "ERROR:ffilesystem:resolve(" << path << ") " << ec.message() << "\n";
+  std::cerr << "ERROR:ffilesystem:absolute(" << path << ") " << ec.message() << "\n";
   return {};
+}
+
+
+
+std::string Ffs::absolute(std::string_view path, std::string_view base, const bool expand_tilde)
+{
+  const auto ex = expand_tilde
+    ? std::filesystem::path(Ffs::expanduser(path))
+    : path;
+
+  if (ex.is_absolute())
+    return ex.generic_string();;
+
+  const auto bx = expand_tilde
+    ? std::filesystem::path(Ffs::expanduser(base))
+    : base;
+
+  return Ffs::join(bx.generic_string(), ex.generic_string());
+}
+
+
+std::optional<std::string> Ffs::resolve(std::string_view path, const bool strict, const bool expand_tilde)
+{
+  // works like canonical(absolute(path)).
+  // Inspired by Python pathlib.Path.resolve()
+  // https://docs.python.org/3/library/pathlib.html#pathlib.Path.resolve
+
+  auto a = Ffs::absolute(path, expand_tilde);
+  if (a.empty()) FFS_UNLIKELY
+    return {};
+
+  return Ffs::canonical(a, strict, false);
 }
 
 
@@ -80,15 +113,4 @@ bool Ffs::equivalent(std::string_view path1, std::string_view path2)
   }
 
   return e;
-}
-
-
-std::string Ffs::make_absolute(std::string_view path, std::string_view base)
-{
-  const std::string out = Ffs::expanduser(path);
-
-  if (Ffs::is_absolute(out))
-    return out;
-
-  return Ffs::join(Ffs::expanduser(base), out);
 }

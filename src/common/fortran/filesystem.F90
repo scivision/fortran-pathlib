@@ -358,9 +358,10 @@ import
 character(kind=C_CHAR), intent(in) :: subdir(*), dir(*)
 end function
 
-integer(C_SIZE_T) function fs_make_absolute(path, base, result, buffer_size) bind(C)
+integer(C_SIZE_T) function fs_absolute(path, base, expand_tilde, result, buffer_size) bind(C)
 import
 character(kind=c_char), intent(in) :: path(*), base(*)
+logical(C_BOOL), intent(in), value :: expand_tilde
 character(kind=c_char), intent(out) :: result(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
@@ -1263,15 +1264,22 @@ include "ifc0b.inc"
 end function
 
 
-function make_absolute(path, base) result(r)
+function make_absolute(path, base, expand_tilde) result(r)
 !! if path is absolute, return expanded path
 !! if path is relative, base / path
 !!
 !! idempotent iff base is absolute
 character(*), intent(in) :: path, base
+logical, intent(in), optional :: expand_tilde
+
+logical(C_BOOL) :: e
 
 include "ifc0a.inc"
-N = fs_make_absolute(trim(path) // C_NULL_CHAR, trim(base) // C_NULL_CHAR, cbuf, N)
+
+e = .true.
+if(present(expand_tilde)) e = expand_tilde
+
+N = fs_absolute(trim(path) // C_NULL_CHAR, trim(base) // C_NULL_CHAR, e, cbuf, N)
 include "ifc0b.inc"
 end function
 

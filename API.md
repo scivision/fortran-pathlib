@@ -850,14 +850,15 @@ character(:), allocatable :: make_tempdir()
 Make a path absolute if relative:
 
 ```fortran
-function make_absolute(path, top_path)
-!! if path is absolute, return expanded path
-!! if path is relative, top_path / path
+function absolute(path, base, expand_tilde)
+!! if path is absolute, return path
+!! if path is relative, base path
 !!
 !! idempotent iff top_path is absolute
 
-character(:), allocatable :: make_absolute
-character(*), intent(in) :: path, top_path
+character(:), allocatable :: absolute
+character(*), intent(in) :: path, base
+logical, intent(in), optional :: expand_tilde
 ```
 
 Tell characteristics of the computing platform such as operating system:
