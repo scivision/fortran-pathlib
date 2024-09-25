@@ -51,23 +51,27 @@ if (out /= ref) then
   error stop
 endif
 
+ref = join(get_cwd(), "rel")
 out = make_absolute(in, "")
-if(len_trim(out) == 0) error stop "make_absolute(path, '') has empty output"
-if(out /= "rel")  then
-  write(stderr, '(a)') "make_absolute(" // in // ", '') =" // out
+if(len_trim(out) == 0) error stop "absolute(path, '') has empty output"
+if(out /= ref)  then
+  write(stderr, '(a)') "absolute(" // in // ", '') =" // out // " /= " // ref
   error stop
 endif
 
+ref = get_cwd()
 out = make_absolute("", "")
-if(len_trim(out) > 0) then
-  write(stderr, '(a)') "make_absolute('', ''): " // out
+if(len_trim(out) == 0) error stop "absolute('', '') has empty output"
+if(out /= ref) then
+  write(stderr, '(a)') "absolute('', ''): " // out // " /= " // ref
   error stop
 endif
 
+ref = join(get_cwd(), "rel")
 out = make_absolute("", in)
-if(len_trim(out) == 0) error stop "make_absolute('', path) has empty output"
-if(out /= "rel") then
-  write(stderr,'(a)') "make_absolute('', " // in //"): " // out
+if(len_trim(out) == 0) error stop "absolute('', path) has empty output"
+if(out /= ref) then
+  write(stderr,'(a)') "absolute('', " // in //"): " // out // " /= " // ref
   error stop
 endif
 

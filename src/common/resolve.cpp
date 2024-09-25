@@ -73,11 +73,7 @@ std::string Ffs::absolute(std::string_view path, std::string_view base, const bo
   if (ex.is_absolute())
     return ex.generic_string();;
 
-  const auto bx = expand_tilde
-    ? std::filesystem::path(Ffs::expanduser(base))
-    : base;
-
-  return Ffs::join(bx.generic_string(), ex.generic_string());
+  return Ffs::join(Ffs::absolute(base, expand_tilde), ex.generic_string());
 }
 
 

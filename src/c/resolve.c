@@ -18,6 +18,8 @@
 #include <sys/stat.h>
 #include <errno.h>
 
+#include <cwalk.h>
+
 
 size_t fs_canonical(const char* path, const bool strict, const bool expand_tilde,
                     char* result, const size_t buffer_size)
@@ -95,45 +97,75 @@ bool fs_equivalent(const char* path1, const char* path2)
 size_t fs_absolute(const char* path, const char* base, const bool expand_tilde,
                         char* result, const size_t buffer_size)
 {
-  size_t L;
 
+  char* ex = (char*) malloc(buffer_size);
+  if(!ex) return 0;
+
+  size_t Lp;
   // path might be empty, no return checks
   if(expand_tilde)
-    L = fs_expanduser(path, result, buffer_size);
+    Lp = fs_expanduser(path, ex, buffer_size);
   else
-    L = fs_strncpy(path, result, buffer_size);
+    Lp = fs_strncpy(path, ex, buffer_size);
 
-  if (fs_is_absolute(result)){
-    if(FS_TRACE) printf("TRACE: fs_absolute: %s is already absolute\n", result);
-    return L;
+  if(fs_is_absolute(ex)){
+    Lp = fs_strncpy(ex, result, buffer_size);
+    free(ex);
+    return Lp;
   }
 
-  char* buf = (char*) malloc(buffer_size);
-  if(!buf) return 0;
+  char* bx = (char*) malloc(buffer_size);
+  if(!bx){
+    free(ex);
+    return 0;
+  }
 
+
+  size_t Lb;
   // base might be empty, no return checks
   if(expand_tilde){
-    fs_expanduser(base, buf, buffer_size);
+    Lb = fs_expanduser(base, bx, buffer_size);
   } else
-    fs_strncpy(base, buf, buffer_size);
+    Lb = fs_strncpy(base, bx, buffer_size);
 
-  if(FS_TRACE) printf("TRACE: fs_absolute: base=%s path=%s\n", buf, result);
-
-  char* buf2 = (char*) malloc(buffer_size);
-  if(!buf2){
-    free(buf);
-    return 0;
-  }
-  L = fs_join(buf, result, buf2, buffer_size);
-  free(buf);
-  if(L == 0){
-    free(buf2);
+  if(Lb == 0 && !fs_get_cwd(bx, buffer_size)){
+    free(ex);
+    free(bx);
     return 0;
   }
 
-  if(FS_TRACE) printf("TRACE: fs_absolute: joined=%s\n", buf2);
+  if(!fs_is_absolute(bx)){
+    char* cwd = (char*) malloc(buffer_size);
+    if(!cwd){
+      free(ex);
+      free(bx);
+      return 0;
+    }
+    if(!fs_get_cwd(cwd, buffer_size) || !snprintf(result, buffer_size, "%s/%s", cwd, bx)){
+      free(ex);
+      free(bx);
+      free(cwd);
+      return 0;
+    }
+    free(cwd);
+    fs_strncpy(result, bx, buffer_size);
+  }
 
-  L = fs_strncpy(buf2, result, buffer_size);
-  free(buf2);
-  return L;
+  if(Lp == 0){
+    Lp = fs_strncpy(bx, result, buffer_size);
+    free(ex);
+    free(bx);
+    return Lp;
+  }
+
+  if(FS_TRACE) printf("TRACE: fs_absolute: base=%s path=%s\n", bx, ex);
+
+  cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
+
+  Lp = cwk_path_get_absolute(bx, ex, result, buffer_size);
+  free(ex);
+  free(bx);
+
+  fs_as_posix(result);
+  return Lp;
 }

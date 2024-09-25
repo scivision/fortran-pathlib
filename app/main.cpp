@@ -269,6 +269,9 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
     mvoidb[fun](a1, a2, false);
   else if (fun == "create_symlink")
     Ffs::create_symlink(a1, a2);
+  else if (fun == "absolute"){
+    std::cout << Ffs::absolute(a1, a2, true)<< "\n";
+  }
   else
     std::cerr << fun << " requires more arguments or is unknown function\n";
 
