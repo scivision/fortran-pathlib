@@ -27,8 +27,13 @@ bool fs_copy_file(const char* source, const char* dest, bool overwrite)
   * based on kwSys:SystemTools:CloneFileContent
   * https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/copyfile.3.html
   * COPYFILE_CLONE is a 'best try' flag, which falls back to a copy if the clone fails.
+  * These flags are meant to be COPYFILE_METADATA | COPYFILE_CLONE, but CLONE
+  * forces COPYFILE_NOFOLLOW_SRC and that violates the invariant that this
+  * should result in a file.
+  * https://gitlab.kitware.com/utils/kwsys/-/commit/ee3223d7ae9a5b52b0a30efb932436def80c0d92
   */
-  if(copyfile(source, dest, NULL, COPYFILE_METADATA | COPYFILE_CLONE) < 0){
+  if(copyfile(source, dest, NULL,
+      COPYFILE_METADATA | COPYFILE_EXCL | COPYFILE_STAT | COPYFILE_XATTR | COPYFILE_DATA) < 0){
     fprintf(stderr, "ERROR:ffilesystem:copy_file: could not clone file %s to %s\n", source, dest);
     return false;
   }
