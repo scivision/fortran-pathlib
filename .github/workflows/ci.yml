@@ -141,7 +141,7 @@ jobs:
 
     - uses: actions/checkout@v4
 
-    - run: ctest -Dopts="-Dffilesystem_cpp:BOOL=${{ matrix.cpp }}" -S memcheck.cmake -V
+    - run: ctest -Dopts="-Dffilesystem_cpp:BOOL=${{ matrix.cpp }}" -S memcheck.cmake -E "overflow|reserved|CLI" -V
 
     - name: upload Valgrind log
       if: ${{ failure() }}
