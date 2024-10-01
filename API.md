@@ -872,10 +872,25 @@ is_unix()
 is_linux()
 is_windows()
 is_macos()
-is_rosetta()  !< macOS Rosetta translation
 is_cygwin()
 is_mingw()
 ```
+
+---
+
+```fortran
+logical :: is_rosetta()
+```
+
+Tell if program is running via macOS Rosetta 2 translation (macOS Apple Silicon running Intel binaries).
+
+To force a project in general to build in Intel mode on Apple Silicon, use:
+
+```bash
+cmake -DCMAKE_OSX_ARCHITECTURES=x86_64 -B build -Dffilesystem_fortran=off
+```
+
+---
 
 logical: is the user running as admin / root / superuser:
 

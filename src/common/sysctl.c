@@ -9,6 +9,7 @@
 
 bool fs_is_rosetta() {
 #ifdef __APPLE__
+// https://developer.apple.com/documentation/apple-silicon/about-the-rosetta-translation-environment
     int ret = 0;
     size_t size = sizeof(ret);
 
