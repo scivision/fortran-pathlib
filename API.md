@@ -872,6 +872,7 @@ is_unix()
 is_linux()
 is_windows()
 is_macos()
+is_rosetta()  !< macOS Rosetta translation
 is_cygwin()
 is_mingw()
 ```

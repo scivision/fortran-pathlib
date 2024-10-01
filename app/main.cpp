@@ -34,6 +34,7 @@ static void no_arg(std::string_view fun){
     {"is_bsd", fs_is_bsd},
     {"is_linux", fs_is_linux},
     {"is_macos", fs_is_macos},
+    {"is_rosetta", fs_is_rosetta},
     {"is_unix", fs_is_unix},
     {"is_windows", fs_is_windows},
     {"is_mingw", fs_is_mingw},

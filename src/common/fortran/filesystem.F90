@@ -25,7 +25,7 @@ touch, get_modtime, set_modtime, &
 remove, get_tempdir, &
 set_permissions, get_permissions, &
 fs_cpp, fs_lang, fs_is_optimized, pathsep, is_safe_name, &
-is_admin, is_bsd, is_macos, is_windows, is_cygwin, is_wsl, is_mingw, is_linux, is_unix, &
+is_admin, is_bsd, is_macos, is_rosetta, is_windows, is_cygwin, is_wsl, is_mingw, is_linux, is_unix, &
 max_path, max_component, &
 exe_path, lib_path, compiler, compiler_c, get_shell, get_terminal, &
 longname, shortname, getenv, setenv, getarg, &
@@ -68,6 +68,11 @@ end function
 
 logical(C_BOOL) function is_macos() bind(C, name="fs_is_macos")
 !! operating system is macOS
+import
+end function
+
+logical(C_BOOL) function is_rosetta() bind(C, name="fs_is_rosetta")
+!! running on Apple Silicon with Rosetta 2
 import
 end function
 

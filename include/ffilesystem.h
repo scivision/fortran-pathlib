@@ -212,6 +212,7 @@ FFS_NODISCARD bool fs_is_windows();
 FFS_NODISCARD int fs_is_wsl();
 FFS_NODISCARD bool fs_is_mingw();
 FFS_NODISCARD bool fs_is_cygwin();
+FFS_NODISCARD bool fs_is_rosetta();
 
 FFS_NODISCARD bool fs_is_safe_name(const char*);
 

@@ -77,6 +77,8 @@ main : do
     print '(L1)', is_linux()
   case ("is_macos")
     print '(L1)', is_macos()
+  case ("is_rosetta")
+    print '(L1)', is_rosetta()
   case ("is_unix")
     print '(L1)', is_unix()
   case ("is_windows")
