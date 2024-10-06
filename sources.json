@@ -1,0 +1,6 @@
+{
+    "common": ["src/common/common.c", "src/common/compiler.c", "src/common/cpu.c", "src/common/cygwin.c", "src/common/exepath.c", "src/common/env.c", "src/common/home.c", "src/common/libpath.c", "src/common/limits.c", "src/common/mkdtemp.c", "src/common/os.c", "src/common/owner.c", "src/common/partition.c", "src/common/realpath.c", "src/common/sysctl.c", "src/common/touch.c", "src/common/uid.c", "src/common/uname.c", "src/common/which.c", "src/common/windows.c", "src/common/winsock.c"],
+    "cpp": ["src/common/copy.cpp", "src/common/filesystem.cpp", "src/common/c_ifc.cpp", "src/common/ifc.cpp", "src/common/inquire.cpp", "src/common/mkdir.cpp", "src/common/mkdtemp.cpp", "src/common/platform.cpp", "src/common/pure.cpp", "src/common/resolve.cpp", "src/common/space.cpp", "src/common/symlink.cpp", "src/common/time.cpp"],
+    "fortran": ["src/common/fortran/filesystem.F90"],
+    "c": ["src/c/copy.c", "src/c/filesystem.c", "src/c/inquire.c", "src/c/mkdir.c", "src/c/platform.c", "src/c/pure.c", "src/c/resolve.c", "src/c/space.c", "src/c/symlink.c", "src/c/time.c"]
+}

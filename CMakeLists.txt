@@ -58,74 +58,34 @@ if(NOT HAVE_CXX_FILESYSTEM)
   )
 endif()
 
+include(cmake/json_array.cmake)
+file(READ ${CMAKE_CURRENT_SOURCE_DIR}/sources.json json)
+
 # use separate object for Fortran to work with Visual Studio generator
 if(HAVE_Fortran_FILESYSTEM)
 
-add_library(ffilesystem_Fortran OBJECT src/common/fortran/filesystem.F90)
+  json_array(${json} "fortran" src_fortran)
+  add_library(ffilesystem_Fortran OBJECT ${src_fortran})
 
-target_compile_definitions(ffilesystem_Fortran PRIVATE
-$<$<NOT:$<BOOL:${HAVE_F03TYPE}>>:NO_F03TYPE>
-)
-set_property(TARGET ffilesystem_Fortran PROPERTY
-Fortran_MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/include
-)
+  target_compile_definitions(ffilesystem_Fortran PRIVATE
+  $<$<NOT:$<BOOL:${HAVE_F03TYPE}>>:NO_F03TYPE>
+  )
+  set_property(TARGET ffilesystem_Fortran PROPERTY
+  Fortran_MODULE_DIRECTORY ${PROJECT_BINARY_DIR}/include
+  )
 
 endif()
 
-
-add_library(ffilesystem src/common/common.c
-src/common/compiler.c
-src/common/cpu.c
-src/common/cygwin.c
-src/common/exepath.c
-src/common/env.c
-src/common/home.c
-src/common/libpath.c
-src/common/limits.c
-src/common/mkdtemp.c
-src/common/os.c
-src/common/owner.c
-src/common/partition.c
-src/common/realpath.c
-src/common/sysctl.c
-src/common/touch.c
-src/common/uid.c
-src/common/uname.c
-src/common/which.c
-src/common/windows.c
-src/common/winsock.c
+json_array(${json} "common" src_common)
+add_library(ffilesystem ${src_common}
 $<$<TARGET_EXISTS:ffilesystem_Fortran>:$<TARGET_OBJECTS:ffilesystem_Fortran>>
 )
 if(HAVE_CXX_FILESYSTEM)
-  target_sources(ffilesystem PRIVATE
-    src/common/copy.cpp
-    src/common/filesystem.cpp
-    src/common/c_ifc.cpp
-    src/common/ifc.cpp
-    src/common/inquire.cpp
-    src/common/mkdir.cpp
-    src/common/mkdtemp.cpp
-    src/common/platform.cpp
-    src/common/pure.cpp
-    src/common/resolve.cpp
-    src/common/space.cpp
-    src/common/symlink.cpp
-    src/common/time.cpp
-    )
+  json_array(${json} "cpp" src_cpp)
+  target_sources(ffilesystem PRIVATE ${src_cpp})
 else()
-  target_sources(ffilesystem PRIVATE
-  src/c/copy.c
-  src/c/filesystem.c
-  src/c/inquire.c
-  src/c/mkdir.c
-  src/c/platform.c
-  src/c/pure.c
-  src/c/resolve.c
-  src/c/space.c
-  src/c/symlink.c
-  src/c/time.c
-  ${cwalk_SOURCE_DIR}/src/cwalk.c
-  )
+  json_array(${json} "c" src_c)
+  target_sources(ffilesystem PRIVATE ${cwalk_SOURCE_DIR}/src/cwalk.c ${src_c})
 endif()
 target_include_directories(ffilesystem PRIVATE
 ${PROJECT_SOURCE_DIR}/include
