@@ -109,9 +109,15 @@ size_t fs_join(const char* path, const char* other, char* result, const size_t b
 size_t fs_parent(const char* path, char* result, const size_t buffer_size)
 {
 
-  size_t L = strlen(path);
   if(buffer_size < 2)
     return 0;
+
+  size_t L = strlen(path);
+  if (L == 0){
+    result[0] = '.';
+    result[1] = '\0';
+    return 1;
+  }
 
   cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
 
