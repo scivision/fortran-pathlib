@@ -172,7 +172,13 @@ if (s1 /= "") error stop "ERROR:test: relative_to: " //s1
 
 !> root
 p1 = path_t("/c/b")
-if (p1%root() /= "/") error stop "ERROR:test: root: " // p1%root()
+
+if (is_windows()) then
+  s1 = ""
+else
+  s1 = "/"
+end if
+if (p1%root() /= s1) error stop "ERROR:test: root: " // p1%root() // " /= " // s1
 
 !> stem
 p1 = path_t("a/b.txt")

@@ -44,7 +44,10 @@ FIXTURES_REQUIRED is_absolute
 )
 set_tests_properties(Fortran_resolve PROPERTIES FIXTURES_REQUIRED absolute)
 
-set_tests_properties(Fortran_root PROPERTIES FIXTURES_SETUP root)
+set_tests_properties(Fortran_root PROPERTIES
+FIXTURES_SETUP root
+FIXTURES_REQUIRED is_absolute
+)
 
 set_tests_properties(Fortran_filesystem_type Fortran_parent Fortran_space PROPERTIES FIXTURES_REQUIRED root)
 
