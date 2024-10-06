@@ -17,4 +17,4 @@ FIXTURES_SETUP mkdir
 FIXTURES_REQUIRED root
 )
 
-set_property(TEST Fortran_same PROPERTY FIXTURES_REQUIRED mkdir_fxt)
+set_property(TEST Fortran_same PROPERTY FIXTURES_REQUIRED mkdir)

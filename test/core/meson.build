@@ -2,6 +2,7 @@ if fortran
 
 core_tests = ['absolute',
 'filesystem_type',
+'filesize', 'space',
 'filename', 'is_dir',
 'is_subdir', 'join', 'normal', 'parent', 'root', 'separator', 'stem',
 'suffix', 'with_suffix']
