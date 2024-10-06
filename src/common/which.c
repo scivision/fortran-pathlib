@@ -14,9 +14,8 @@
 size_t fs_which(const char* name, char* result, const size_t buffer_size)
 {
 
-  size_t L;
   if(fs_is_exe(name)){
-    L = fs_strncpy(name, result, buffer_size);
+    const size_t L = fs_strncpy(name, result, buffer_size);
     fs_as_posix(result);
     return L;
   }
@@ -24,17 +23,6 @@ size_t fs_which(const char* name, char* result, const size_t buffer_size)
   // relative directory component, but path was not a file
   if(fs_file_name(name, result, buffer_size) != strlen(name))
     return 0;
-
-  // Windows gives priority to cwd, so check that first
-  if(fs_is_windows()){
-    L = fs_get_cwd(result, buffer_size);
-    if(L)
-      L = fs_join(result, name, result, buffer_size);
-    if(L && fs_is_exe(result)){
-      fs_as_posix(result);
-      return L;
-    }
-  }
 
   char* path = getenv("PATH");
   if(!path){
