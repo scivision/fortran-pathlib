@@ -16,7 +16,7 @@ if(root("../a/b") /= "") error stop "relative root ../a should be empty"
 
 if(is_windows()) then
   r = root("/etc")
-  if(r /= "/") then
+  if(r /= "") then
   write(stderr,'(a,i0)') "ERROR: windows root /etc failed: "// r // " length: ", len_trim(r)
   error stop
   end if
@@ -36,6 +36,6 @@ end if
 
 end block valgrind
 
-print '(a)', "OK: root"
+print '(A,L1)', "OK: root: C++: ", fs_cpp()
 
 end program

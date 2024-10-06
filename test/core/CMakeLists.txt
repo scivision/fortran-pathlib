@@ -34,6 +34,10 @@ SKIP_RETURN_CODE 77
 DISABLED $<AND:$<BOOL:${LINUX}>,$<NOT:$<BOOL:${ffilesystem_HAVE_LINUX_MAGIC}>>>
 )
 
+set_tests_properties(Fortran_root PROPERTIES FIXTURES_SETUP root)
+
+set_tests_properties(Fortran_filesystem_type Fortran_parent Fortran_space PROPERTIES FIXTURES_REQUIRED root)
+
 endif()
 
 

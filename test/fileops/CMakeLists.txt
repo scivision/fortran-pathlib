@@ -12,6 +12,9 @@ foreach(t IN ITEMS copyfile fileop mkdir same touch)
   set_property(TEST Fortran_${t} PROPERTY WORKING_DIRECTORY $<TARGET_FILE_DIR:test_${t}_fortran>)
 endforeach()
 
-set_property(TEST Fortran_mkdir PROPERTY FIXTURES_SETUP mkdir_fxt)
+set_tests_properties(Fortran_mkdir PROPERTIES
+FIXTURES_SETUP mkdir
+FIXTURES_REQUIRED root
+)
 
 set_property(TEST Fortran_same PROPERTY FIXTURES_REQUIRED mkdir_fxt)

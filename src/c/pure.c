@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h> // malloc
 #include <string.h>
+#include <ctype.h> // isalpha
 
 
 bool fs_cpp(){
@@ -198,20 +199,28 @@ size_t fs_with_suffix(const char* path, const char* suffix,
 
 size_t fs_root(const char* path, char* result, const size_t buffer_size)
 {
-  size_t L;
+  // assumes a POSIX path separated input i.e. '/'
 
-  cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
+  if(buffer_size < 1)
+    return 0;
 
-  cwk_path_get_root(path, &L);
+  result[0] = '\0';
+  if(!fs_is_absolute(path))
+    return 0;
+  // empty path is not absolute
 
-  if(L >= buffer_size){
-    fprintf(stderr, "ERROR:ffilesystem:fs_root(%s) buffer_size %zu too small\n", path, buffer_size);
+  int N;
+  if(fs_is_windows())
+    N = snprintf(result, buffer_size, "%c:/", path[0]);
+  else
+    N = snprintf(result, buffer_size, "/");
+
+  if (N < 0 || N >= (int) buffer_size){
+    fprintf(stderr, "ERROR:ffilesystem:fs_root: buffer overflow\n");
     return 0;
   }
 
-  strncpy(result, path, L);
-  result[L] = '\0';  // need this for proper termination
-  return L;
+  return (size_t) N;
 }
 
 
