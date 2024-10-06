@@ -7,7 +7,7 @@ endif
 
 if fortran
 
-foreach t : ['canonical', 'realpath', 'resolve']
+foreach t : ['canonical', 'realpath']
   te = executable(t + '_fortran', 'test_' + t + '.f90', link_with: filesystem, include_directories: inc)
   test(t + '_fortran', te, suite: 'fortran')
 endforeach

@@ -1,11 +1,12 @@
 if fortran
 
-core_tests = ['absolute',
+core_tests = ['is_absolute', 'absolute',
 'filesystem_type',
 'filesize', 'space',
 'filename', 'is_dir',
 'is_subdir', 'join', 'normal', 'parent', 'root', 'separator', 'stem',
-'suffix', 'with_suffix']
+'suffix', 'with_suffix',
+'resolve']
 
 if have_f03type
 core_tests += 'path_t'

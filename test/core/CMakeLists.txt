@@ -2,12 +2,14 @@ set_property(DIRECTORY PROPERTY LABELS "core")
 
 if(HAVE_Fortran_FILESYSTEM)
 
-set(tests absolute filename
+set(tests is_absolute absolute
+filename
 filesize space
 filesystem_type
 is_dir is_subdir join
 normal parent root separator stem
 suffix with_suffix
+resolve
 )
 
 if(HAVE_F03TYPE)
@@ -34,6 +36,13 @@ set_tests_properties(Fortran_filesystem_type PROPERTIES
 SKIP_RETURN_CODE 77
 DISABLED $<AND:$<BOOL:${LINUX}>,$<NOT:$<BOOL:${ffilesystem_HAVE_LINUX_MAGIC}>>>
 )
+
+set_tests_properties(Fortran_is_absolute PROPERTIES FIXTURES_SETUP is_absolute)
+set_tests_properties(Fortran_absolute PROPERTIES
+FIXTURES_SETUP absolute
+FIXTURES_REQUIRED is_absolute
+)
+set_tests_properties(Fortran_resolve PROPERTIES FIXTURES_REQUIRED absolute)
 
 set_tests_properties(Fortran_root PROPERTIES FIXTURES_SETUP root)
 

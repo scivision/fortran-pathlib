@@ -232,12 +232,12 @@ size_t fs_root(const char* path, char* result, const size_t buffer_size)
 
 bool fs_is_absolute(const char* path)
 {
-  if(fs_is_windows() && path[0] == '/')
-    return false;
+  const size_t L = strlen(path);
 
-  cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
-
-  return cwk_path_is_absolute(path);
+  if(fs_is_windows())
+    return L > 2 && isalpha(path[0]) && path[1] == ':' && (path[2] == '/' || path[2] == '\\');
+  else
+    return L > 0 && path[0] == '/';
 }
 
 

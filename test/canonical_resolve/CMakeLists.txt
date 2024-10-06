@@ -11,7 +11,7 @@ endif()
 
 if(HAVE_Fortran_FILESYSTEM)
 
-foreach(t IN ITEMS canonical realpath resolve)
+foreach(t IN ITEMS canonical realpath)
   add_executable(Fortran_${t} test_${t}.f90)
   target_link_libraries(Fortran_${t} PRIVATE ffilesystem)
   target_compile_options(Fortran_${t} PRIVATE ${${PROJECT_NAME}_fortran_test_flags})
