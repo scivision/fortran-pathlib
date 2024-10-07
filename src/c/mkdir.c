@@ -28,7 +28,6 @@
 #endif
 
 #include "ffilesystem.h"
-#include <cwalk.h>
 
 
 bool fs_mkdir(const char* path)
@@ -37,47 +36,61 @@ bool fs_mkdir(const char* path)
   if(fs_is_dir(path))
     return true;
 
-  struct cwk_segment segment;
-  if(!cwk_path_get_first_segment(path, &segment))
-    return false;
-
   const size_t m = fs_get_max_path();
 
   char *buf = (char*)malloc(m);
-  if(!buf) return false;
+  if(!buf)
+    return false;
 
-  char r[4];
-  size_t L = 0;
+  size_t L = fs_normal(path, buf, m);
+  if(L == 0){
+    free(buf);
+    return false;
+  }
 
-  if(fs_is_windows())
-    r[0] = '\0';
-  else
-    fs_root(path, r, 4);
-    // root may be empty for relative paths
+  char *seg = (char*)malloc(m);
+  if(!seg){
+    free(buf);
+    return false;
+  }
 
-  do {
-    if(L + segment.size + 1 >= m){
-      fprintf(stderr, "ERROR:ffilesystem:mkdir: path too long %s\n", path);
+  // iterate over path components using strchr and mkdir each segment
+  char *p = buf;
+  while((p = strchr(p, '/'))){
+    L = p - buf;
+    if(L == 0){
+      p++;
+      continue;
+    }
+
+    strncpy(seg, buf, L);
+    seg[L] = '\0';
+
+    if(mkdir(seg, S_IRWXU) && !(errno == EEXIST || errno == EACCES)) {
+      fprintf(stderr, "ERROR:ffilesystem:mkdir(%s) %s %u %s\n", path, seg, errno, strerror(errno));
       free(buf);
+      free(seg);
       return false;
     }
-    L += snprintf(buf+L, m-L, "%s%.*s", r, (int)segment.size, segment.begin);
-    if(r[0] != '/') {
-      r[0] = '/';
-      r[1] = '\0';
-    }
 
-    if(FS_TRACE) printf("TRACE: mkdir(%s) %.*s %zu %zu\n", buf, (int)segment.size, segment.begin, L, strlen(buf));
+    p++;
+  }
 
-    if(mkdir(buf, S_IRWXU) && !(errno == EEXIST || errno == EACCES)) {
-      fprintf(stderr, "ERROR:ffilesystem:mkdir: %s => %s\n", buf, strerror(errno));
-      free(buf);
-      return false;
-    }
-
-  } while(cwk_path_get_next_segment(&segment));
+  // Create the last segment
+  if (mkdir(buf, S_IRWXU) && !(errno == EEXIST || errno == EACCES)) {
+    fprintf(stderr, "ERROR:ffilesystem:mkdir(%s) %s %s\n", path, buf, strerror(errno));
+    free(buf);
+    free(seg);
+    return false;
+  }
 
   free(buf);
+  free(seg);
 
-  return fs_is_dir(path);
+  if(!fs_is_dir(path)){
+    fprintf(stderr, "ERROR:ffilesystem:mkdir: %s not created\n", path);
+    return false;
+  }
+
+  return true;
 }

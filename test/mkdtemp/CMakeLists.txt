@@ -9,5 +9,6 @@ set_property(TARGET test_fortran_mkdtemp PROPERTY LINKER_LANGUAGE Fortran)
 add_test(NAME Fortran_mkdtemp COMMAND test_fortran_mkdtemp)
 set_tests_properties(Fortran_mkdtemp PROPERTIES
 LABELS Fortran
+FIXTURES_REQUIRED mkdir
 )
 endif()
