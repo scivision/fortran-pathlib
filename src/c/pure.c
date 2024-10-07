@@ -109,52 +109,44 @@ size_t fs_join(const char* path, const char* other, char* result, const size_t b
 size_t fs_parent(const char* path, char* result, const size_t buffer_size)
 {
 
-  if(buffer_size < 2)
-    return 0;
-
+  // drop repeated slashes
   size_t L = strlen(path);
-  if (L == 0){
-    result[0] = '.';
-    result[1] = '\0';
-    return 1;
+  size_t j = 0;
+  for (size_t i = 0; i <= L; i++) {
+    if (path[i] == '/') {
+      if (j > 0 && result[j-1] == '/')
+        continue;
+    }
+    if(j >= buffer_size){
+      fprintf(stderr, "ERROR:ffilesystem:fs_parent: buffer_size %zu too small for string\n", buffer_size);
+      return 0;
+    }
+    result[j++] = path[i];
   }
+  j--;
+  result[j] = '\0';
 
-  cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
+  if(j == 1 && result[0] == '/')
+    return fs_strncpy("/", result, buffer_size);
 
-  cwk_path_get_dirname(path, &L);
+  if (fs_is_windows() && (j==2 || j==3) && isalpha(result[0]) && result[1] == ':')
+    return fs_root(path, result, buffer_size);
 
-  if (L >= buffer_size){
-    fprintf(stderr, "ERROR:Ffilesystem:fs_parent: buffer_size %zu too small\n", buffer_size);
-    return 0;
-  }
+  if(j > 0 && result[j-1] == '/')
+    result[j-1] = '\0';
 
-  // handle "/" and other no parent cases
-  if(L == 0){
-    if (path[0] == '/' || (fs_is_windows() && path[0] == '\\'))
-      result[0] = '/';
-    else if (fs_is_windows()){
-      L = fs_root(path, result, buffer_size);
-      if(L)
-        return L;
-      result[0] = '.';
-    } else
-      result[0] = '.';
+  char *pos = strrchr(result, '/');
+  if(!pos)
+    return fs_strncpy(".", result, buffer_size);
+  if (pos != result)
+    *pos = '\0';
 
-    result[1] = '\0';
-    return 1;
-  }
-
-  // drop trailing slashes
-  while(L > 1 && (path[L-1] == '/' || (fs_is_windows() && path[L-1] == '\\')))
-    L--;
-
-  if(FS_TRACE) printf("TRACE: parent %s L=%zu\n", path, L);
-
-  strncpy(result, path, L);
-
-  fs_as_posix(result);
+  L = strlen(result);
+  if(L==0)
+    return fs_strncpy(".", result, buffer_size);
 
   return L;
+
 }
 
 

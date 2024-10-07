@@ -9,6 +9,7 @@ int main(void){
   size_t N = 5;
   char* buf = (char*) malloc(N);
   int i=0;
+  size_t L;
 
   if(fs_normal("abcedf", buf, N) != 0){
     fprintf(stderr, "ERROR: fs_normal(abcdef) did not handle overflow properly\n");
@@ -29,22 +30,23 @@ if(fs_cpp()){
     i++;
   }
 }
-
-  if(fs_file_name("abcedf", buf, N) != 0){
+  L = fs_file_name("abcedf", buf, N);
+  if(L != 0){
     fprintf(stderr, "ERROR: fs_file_name(abcdef) did not handle overflow properly\n");
-    fprintf(stderr, "       buf = %s\n", buf);
+    fprintf(stderr, "L = %zu       buf = %s\n", L, buf);
     i++;
   }
 
-  if(fs_stem("abcedf", buf, N) != 0){
+  L = fs_suffix("abcedf", buf, N);
+  if(L != 0){
     fprintf(stderr, "ERROR: fs_stem(abcdef) did not handle overflow properly\n");
-    fprintf(stderr, "       buf = %s\n", buf);
+    fprintf(stderr, "L = %zu       buf = %s\n", L, buf);
     i++;
   }
-
-  if(fs_parent("abcedf/a", buf, N) != 0){
+  L = fs_parent("abcedf/a", buf, N);
+  if(L != 0){
     fprintf(stderr, "ERROR: fs_parent(abcdef) did not handle overflow properly\n");
-    fprintf(stderr, "       buf = %s\n", buf);
+    fprintf(stderr, "L = %zu       buf = %s\n", L, buf);
     i++;
   }
 

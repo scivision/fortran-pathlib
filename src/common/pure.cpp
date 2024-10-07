@@ -74,7 +74,10 @@ std::string Ffs::join(std::string_view path, std::string_view other){
 std::string Ffs::parent(std::string_view path)
 {
   // have to drop_slash on input to get expected parent path
-  const std::string p = std::filesystem::path(Ffs::drop_slash(path)).parent_path().generic_string();
+  std::string p = std::filesystem::path(Ffs::drop_slash(path)).parent_path().generic_string();
+
+  // remove repeated path seperators from p string -- necessary for AppleClang
+  p.erase(std::unique(p.begin(), p.end(), [](char a, char b){ return a == '/' && b == '/'; }), p.end());
 
   if(FS_TRACE) std::cout << "TRACE:parent(" << path << ") => " << p << "\n";
 

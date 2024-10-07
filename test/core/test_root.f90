@@ -21,6 +21,19 @@ if(is_windows()) then
   error stop
   end if
 
+  r = root("c:/")
+  if(r /= "c:/") then
+  write(stderr, '(a)') "ERROR: windows root c:/ failed: " // r
+  error stop
+  end if
+
+  r = root("c:\")
+  if(r /= "c:/") then
+  write(stderr, '(a)') "ERROR: windows root c:\ failed: " // r
+  error stop
+  end if
+
+
   r = root("c:/etc")
   if(r /= "c:/") then
   write(stderr, '(a)') "ERROR: windows root c:/etc failed: " // r

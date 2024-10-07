@@ -6,14 +6,14 @@ use filesystem
 
 implicit none
 
-integer, parameter :: L = 21, N = 16
+integer, parameter :: L = 21, N = 17
 
 character(L) :: in(N) =  [character(L) ::  "",  "/", ".", "./", "..", "../", &
   "a", "a/", "a/.", "a/..", "a/b", "a/b/", "a/b/c", &
-  "ab/.parent", "ab/.parent.txt", "a/b/../.parent.txt"]
+  "ab/.parent", "ab/.parent.txt", "a/b/../.parent.txt", "a////////b/////c"]
 character(L) :: ref(N) = [character(L) ::  ".", "/", ".", ".",  ".",  ".",  &
   ".", ".",  "a", "a",    "a",   "a",    "a/b", &
-  "ab",         "ab",            "a/b/.."]
+  "ab",         "ab",            "a/b/..",              "a/b"]
 
 integer :: i, j
 
