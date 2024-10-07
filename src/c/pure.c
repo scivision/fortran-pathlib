@@ -113,7 +113,7 @@ size_t fs_parent(const char* path, char* result, const size_t buffer_size)
   size_t L = strlen(path);
   size_t j = 0;
   for (size_t i = 0; i <= L; i++) {
-    if (path[i] == '/') {
+    if (path[i] == '/' || (fs_is_windows() && path[i] == '\\')) {
       if (j > 0 && result[j-1] == '/')
         continue;
     }
@@ -121,7 +121,7 @@ size_t fs_parent(const char* path, char* result, const size_t buffer_size)
       fprintf(stderr, "ERROR:ffilesystem:fs_parent: buffer_size %zu too small for string\n", buffer_size);
       return 0;
     }
-    result[j++] = path[i];
+    result[j++] = (fs_is_windows() && path[i] == '\\') ? '/' : path[i];
   }
   j--;
   result[j] = '\0';

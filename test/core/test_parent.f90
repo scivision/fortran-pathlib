@@ -25,12 +25,7 @@ end do
 
 if(is_windows()) then
   i = i + check("c:\a\b\..\.parent.txt", "c:/a/b/..")
-
-  if (all([check("x:/", "x:/"), check("x:/", "x:")] == 1)) then
-    write(stderr, '(a)') "ERROR: parent(x:/)"
-    i = i+1
-  end if
-  !! Python also may give either result
+  i = i + check("x:/", "x:/")
 end if
 
 if(i /= 0) error stop "FAIL: parent()"
