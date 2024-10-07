@@ -5,6 +5,7 @@
 
 #include <string>
 #include <iostream>
+#include <cctype>
 
 
 // tell if Ffilesystme core is C or C++
@@ -94,6 +95,9 @@ std::string Ffs::parent(std::string_view path)
     else
       return ".";
   }
+
+  if (fs_is_windows() && p.length() == 2 && std::isalpha(p[0]) && p[1] == ':')
+    return p + "/";
 
   return p;
 }
