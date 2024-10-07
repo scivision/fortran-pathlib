@@ -35,10 +35,10 @@ void fs_as_posix(char* path)
 
 void fs_drop_slash(char* path)
 {
-  // drop single final "/" if present
-  const size_t L = strlen(path);
-  if (L > 1 && path[L - 1] == '/')
-    path[L - 1] = '\0';
+  // drops all trailing "/" from path
+  size_t L = strlen(path);
+  while(L > 1 && (path[L-1] == '/' || (fs_is_windows() && path[L-1] == '\\')))
+    path[--L] = '\0';
 }
 
 

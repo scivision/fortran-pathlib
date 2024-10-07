@@ -32,10 +32,9 @@ std::string::size_type fs_str2char(std::string_view s, char* result, const std::
 
 std::string Ffs::drop_slash(std::string_view sv)
 {
-  // drop single final "/" if present
+  // drop all trailing "/"
   std::string s(sv);
-
-  if (s.length() > 1 && s.back() == '/')
+  while(s.length() > 1 && (s.back() == '/' || (fs_is_windows() && s.back() == '\\')))
     s.pop_back();
 
   return s;
