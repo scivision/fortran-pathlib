@@ -2,6 +2,8 @@ NAME := fs_cli
 FNAME := filesystem_cli
 LIB := libfilesystem.a
 
+cpp := 1
+
 ifeq ($(origin CC),default)
 CC = gcc
 endif
@@ -35,11 +37,18 @@ FFLAGS := -O3 -DNDEBUG
 
 ARFLAGS := rcs
 
-cdir = src/common/
-fdir = $(cdir)fortran/
+comdir = src/common/
+cdir = src/c/
+fdir = $(comdir)fortran/
 
-COMM_SRCS = $(cdir)common.c $(cdir)compiler.c $(cdir)cpu.c $(cdir)cygwin.c $(cdir)exepath.c $(cdir)env.c $(cdir)home.c $(cdir)libpath.c $(cdir)limits.c $(cdir)mkdtemp.c $(cdir)owner.c $(cdir)os.c $(cdir)partition.c $(cdir)realpath.c $(cdir)sysctl.c $(cdir)touch.c $(cdir)uid.c $(cdir)uname.c $(cdir)which.c $(cdir)winsock.c $(cdir)windows.c
-SRCS = $(cdir)filesystem.cpp $(cdir)c_ifc.cpp $(cdir)copy.cpp $(cdir)ifc.cpp $(cdir)inquire.cpp $(cdir)mkdir.cpp $(cdir)mkdtemp.cpp $(cdir)pure.cpp $(cdir)platform.cpp $(cdir)resolve.cpp $(cdir)space.cpp $(cdir)symlink.cpp $(cdir)time.cpp
+COMM_SRCS = $(comdir)common.c $(comdir)compiler.c $(comdir)cpu.c $(comdir)cygwin.c $(comdir)exepath.c $(comdir)env.c $(comdir)home.c $(comdir)libpath.c $(comdir)limits.c $(comdir)mkdtemp.c $(comdir)owner.c $(comdir)os.c $(comdir)partition.c $(comdir)realpath.c $(comdir)sysctl.c $(comdir)touch.c $(comdir)uid.c $(comdir)uname.c $(comdir)which.c $(comdir)winsock.c $(comdir)windows.c
+
+ifeq (cpp,1)
+SRCS = $(comdir)filesystem.cpp $(comdir)c_ifc.cpp $(comdir)copy.cpp $(comdir)ifc.cpp $(comdir)inquire.cpp $(comdir)mkdir.cpp $(comdir)mkdtemp.cpp $(comdir)pure.cpp $(comdir)platform.cpp $(comdir)resolve.cpp $(comdir)space.cpp $(comdir)symlink.cpp $(comdir)time.cpp
+else
+SRCS = $(cdir)filesystem.c $(cdir)copy.c $(cdir)inquire.c $(cdir)mkdir.c $(cdir)mkdtemp.c $(cdir)pure.c $(cdir)platform.c $(cdir)resolve.c $(cdir)space.c $(cdir)symlink.c $(cdir)time.c
+endif
+
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o) $(COMM_SRCS:%=$(BUILD_DIR)/%.o)
 
 fbd = $(BUILD_DIR)/$(fdir)
@@ -85,8 +94,9 @@ $(fbd):
 $(lib): $(OBJS) $(FOBJS)
 	$(AR) $(ARFLAGS) $@ $?
 
-$(main): app/main.cpp $(lib)
-	$(CXX) $(CXXFLAGS) $(lib) -o $@ $< $(LDFLAGS)
+# cosmocc wants OBJS instead of $(lib). The latter is OK for standard compilers.
+$(main): app/main.cpp $(OBJS)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $< $(LDFLAGS)
 
 $(BUILD_DIR)/%.c.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
