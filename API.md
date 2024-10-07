@@ -884,12 +884,6 @@ logical :: is_rosetta()
 
 Tell if program is running via macOS Rosetta 2 translation (macOS Apple Silicon running Intel binaries).
 
-To force a project in general to build in Intel mode on Apple Silicon, use:
-
-```bash
-cmake -DCMAKE_OSX_ARCHITECTURES=x86_64 -B build -Dffilesystem_fortran=off
-```
-
 ---
 
 logical: is the user running as admin / root / superuser:

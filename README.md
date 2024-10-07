@@ -28,9 +28,12 @@ Ffilesystem uses
 [C++ stdlib filesystem](https://en.cppreference.com/w/cpp/filesystem)
 and / or
 [C standard library](https://en.wikipedia.org/wiki/C_standard_library).
+
 Ffilesystem works with several popular C standard library implementations, including
 [glibc](https://sourceware.org/glibc/),
 [musl](https://musl.libc.org/),
+[Cosmopolitan universal binaries](./Readme_cosmopolitan.md),
+[macOS universal binaries](./Readme_macos.md),
 BSD libc,
 [Microsoft CRT](https://en.wikipedia.org/wiki/Microsoft_Windows_library_files#CRT),
 among others.

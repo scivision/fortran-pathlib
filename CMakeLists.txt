@@ -38,6 +38,9 @@ endif()
 include(cmake/compilers.cmake)
 
 message(STATUS "${PROJECT_NAME} ${PROJECT_VERSION} C++${cxx_std} CMake ${CMAKE_VERSION} ${CMAKE_SYSTEM_NAME} Toolchain ${CMAKE_TOOLCHAIN_FILE}")
+message(VERBOSE "CMAKE_AR ${CMAKE_AR}
+CMAKE_RANLIB ${CMAKE_RANLIB}
+CMAKE_STRIP ${CMAKE_STRIP}")
 
 # CPPcheck
 if(ffilesystem_cppcheck)
