@@ -143,9 +143,9 @@ mkdtemp_def = []
 
 fs_lib = []
 
-if use_cpp
-
 cpp = meson.get_compiler('cpp')
+
+if use_cpp
 
 if cpp.get_id() == 'gcc' and cpp.version().version_compare('<9.1.0')
   fs_lib = [cpp.find_library('stdc++fs'), cpp.find_library('stdc++')]
