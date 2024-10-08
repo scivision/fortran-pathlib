@@ -227,6 +227,8 @@ main : do
 
   case ("absolute")
     print '(A)', absolute(arg1, arg2, .false.)
+  case ("with_suffix")
+    print '(A)', with_suffix(arg1, arg2)
   case ("is_subdir")
     print '(L1)', is_subdir(arg1, arg2)
   case ("setenv")
