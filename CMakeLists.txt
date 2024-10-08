@@ -6,7 +6,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
 endif()
 
 project(ffilesystem
-LANGUAGES C
+LANGUAGES C CXX
 VERSION 5.8.0
 )
 
@@ -23,10 +23,6 @@ set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 # This project isn't using C++ modules; avoid bugs in module scanning CMake 3.28, 3.29 with GCC >= 14.
 
 include(options.cmake)
-
-if(ffilesystem_cpp OR ffilesystem_bench)
-  enable_language(CXX)
-endif()
 
 if(ffilesystem_fortran)
     enable_language(Fortran)

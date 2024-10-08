@@ -1,17 +1,18 @@
-project('ffilesystem', ['c'],
+project('ffilesystem', ['c', 'cpp'],
 version: '5.8.0',
 default_options: ['c_std=c99', 'cpp_std=c++23,c++20,c++17', 'buildtype=release', 'b_ndebug=if-release'],
 meson_version : '>=1.4.0')
 
 use_cpp = get_option('cpp')
-if use_cpp
-  add_languages('cpp', native: false, required: true)
-endif
+# mean to use C++17 <filesystem> library
 
 fortran = get_option('fortran')
 if fortran
   add_languages('fortran', native: false, required: true)
 endif
+
+cpp_std = get_option('cpp_std')
+message('C++ standard: ' + cpp_std)
 
 fs = import('fs')
 
@@ -23,7 +24,7 @@ endif
 
 fsrcs = fortran ? files('src/common/fortran/filesystem.F90') : []
 
-csrcs = files('src/common/common.c',
+comm_src = files('src/common/common.c',
 'src/common/compiler.c',
 'src/common/cpu.c',
 'src/common/cygwin.c',
@@ -47,9 +48,6 @@ csrcs = files('src/common/common.c',
 )
 
 if use_cpp
-
-cpp_std = get_option('cpp_std')
-message('C++ standard: ' + cpp_std)
 
 cwalk_dep = []
 cwalk_inc = []
@@ -76,7 +74,7 @@ cwalk_dep = cwalk_proj.get_variable('cwalk')
 cwalk_inc = cwalk_proj.get_variable('cwalk_inc')
 
 cppsrcs = []
-csrcs += files('src/c/copy.c',
+comm_src += files('src/c/copy.c',
 'src/c/filesystem.c',
 'src/c/inquire.c',
 'src/c/mkdir.c',
@@ -249,7 +247,7 @@ endif
 # -- main library
 
 filesystem = library('filesystem',
-sources: [fsrcs, csrcs, cppsrcs],
+sources: [fsrcs, comm_src, cppsrcs],
 include_directories: [cwalk_inc, inc],
 install: true,
 c_args: [mkdtemp_def, dladdr_def, getloadavg_def],

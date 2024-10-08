@@ -1,15 +1,11 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(ffilesystemExample LANGUAGES C)
+project(ffilesystemExample LANGUAGES C CXX)
 
 enable_testing()
 
 find_package(ffilesystem CONFIG REQUIRED)
 message(STATUS "ffilesystem found: ${ffilesystem_DIR}")
-
-if(ffilesystem_cpp)
-  enable_language(CXX)
-endif()
 
 if(ffilesystem_fortran)
   enable_language(Fortran)

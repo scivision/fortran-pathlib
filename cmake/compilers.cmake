@@ -53,7 +53,7 @@ fs_check()
 endif(HAVE_CXX_FILESYSTEM)
 
 if(ffilesystem_cpp AND NOT ffilesystem_fallback AND NOT HAVE_CXX_FILESYSTEM)
-  message(FATAL_ERROR "C++ filesystem not available. To fallback to C filesystem:
+  message(FATAL_ERROR "C++ filesystem not available. To fallback to plain C++:
   cmake -Dffilesystem_fallback=on -B build"
   )
 endif()
