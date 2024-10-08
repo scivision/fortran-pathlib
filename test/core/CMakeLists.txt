@@ -37,10 +37,11 @@ SKIP_RETURN_CODE 77
 DISABLED $<AND:$<BOOL:${LINUX}>,$<NOT:$<BOOL:${ffilesystem_HAVE_LINUX_MAGIC}>>>
 )
 
+set_tests_properties(Fortran_join PROPERTIES FIXTURES_SETUP join)
 set_tests_properties(Fortran_is_absolute PROPERTIES FIXTURES_SETUP is_absolute)
 set_tests_properties(Fortran_absolute PROPERTIES
 FIXTURES_SETUP absolute
-FIXTURES_REQUIRED is_absolute
+FIXTURES_REQUIRED "is_absolute;join"
 )
 set_tests_properties(Fortran_resolve PROPERTIES FIXTURES_REQUIRED absolute)
 
