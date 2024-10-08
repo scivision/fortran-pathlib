@@ -50,22 +50,14 @@ size_t fs_normal(const char* path, char* result, const size_t buffer_size)
 
 size_t fs_file_name(const char* path, char* result, const size_t buffer_size)
 {
-  size_t L = strlen(path);
-  // need this check to avoid cwalk segfault
-  if(L == 0)
-    return 0;
+  char* pos = strrchr(path, '/');
+  if (fs_is_windows() && !pos)
+    pos = strrchr(path, '\\');
 
-  // same as C++17 std::filesystem::path::filename()
-  if (path[L-1] == '/' || (fs_is_windows() && path[L-1] == '\\'))
-    return 0;
+  if(!pos)
+    return fs_strncpy(path, result, buffer_size);
 
-  const char *base;
-
-  cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
-
-  cwk_path_get_basename(path, &base, &L);
-
-  return fs_strncpy(base, result, buffer_size);
+  return fs_strncpy(pos+1, result, buffer_size);
 }
 
 
