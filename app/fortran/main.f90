@@ -140,6 +140,8 @@ main : do
     print '(A)', canonical(arg1, .false., .false.)
   case ("resolve")
     print '(A)', resolve(arg1, .false., .false.)
+  case ("normal")
+    print '(A)', normal(arg1)
   case ("parent")
     print '(A)', parent(arg1)
   case ("root")
