@@ -42,3 +42,8 @@ size_t fs_hostname(char* name, const size_t buffer_size)
 {
   return fs_str2char(fs_hostname(), name, buffer_size);
 }
+
+size_t fs_cpu_arch(char* arch, const size_t buffer_size)
+{
+  return fs_str2char(fs_cpu_arch(), arch, buffer_size);
+}

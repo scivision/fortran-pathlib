@@ -157,6 +157,7 @@ std::string fs_longname(std::string_view);
 std::string fs_shortname(std::string_view);
 
 std::string fs_hostname();
+std::string fs_cpu_arch();
 
 // ---------------------------------------------------------------------------
 

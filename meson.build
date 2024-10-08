@@ -43,7 +43,7 @@ comm_src = files(
 'src/common/sysctl.c',
 'src/common/touch.c',
 'src/common/uid.c',
-'src/common/uname.c',
+'src/common/uname.cpp',
 'src/common/which.c',
 'src/common/winsock.cpp',
 'src/common/windows.cpp'
