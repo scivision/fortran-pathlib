@@ -1,4 +1,4 @@
-# Ffilesystem: for Fortran using C++ filesystem or standalone C stdlib functions
+# Ffilesystem: for Fortran using C++17 and libc 
 
 [![DOI](https://zenodo.org/badge/433875623.svg)](https://zenodo.org/badge/latestdoi/433875623)
 [![ci](https://github.com/scivision/fortran-filesystem/actions/workflows/ci.yml/badge.svg)](https://github.com/scivision/fortran-filesystem/actions/workflows/ci.yml)
@@ -8,9 +8,8 @@
 [![ci_meson](https://github.com/scivision/fortran-filesystem/actions/workflows/ci_meson.yml/badge.svg)](https://github.com/scivision/fortran-filesystem/actions/workflows/ci_meson.yml)
 
 Platform independent (Linux, macOS, Windows, Cygwin, WSL, BSD, ...) Fortran filesystem "Ffilesystem" path manipulation library.
-Ffilesystem core functions are implemented in C, and by default
-[C++ standard library filesystem](https://en.cppreference.com/w/cpp/filesystem).
-However, Ffilesystem can be used with C alone if desired.
+Ffilesystem core functions are implemented in C++17, and
+[C++ standard library filesystem](https://en.cppreference.com/w/cpp/filesystem) if available.
 The Fortran interface is also built by default, as the main purpose of this library is to bring full filesystem functionality to Fortran.
 However, the Fortran interface itself is optional.
 Ffilesystem header
@@ -20,14 +19,14 @@ can be used from C and C++ project code--see
 
 The language standards required are at least:
 
-* C++ interface / backend (optional, default): C++17 standard
-* C interface / backend (required): C99
-* Fortran interface (optional, default): 2003
+* C++17 interface / backend
+* C99 interface
+* Fortran interface (optional): 2003
 
 Ffilesystem uses
 [C++ stdlib filesystem](https://en.cppreference.com/w/cpp/filesystem)
-and / or
-[C standard library](https://en.wikipedia.org/wiki/C_standard_library).
+and the
+[C standard library](https://en.wikipedia.org/wiki/C_standard_library) to access filesystem and system parameters.
 
 Ffilesystem works with several popular C standard library implementations, including
 [glibc](https://sourceware.org/glibc/),
@@ -40,9 +39,6 @@ among others.
 On Linux, symbol
 [_DEFAULT_SOURCE](https://man7.org/linux/man-pages/man7/feature_test_macros.7.html)
 is defined if needed to enable C standard library functions.
-
-If a compatible C++ compiler isn't available, Ffilesystem uses
-[CWalk](https://github.com/likle/cwalk).
 
 Inspired by (and benchmarked against)
 [Python pathlib](https://docs.python.org/3/library/pathlib.html).
@@ -171,8 +167,8 @@ It provides the appropriate imported targets for shared or static builds, includ
 
 Other Fortran libraries that provide interfaces to filesystems include the following.
 Generally they have noticeably fewer functions than Ffilesystem.
-They typically implement many functions in Fortran, where with Ffilesystem we implement in C if possible, except where C++ filesystem is available.
-Ffilesystem Fortran code is optional, and is just a thin wrapper around the C functions.
+They typically implement many functions in Fortran, where with Ffilesystem we implement in C++ or C++ `<filesystem>` if available.
+Ffilesystem Fortran code is optional, and is just a thin wrapper around the C++ functions.
 
 * [stdlib_os](https://github.com/MarDiehl/stdlib_os)
 * [fortyxima](https://bitbucket.org/aradi/fortyxima/src/develop/)
