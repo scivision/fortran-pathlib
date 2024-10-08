@@ -27,10 +27,13 @@
 #include <cstdlib>
 #include <algorithm> // std::min
 #include <string>
+#include <string_view>
 #include <ctime> // time_t
 #include <optional>
 
+#if __has_include(<filesystem>)
 #include <filesystem>
+#endif
 
 #ifdef __cpp_lib_filesystem
 
@@ -141,9 +144,21 @@ public:
   Ffs() = delete;
 };
 
+#endif // __cpp_lib_filesystem
+
+// C++ functions available without C++17 filesystem too
+
 std::string::size_type fs_str2char(std::string_view, char*, const std::string::size_type);
 
-#endif // __cpp_lib_filesystem
+void fs_print_error(std::string_view, std::string_view);
+bool fs_win32_create_symlink(std::string_view, std::string_view);
+
+std::string fs_longname(std::string_view);
+std::string fs_shortname(std::string_view);
+
+std::string fs_hostname();
+
+// ---------------------------------------------------------------------------
 
 extern "C" {
 
@@ -314,7 +329,7 @@ bool fs_setenv(const char*, const char*);
 
 size_t fs_filesystem_type(const char*, char*, const size_t);
 
-void fs_win32_print_error(const char*, const char*);
+void fs_print_error(const char*, const char*);
 
 size_t fs_to_cygpath(const char*, char*, const size_t);
 size_t fs_to_winpath(const char*, char*, const size_t);

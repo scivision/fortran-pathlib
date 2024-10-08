@@ -53,7 +53,7 @@ size_t fs_get_terminal(char* name, const size_t buffer_size)
   if(L > 0)
     return (size_t) L;
 
-  fs_win32_print_error(name, "get_terminal");
+  fs_print_error(name, "get_terminal");
   return 0;
 #else
   return fs_getenv("TERM", name, buffer_size);

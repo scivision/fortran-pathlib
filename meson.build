@@ -24,7 +24,9 @@ endif
 
 fsrcs = fortran ? files('src/common/fortran/filesystem.F90') : []
 
-comm_src = files('src/common/common.c',
+comm_src = files(
+'src/common/c.cpp',
+'src/common/common.c',
 'src/common/compiler.c',
 'src/common/cpu.c',
 'src/common/cygwin.c',
@@ -43,8 +45,8 @@ comm_src = files('src/common/common.c',
 'src/common/uid.c',
 'src/common/uname.c',
 'src/common/which.c',
-'src/common/winsock.c',
-'src/common/windows.c'
+'src/common/winsock.cpp',
+'src/common/windows.cpp'
 )
 
 if use_cpp

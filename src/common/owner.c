@@ -30,7 +30,7 @@ size_t fs_get_owner_name(const char* path, char* name, const size_t buffer_size)
 
   DWORD dwResult = GetNamedSecurityInfoA(path, SE_FILE_OBJECT, OWNER_SECURITY_INFORMATION, &pOwnerSid, NULL, NULL, NULL, &pSD);
   if (dwResult != ERROR_SUCCESS) {
-    fs_win32_print_error(path, "owner:GetNamedSecurityInfo: failed to get security info");
+    fs_print_error(path, "owner:GetNamedSecurityInfo: failed to get security info");
     return 0;
   }
 
@@ -41,19 +41,19 @@ size_t fs_get_owner_name(const char* path, char* name, const size_t buffer_size)
                          NULL, &Ldomain, &eUse))
   {
     if (GetLastError() != ERROR_INSUFFICIENT_BUFFER) {
-      fs_win32_print_error(path, "owner:LookupAccountSid: get buffer size failed");
+      fs_print_error(path, "owner:LookupAccountSid: get buffer size failed");
       return 0;
     }
   }
 
   const LPTSTR OwnerName = (LPTSTR)GlobalAlloc(GMEM_FIXED, Lowner*sizeof(TCHAR));
   if (!OwnerName) {
-    fs_win32_print_error(path, "owner:GlobalAlloc: failed to allocate memory");
+    fs_print_error(path, "owner:GlobalAlloc: failed to allocate memory");
     return 0;
   }
 
   if (!LookupAccountSidA(NULL, pOwnerSid, OwnerName, &Lowner, NULL, &Ldomain, &eUse)) {
-    fs_win32_print_error(path, "owner:LookupAccountSid: get owner name failed");
+    fs_print_error(path, "owner:LookupAccountSid: get owner name failed");
     GlobalFree(OwnerName);
     return 0;
   }

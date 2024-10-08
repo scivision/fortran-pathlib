@@ -30,18 +30,14 @@ bool fs_remove(const char* path)
 #ifdef _WIN32
 // https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-removedirectorya
 // https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilea
-  const bool ok = fs_is_dir(path) ? RemoveDirectoryA(path) : DeleteFileA(path);
-  if (!ok)
-    fs_win32_print_error(path, "remove");
-
-  return ok;
+  if(fs_is_dir(path) ? RemoveDirectoryA(path) : DeleteFileA(path))
+    return true;
 #else
   if(remove(path) == 0)
     return true;
-
-  fprintf(stderr, "ERROR:Ffilesystem:remove: %s => %s\n", path, strerror(errno));
-  return false;
 #endif
+   fs_print_error(path, "remove");
+   return false;
 }
 
 

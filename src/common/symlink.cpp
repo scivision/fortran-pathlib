@@ -52,7 +52,7 @@ bool Ffs::create_symlink(std::string_view target, std::string_view link)
   }
 
 #ifdef WIN32_SYMLINK
-  return fs_win32_create_symlink(target.data(), link.data());
+  return fs_win32_create_symlink(target, link);
 #else
   std::error_code ec;
 

@@ -66,7 +66,7 @@ size_t fs_get_profile_dir(char* path, const size_t buffer_size)
   CloseHandle(hToken);
 
   if (!ok){
-    fs_win32_print_error(path, "get_homedir");
+    fs_print_error(path, "get_homedir");
     return 0;
   }
 
@@ -135,7 +135,7 @@ size_t fs_get_username(char *name, const size_t buffer_size)
     // Windows.h
     if(!GetUserNameA(name, &L))
     {
-      fs_win32_print_error(name, "get_username");
+      fs_print_error(name, "get_username");
       return 0;
     }
 

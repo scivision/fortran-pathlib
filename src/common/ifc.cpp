@@ -139,14 +139,7 @@ std::string Ffs::get_owner_group(std::string_view path)
 }
 
 
-std::string Ffs::get_hostname()
-{
-  if(std::string buf(fs_get_max_path(), '\0');
-      fs_hostname(buf.data(), buf.size()) > 0)  FFS_LIKELY
-    return buf.c_str();
-
-  return {};
-}
+std::string Ffs::get_hostname(){ return fs_hostname(); }
 
 
 std::string Ffs::realpath(std::string_view path)
@@ -213,24 +206,8 @@ std::string Ffs::lib_path()
   return {};
 }
 
-std::string Ffs::shortname(std::string_view in)
-{
-  if(std::string buf(fs_get_max_path(), '\0');
-      fs_shortname(in.data(), buf.data(), buf.size())) FFS_LIKELY
-    return buf.c_str();
-
-  return {};
-}
-
-
-std::string Ffs::longname(std::string_view in)
-{
-  if(std::string buf(fs_get_max_path(), '\0');
-      fs_longname(in.data(), buf.data(), buf.size())) FFS_LIKELY
-    return buf.c_str();
-
-  return {};
-}
+std::string Ffs::shortname(std::string_view in){ return fs_shortname(in); }
+std::string Ffs::longname(std::string_view in){ return fs_longname(in); }
 
 
 bool Ffs::touch(std::string_view path)

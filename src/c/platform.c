@@ -28,7 +28,7 @@ size_t fs_get_tempdir(char* path, const size_t buffer_size)
 #ifdef _WIN32
   DWORD L = GetTempPathA((DWORD) buffer_size, path);
   if (L == 0 || L >= buffer_size){
-    fs_win32_print_error(path, "get_tempdir");
+    fs_print_error(path, "get_tempdir");
     return 0;
   }
   L++;

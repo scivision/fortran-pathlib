@@ -39,7 +39,7 @@ size_t fs_exe_path(FFS_MUNUSED char* path, FFS_MUNUSED const size_t buffer_size)
  // https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
   L = GetModuleFileNameA(NULL, path, (DWORD) buffer_size);
   if(L == 0 || L >= buffer_size){
-    fs_win32_print_error(path, "exe_path");
+    fs_print_error(path, "exe_path");
     return 0;
   }
   path[L] = '\0';

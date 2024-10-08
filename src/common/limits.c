@@ -40,7 +40,7 @@ size_t fs_max_component(const char* path)
   DWORD lpMaximumComponentLength = 0;
 
   if(!GetVolumeInformationA(path, 0, 0, 0, &lpMaximumComponentLength, 0, 0, 0))
-    fs_win32_print_error(path, "max_name");
+    fs_print_error(path, "max_name");
 
   return (size_t) lpMaximumComponentLength;
 

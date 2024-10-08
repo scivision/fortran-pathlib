@@ -15,21 +15,6 @@ bool fs_cpp(){ return true; }
 long fs_lang(){ return __cplusplus; }
 
 
-std::string::size_type fs_str2char(std::string_view s, char* result, const std::string::size_type buffer_size)
-{
-  if(s.length() >= buffer_size) FFS_UNLIKELY
-  {
-    result = nullptr;
-    std::cerr << "ERROR:Ffs:str2char(" << s << ") output buffer " << buffer_size << " too small for string: " << s << "\n";
-    return 0;
-  }
-
-  s.copy(result, buffer_size);
-  result[s.length()] = '\0';
-  return s.length();
-}
-
-
 std::string Ffs::drop_slash(std::string_view sv)
 {
   // drop all trailing "/"

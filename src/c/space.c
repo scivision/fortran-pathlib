@@ -31,7 +31,7 @@ fs_space_available(const char* path)
   if(ok)
     return bytes_available.QuadPart;
 
-  fs_win32_print_error(path, "space_available");
+  fs_print_error(path, "space_available");
 #elif __has_include(<sys/statvfs.h>)
   // https://unix.stackexchange.com/a/703650
   struct statvfs stat;

@@ -185,7 +185,7 @@ size_t fs_filesystem_type(const char* path, char* name, const size_t buffer_size
       return L;
   }
 
-  fs_win32_print_error(path, "filesystem_type");
+  fs_print_error(path, "filesystem_type");
   return 0;
 #elif defined(__linux__) && __has_include(<linux/magic.h>)
   return fs_strncpy(fs_type_linux(path), name, buffer_size);
