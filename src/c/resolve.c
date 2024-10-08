@@ -18,8 +18,6 @@
 #include <sys/stat.h>
 #include <errno.h>
 
-#include <cwalk.h>
-
 
 size_t fs_canonical(const char* path, const bool strict, const bool expand_tilde,
                     char* result, const size_t buffer_size)
@@ -147,12 +145,9 @@ size_t fs_absolute(const char* path, const char* base, const bool expand_tilde,
 
   if(FS_TRACE) printf("TRACE: fs_absolute: base=%s path=%s\n", bx, ex);
 
-  cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
-
-  Lp = cwk_path_get_absolute(bx, ex, result, buffer_size);
+  Lp = fs_join(bx, ex, result, buffer_size);
   free(ex);
   free(bx);
 
-  fs_as_posix(result);
   return Lp;
 }
