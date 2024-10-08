@@ -2,7 +2,7 @@ if(NOT HAVE_Fortran_FILESYSTEM)
   return()
 endif()
 
-foreach(t IN ITEMS copyfile fileop mkdir same touch)
+foreach(t IN ITEMS copyfile fileop mkdir mkdtemp same touch)
   add_executable(test_${t}_fortran test_${t}.f90)
   target_link_libraries(test_${t}_fortran PRIVATE ffilesystem)
   target_compile_options(test_${t}_fortran PRIVATE ${${PROJECT_NAME}_fortran_test_flags})
@@ -15,6 +15,11 @@ endforeach()
 set_tests_properties(Fortran_mkdir PROPERTIES
 FIXTURES_SETUP mkdir
 FIXTURES_REQUIRED root
+)
+
+set_tests_properties(Fortran_mkdtemp PROPERTIES
+LABELS Fortran
+FIXTURES_REQUIRED "join;mkdir"
 )
 
 set_property(TEST Fortran_same PROPERTY FIXTURES_REQUIRED mkdir)
