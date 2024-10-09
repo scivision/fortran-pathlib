@@ -41,7 +41,7 @@ comm_src = files(
 'src/common/partition.c',
 'src/common/realpath.c',
 'src/common/sysctl.cpp',
-'src/common/touch.c',
+'src/common/touch.cpp',
 'src/common/uid.cpp',
 'src/common/uname.cpp',
 'src/common/which.c',

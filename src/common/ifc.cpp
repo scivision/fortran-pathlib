@@ -147,7 +147,7 @@ std::string Ffs::longname(std::string_view in){ return fs_longname(in); }
 
 bool Ffs::touch(std::string_view path)
 {
-  return fs_touch(path.data());
+  return fs_touch(path);
 }
 
 
