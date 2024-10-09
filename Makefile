@@ -41,7 +41,7 @@ comdir = src/common/
 cdir = src/c/
 fdir = $(comdir)fortran/
 
-COMM_SRCS = $(comdir)c.cpp $(comdir)common.c $(comdir)compiler.cpp $(comdir)cpu.c $(comdir)cygwin.c $(comdir)exepath.c $(comdir)env.cpp $(comdir).cpp $(comdir)libpath.c $(comdir)limits.cpp $(comdir)mkdtemp.c $(comdir)owner.c $(comdir)os.c $(comdir)partition.c $(comdir)realpath.c $(comdir)sysctl.cpp $(comdir)touch.cpp $(comdir)uid.cpp $(comdir)uname.cpp $(comdir)which.c $(comdir)windows.cpp $(comdir)winsock.cpp
+COMM_SRCS = $(comdir)c.cpp $(comdir)common.c $(comdir)compiler.cpp $(comdir)cpu.c $(comdir)cygwin.c $(comdir)exepath.c $(comdir)env.cpp $(comdir).cpp $(comdir)libpath.cpp $(comdir)limits.cpp $(comdir)mkdtemp.c $(comdir)owner.c $(comdir)os.c $(comdir)partition.c $(comdir)realpath.c $(comdir)sysctl.cpp $(comdir)touch.cpp $(comdir)uid.cpp $(comdir)uname.cpp $(comdir)which.c $(comdir)windows.cpp $(comdir)winsock.cpp
 
 ifeq (cpp,1)
 SRCS = $(comdir)filesystem.cpp $(comdir)c_ifc.cpp $(comdir)copy.cpp $(comdir)ifc.cpp $(comdir)inquire.cpp $(comdir)mkdir.cpp $(comdir)mkdtemp.cpp $(comdir)pure.cpp $(comdir)platform.cpp $(comdir)resolve.cpp $(comdir)space.cpp $(comdir)symlink.cpp $(comdir)time.cpp

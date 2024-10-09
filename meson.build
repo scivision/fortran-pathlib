@@ -34,7 +34,7 @@ comm_src = files(
 'src/common/env.cpp',
 'src/common/home.cpp',
 'src/common/mkdtemp.c',
-'src/common/libpath.c',
+'src/common/libpath.cpp',
 'src/common/limits.cpp',
 'src/common/owner.c',
 'src/common/os.c',

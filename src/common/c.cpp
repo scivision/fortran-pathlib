@@ -108,3 +108,8 @@ size_t fs_max_component(const char* path)
 {
   return fs_max_component(std::string_view(path));
 }
+
+size_t fs_lib_path(char* path, const size_t buffer_size)
+{
+  return fs_str2char(fs_lib_path(), path, buffer_size);
+}

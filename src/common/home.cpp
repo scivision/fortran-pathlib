@@ -6,7 +6,6 @@
 
 #include <string>
 #include <cstdlib> // malloc, free
-#include <algorithm> // std::replace
 #include <set>
 
 #if __has_include(<format>)
@@ -54,12 +53,8 @@ static struct passwd* fs_getpwuid()
 std::string fs_get_homedir()
 {
   std::string home = fs_getenv(fs_is_windows() ? "USERPROFILE" : "HOME");
-  if(!home.empty()){
-    if(fs_is_windows())
-      std::replace( home.begin(), home.end(), '\\', '/');
-
-    return home;
-  }
+  if(!home.empty())
+    return fs_as_posix(home);
 
   return fs_get_profile_dir();
 }
@@ -93,9 +88,7 @@ std::string fs_get_profile_dir()
 
   path.resize(N-1);
 
-  std::replace( path.begin(), path.end(), '\\', '/');
-
-  return path;
+  return fs_as_posix(path);
 #else
   const struct passwd *pw = fs_getpwuid();
   if (!pw)

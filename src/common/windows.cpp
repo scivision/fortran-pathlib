@@ -6,8 +6,20 @@
 #include <iostream>
 #include <system_error>
 #include <cerrno>
+#include <algorithm> // std::replace
 
 #include "ffilesystem.h"
+
+
+std::string fs_as_posix(std::string_view path)
+{
+  std::string s(path);
+
+  if(fs_is_windows())
+    std::replace( s.begin(), s.end(), '\\', '/');
+
+  return s;
+}
 
 
 void fs_print_error(std::string_view path, std::string_view fname)

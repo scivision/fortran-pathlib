@@ -3,13 +3,7 @@
 #include <string>
 
 
-std::string Ffs::as_posix(std::string_view path)
-{
-  std::string buf(path);
-
-  fs_as_posix(buf.data());
-  return buf;
-}
+std::string Ffs::as_posix(std::string_view path){ return fs_as_posix(path); }
 
 
 std::string Ffs::compiler(){ return fs_compiler(); }
@@ -124,14 +118,7 @@ bool Ffs::is_subdir(std::string_view subdir, std::string_view dir)
 }
 
 
-std::string Ffs::lib_path()
-{
-  if(std::string buf(fs_get_max_path(), '\0');
-      fs_lib_path(buf.data(), buf.size()) > 0)  FFS_LIKELY
-    return buf.c_str();
-
-  return {};
-}
+std::string Ffs::lib_path() { return fs_lib_path(); }
 
 std::string Ffs::shortname(std::string_view in){ return fs_shortname(in); }
 std::string Ffs::longname(std::string_view in){ return fs_longname(in); }
