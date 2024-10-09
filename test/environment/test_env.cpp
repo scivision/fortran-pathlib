@@ -36,7 +36,7 @@ if(!fpath)
 
 std::cout << "current working dir " << fpath.value() << "\n";
 
-if(!Ffs::exists(fpath.value()))
+if(!fs_exists(fpath.value()))
   err("current working dir " + fpath.value() + " does not exist");
 
 if(!Ffs::is_dir(fpath.value()))
@@ -78,7 +78,7 @@ if(!t)
   err("failed to get_tempdir()");
 
 std::cout << "Temp directory " << t.value() << "\n";
-if (!Ffs::exists(t.value()))
+if (!fs_exists(t.value()))
   err("Fortran: temp dir " + t.value() + " does not exist");
 
 std::cout << "PASS: C++ temp directory\n";

@@ -147,3 +147,5 @@ bool fs_is_absolute(const char* path)
 uintmax_t fs_space_available(const char* path){
   return fs_space_available(std::string_view(path)).value_or(0);
 }
+
+bool fs_exists(const char* path){ return fs_exists(std::string_view(path)); }

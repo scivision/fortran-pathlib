@@ -91,7 +91,6 @@ std::map<std::string_view, std::function<bool(std::string_view)>> b_s =
     {"is_readable", Ffs::is_readable},
     {"is_writable", Ffs::is_writable},
     {"is_symlink", Ffs::is_symlink},
-    {"exists", Ffs::exists},
     {"is_absolute", Ffs::is_absolute},
     {"is_char", Ffs::is_char_device},
     {"mkdir", Ffs::mkdir},
@@ -117,6 +116,8 @@ else if (s_s.contains(fname))
   h = s_s[fname](path);
 else if (s_so.contains(fname))
   h = s_so[fname](path).value_or("");
+else if (fname == "exists")
+  b = fs_exists(path);
 else
   {
     std::cerr << "Error: unknown function " << fname << "\n";

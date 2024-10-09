@@ -46,7 +46,7 @@ std::cout << "Permissions for " << read << ": " << p.value() << "\n";
 if(!Ffs::is_readable(read))
     err(read + " should be readable");
 
-if(!Ffs::exists(read))
+if(!fs_exists(read))
     err(read + " should exist");
 
 if(!Ffs::is_file(read))
@@ -65,7 +65,7 @@ std::cout << "Permissions for " << noread << ": " << p.value() << "\n";
 #ifdef __cpp_lib_string_contains
 if(!p.value().contains("r") && Ffs::is_readable(noread)){
 
-if(!Ffs::exists(noread))
+if(!fs_exists(noread))
     err(noread + " should exist");
 
 if(!Ffs::is_file(noread))
@@ -95,7 +95,7 @@ if(!p.value().contains("w") && Ffs::is_writable(nowrite)){
 std::cerr << "SKIP: due to not having C++23 string contains support\n";
 #endif
 
-if(!Ffs::exists(nowrite))
+if(!fs_exists(nowrite))
     err(nowrite + " should exist");
 
 if(!Ffs::is_file(nowrite))

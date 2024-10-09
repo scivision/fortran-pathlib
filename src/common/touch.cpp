@@ -11,7 +11,7 @@
 
 bool fs_touch(std::string_view path)
 {
-  if(fs_exists(path.data()))
+  if(fs_exists(path))
     return fs_set_modtime(path.data());
 
   FILE* fid = fopen(path.data(), "w");

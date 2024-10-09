@@ -49,29 +49,6 @@ fs_st_mode(const char* path)
   return s.st_mode;
 }
 
-
-bool
-fs_exists(const char* path)
-{
-  /* fs_exists() is true even if path is non-readable
-   this is like Python pathlib.Path.exists()
-   but unlike kwSys:SystemTools:FileExists which uses R_OK instead of F_OK like this project.
-  */
-
-#ifdef _MSC_VER
-  /* kwSys:SystemTools:FileExists is much more elaborate with Reparse point checks etc.
-  * For this project, Windows non-C++ is not officially supported so we do it simply.
-  * This way seems to work fine on Windows anyway.
-  */
-   // io.h
-  return !_access_s(path, 0);
-#else
-  // unistd.h
-  return !access(path, F_OK);
-#endif
-}
-
-
 bool
 fs_is_char_device(const char* path)
 {

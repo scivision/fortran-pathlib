@@ -69,8 +69,8 @@ int main(){
     if(!Ffs::root("").empty())
       err("Ffs::root");
 
-    if(Ffs::exists(""))
-      err("Ffs::exists");
+    if(fs_exists(""))
+      err("exists");
 
     if(Ffs::is_absolute(""))
       err("Ffs::is_absolute");

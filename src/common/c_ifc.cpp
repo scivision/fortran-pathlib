@@ -3,9 +3,6 @@
 
 #include "ffilesystem.h"
 
-
-bool fs_exists(const char* path){ return Ffs::exists(path); }
-
 bool fs_is_char_device(const char* path){ return Ffs::is_char_device(path); }
 
 bool fs_is_dir(const char* path){ return Ffs::is_dir(path); }

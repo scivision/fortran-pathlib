@@ -6,6 +6,8 @@
 #include "ffilesystem.h"
 
 
+// pure.cpp
+//------------------
 bool fs_is_absolute(std::string_view path)
 {
   if(path.empty())

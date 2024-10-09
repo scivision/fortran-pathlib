@@ -10,13 +10,6 @@
 #include <cstdint> // for uintmax_t
 
 
-bool Ffs::exists(std::string_view path)
-{
-  std::error_code ec;
-  return std::filesystem::exists(path, ec) && !ec;
-}
-
-
 bool Ffs::is_char_device(std::string_view path)
 {
   std::error_code ec;

@@ -118,7 +118,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"is_readable", Ffs::is_readable},
     {"is_writable", Ffs::is_writable},
     {"is_symlink", Ffs::is_symlink},
-    {"exists", Ffs::exists},
     {"is_absolute", Ffs::is_absolute},
     {"is_char", Ffs::is_char_device},
     {"mkdir", Ffs::mkdir},
@@ -199,6 +198,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << smax[fun](a1) << "\n";
   else if (mvoid.contains(fun))
     mvoid[fun](a1);
+  else if (fun == "exists")
+    std::cout << fs_exists(a1) << "\n";
   else if (fun == "space")
     std::cout << fs_space_available(a1).value_or(0) << "\n";
   else if (fun == "absolute")

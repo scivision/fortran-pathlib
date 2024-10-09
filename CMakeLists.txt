@@ -59,6 +59,7 @@ endif()
 
 include(cmake/json_array.cmake)
 file(READ ${CMAKE_CURRENT_SOURCE_DIR}/sources.json json)
+set(CMAKE_CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/sources.json)
 
 # use separate object for Fortran to work with Visual Studio generator
 if(HAVE_Fortran_FILESYSTEM)
