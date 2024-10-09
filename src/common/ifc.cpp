@@ -18,14 +18,7 @@ std::string Ffs::get_terminal() { return fs_get_terminal();}
 std::string Ffs::cpu_arch() { return fs_cpu_arch(); }
 
 
-std::string Ffs::exe_path()
-{
-  if(std::string buf(fs_get_max_path(), '\0');
-      fs_exe_path(buf.data(), buf.size()) > 0)  FFS_LIKELY
-    return buf.c_str();
-
-  return {};
-}
+std::string Ffs::exe_path() { return fs_exe_path(); }
 
 
 std::string Ffs::expanduser(std::string_view path){ return fs_expanduser(path); }

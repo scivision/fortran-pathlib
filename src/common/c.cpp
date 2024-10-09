@@ -113,3 +113,8 @@ size_t fs_lib_path(char* path, const size_t buffer_size)
 {
   return fs_str2char(fs_lib_path(), path, buffer_size);
 }
+
+size_t fs_exe_path(char* path, const size_t buffer_size)
+{
+  return fs_str2char(fs_exe_path(), path, buffer_size);
+}

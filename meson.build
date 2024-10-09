@@ -31,7 +31,7 @@ comm_src = files(
 'src/common/compiler.cpp',
 'src/common/cpu.c',
 'src/common/cygwin.c',
-'src/common/exepath.c',
+'src/common/exepath.cpp',
 'src/common/env.cpp',
 'src/common/home.cpp',
 'src/common/mkdtemp.c',

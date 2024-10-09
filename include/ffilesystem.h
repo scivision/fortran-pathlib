@@ -180,6 +180,7 @@ size_t fs_max_component(std::string_view);
 
 std::string fs_as_posix(std::string_view);
 std::string fs_lib_path();
+std::string fs_exe_path();
 
 // ---------------------------------------------------------------------------
 

@@ -4,10 +4,9 @@
 
 #include "ffilesystem.h"
 
-#include <stdio.h>
-#include <errno.h>
-#include <string.h>
-#include <stdint.h> // uint32_t
+#include <iostream>
+#include <string>
+#include <cstdint> // uint32_t
 
 #if defined(__unix__)
 // https://github.com/cpredef/predef/blob/master/OperatingSystems.md#bsd-environment
@@ -28,50 +27,59 @@
 #endif
 
 
-size_t fs_exe_path(FFS_MUNUSED char* path, FFS_MUNUSED const size_t buffer_size)
+std::string fs_exe_path()
 {
   // https://stackoverflow.com/a/4031835
   // https://stackoverflow.com/a/1024937
 
-  size_t L=0;
+  std::string path(fs_get_max_path(), '\0');
+  const size_t buffer_size = path.size();
 
 #if defined(_WIN32) || defined(__CYGWIN__)
  // https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
-  L = GetModuleFileNameA(NULL, path, (DWORD) buffer_size);
+  const size_t L = GetModuleFileNameA(nullptr, path.data(), (DWORD) buffer_size);
   if(L == 0 || L >= buffer_size){
     fs_print_error(path, "exe_path");
-    return 0;
+    return {};
   }
-  path[L] = '\0';
+  path.resize(L);
+  return fs_as_posix(path);
 #elif defined(__linux__)
   // https://man7.org/linux/man-pages/man2/readlink.2.html
-  L = readlink("/proc/self/exe", path, buffer_size);
+  const size_t L = readlink("/proc/self/exe", path.data(), buffer_size);
   if(!L){
-    fprintf(stderr, "ERROR:ffilesystem:exe_path:readlink: %s\n", strerror(errno));
-    return 0;
+    fs_print_error("readlink", "exe_path");
+    return {};
   }
-  path[L] = '\0';
+  path.resize(L);
+  return path;
 #elif defined(__APPLE__)
   // https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/dyld.3.html
   uint32_t mp = (uint32_t) buffer_size;
 
-  if(_NSGetExecutablePath(path, &mp) != 0)
-    return 0;
-  L = strlen(path);
+  if(_NSGetExecutablePath(path.data(), &mp) != 0){
+    fs_print_error("", "exe_path:_NSGetExecutablePath");
+    return {};
+  }
+  // "mp" doesn't have the string length of the path
+  return fs_trim(path);
 #elif defined(BSD)
+  // https://man.freebsd.org/cgi/man.cgi?sysctl(3)
+  size_t L=0;
   const int mib[4] = {CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1};
-  if(sysctl(mib, 4, NULL, &L, NULL, 0) != 0){
-    fprintf(stderr, "ERROR:ffilesystem:exe_path:sysctl: get size %s\n", strerror(errno));
-    return 0;
+  if(sysctl(mib, 4, nullptr, &L, nullptr, 0) != 0){
+    fs_print_error("sysctl: get size", "exe_path");
+    return {};
   }
-  if(sysctl(mib, 4, path, &L, NULL, 0) != 0){
-    fprintf(stderr, "ERROR:ffilesystem:exe_path:sysctl: get path %s\n", strerror(errno));
-    return 0;
+  if(sysctl(mib, 4, path.data(), &L, nullptr, 0) != 0){
+    fs_print_error("sysctl: get path", "exe_path");
+    return {};
   }
+  path.resize(L);
+  return path;
 #else
-  fprintf(stderr, "ERROR:ffilesystem:exe_path: not implemented for this platform\n");
-  return L;
+  fs_print_error("ERROR:ffilesystem:exe_path: not implemented for this platform", "exepath");
+  return {};
 #endif
-  fs_as_posix(path);
-  return L;
+
 }

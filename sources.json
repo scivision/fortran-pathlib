@@ -1,6 +1,6 @@
 {
     "common": ["src/common/c.cpp", "src/common/common.c", "src/common/compiler.cpp", "src/common/cpu.c", "src/common/cygwin.c",
-               "src/common/exepath.c", "src/common/env.cpp", "src/common/home.cpp", "src/common/libpath.cpp", "src/common/limits.cpp",
+               "src/common/exepath.cpp", "src/common/env.cpp", "src/common/home.cpp", "src/common/libpath.cpp", "src/common/limits.cpp",
                "src/common/mkdtemp.c", "src/common/os.c", "src/common/owner.c", "src/common/partition.c", "src/common/realpath.c",
                "src/common/sysctl.cpp", "src/common/touch.cpp", "src/common/uid.cpp", "src/common/uname.cpp", "src/common/which.c",
                "src/common/windows.cpp", "src/common/winsock.cpp"],
