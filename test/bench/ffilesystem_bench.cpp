@@ -168,8 +168,7 @@ if(argc > 1)
 
 std::string_view path;
 
-if(std::vector<char> buf(1000); fs_compiler(buf.data(), buf.size()))
-  std::cout << buf.data() << "\n";
+std::cout << fs_compiler() << "\n";
 
 std::set<std::string_view, std::less<>> fset;
 

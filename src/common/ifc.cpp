@@ -12,15 +12,7 @@ std::string Ffs::as_posix(std::string_view path)
 }
 
 
-std::string Ffs::compiler()
-{
-  // 1000 is arbitrary
-  if(std::string buf(1000, '\0');
-      fs_compiler(buf.data(), buf.size()) > 0)  FFS_LIKELY
-    return buf.c_str();
-
-  return {};
-}
+std::string Ffs::compiler(){ return fs_compiler(); }
 
 
 std::string Ffs::get_shell(){ return fs_get_shell(); }

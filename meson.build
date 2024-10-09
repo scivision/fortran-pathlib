@@ -27,7 +27,7 @@ fsrcs = fortran ? files('src/common/fortran/filesystem.F90') : []
 comm_src = files(
 'src/common/c.cpp',
 'src/common/common.c',
-'src/common/compiler.c',
+'src/common/compiler.cpp',
 'src/common/cpu.c',
 'src/common/cygwin.c',
 'src/common/exepath.c',
