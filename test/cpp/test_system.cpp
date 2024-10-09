@@ -1,6 +1,7 @@
 #include "ffilesystem.h"
 
 #include <cstdlib>
+#include <string>
 #include <iostream>
 
 int main(){
@@ -18,57 +19,71 @@ int main(){
 
   const auto max_path = fs_get_max_path();
 
-  std::string hostname = fs_hostname();
-  if (hostname.empty()){
+  std::string s = fs_hostname();
+  if (s.empty()){
     std::cerr << "ERROR: failed to get hostname\n";
     fail++;
   }
-  else if (hostname.length() == max_path){
+  else if (s.length() == max_path){
     std::cerr << "ERROR: hostname has blank space\n";
     fail++;
   }
   else
-    std::cout << "OK: hostname: " << hostname << "\n";
+    std::cout << "OK: hostname: " << s << "\n";
 
-  std::string compiler = fs_compiler();
-  if (compiler.empty()){
+  s = fs_compiler();
+  if (s.empty()){
     std::cerr << "unknown compiler\n";
     skip++;
   }
-  else if (compiler.length() == max_path){
+  else if (s.length() == max_path){
     std::cerr << "ERROR: compiler has blank space\n";
     fail++;
   }
-  else if (compiler.find("%") != std::string::npos){
+#ifdef __cpp_lib_string_contains
+  else if (s.contains("%")){
     std::cerr << "ERROR: fs_compiler has formatting problem\n";
     fail++;
   }
+#endif
   else
-    std::cout << "OK: compiler: " << compiler << "\n";
+    std::cout << "OK: compiler: " << s << "\n";
 
-  std::string shell = fs_get_shell();
-  if (shell.empty()){
+  s = fs_get_shell();
+  if (s.empty()){
     std::cerr << "unknown shell\n";
     skip++;
   }
-  else if (shell.length() == max_path){
+  else if (s.length() == max_path){
     std::cerr << "ERROR: shell has blank space\n";
     fail++;
   }
   else
-    std::cout << "OK: shell: " << shell << "\n";
+    std::cout << "OK: shell: " << s << "\n";
 
-  std::string terminal = fs_get_terminal();
-  if (terminal.empty()){
+  s= fs_get_terminal();
+  if (s.empty()){
     std::cerr << "unknown terminal\n";
     skip++;
   }
-  else if (terminal.length() == max_path){
+  else if (s.length() == max_path){
     std::cerr << "ERROR: terminal has blank space\n";
     fail++;
   }
   else
-    std::cout << "OK: terminal: " << terminal << "\n";
+    std::cout << "OK: terminal: " << s << "\n";
+
+  s = fs_get_username();
+  if (s.empty()){
+    std::cerr << "ERROR: failed to get username\n";
+    fail++;
+  }
+  else if (s.length() == max_path){
+    std::cerr << "ERROR: username has blank space\n";
+    fail++;
+  }
+  else
+    std::cout << "OK: username: " << s << "\n";
 
 
 // -----------------
