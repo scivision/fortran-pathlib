@@ -63,18 +63,12 @@ public:
   [[nodiscard]] static std::string realpath(std::string_view);
 
   [[nodiscard]] static bool is_absolute(std::string_view);
-  [[nodiscard]] static bool is_char_device(std::string_view);
-  [[nodiscard]] static bool is_dir(std::string_view);
   [[nodiscard]] static bool is_exe(std::string_view);
   [[nodiscard]] static bool is_readable(std::string_view);
   [[nodiscard]] static bool is_writable(std::string_view);
-  [[nodiscard]] static bool is_symlink(std::string_view);
   [[nodiscard]] static bool exists(std::string_view);
-  [[nodiscard]] static bool is_file(std::string_view);
   [[nodiscard]] static bool is_reserved(std::string_view);
   [[nodiscard]] static bool is_subdir(std::string_view, std::string_view);
-
-  static bool remove(std::string_view);
 
   [[nodiscard]] static std::string as_posix(std::string_view);
 
@@ -99,9 +93,6 @@ public:
   [[nodiscard]] static std::string absolute(std::string_view, const bool);
   [[nodiscard]] static std::string absolute(std::string_view, std::string_view, const bool);
 
-  [[nodiscard]] static std::optional<std::string> read_symlink(std::string_view);
-  [[nodiscard]] static std::optional<std::string> get_permissions(std::string_view);
-
   [[nodiscard]] static std::optional<uintmax_t> file_size(std::string_view);
 
   [[nodiscard]] static std::string mkdtemp(std::string_view);
@@ -123,10 +114,7 @@ public:
 
   [[nodiscard]] static std::string with_suffix(std::string_view, std::string_view);
 
-  static bool create_symlink(std::string_view, std::string_view);
   static bool copy_file(std::string_view, std::string_view, bool);
-
-  static bool set_permissions(std::string_view, int, int, int);
 
   [[nodiscard]] static bool is_safe_name(std::string_view);
 
@@ -187,12 +175,30 @@ std::string fs_trim(std::string r);
 bool fs_is_absolute(std::string_view path);
 bool fs_is_symlink(std::string_view);
 bool fs_create_symlink(std::string_view, std::string_view);
-bool fs_exists(std::string_view path);
+
+bool fs_set_permissions(std::string_view, int, int, int);
+
+[[nodiscard]] bool fs_exists(std::string_view path);
+[[nodiscard]] bool fs_is_file(std::string_view);
 
 std::string fs_root(std::string_view path);
 
 std::optional<uintmax_t> fs_space_available(std::string_view);
 std::optional<std::string> fs_read_symlink(std::string_view);
+
+[[nodiscard]] std::optional<std::string> fs_get_permissions(std::string_view);
+
+[[nodiscard]] bool fs_is_char_device(std::string_view);
+[[nodiscard]] bool fs_is_dir(std::string_view);
+
+bool fs_remove(std::string_view);
+
+#if defined(_MSC_VER)
+int
+#else
+mode_t
+#endif
+fs_st_mode(std::string_view path);
 
 // ---------------------------------------------------------------------------
 
@@ -213,13 +219,6 @@ extern "C" {
 
 // mostly internal use functions only for C
 size_t fs_strncpy(const char*, char*, const size_t);
-
-#if defined(_MSC_VER)
-int
-#else
-mode_t
-#endif
-fs_st_mode(const char*);
 
 #endif  // end C-only
 

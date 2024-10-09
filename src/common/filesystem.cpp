@@ -12,6 +12,18 @@
 #endif
 #endif
 
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#include <io.h> // chmod
+#endif
+
+// preferred import order for stat()
+#include <sys/types.h>
+#include <sys/stat.h>  // chmod, stat
+
+#include <cstdio> // remove()
+
 #include <iostream>
 #include <string>
 #include <system_error>         // for error_code
@@ -19,8 +31,9 @@
 #include "ffilesystem.h"
 
 
-bool Ffs::remove(std::string_view path)
+bool fs_remove(std::string_view path)
 {
+#ifdef HAVE_CXX_FILESYSTEM
   std::error_code ec;
 
   if(std::filesystem::remove(path, ec) && !ec) FFS_LIKELY
@@ -28,11 +41,27 @@ bool Ffs::remove(std::string_view path)
 
   std::cerr << "ERROR:FFs:remove: " << ec.message() << "\n";
   return false;
+#else
+
+#ifdef _WIN32
+// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-removedirectorya
+// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilea
+  if(fs_is_dir(path) ? RemoveDirectoryA(path.data()) : DeleteFileA(path.data()))
+    return true;
+#else
+  if(remove(path.data()) == 0)
+    return true;
+#endif
+   fs_print_error(path, "remove");
+   return false;
+
+#endif
 }
 
 
-bool Ffs::set_permissions(std::string_view path, int readable, int writable, int executable)
+bool fs_set_permissions(std::string_view path, int readable, int writable, int executable)
 {
+#ifdef HAVE_CXX_FILESYSTEM
   std::filesystem::path pth(path);
 
 #if defined(__cpp_using_enum)
@@ -68,4 +97,37 @@ bool Ffs::set_permissions(std::string_view path, int readable, int writable, int
 
   std::cerr << "ERROR:ffilesystem:set_permissions: " << ec.message() << "\n";
   return false;
+#else
+
+  // on POSIX, only sets permission for user, not group or others
+
+#ifdef _MSC_VER
+  int m = fs_st_mode(path);
+  const int r = _S_IREAD;
+  const int w = _S_IWRITE;
+  const int x = _S_IEXEC;
+#else
+  mode_t m = fs_st_mode(path);
+  const mode_t r = S_IRUSR;
+  const mode_t w = S_IWUSR;
+  const mode_t x = S_IXUSR;
+#endif
+
+  if(readable > 0)
+    m |= r;
+  else if (readable < 0)
+    m &= ~r;
+
+  if(writable > 0)
+    m |= w;
+  else if (writable < 0)
+    m &= ~w;
+
+  if(executable > 0)
+    m |= x;
+  else if (executable < 0)
+    m &= ~x;
+// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/chmod-wchmod
+  return chmod(path.data(), m) == 0;
+#endif
 }

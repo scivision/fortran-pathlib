@@ -27,7 +27,7 @@ int main()
   _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-if(auto p = Ffs::get_permissions(""); p)
+if(auto p = fs_get_permissions(""); p)
     err("get_permissions('') should fail, but got: " + p.value());
 
 std::string read = "readable.txt";
@@ -35,9 +35,9 @@ std::string noread = "nonreadable.txt";
 std::string nowrite = "nonwritable.txt";
 
 Ffs::touch(read);
-Ffs::set_permissions(read, 1, 0, 0);
+fs_set_permissions(read, 1, 0, 0);
 
-auto p = Ffs::get_permissions(read);
+auto p = fs_get_permissions(read);
 if(!p)
     err("get_permissions('" + read + "') failed");
 
@@ -49,14 +49,14 @@ if(!Ffs::is_readable(read))
 if(!fs_exists(read))
     err(read + " should exist");
 
-if(!Ffs::is_file(read))
+if(!fs_is_file(read))
     err(read + " should be a file");
 
 // for Ffilesystem, even non-readable files "exist" and are "is_file"
 Ffs::touch(noread);
-Ffs::set_permissions(noread, -1, 0, 0);
+fs_set_permissions(noread, -1, 0, 0);
 
-p = Ffs::get_permissions(noread);
+p = fs_get_permissions(noread);
 if(!p)
     err("get_permissions('" + noread + "') failed");
 
@@ -68,7 +68,7 @@ if(!p.value().contains("r") && Ffs::is_readable(noread)){
 if(!fs_exists(noread))
     err(noread + " should exist");
 
-if(!Ffs::is_file(noread))
+if(!fs_is_file(noread))
     err(noread + " should be a file");
 }
 #else
@@ -76,11 +76,11 @@ std::cerr << "SKIP: due to not having C++23 string contains support\n";
 #endif
 
 // writable
-if(!Ffs::is_file(nowrite))
+if(!fs_is_file(nowrite))
   Ffs::touch(nowrite);
-Ffs::set_permissions(nowrite, 0, -1, 0);
+fs_set_permissions(nowrite, 0, -1, 0);
 
-p = Ffs::get_permissions(nowrite);
+p = fs_get_permissions(nowrite);
 if(!p)
     err("get_permissions('" + nowrite + "') failed");
 std::cout << "Permissions for " << nowrite << " " << p.value() << "\n";
@@ -98,7 +98,7 @@ std::cerr << "SKIP: due to not having C++23 string contains support\n";
 if(!fs_exists(nowrite))
     err(nowrite + " should exist");
 
-if(!Ffs::is_file(nowrite))
+if(!fs_is_file(nowrite))
     err(nowrite + " should be a file");
 
 return EXIT_SUCCESS;

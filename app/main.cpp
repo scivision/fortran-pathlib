@@ -110,15 +110,11 @@ static void one_arg(std::string_view fun, std::string_view a1){
 
   std::map<std::string_view, std::function<bool(std::string_view)>> mbool =
   {
-    {"is_dir", Ffs::is_dir},
     {"is_exe", Ffs::is_exe},
-    {"is_file", Ffs::is_file},
-    {"remove", Ffs::remove},
     {"is_reserved", Ffs::is_reserved},
     {"is_readable", Ffs::is_readable},
     {"is_writable", Ffs::is_writable},
     {"is_absolute", Ffs::is_absolute},
-    {"is_char", Ffs::is_char_device},
     {"mkdir", Ffs::mkdir},
     {"is_safe", Ffs::is_safe_name}
   };
@@ -144,11 +140,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"longname", Ffs::longname},
     {"getenv", Ffs::get_env},
     {"type", Ffs::filesystem_type}
-  };
-
-    std::map<std::string_view, std::function<std::optional<std::string>(std::string_view)>> mostring =
-  {
-    {"perm", Ffs::get_permissions}
   };
 
   std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool, bool)>> mstrb =
@@ -184,8 +175,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << mbool[fun](a1) << "\n";
   else if (mstring.contains(fun))
     std::cout << mstring[fun](a1) << "\n";
-  else if (mostring.contains(fun))
-    std::cout << mostring[fun](a1).value_or("") << "\n";
   else if (mstrb.contains(fun))
     std::cout << mstrb[fun](a1, true, false).value_or("") << "\n";
   else if (mstrbw.contains(fun))
@@ -196,8 +185,16 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << smax[fun](a1) << "\n";
   else if (mvoid.contains(fun))
     mvoid[fun](a1);
+  else if (fun == "is_dir")
+    std::cout << fs_is_dir(a1) << "\n";
+  else if (fun == "is_char")
+    std::cout << fs_is_char_device(a1) << "\n";
+  else if (fun == "is_file")
+    std::cout << fs_is_file(a1) << "\n";
   else if (fun == "is_symlink")
     std::cout << fs_is_symlink(a1) << "\n";
+  else if (fun == "perm")
+    std::cout << fs_get_permissions(a1).value_or("") << "\n";
   else if (fun == "read_symlnk")
     std::cout << fs_read_symlink(a1).value_or("") << "\n";
   else if (fun == "exists")
@@ -239,7 +236,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
       if (const auto &s = std::filesystem::file_size(p, ec); s && !ec)
         std::cout << " " << s;
 
-      std::cout << " " << Ffs::get_permissions(p.generic_string()).value_or("") << "\n";
+      std::cout << " " << fs_get_permissions(p.generic_string()).value_or("") << "\n";
 #else
       std::cerr << "ERROR: ls requires C++17 filesystem\n";
 #endif
@@ -293,13 +290,13 @@ static void four_arg(std::string_view fun, std::string_view a1, std::string_view
     int w = std::stoi(a3.data());
     int x = std::stoi(a4.data());
 
-    auto p = Ffs::get_permissions(a1);
+    auto p = fs_get_permissions(a1);
     if(!p)
       std::cerr << "ERROR get_permissions(" << a1 << ") before chmod\n";
     else
       std::cout << "before chmod " << a1 << " " << p.value() << "\n";
 
-    Ffs::set_permissions(a1, r, w, x);
+    fs_set_permissions(a1, r, w, x);
 
     if(!p)
       std::cerr << "ERROR get_permissions(" << a1 << ") after chmod\n";

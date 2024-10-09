@@ -16,7 +16,6 @@
 #include <stdbool.h>
 #include <stdint.h>  // uintmax_t
 #include <string.h>
-#include <ctype.h> // toupper
 
 #if defined(_MSC_VER)
 #define WIN32_LEAN_AND_MEAN
@@ -31,41 +30,6 @@
 #include <errno.h>
 
 #include <stdio.h>
-
-
-#if defined(_MSC_VER)
-int
-#else
-mode_t
-#endif
-fs_st_mode(const char* path)
-{
-  struct stat s;
-  if(stat(path, &s)){
-    // fprintf(stderr, "ERROR:ffilesystem:fs_st_mode: %s => %s\n", path, strerror(errno));
-    return 0;
-  }
-
-  return s.st_mode;
-}
-
-bool
-fs_is_char_device(const char* path)
-{
-// special character device like /dev/null
-// Windows: https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fstat-fstat32-fstat64-fstati64-fstat32i64-fstat64i32
-  return fs_st_mode(path) & S_IFCHR;
-  // S_ISCHR not available with MSVC
-}
-
-
-bool
-fs_is_dir(const char* path)
-{
-// NOTE: Windows top-level drive "C:" needs a trailing slash "C:/"
-  return fs_st_mode(path) & S_IFDIR;
-  // S_ISDIR not available with MSVC
-}
 
 
 bool
@@ -111,14 +75,6 @@ fs_is_writable(const char* path)
 }
 
 
-bool
-fs_is_file(const char* path)
-{
-  return fs_st_mode(path) & S_IFREG;
-  // S_ISREG not available with MSVC
-}
-
-
 uintmax_t
 fs_file_size(const char* path)
 {
@@ -128,45 +84,4 @@ fs_file_size(const char* path)
 
   fprintf(stderr, "ERROR:ffilesystem:file_size: %s => %s\n", path, strerror(errno));
   return 0;
-}
-
-
-size_t
-fs_get_permissions(const char* path, char* result, const size_t buffer_size)
-{
-  if (buffer_size < 10) {
-    fprintf(stderr, "ERROR:ffilesystem:fs_get_permissions: buffer_size must be at least 10\n");
-    return 0;
-  }
-  if (!fs_exists(path)) {
-    fprintf(stderr, "ERROR:ffilesystem:fs_get_permissions: %s does not exist\n", path);
-    return 0;
-  }
-
-  result[9] = '\0';
-
-#ifdef _MSC_VER
-  const int m = fs_st_mode(path);
-  result[0] = (m & _S_IREAD) ? 'r' : '-';
-  result[1] = (m & _S_IWRITE) ? 'w' : '-';
-  result[2] = (m & _S_IEXEC) ? 'x' : '-';
-  result[3] = (m & _S_IREAD) ? 'r' : '-';
-  result[4] = (m & _S_IWRITE) ? 'w' : '-';
-  result[5] = (m & _S_IEXEC) ? 'x' : '-';
-  result[6] = (m & _S_IREAD) ? 'r' : '-';
-  result[7] = (m & _S_IWRITE) ? 'w' : '-';
-  result[8] = (m & _S_IEXEC) ? 'x' : '-';
-#else
-  const mode_t m = fs_st_mode(path);
-  result[0] = (m & S_IRUSR) ? 'r' : '-';
-  result[1] = (m & S_IWUSR) ? 'w' : '-';
-  result[2] = (m & S_IXUSR) ? 'x' : '-';
-  result[3] = (m & S_IRGRP) ? 'r' : '-';
-  result[4] = (m & S_IWGRP) ? 'w' : '-';
-  result[5] = (m & S_IXGRP) ? 'x' : '-';
-  result[6] = (m & S_IROTH) ? 'r' : '-';
-  result[7] = (m & S_IWOTH) ? 'w' : '-';
-  result[8] = (m & S_IXOTH) ? 'x' : '-';
-#endif
-  return 9;
 }

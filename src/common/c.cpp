@@ -148,7 +148,19 @@ uintmax_t fs_space_available(const char* path){
   return fs_space_available(std::string_view(path)).value_or(0);
 }
 
+bool fs_set_permissions(const char* path, int readable, int writable, int executable){
+  return fs_set_permissions(std::string_view(path), readable, writable, executable);
+}
+
+bool fs_remove(const char* path){ return fs_remove(std::string_view(path)); }
+
+bool fs_is_char_device(const char* path){ return fs_is_char_device(std::string_view(path)); }
+
+bool fs_is_dir(const char* path){ return fs_is_dir(std::string_view(path)); }
+
 bool fs_exists(const char* path){ return fs_exists(std::string_view(path)); }
+
+bool fs_is_file(const char* path){ return fs_is_file(std::string_view(path)); }
 
 bool fs_create_symlink(const char* target, const char* link){
   return fs_create_symlink(std::string_view(target), std::string_view(link));
@@ -159,4 +171,9 @@ bool fs_is_symlink(const char* path){ return fs_is_symlink(std::string_view(path
 std::string::size_type fs_read_symlink(const char* path,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(fs_read_symlink(path).value_or(""), result, buffer_size);
+}
+
+std::string::size_type fs_get_permissions(const char* path,
+                         char* result, const std::string::size_type buffer_size){
+  return fs_str2char(fs_get_permissions(path).value_or(""), result, buffer_size);
 }

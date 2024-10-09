@@ -11,7 +11,7 @@ bool Ffs::copy_file(std::string_view source, std::string_view dest, bool overwri
     opt = std::filesystem::copy_options::overwrite_existing;
 // WORKAROUND: Windows MinGW GCC 11..13, Intel oneAPI Linux: bug with overwrite_existing failing on overwrite
 
-  if(overwrite && Ffs::is_file(dest) && !Ffs::remove(dest)) FFS_UNLIKELY
+  if(overwrite && fs_is_file(dest) && !fs_remove(dest)) FFS_UNLIKELY
     std::cerr << "ERROR:Ffs::copy_file: could not remove existing destination file: " << dest << "\n";
 
   std::error_code ec;

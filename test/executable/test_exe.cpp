@@ -43,24 +43,24 @@ if(Ffs::is_exe(""))
     err("test_exe: is_exe('') should be false");
 
 // Non-existent file
-if (Ffs::is_file("not-exist"))
+if (fs_is_file("not-exist"))
     err("test_exe: not-exist-file should not exist.");
 if (Ffs::is_exe("not-exist"))
     err("test_exe: not-exist-file cannot be executable");
-auto p = Ffs::get_permissions("not-exist");
+auto p = fs_get_permissions("not-exist");
 if(p)
     err("test_exe: get_permissions('not-exist') should faile");
 
 Ffs::touch(exe);
 Ffs::touch(noexe);
 
-Ffs::set_permissions(exe, 0, 0, 1);
-Ffs::set_permissions(noexe, 0, 0, -1);
+fs_set_permissions(exe, 0, 0, 1);
+fs_set_permissions(noexe, 0, 0, -1);
 
 if(Ffs::is_exe(Ffs::parent(exe)))
     err("test_exe: is_exe() should not detect directory " + Ffs::parent(exe));
 
-p = Ffs::get_permissions(exe);
+p = fs_get_permissions(exe);
 if(!p)
   err("test_exe: get_permissions(" + exe + ") failed");
 
@@ -69,7 +69,7 @@ std::cout << "permissions: " << exe << " = " << p.value() << "\n";
 if (!Ffs::is_exe(exe))
   err("test_exe: " + exe + " is not executable and should be.");
 
-p = Ffs::get_permissions(noexe);
+p = fs_get_permissions(noexe);
 if(!p)
   err("test_exe: get_permissions(" + noexe + ") failed");
 std::cout << "permissions: " << noexe << " = " << p.value() << "\n";
@@ -85,23 +85,23 @@ if (Ffs::is_exe(noexe)){
 
 // chmod setup
 
-Ffs::remove(exe);
-Ffs::remove(noexe);
+fs_remove(exe);
+fs_remove(noexe);
 
 // chmod(true)
 Ffs::touch(exe);
-if (!Ffs::is_file(exe))
+if (!fs_is_file(exe))
     err("test_exe: " + exe + " is not a file.");
 
-p = Ffs::get_permissions(exe);
+p = fs_get_permissions(exe);
 if(!p)
   err("test_exe: get_permissions(" + exe + ") failed");
 
 std::cout << "permissions before chmod(" << exe << ", true)  = " << p.value() << "\n";
 
-Ffs::set_permissions(exe, 0, 0, 1);
+fs_set_permissions(exe, 0, 0, 1);
 
-p = Ffs::get_permissions(exe);
+p = fs_get_permissions(exe);
 if(!p)
   err("test_exe: get_permissions(" + exe + ") failed after set");
 std::cout << "permissions after chmod(" << exe << ", true) = " << p.value() << "\n";
@@ -121,17 +121,17 @@ if (!fs_is_windows() && p.value()[2] != 'x'){
 
 // chmod(false)
 Ffs::touch(noexe);
-if (!Ffs::is_file(noexe))
+if (!fs_is_file(noexe))
     err("test_exe: " + noexe + " is not a file.");
 
-p = Ffs::get_permissions(noexe);
+p = fs_get_permissions(noexe);
 if(!p)
   err("test_exe: get_permissions(" + noexe + ") failed after touch");
 std::cout << "permissions before chmod(" << noexe << ", false)  = " << p.value() << "\n";
 
-Ffs::set_permissions(noexe, 0, 0, 0);
+fs_set_permissions(noexe, 0, 0, 0);
 
-p = Ffs::get_permissions(noexe);
+p = fs_get_permissions(noexe);
 if(!p)
   err("test_exe: get_permissions(" + noexe + ") failed after set");
 
@@ -163,8 +163,8 @@ if(r.length() == 0)
 std::cout << "Ffs::which(" << exe << ") " << r << "\n";
 
 
-Ffs::remove(exe);
-Ffs::remove(noexe);
+fs_remove(exe);
+fs_remove(noexe);
 
 std::cout << "OK: c++ test_exe\n";
 

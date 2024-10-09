@@ -35,6 +35,7 @@ comm_src = files(
 'src/common/cygwin.c',
 'src/common/exepath.cpp',
 'src/common/env.cpp',
+'src/common/filesystem.cpp',
 'src/common/home.cpp',
 'src/common/inquire2.cpp',
 'src/common/libpath.cpp',
@@ -62,7 +63,6 @@ cwalk_inc = []
 
 cppsrcs = files(
 'src/common/copy.cpp',
-'src/common/filesystem.cpp',
 'src/common/c_ifc.cpp',
 'src/common/ifc.cpp',
 'src/common/inquire.cpp',
@@ -81,7 +81,6 @@ cwalk_inc = cwalk_proj.get_variable('cwalk_inc')
 
 cppsrcs = []
 comm_src += files('src/c/copy.c',
-'src/c/filesystem.c',
 'src/c/inquire.c',
 'src/c/mkdir.c',
 'src/c/platform.c',

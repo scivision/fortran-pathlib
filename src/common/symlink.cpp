@@ -91,7 +91,7 @@ bool fs_create_symlink(std::string_view target, std::string_view link)
 #elif defined(HAVE_CXX_FILESYSTEM)
   std::error_code ec;
 
-  Ffs::is_dir(target)
+  fs_is_dir(target)
     ? std::filesystem::create_directory_symlink(target, link, ec)
     : std::filesystem::create_symlink(target, link, ec);
 

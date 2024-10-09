@@ -69,11 +69,6 @@ std::map<std::string_view, std::function<std::string(std::string_view)>> s_s =
     {"getenv", Ffs::get_env}
   };
 
-std::map<std::string_view, std::function<std::optional<std::string>(std::string_view)>> s_so =
-  {
-    {"perm", Ffs::get_permissions}
-  };
-
 std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool, bool)>> ssb =
   {
     {"canonical", Ffs::canonical},
@@ -82,15 +77,11 @@ std::map<std::string_view, std::function<std::optional<std::string>(std::string_
 
 std::map<std::string_view, std::function<bool(std::string_view)>> b_s =
   {
-    {"is_dir", Ffs::is_dir},
     {"is_exe", Ffs::is_exe},
-    {"is_file", Ffs::is_file},
-    {"remove", Ffs::remove},
     {"is_reserved", Ffs::is_reserved},
     {"is_readable", Ffs::is_readable},
     {"is_writable", Ffs::is_writable},
     {"is_absolute", Ffs::is_absolute},
-    {"is_char", Ffs::is_char_device},
     {"mkdir", Ffs::mkdir},
     {"is_safe", Ffs::is_safe_name}
   };
@@ -112,10 +103,14 @@ else if (ssb.contains(fname))
   h = ssb[fname](path, strict, expand_tilde).value_or("");
 else if (s_s.contains(fname))
   h = s_s[fname](path);
-else if (s_so.contains(fname))
-  h = s_so[fname](path).value_or("");
 else if (fname == "exists")
   b = fs_exists(path);
+else if (fname == "is_dir")
+  b = fs_is_dir(path);
+else if (fname == "is_char")
+  b = fs_is_char_device(path);
+else if (fname == "is_file")
+  b = fs_is_file(path);
 else if (fname == "is_symlink")
   b = fs_is_symlink(path);
 else if (fname == "read_symlink")

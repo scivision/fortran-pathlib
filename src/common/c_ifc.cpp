@@ -3,13 +3,7 @@
 
 #include "ffilesystem.h"
 
-bool fs_is_char_device(const char* path){ return Ffs::is_char_device(path); }
-
-bool fs_is_dir(const char* path){ return Ffs::is_dir(path); }
-
 bool fs_is_exe(const char* path){ return Ffs::is_exe(path); }
-
-bool fs_is_file(const char* path){ return Ffs::is_file(path); }
 
 bool fs_is_readable(const char* path){ return Ffs::is_readable(path); }
 
@@ -34,10 +28,6 @@ std::string::size_type fs_get_cwd(char* path, const std::string::size_type buffe
   return fs_str2char(Ffs::get_cwd().value_or(""), path, buffer_size);
 }
 
-std::string::size_type fs_get_permissions(const char* path,
-                         char* result, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::get_permissions(path).value_or(""), result, buffer_size);
-}
 
 std::string::size_type fs_file_name(const char* path,
                          char* result, const std::string::size_type buffer_size){
@@ -107,8 +97,6 @@ bool fs_copy_file(const char* source, const char* dest, bool overwrite){
 
 bool fs_mkdir(const char* path){ return Ffs::mkdir(path); }
 
-bool fs_remove(const char* path){ return Ffs::remove(path); }
-
 bool fs_set_modtime(const char* path){ return Ffs::set_modtime(path); }
 
 #ifdef HAVE_MERSENNE_TWISTER
@@ -116,7 +104,3 @@ std::string::size_type fs_mkdtemp(char* result, const std::string::size_type buf
   return fs_str2char(Ffs::mkdtemp("tmp."), result, buffer_size);
 }
 #endif
-
-bool fs_set_permissions(const char* path, int readable, int writable, int executable){
-  return Ffs::set_permissions(path, readable, writable, executable);
-}

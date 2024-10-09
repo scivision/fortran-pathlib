@@ -48,8 +48,8 @@ int main(){
     if(!Ffs::with_suffix("", "").empty())
       err("Ffs::with_suffix");
 
-    if(Ffs::is_char_device(""))
-      err("Ffs::is_char_device");
+    if(fs_is_char_device(""))
+      err("is_char_device");
 
     if(Ffs::is_reserved(""))
       err("Ffs::is_reserved");
@@ -75,17 +75,17 @@ int main(){
     if(Ffs::is_absolute(""))
       err("Ffs::is_absolute");
 
-    if(Ffs::is_dir(""))
-      err("Ffs::is_dir");
+    if(fs_is_dir(""))
+      err("is_dir");
 
     if(Ffs::is_exe(""))
       err("Ffs::is_exe");
 
-    if(Ffs::is_file(""))
-      err("Ffs::is_file");
+    if(fs_is_file(""))
+      err("is_file");
 
-    if(Ffs::remove(""))
-      err("Ffs::remove");
+    if(fs_remove(""))
+      err("remove");
 
     if(Ffs::canonical("", false, false))
       err("Ffs::canonical");
@@ -111,7 +111,7 @@ int main(){
       if(fs_space_available(""))
         err("space_available");
 
-      if(Ffs::set_permissions("", 0, 0, 0))
+      if(fs_set_permissions("", 0, 0, 0))
         err("set_permissions");
 
     }
