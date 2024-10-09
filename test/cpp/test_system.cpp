@@ -46,6 +46,33 @@ int main(){
   else
     std::cout << "OK: compiler: " << compiler << "\n";
 
+  std::string shell = fs_get_shell();
+  if (shell.empty()){
+    std::cerr << "unknown shell\n";
+    skip++;
+  }
+  else if (shell.length() == max_path){
+    std::cerr << "ERROR: shell has blank space\n";
+    fail++;
+  }
+  else
+    std::cout << "OK: shell: " << shell << "\n";
+
+  std::string terminal = fs_get_terminal();
+  if (terminal.empty()){
+    std::cerr << "unknown terminal\n";
+    skip++;
+  }
+  else if (terminal.length() == max_path){
+    std::cerr << "ERROR: terminal has blank space\n";
+    fail++;
+  }
+  else
+    std::cout << "OK: terminal: " << terminal << "\n";
+
+
+// -----------------
+
   std::cout << "skip: " << skip << " fail: " << fail << "\n";
 
   if(fail)

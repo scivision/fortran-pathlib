@@ -201,8 +201,13 @@ std::string fs_get_shell()
                                 PROCESS_VM_READ,
                                 FALSE, pe.th32ParentProcessID );
           if ( EnumProcessModules( hProcess, &hMod, sizeof(hMod), &cbNeeded) ) {
-              GetModuleBaseName( hProcess, hMod, name.data(), (DWORD) m );
+              const auto L = GetModuleBaseNameA( hProcess, hMod, name.data(), (DWORD) m );
               CloseHandle( hProcess );
+              if(L == 0){
+                fs_print_error(name, "get_shell:GetModuleBaseName");
+                return {};
+              }
+              name.resize(L);
               break;
           }
           CloseHandle( hProcess );
