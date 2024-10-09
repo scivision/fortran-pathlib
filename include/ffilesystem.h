@@ -93,8 +93,6 @@ public:
   [[nodiscard]] static std::string absolute(std::string_view, const bool);
   [[nodiscard]] static std::string absolute(std::string_view, std::string_view, const bool);
 
-  [[nodiscard]] static std::optional<uintmax_t> file_size(std::string_view);
-
   [[nodiscard]] static std::string mkdtemp(std::string_view);
 
   [[nodiscard]] static std::string shortname(std::string_view);
@@ -135,45 +133,45 @@ public:
 
 // C++ functions available without C++17 filesystem too
 
-std::string::size_type fs_str2char(std::string_view, char*, const std::string::size_type);
+[[nodiscard]] std::string::size_type fs_str2char(std::string_view, char*, const std::string::size_type);
 
 void fs_print_error(std::string_view, std::string_view);
 bool fs_win32_create_symlink(std::string_view, std::string_view);
 
-std::string fs_longname(std::string_view);
-std::string fs_shortname(std::string_view);
+[[nodiscard]] std::string fs_longname(std::string_view);
+[[nodiscard]] std::string fs_shortname(std::string_view);
 
-std::string fs_hostname();
-std::string fs_cpu_arch();
+[[nodiscard]] std::string fs_hostname();
+[[nodiscard]] std::string fs_cpu_arch();
 
-std::string fs_compiler();
+[[nodiscard]] std::string fs_compiler();
 
-std::string fs_getenv(std::string_view);
+[[nodiscard]] std::string fs_getenv(std::string_view);
 
-std::string fs_get_shell();
-std::string fs_get_terminal();
+[[nodiscard]] std::string fs_get_shell();
+[[nodiscard]] std::string fs_get_terminal();
 bool fs_setenv(std::string_view, std::string_view);
 
-std::string fs_get_homedir();
-std::string fs_get_profile_dir();
-std::string fs_user_config_dir();
-std::string fs_get_username();
+[[nodiscard]] std::string fs_get_homedir();
+[[nodiscard]] std::string fs_get_profile_dir();
+[[nodiscard]] std::string fs_user_config_dir();
+[[nodiscard]] std::string fs_get_username();
 
-std::string fs_expanduser(std::string_view);
+[[nodiscard]] std::string fs_expanduser(std::string_view);
 
 bool fs_touch(std::string_view);
 
-size_t fs_max_component(std::string_view);
+[[nodiscard]] size_t fs_max_component(std::string_view);
 
-std::string fs_as_posix(std::string_view);
-std::string fs_lib_path();
-std::string fs_exe_path();
+[[nodiscard]] std::string fs_as_posix(std::string_view);
+[[nodiscard]] std::string fs_lib_path();
+[[nodiscard]] std::string fs_exe_path();
 
-std::string fs_realpath(std::string_view);
-std::string fs_trim(std::string r);
+[[nodiscard]] std::string fs_realpath(std::string_view);
+[[nodiscard]] std::string fs_trim(std::string r);
 
-bool fs_is_absolute(std::string_view path);
-bool fs_is_symlink(std::string_view);
+[[nodiscard]] bool fs_is_absolute(std::string_view path);
+[[nodiscard]] bool fs_is_symlink(std::string_view);
 bool fs_create_symlink(std::string_view, std::string_view);
 
 bool fs_set_permissions(std::string_view, int, int, int);
@@ -181,15 +179,17 @@ bool fs_set_permissions(std::string_view, int, int, int);
 [[nodiscard]] bool fs_exists(std::string_view path);
 [[nodiscard]] bool fs_is_file(std::string_view);
 
-std::string fs_root(std::string_view path);
+[[nodiscard]] std::string fs_root(std::string_view path);
 
-std::optional<uintmax_t> fs_space_available(std::string_view);
-std::optional<std::string> fs_read_symlink(std::string_view);
+[[nodiscard]] std::optional<uintmax_t> fs_space_available(std::string_view);
+[[nodiscard]] std::optional<std::string> fs_read_symlink(std::string_view);
 
 [[nodiscard]] std::optional<std::string> fs_get_permissions(std::string_view);
 
 [[nodiscard]] bool fs_is_char_device(std::string_view);
 [[nodiscard]] bool fs_is_dir(std::string_view);
+
+[[nodiscard]] std::optional<uintmax_t> fs_file_size(std::string_view);
 
 bool fs_remove(std::string_view);
 

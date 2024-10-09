@@ -14,22 +14,13 @@
 #include "ffilesystem.h"
 
 #include <stdbool.h>
-#include <stdint.h>  // uintmax_t
-#include <string.h>
 
 #if defined(_MSC_VER)
 #define WIN32_LEAN_AND_MEAN
 #include <io.h> // _access_s
 #else
-#include <unistd.h>
+#include <unistd.h> // access
 #endif
-
-// preferred import order for stat()
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <errno.h>
-
-#include <stdio.h>
 
 
 bool
@@ -72,16 +63,4 @@ fs_is_writable(const char* path)
 #else
   return !access(path, W_OK);
 #endif
-}
-
-
-uintmax_t
-fs_file_size(const char* path)
-{
-  struct stat s;
-  if (!stat(path, &s))
-    return s.st_size;
-
-  fprintf(stderr, "ERROR:ffilesystem:file_size: %s => %s\n", path, strerror(errno));
-  return 0;
 }

@@ -34,7 +34,7 @@ int main(int argc, char *argv[]){
 
   std::string drive(argv[0]);
 
-  if(!Ffs::file_size(drive))
+  if(!fs_file_size(drive))
     err("failed to get own file size");
 
   auto avail = fs_space_available(drive);

@@ -5,8 +5,10 @@
 
 #include "ffilesystem.h"
 
+#include <optional>
 #include <string_view>
 #include <system_error>
+#include <iostream>
 
 // inquire.cpp
 // ------------
@@ -34,7 +36,7 @@ fs_st_mode(std::string_view path)
 {
   struct stat s;
   if(stat(path.data(), &s)){
-    // fprintf(stderr, "ERROR:ffilesystem:fs_st_mode: %s => %s\n", path, strerror(errno));
+    // std::cerr << "ERROR:ffilesystem:fs_st_mode(" << path << ") " << strerror(errno)) << "\n";
     return 0;
   }
 
@@ -104,6 +106,26 @@ bool fs_is_char_device(std::string_view path)
   // Windows: https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fstat-fstat32-fstat64-fstati64-fstat32i64-fstat64i32
   return fs_st_mode(path) & S_IFCHR;
   // S_ISCHR not available with MSVC
+#endif
+}
+
+
+std::optional<uintmax_t> fs_file_size(std::string_view path)
+{
+#ifdef HAVE_CXX_FILESYSTEM
+  std::error_code ec;
+  if(auto s = std::filesystem::file_size(path, ec); !ec)  FFS_LIKELY
+    return s;
+
+  std::cerr << "ERROR:ffilesystem:file_size: " << ec.message() << "\n";
+  return {};
+#else
+  if (struct stat s;
+        !stat(path.data(), &s))
+    return s.st_size;
+
+  fs_print_error(path, "file_size");
+  return {};
 #endif
 }
 

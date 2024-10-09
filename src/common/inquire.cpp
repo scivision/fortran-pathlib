@@ -74,14 +74,3 @@ bool Ffs::is_writable(std::string_view path)
 
   return (s.permissions() & (owner_write | group_write | others_write)) != none;
 }
-
-
-std::optional<uintmax_t> Ffs::file_size(std::string_view path)
-{
-  std::error_code ec;
-  if(auto s = std::filesystem::file_size(path, ec); !ec)  FFS_LIKELY
-    return s;
-
-  std::cerr << "ERROR:ffilesystem:file_size: " << ec.message() << "\n";
-  return {};
-}

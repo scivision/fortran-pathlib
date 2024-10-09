@@ -177,3 +177,7 @@ std::string::size_type fs_get_permissions(const char* path,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(fs_get_permissions(path).value_or(""), result, buffer_size);
 }
+
+uintmax_t fs_file_size(const char* path){
+  return fs_file_size(std::string_view(path)).value_or(0);
+}

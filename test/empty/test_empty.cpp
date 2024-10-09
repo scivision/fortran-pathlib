@@ -103,8 +103,8 @@ int main(){
       err("Ffs::touch");
 
 
-    if(Ffs::file_size(""))
-      err("Ffs::file_size");
+    if(fs_file_size(""))
+      err("file_size");
 
     if(!fs_is_windows()){
 
