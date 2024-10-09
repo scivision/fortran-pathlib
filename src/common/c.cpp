@@ -118,3 +118,8 @@ size_t fs_exe_path(char* path, const size_t buffer_size)
 {
   return fs_str2char(fs_exe_path(), path, buffer_size);
 }
+
+size_t fs_realpath(const char* path, char* result, const size_t buffer_size)
+{
+  return fs_str2char(fs_realpath(path), result, buffer_size);
+}

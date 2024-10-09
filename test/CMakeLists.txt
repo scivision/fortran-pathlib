@@ -20,7 +20,7 @@ if(ffilesystem_bench)
   add_subdirectory(bench)
 endif()
 
-foreach(t IN ITEMS canonical_resolve cpp fortran core empty environment
+foreach(t IN ITEMS cpp fortran core empty environment
   executable exepath
   fileops libpath overflow permissions relative reserved symlink windows)
 

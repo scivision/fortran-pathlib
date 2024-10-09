@@ -182,6 +182,9 @@ std::string fs_as_posix(std::string_view);
 std::string fs_lib_path();
 std::string fs_exe_path();
 
+std::string fs_realpath(std::string_view);
+std::string fs_trim(std::string r);
+
 // ---------------------------------------------------------------------------
 
 extern "C" {

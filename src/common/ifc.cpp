@@ -71,14 +71,7 @@ std::string Ffs::get_owner_group(std::string_view path)
 std::string Ffs::get_hostname(){ return fs_hostname(); }
 
 
-std::string Ffs::realpath(std::string_view path)
-{
-  if(std::string buf(fs_get_max_path(), '\0');
-      fs_realpath(path.data(), buf.data(), buf.size()) > 0)  FFS_LIKELY
-    return buf.c_str();
-
-  return {};
-}
+std::string Ffs::realpath(std::string_view path) { return fs_realpath(path); }
 
 
 std::string Ffs::get_username(){ return fs_get_username(); }

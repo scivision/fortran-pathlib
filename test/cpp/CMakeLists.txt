@@ -13,12 +13,15 @@ COMMAND ${CMAKE_COMMAND}
 
 endif()
 
-foreach(t IN ITEMS file utf8)
+foreach(t IN ITEMS file system utf8)
   add_executable(test_cpp_${t} test_${t}.cpp)
   target_link_libraries(test_cpp_${t} PRIVATE ffilesystem)
 
   add_test(NAME Cpp_${t} COMMAND test_cpp_${t})
-  set_property(TEST Cpp_${t} PROPERTY LABELS "Cpp")
+  set_tests_properties(Cpp_${t} PROPERTIES
+    LABELS "Cpp"
+    SKIP_RETURN_CODE 77
+    )
 endforeach()
 
 set_tests_properties(Cpp_file PROPERTIES

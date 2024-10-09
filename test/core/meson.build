@@ -1,6 +1,7 @@
 if fortran
 
 core_tests = ['is_absolute', 'absolute',
+'canonical', 'realpath',
 'expanduser',
 'filesystem_type',
 'filesize', 'space',
@@ -14,8 +15,11 @@ core_tests += 'path_t'
 endif
 
 foreach t : core_tests
+
 tec = executable(t + '_fortran', 'test_' + t + '.f90', link_with: filesystem, include_directories: inc)
-    test(t + '_fortran', tec, suite: 'fortran')
+
+test(t + '_fortran', tec, suite: 'fortran')
+
 endforeach
 
 endif
@@ -23,7 +27,15 @@ endif
 
 if use_cpp
 
-t_cpp = executable('core_cpp', 'cpp/test_core.cpp', link_with: filesystem, include_directories: inc)
-test('core_cpp', t_cpp, suite: 'cpp')
+cpp_core = ['canonical', 'core', 'expanduser']
+
+foreach t : cpp_core
+
+t_cpp = executable(t + '_cpp', 'cpp/test_' + t + '.cpp', link_with: filesystem, include_directories: inc)
+
+test(t + '_cpp', t_cpp, suite: 'cpp')
+
+endforeach
+
 
 endif

@@ -184,6 +184,8 @@ main : do
     print '(i0)', space_available(arg1)
   case ("hostname")
     print '(A)', hostname()
+  case ("loadavg")
+    print '(f7.3)', loadavg()
   case ("username")
     print '(A)', get_username()
   case ("mkdir")

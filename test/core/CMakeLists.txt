@@ -3,6 +3,7 @@ set_property(DIRECTORY PROPERTY LABELS "core")
 if(HAVE_Fortran_FILESYSTEM)
 
 set(tests is_absolute absolute
+canonical realpath
 expanduser
 filename
 filesize space
@@ -56,12 +57,17 @@ FIXTURES_REQUIRED is_absolute
 
 set_tests_properties(Fortran_filesystem_type Fortran_space PROPERTIES FIXTURES_REQUIRED root)
 
+set_tests_properties(Fortran_canonical PROPERTIES
+FIXTURES_REQUIRED "expanduser"
+FIXTURES_SETUP "canonical"
+)
+
 endif()
 
 
 if(HAVE_CXX_FILESYSTEM)
 
-foreach(t IN ITEMS expanduser core)
+foreach(t IN ITEMS canonical expanduser core)
   add_executable(test_cpp_${t} cpp/test_${t}.cpp)
   target_link_libraries(test_cpp_${t} PRIVATE ffilesystem)
 

@@ -29,7 +29,7 @@ comm_src = files(
 'src/common/c.cpp',
 'src/common/common.c',
 'src/common/compiler.cpp',
-'src/common/cpu.c',
+'src/common/cpu.cpp',
 'src/common/cygwin.c',
 'src/common/exepath.cpp',
 'src/common/env.cpp',
@@ -40,7 +40,7 @@ comm_src = files(
 'src/common/owner.c',
 'src/common/os.c',
 'src/common/partition.c',
-'src/common/realpath.c',
+'src/common/realpath.cpp',
 'src/common/sysctl.cpp',
 'src/common/touch.cpp',
 'src/common/uid.cpp',
@@ -272,10 +272,7 @@ executable('filesystem_cli',
 endif
 
 if not meson.is_subproject()
-  foreach d : [
-      'canonical_resolve', 'core', 'environment', 'executable',
-      'fortran', 'permissions', 'relative'
-      ]
+  foreach d : ['core', 'environment', 'executable', 'fortran', 'permissions', 'relative']
     subdir('test/' + d)
   endforeach
 
