@@ -35,7 +35,7 @@ endif()
 if(UNIX)
   list(APPEND CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS})
   set(CMAKE_REQUIRED_DEFINITIONS -D_GNU_SOURCE)
-  check_symbol_exists(dladdr "dlfcn.h" ffilesystem_HAVE_DLADDR)
+  check_cxx_symbol_exists(dladdr "dlfcn.h" ffilesystem_HAVE_DLADDR)
 
   set(CMAKE_REQUIRED_DEFINITIONS -D_DEFAULT_SOURCE)
   check_symbol_exists(getloadavg "stdlib.h" ffilesystem_HAVE_GETLOADAVG)

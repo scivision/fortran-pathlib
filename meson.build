@@ -17,6 +17,7 @@ message('C++ standard: ' + cpp_std)
 fs = import('fs')
 
 cc = meson.get_compiler('c')
+cpp = meson.get_compiler('cpp')
 
 if ['gcc', 'clang', 'intel-llvm'].contains(cc.get_id())
   add_project_arguments('-Werror=implicit-function-declaration', language: 'c')
@@ -97,13 +98,13 @@ dladdr_def = []
 dl = []
 
 if not is_windows
-  dl = cc.find_library('dl', required: false)
+  dl = cpp.find_library('dl', required: false)
 
-  have_dladdr = cc.links('''#define _GNU_SOURCE
+  have_dladdr = cpp.links('''#define _GNU_SOURCE
   #include <dlfcn.h>
   static void dl_dummy_func() {}
 
-  int main(void){
+  int main(){
 
   Dl_info info;
   if(!dladdr( (void*)&dl_dummy_func, &info))
@@ -144,8 +145,6 @@ chrono_def = []
 mkdtemp_def = []
 
 fs_lib = []
-
-cpp = meson.get_compiler('cpp')
 
 if use_cpp
 
@@ -252,8 +251,8 @@ filesystem = library('filesystem',
 sources: [fsrcs, comm_src, cppsrcs],
 include_directories: [cwalk_inc, inc],
 install: true,
-c_args: [mkdtemp_def, dladdr_def, getloadavg_def],
-cpp_args: [chrono_def, mkdtemp_def, win32_symlink_def],
+c_args: [mkdtemp_def, getloadavg_def],
+cpp_args: [chrono_def, dladdr_def, mkdtemp_def, win32_symlink_def],
 fortran_args: f03type_def,
 dependencies: [libwin, fs_lib, dl],
 link_with: cwalk_dep
