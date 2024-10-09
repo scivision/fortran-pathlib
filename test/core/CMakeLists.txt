@@ -3,6 +3,7 @@ set_property(DIRECTORY PROPERTY LABELS "core")
 if(HAVE_Fortran_FILESYSTEM)
 
 set(tests is_absolute absolute
+expanduser
 filename
 filesize space
 filesystem_type
@@ -43,7 +44,10 @@ set_tests_properties(Fortran_absolute PROPERTIES
 FIXTURES_SETUP absolute
 FIXTURES_REQUIRED "is_absolute;join"
 )
-set_tests_properties(Fortran_resolve PROPERTIES FIXTURES_REQUIRED absolute)
+set_tests_properties(Fortran_expanduser PROPERTIES FIXTURES_SETUP expanduser)
+
+set_tests_properties(Fortran_resolve PROPERTIES
+FIXTURES_REQUIRED "absolute;canonical")
 
 set_tests_properties(Fortran_root PROPERTIES
 FIXTURES_SETUP root
@@ -57,11 +61,12 @@ endif()
 
 if(HAVE_CXX_FILESYSTEM)
 
-# --- C++
-add_executable(test_cpp_core cpp/test_core.cpp)
-target_link_libraries(test_cpp_core PRIVATE ffilesystem)
+foreach(t IN ITEMS expanduser core)
+  add_executable(test_cpp_${t} cpp/test_${t}.cpp)
+  target_link_libraries(test_cpp_${t} PRIVATE ffilesystem)
 
-add_test(NAME Cpp_core COMMAND test_cpp_core)
-set_property(TEST Cpp_core PROPERTY LABELS Cpp)
+  add_test(NAME Cpp_${t} COMMAND test_cpp_${t})
+  set_property(TEST Cpp_${t} PROPERTY LABELS Cpp)
+endforeach()
 
 endif()

@@ -22,7 +22,7 @@ endif()
 
 foreach(t IN ITEMS canonical_resolve cpp fortran core empty environment
   executable exepath
-  expanduser fileops libpath overflow permissions relative reserved symlink windows)
+  fileops libpath overflow permissions relative reserved symlink windows)
 
 add_subdirectory(${t})
 

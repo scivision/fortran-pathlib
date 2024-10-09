@@ -1,7 +1,6 @@
-#include <stdio.h>
-#include <errno.h>
-#include <stdbool.h>
-#include <string.h>
+#include <cerrno>
+
+#include "ffilesystem.h"
 
 #ifdef __APPLE__
 #include <sys/sysctl.h>
@@ -13,9 +12,9 @@ bool fs_is_rosetta() {
     int ret = 0;
     size_t size = sizeof(ret);
 
-    if (sysctlbyname("sysctl.proc_translated", &ret, &size, NULL, 0) < 0) {
+    if (sysctlbyname("sysctl.proc_translated", &ret, &size, nullptr, 0) < 0) {
         if (errno != ENOENT)
-            fprintf(stderr, "ERROR:fs_is_rosetta:sysctlbyname: %s\n", strerror(errno));
+            fs_print_error("sysctl.proc_translated", "fs_is_rosetta");
         return false;
     }
 

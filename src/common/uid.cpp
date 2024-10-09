@@ -1,6 +1,3 @@
-#include <stdbool.h>
-#include <stdio.h>
-
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>  // GetTokenInformation
@@ -9,13 +6,15 @@
 #include <sys/types.h>  // geteuid, pid_t
 #endif
 
+#include <string>
+
 #include "ffilesystem.h"
 
 
 bool fs_is_admin(){
   // running as admin / root / superuser
 #ifdef _WIN32
-	HANDLE hToken = NULL;
+	HANDLE hToken = nullptr;
 	TOKEN_ELEVATION elevation;
 	DWORD dwSize;
 
@@ -43,20 +42,23 @@ int fs_getpid()
 }
 
 
-size_t fs_get_terminal(char* name, const size_t buffer_size)
+std::string fs_get_terminal()
 {
 #ifdef _WIN32
+  std::string name(fs_get_max_path(), '\0');
   // inspired by https://gitlab.kitware.com/utils/kwsys/-/commit/0d6eac1feb8615fe59e8f972d41d1eaa8bc9baf8
-  int const L = GetClassNameA(GetConsoleWindow(), name, (int) buffer_size);
+  int const L = GetClassNameA(GetConsoleWindow(), name.data(), (int) name.size());
   // Windows Console Host: ConsoleWindowClass
   // Windows Terminal / ConPTY: PseudoConsoleWindow (undocumented)
-  if(L > 0)
-    return (size_t) L;
+  if(L > 0){
+    name.resize(L);
+    return name;
+  }
 
   fs_print_error(name, "get_terminal");
-  return 0;
+  return {};
 #else
-  return fs_getenv("TERM", name, buffer_size);
+  return fs_getenv("TERM");
 #endif
 
 }

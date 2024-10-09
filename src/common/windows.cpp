@@ -54,7 +54,7 @@ std::string fs_longname(std::string_view in)
   std::string out(fs_get_max_path(), '\0');
 // size does not include null terminator
   auto L = GetLongPathNameA(in.data(), out.data(), (DWORD) out.size());
-  if(L > 0 && L < out.size()){
+  if(L > 0 && L < out.length()){
     out.resize(L);
     return out;
   }
@@ -75,7 +75,7 @@ std::string fs_shortname(std::string_view in)
   std::string out(fs_get_max_path(), '\0');
 // size does not include null terminator
   auto L = GetShortPathNameA(in.data(), out.data(), (DWORD) out.size());
-  if(L > 0 && L < out.size()){
+  if(L > 0 && L < out.length()){
     out.resize(L);
     return out;
   }

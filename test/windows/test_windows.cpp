@@ -24,12 +24,7 @@ _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
 _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-std::string long_path;
-
-if(argc < 2)
-  long_path = std::getenv("PROGRAMFILES");
-else
-  long_path = argv[1];
+std::string long_path = (argc < 2) ? fs_getenv("PROGRAMFILES") : argv[1];
 
 if (long_path.empty())
   err("input is empty");

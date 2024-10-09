@@ -159,6 +159,25 @@ std::string fs_shortname(std::string_view);
 std::string fs_hostname();
 std::string fs_cpu_arch();
 
+std::string fs_compiler();
+
+std::string fs_getenv(std::string_view);
+
+std::string fs_get_shell();
+std::string fs_get_terminal();
+bool fs_setenv(std::string_view, std::string_view);
+
+std::string fs_get_homedir();
+std::string fs_get_profile_dir();
+std::string fs_user_config_dir();
+std::string fs_get_username();
+
+std::string fs_expanduser(std::string_view);
+
+bool fs_touch(std::string_view);
+
+size_t fs_max_component(std::string_view);
+
 // ---------------------------------------------------------------------------
 
 extern "C" {

@@ -31,18 +31,18 @@ comm_src = files(
 'src/common/cpu.c',
 'src/common/cygwin.c',
 'src/common/exepath.c',
-'src/common/env.c',
-'src/common/home.c',
+'src/common/env.cpp',
+'src/common/home.cpp',
 'src/common/mkdtemp.c',
 'src/common/libpath.c',
-'src/common/limits.c',
+'src/common/limits.cpp',
 'src/common/owner.c',
 'src/common/os.c',
 'src/common/partition.c',
 'src/common/realpath.c',
-'src/common/sysctl.c',
+'src/common/sysctl.cpp',
 'src/common/touch.c',
-'src/common/uid.c',
+'src/common/uid.cpp',
 'src/common/uname.cpp',
 'src/common/which.c',
 'src/common/winsock.cpp',
@@ -274,7 +274,7 @@ endif
 
 if not meson.is_subproject()
   foreach d : [
-      'canonical_resolve', 'core', 'environment', 'executable', 'expanduser',
+      'canonical_resolve', 'core', 'environment', 'executable',
       'fortran', 'permissions', 'relative'
       ]
     subdir('test/' + d)

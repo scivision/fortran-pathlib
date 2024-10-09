@@ -23,34 +23,13 @@ std::string Ffs::compiler()
 }
 
 
-std::string Ffs::get_shell()
-{
-  if(std::string buf(80, '\0');
-      fs_get_shell(buf.data(), buf.size()) > 0)  FFS_LIKELY
-    return buf.c_str();
-
-  return {};
-}
+std::string Ffs::get_shell(){ return fs_get_shell(); }
 
 
-std::string Ffs::get_terminal()
-{
-  if(std::string buf(fs_get_max_path(), '\0');
-      fs_get_terminal(buf.data(), buf.size()) > 0)  FFS_LIKELY
-    return buf.c_str();
-
-  return {};
-}
+std::string Ffs::get_terminal() { return fs_get_terminal();}
 
 
-std::string Ffs::cpu_arch()
-{
-  if(std::string buf(80, '\0');
-      fs_cpu_arch(buf.data(), buf.size()) > 0)  FFS_LIKELY
-    return buf.c_str();
-
-  return {};
-}
+std::string Ffs::cpu_arch() { return fs_cpu_arch(); }
 
 
 std::string Ffs::exe_path()
@@ -63,14 +42,7 @@ std::string Ffs::exe_path()
 }
 
 
-std::string Ffs::expanduser(std::string_view path)
-{
-  if(std::string buf(fs_get_max_path(), '\0');
-      fs_expanduser(path.data(), buf.data(), buf.size())) FFS_LIKELY
-    return buf.c_str();
-
-  return {};
-}
+std::string Ffs::expanduser(std::string_view path){ return fs_expanduser(path); }
 
 
 std::string Ffs::filesystem_type(std::string_view path)
@@ -85,38 +57,16 @@ std::string Ffs::filesystem_type(std::string_view path)
 
 size_t Ffs::max_component(std::string_view path)
 {
-  return fs_max_component(path.data());
+  return fs_max_component(path);
 }
 
 
-std::string Ffs::get_homedir()
-{
-  if(std::string buf(fs_get_max_path(), '\0');
-      fs_get_homedir(buf.data(), buf.size()) > 0)  FFS_LIKELY
-    return buf.c_str();
-
-  return {};
-}
+std::string Ffs::get_homedir(){ return fs_get_homedir(); }
 
 
-std::string Ffs::get_profile_dir()
-{
-  if(std::string buf(fs_get_max_path(), '\0');
-      fs_get_profile_dir(buf.data(), buf.size()) > 0)  FFS_LIKELY
-    return buf.c_str();
+std::string Ffs::get_profile_dir(){ return fs_get_profile_dir(); }
 
-  return {};
-}
-
-
-std::string Ffs::user_config_dir()
-{
-  if(std::string buf(fs_get_max_path(), '\0');
-      fs_user_config_dir(buf.data(), buf.size()) > 0)  FFS_LIKELY
-    return buf.c_str();
-
-  return {};
-}
+std::string Ffs::user_config_dir(){ return fs_user_config_dir(); }
 
 
 std::string Ffs::get_owner_name(std::string_view path)
@@ -152,31 +102,16 @@ std::string Ffs::realpath(std::string_view path)
 }
 
 
-std::string Ffs::get_username()
-{
-  if(std::string buf(fs_get_max_path(), '\0');
-      fs_get_username(buf.data(), buf.size()) > 0)  FFS_LIKELY
-    return buf.c_str();
-
-  return {};
-
-}
+std::string Ffs::get_username(){ return fs_get_username(); }
 
 
 bool Ffs::set_env(std::string_view name, std::string_view value)
 {
-  return fs_setenv(name.data(), value.data());
+  return fs_setenv(name, value);
 }
 
 
-std::string Ffs::get_env(std::string_view name)
-{
-  if(std::string buf(fs_get_max_path(), '\0');
-      fs_getenv(name.data(), buf.data(), buf.size())) FFS_LIKELY
-    return buf.c_str();
-
-  return {};
-}
+std::string Ffs::get_env(std::string_view name) { return fs_getenv(name); }
 
 
 bool Ffs::is_reserved(std::string_view filename)

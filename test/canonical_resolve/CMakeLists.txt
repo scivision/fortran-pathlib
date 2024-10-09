@@ -21,4 +21,9 @@ foreach(t IN ITEMS canonical realpath)
   set_property(TEST Fortran_${t} PROPERTY PROPERTY LABELS "Fortran")
 endforeach()
 
+set_tests_properties(Fortran_canonical PROPERTIES
+FIXTURES_REQUIRED "expanduser"
+FIXTURES_SETUP "canonical"
+)
+
 endif()

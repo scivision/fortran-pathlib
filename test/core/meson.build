@@ -1,6 +1,7 @@
 if fortran
 
 core_tests = ['is_absolute', 'absolute',
+'expanduser',
 'filesystem_type',
 'filesize', 'space',
 'filename', 'is_dir',

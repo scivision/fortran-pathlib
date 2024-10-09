@@ -47,3 +47,64 @@ size_t fs_cpu_arch(char* arch, const size_t buffer_size)
 {
   return fs_str2char(fs_cpu_arch(), arch, buffer_size);
 }
+
+size_t fs_get_terminal(char* name, const size_t buffer_size)
+{
+  return fs_str2char(fs_get_terminal(), name, buffer_size);
+}
+
+size_t fs_get_shell(char* name, const size_t buffer_size)
+{
+  return fs_str2char(fs_get_shell(), name, buffer_size);
+}
+
+
+size_t fs_getenv(const char* name, char* value, const size_t buffer_size)
+{
+  return fs_str2char(fs_getenv(name), value, buffer_size);
+}
+
+bool fs_setenv(const char* name, const char* value)
+{
+  return fs_setenv(std::string_view(name), std::string_view(value));
+}
+
+size_t fs_get_homedir(char* path, const size_t buffer_size)
+{
+  return fs_str2char(fs_get_homedir(), path, buffer_size);
+}
+
+size_t fs_get_profile_dir(char* path, const size_t buffer_size)
+{
+  return fs_str2char(fs_get_profile_dir(), path, buffer_size);
+}
+
+size_t fs_user_config_dir(char* path, const size_t buffer_size)
+{
+  return fs_str2char(fs_user_config_dir(), path, buffer_size);
+}
+
+size_t fs_get_username(char* name, const size_t buffer_size)
+{
+  return fs_str2char(fs_get_username(), name, buffer_size);
+}
+
+size_t fs_expanduser(const char* path, char* result, const size_t buffer_size)
+{
+  return fs_str2char(fs_expanduser(path), result, buffer_size);
+}
+
+bool fs_touch(const char* path)
+{
+  return fs_touch(std::string_view(path));
+}
+
+size_t fs_compiler(char* name, const size_t buffer_size)
+{
+  return fs_str2char(fs_compiler(), name, buffer_size);
+}
+
+size_t fs_max_component(const char* path)
+{
+  return fs_max_component(std::string_view(path));
+}

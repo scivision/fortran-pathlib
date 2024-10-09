@@ -11,6 +11,8 @@
 #endif
 
 #include <stddef.h> // size_t
+#include <string_view>
+#include <iostream>
 
 #include "ffilesystem.h"
 
@@ -30,7 +32,7 @@ size_t fs_get_max_path(){
 }
 
 
-size_t fs_max_component(const char* path)
+size_t fs_max_component(std::string_view path)
 {
   // maximum length of each component of a path. That is, while the maximum
   // total length of a path may be thousands of character, each segment of the
@@ -39,17 +41,17 @@ size_t fs_max_component(const char* path)
 #ifdef _WIN32
   DWORD lpMaximumComponentLength = 0;
 
-  if(!GetVolumeInformationA(path, 0, 0, 0, &lpMaximumComponentLength, 0, 0, 0))
-    fs_print_error(path, "max_name");
+  if(!GetVolumeInformationA(path.data(), 0, 0, 0, &lpMaximumComponentLength, 0, 0, 0))
+    fs_print_error(path, "max_component:GetVolumeInformationA");
 
   return (size_t) lpMaximumComponentLength;
 
 #elif defined(_PC_NAME_MAX)
-  return (size_t) pathconf(path, _PC_NAME_MAX);
+  return (size_t) pathconf(path.data(), _PC_NAME_MAX);
 #elif defined(NAME_MAX)
   return (size_t) NAME_MAX;
 #else
-  fprintf(stderr, "ERROR:ffilesystem:max_component(%s) => function not implemented on this platform\n", path);
+  std::cerr << "ERROR:ffilesystem:max_component(" << path << ") => function not implemented on this platform\n";
   return 0;
 #endif
 }
