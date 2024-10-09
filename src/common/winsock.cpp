@@ -18,9 +18,10 @@ std::string fs_hostname()
   std::string name(fs_get_max_path(), '\0');
 
 #if defined(_WIN32)
-  WSADATA wsaData;
 
-  if(WSAStartup(MAKEWORD(2, 0), &wsaData)){
+
+  if(WSADATA wsaData;
+      WSAStartup(MAKEWORD(2, 0), &wsaData)){
     std::cerr << "ERROR:ffilesystem:fs_hostname: WSAStartup failed\n";
     return {};
   }

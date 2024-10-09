@@ -98,9 +98,9 @@ std::string Ffs::with_suffix(std::string_view path, std::string_view new_suffix)
 
 
 std::string Ffs::root(std::string_view path){
-  auto p = std::filesystem::path(path);
 
-  if(p.is_absolute())
+  if(auto p = std::filesystem::path(path);
+      p.is_absolute())
     return p.root_path().generic_string();
 
   return {};

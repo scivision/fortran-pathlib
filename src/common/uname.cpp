@@ -45,8 +45,9 @@ int fs_is_wsl()
 std::string fs_cpu_arch()
 {
 #if __has_include(<sys/utsname.h>)
-  struct utsname buf;
-  if (uname(&buf) == 0)
+
+  if (struct utsname buf;
+       uname(&buf) == 0)
     return buf.machine;
 
   fs_print_error("", "fs_cpu_arch");

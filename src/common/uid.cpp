@@ -47,10 +47,10 @@ std::string fs_get_terminal()
 #ifdef _WIN32
   std::string name(fs_get_max_path(), '\0');
   // inspired by https://gitlab.kitware.com/utils/kwsys/-/commit/0d6eac1feb8615fe59e8f972d41d1eaa8bc9baf8
-  int const L = GetClassNameA(GetConsoleWindow(), name.data(), (int) name.size());
   // Windows Console Host: ConsoleWindowClass
   // Windows Terminal / ConPTY: PseudoConsoleWindow (undocumented)
-  if(L > 0){
+  if(int const L = GetClassNameA(GetConsoleWindow(), name.data(), (int) name.size());
+      L > 0){
     name.resize(L);
     return name;
   }

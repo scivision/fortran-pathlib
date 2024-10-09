@@ -52,8 +52,9 @@ static struct passwd* fs_getpwuid()
 
 std::string fs_get_homedir()
 {
-  std::string home = fs_getenv(fs_is_windows() ? "USERPROFILE" : "HOME");
-  if(!home.empty())
+
+  if(std::string home = fs_getenv(fs_is_windows() ? "USERPROFILE" : "HOME");
+      !home.empty())
     return fs_as_posix(home);
 
   return fs_get_profile_dir();
@@ -67,7 +68,7 @@ std::string fs_get_profile_dir()
   const std::string::size_type m = fs_get_max_path();
   std::string path(m, '\0');
   // works on MSYS2, MSVC, oneAPI
-  DWORD N = (DWORD) m;
+  auto N = (DWORD) m;
   HANDLE hToken = nullptr;
 
   bool ok = OpenProcessToken( GetCurrentProcess(), TOKEN_QUERY, &hToken) != 0;
@@ -155,7 +156,7 @@ std::string fs_get_username()
   // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getusernamea
   const std::string::size_type m = fs_get_max_path();
   std::string name(m, '\0');
-  DWORD L = (DWORD) m;
+  auto L = (DWORD) m;
   // Windows.h
   if(GetUserNameA(name.data(), &L) == 0){
     fs_print_error("", "get_username:GetUserName");
