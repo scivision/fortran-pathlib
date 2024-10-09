@@ -12,118 +12,6 @@
 #include "ffilesystem_bench.h"
 
 
-std::chrono::duration<double> bench_c(int n, std::string_view path, std::string_view fname, bool verbose)
-{
-
-std::map<std::string_view, std::function<size_t(char*, size_t)>> s_ =
-  {
-    {"compiler", fs_compiler},
-    {"homedir", fs_get_homedir},
-    {"cwd", fs_get_cwd},
-    {"tempdir", fs_get_tempdir}
-  };
-
-std::map<std::string_view, std::function<size_t(const char*, char*, size_t)>> s_s =
-  {
-    {"expanduser", fs_expanduser},
-    {"which", fs_which},
-    {"parent", fs_parent},
-    {"root", fs_root},
-    {"stem", fs_stem},
-    {"suffix", fs_suffix},
-    {"filename", fs_file_name},
-    {"perm", fs_get_permissions},
-    {"read_symlink", fs_read_symlink},
-    {"normal", fs_normal},
-    {"getenv", fs_getenv}
-  };
-
-std::map<std::string_view, std::function<size_t(const char*, bool, bool, char*, size_t)>> ssb =
-  {
-    {"canonical", fs_canonical},
-    {"resolve", fs_resolve}
-  };
-
-std::map<std::string_view, std::function<bool(const char*)>> b_s =
-  {
-    {"is_dir", fs_is_dir},
-    {"is_exe", fs_is_exe},
-    {"is_file", fs_is_file},
-    {"remove", fs_remove},
-    {"is_reserved", fs_is_reserved},
-    {"is_readable", fs_is_readable},
-    {"is_writable", fs_is_writable},
-    {"is_symlink", fs_is_symlink},
-    {"exists", fs_exists},
-    {"is_absolute", fs_is_absolute},
-    {"is_char", fs_is_char_device},
-    {"mkdir", fs_mkdir},
-    {"is_safe", fs_is_safe_name}
-  };
-
-constexpr bool strict = false;
-constexpr bool expand_tilde = false;
-
-// warmup
-auto t = std::chrono::duration<double>::max();
-size_t L=0;
-bool b=false;
-
-std::string buf(fs_get_max_path(), '\0');
-if (b_s.contains(fname))
-  b = b_s[fname](buf.data());
-else if (s_.contains(fname))
-  L = s_[fname](buf.data(), buf.size());
-else if (ssb.contains(fname))
-  L = ssb[fname](path.data(), strict, expand_tilde, buf.data(), buf.size());
-else if (s_s.contains(fname))
-  L = s_s[fname](path.data(), buf.data(), buf.size());
-else
-  {
-    std::cerr << "Error: unknown function " << fname << "\n";
-    return t;
-  }
-if(!b_s.contains(fname) && L == 0){
-  std::cerr << "Error:C: " << fname << " failed on warmup\n";
-  return t;
-}
-
-const std::string first_out = buf;
-
-for (int i = 0; i < n; ++i){
-    auto t0 = std::chrono::steady_clock::now();
-    if (b_s.contains(fname))
-      b = b_s[fname](buf.data());
-    else if (s_.contains(fname))
-      s_[fname](buf.data(), buf.size());
-    else if (ssb.contains(fname))
-      ssb[fname](path.data(), strict, expand_tilde, buf.data(), buf.size());
-    else if (s_s.contains(fname))
-      s_s[fname](path.data(), buf.data(), buf.size());
-
-    auto t1 = std::chrono::steady_clock::now();
-    t = std::min(t, std::chrono::duration_cast<std::chrono::duration<double>>(t1 - t0));
-}
-
-if(verbose)
-  print_c(t, n, path, fname, first_out, b);
-
-return t;
-}
-
-
-void print_c(std::chrono::duration<double> t, int n, std::string_view path, std::string_view func, std::string_view w, bool b)
-{
-  std::chrono::nanoseconds ns = std::chrono::duration_cast<std::chrono::nanoseconds>(t);
-  double us = ns.count() / 1000.0;
-  std::cout << "C: " << n << " x " << func << "(" << path << ") = ";
-  if(w.empty())
-    std::cout << b;
-  else
-    std::cout << w;
-  std::cout << ": " << us << " us\n";
-}
-
 void print_cpp(std::chrono::duration<double> t, int n, std::string_view path, std::string_view func, std::string_view w, bool b)
 {
   std::chrono::nanoseconds ns = std::chrono::duration_cast<std::chrono::nanoseconds>(t);
@@ -135,7 +23,6 @@ void print_cpp(std::chrono::duration<double> t, int n, std::string_view path, st
     std::cout << w;
   std::cout << ": " << us << " us\n";
 }
-
 
 
 std::chrono::duration<double> bench_cpp(
@@ -307,10 +194,7 @@ for (std::set<std::string_view, std::less<>> funcs = fset; std::string_view func
       path = "";
   }
 
- bench_c(n, path, func, true);
-
-  if(fs_cpp())
-    bench_cpp(n, path, func, true);
+ bench_cpp(n, path, func, true);
 }
 
 
