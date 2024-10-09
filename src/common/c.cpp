@@ -149,3 +149,14 @@ uintmax_t fs_space_available(const char* path){
 }
 
 bool fs_exists(const char* path){ return fs_exists(std::string_view(path)); }
+
+bool fs_create_symlink(const char* target, const char* link){
+  return fs_create_symlink(std::string_view(target), std::string_view(link));
+}
+
+bool fs_is_symlink(const char* path){ return fs_is_symlink(std::string_view(path)); }
+
+std::string::size_type fs_read_symlink(const char* path,
+                         char* result, const std::string::size_type buffer_size){
+  return fs_str2char(fs_read_symlink(path).value_or(""), result, buffer_size);
+}

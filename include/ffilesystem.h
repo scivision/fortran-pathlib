@@ -185,11 +185,14 @@ std::string fs_realpath(std::string_view);
 std::string fs_trim(std::string r);
 
 bool fs_is_absolute(std::string_view path);
+bool fs_is_symlink(std::string_view);
+bool fs_create_symlink(std::string_view, std::string_view);
 bool fs_exists(std::string_view path);
 
 std::string fs_root(std::string_view path);
 
 std::optional<uintmax_t> fs_space_available(std::string_view);
+std::optional<std::string> fs_read_symlink(std::string_view);
 
 // ---------------------------------------------------------------------------
 

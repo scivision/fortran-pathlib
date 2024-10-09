@@ -71,8 +71,7 @@ std::map<std::string_view, std::function<std::string(std::string_view)>> s_s =
 
 std::map<std::string_view, std::function<std::optional<std::string>(std::string_view)>> s_so =
   {
-    {"perm", Ffs::get_permissions},
-    {"read_symlink", Ffs::read_symlink}
+    {"perm", Ffs::get_permissions}
   };
 
 std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool, bool)>> ssb =
@@ -90,7 +89,6 @@ std::map<std::string_view, std::function<bool(std::string_view)>> b_s =
     {"is_reserved", Ffs::is_reserved},
     {"is_readable", Ffs::is_readable},
     {"is_writable", Ffs::is_writable},
-    {"is_symlink", Ffs::is_symlink},
     {"is_absolute", Ffs::is_absolute},
     {"is_char", Ffs::is_char_device},
     {"mkdir", Ffs::mkdir},
@@ -118,6 +116,10 @@ else if (s_so.contains(fname))
   h = s_so[fname](path).value_or("");
 else if (fname == "exists")
   b = fs_exists(path);
+else if (fname == "is_symlink")
+  b = fs_is_symlink(path);
+else if (fname == "read_symlink")
+  h = fs_read_symlink(path).value_or("");
 else
   {
     std::cerr << "Error: unknown function " << fname << "\n";

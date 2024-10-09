@@ -54,11 +54,11 @@ int main(){
     if(Ffs::is_reserved(""))
       err("Ffs::is_reserved");
 
-    if(Ffs::is_symlink(""))
-      err("Ffs::is_symlink");
+    if(fs_is_symlink(""))
+      err("is_symlink");
 
-    if(Ffs::create_symlink("", ""))
-      err("Ffs::create_symlink");
+    if(fs_create_symlink("", ""))
+      err("create_symlink");
 
     if(Ffs::mkdir(""))
       err("Ffs::mkdir");

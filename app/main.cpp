@@ -117,7 +117,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"is_reserved", Ffs::is_reserved},
     {"is_readable", Ffs::is_readable},
     {"is_writable", Ffs::is_writable},
-    {"is_symlink", Ffs::is_symlink},
     {"is_absolute", Ffs::is_absolute},
     {"is_char", Ffs::is_char_device},
     {"mkdir", Ffs::mkdir},
@@ -149,8 +148,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
 
     std::map<std::string_view, std::function<std::optional<std::string>(std::string_view)>> mostring =
   {
-    {"perm", Ffs::get_permissions},
-    {"read_symlink", Ffs::read_symlink}
+    {"perm", Ffs::get_permissions}
   };
 
   std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool, bool)>> mstrb =
@@ -198,6 +196,10 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << smax[fun](a1) << "\n";
   else if (mvoid.contains(fun))
     mvoid[fun](a1);
+  else if (fun == "is_symlink")
+    std::cout << fs_is_symlink(a1) << "\n";
+  else if (fun == "read_symlnk")
+    std::cout << fs_read_symlink(a1).value_or("") << "\n";
   else if (fun == "exists")
     std::cout << fs_exists(a1) << "\n";
   else if (fun == "space")
@@ -276,7 +278,7 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
   else if (mvoidb.contains(fun))
     mvoidb[fun](a1, a2, false);
   else if (fun == "create_symlink")
-    Ffs::create_symlink(a1, a2);
+    fs_create_symlink(a1, a2);
   else if (fun == "absolute"){
     std::cout << Ffs::absolute(a1, a2, true)<< "\n";
   }

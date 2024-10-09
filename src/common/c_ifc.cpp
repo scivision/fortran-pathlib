@@ -13,8 +13,6 @@ bool fs_is_file(const char* path){ return Ffs::is_file(path); }
 
 bool fs_is_readable(const char* path){ return Ffs::is_readable(path); }
 
-bool fs_is_symlink(const char* path){ return Ffs::is_symlink(path); }
-
 bool fs_is_writable(const char* path){ return Ffs::is_writable(path); }
 
 uintmax_t fs_file_size(const char* path){
@@ -24,11 +22,6 @@ uintmax_t fs_file_size(const char* path){
 std::string::size_type fs_canonical(const char* path, const bool strict, const bool expand_tilde,
                           char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::canonical(path, strict, expand_tilde).value_or(""), result, buffer_size);
-}
-
-
-bool fs_create_symlink(const char* target, const char* link){
-  return Ffs::create_symlink(target, link);
 }
 
 
@@ -74,11 +67,6 @@ std::string::size_type fs_parent(const char* path,
 std::string::size_type fs_proximate_to(const char* base, const char* other,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::proximate_to(base, other), result, buffer_size);
-}
-
-std::string::size_type fs_read_symlink(const char* path,
-                         char* result, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::read_symlink(path).value_or(""), result, buffer_size);
 }
 
 std::string::size_type fs_relative_to(const char* base, const char* other,

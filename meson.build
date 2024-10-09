@@ -46,6 +46,7 @@ comm_src = files(
 'src/common/realpath.cpp',
 'src/common/space.cpp',
 'src/common/sysctl.cpp',
+'src/common/symlink.cpp',
 'src/common/touch.cpp',
 'src/common/uid.cpp',
 'src/common/uname.cpp',
@@ -70,7 +71,6 @@ cppsrcs = files(
 'src/common/pure.cpp',
 'src/common/platform.cpp',
 'src/common/resolve.cpp',
-'src/common/symlink.cpp',
 'src/common/time.cpp'
 )
 else
@@ -88,7 +88,6 @@ comm_src += files('src/c/copy.c',
 'src/c/pure.c',
 'src/common/pure2.cpp',
 'src/c/resolve.c',
-'src/c/symlink.c',
 'src/c/time.c')
 endif
 
@@ -233,18 +232,10 @@ endif
 
 # Windows-specific
 libwin = []
-win32_symlink_def = []
 
 if is_windows
 
 libwin = [cc.find_library('Userenv'), cc.find_library('ws2_32')]
-
-if use_cpp
-  symlink_run = cpp.run(fs.read('cmake/fs_check/check_fs_symlink.cpp'), dependencies: fs_lib, name: 'Symlink')
-  if symlink_run.returncode() != 0
-    win32_symlink_def = '-DWIN32_SYMLINK'
-  endif
-endif
 
 endif
 
@@ -255,7 +246,7 @@ sources: [fsrcs, comm_src, cppsrcs],
 include_directories: [cwalk_inc, inc],
 install: true,
 c_args: [mkdtemp_def, getloadavg_def],
-cpp_args: [have_filesystem, chrono_def, dladdr_def, mkdtemp_def, win32_symlink_def],
+cpp_args: [have_filesystem, chrono_def, dladdr_def, mkdtemp_def],
 fortran_args: f03type_def,
 dependencies: [libwin, fs_lib, dl],
 link_with: cwalk_dep

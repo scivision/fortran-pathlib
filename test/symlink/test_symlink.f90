@@ -58,7 +58,7 @@ if (ok) error stop "ERROR: create_symlink() should fail with empty target"
 print '(a)', "PASSED: create_symlink: empty target"
 
 if (is_symlink(link)) then
-  print *, "deleting old symlink " // link
+  print '(a)', "deleting old symlink " // link
   call remove(link)
 end if
 call create_symlink(tgt, link)

@@ -19,8 +19,7 @@ add_executable(test_is_symlink test_is_symlink.f90)
 add_test(NAME Fortran_is_symlink COMMAND test_is_symlink ${test_symlink_file})
 
 add_executable(test_symlink test_symlink.f90)
-add_test(NAME Fortran_symlink
-COMMAND test_symlink $<OR:$<BOOL:${ffilesystem_WIN32_SYMLINK}>,$<AND:$<BOOL:${WIN32}>,$<NOT:$<BOOL:${HAVE_CXX_FILESYSTEM}>>>>)
+add_test(NAME Fortran_symlink COMMAND test_symlink $<BOOL:${WIN32}>)
 
 set_property(TEST Fortran_symlink PROPERTY SKIP_RETURN_CODE 77)
 
