@@ -103,7 +103,6 @@ public:
   [[nodiscard]] static std::optional<std::string> get_permissions(std::string_view);
 
   [[nodiscard]] static std::optional<uintmax_t> file_size(std::string_view);
-  [[nodiscard]] static std::optional<uintmax_t> space_available(std::string_view);
 
   [[nodiscard]] static std::string mkdtemp(std::string_view);
 
@@ -184,6 +183,10 @@ std::string fs_exe_path();
 
 std::string fs_realpath(std::string_view);
 std::string fs_trim(std::string r);
+
+bool fs_is_absolute(std::string_view path);
+std::string fs_root(std::string_view path);
+std::optional<uintmax_t> fs_space_available(std::string_view);
 
 // ---------------------------------------------------------------------------
 

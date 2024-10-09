@@ -6,6 +6,8 @@ meson_version : '>=1.4.0')
 use_cpp = get_option('cpp')
 # mean to use C++17 <filesystem> library
 
+have_filesystem = use_cpp ? '-DHAVE_CXX_FILESYSTEM' : []
+
 fortran = get_option('fortran')
 if fortran
   add_languages('fortran', native: false, required: true)
@@ -41,6 +43,7 @@ comm_src = files(
 'src/common/os.c',
 'src/common/partition.c',
 'src/common/realpath.cpp',
+'src/common/space.cpp',
 'src/common/sysctl.cpp',
 'src/common/touch.cpp',
 'src/common/uid.cpp',
@@ -66,7 +69,6 @@ cppsrcs = files(
 'src/common/pure.cpp',
 'src/common/platform.cpp',
 'src/common/resolve.cpp',
-'src/common/space.cpp',
 'src/common/symlink.cpp',
 'src/common/time.cpp'
 )
@@ -83,8 +85,8 @@ comm_src += files('src/c/copy.c',
 'src/c/mkdir.c',
 'src/c/platform.c',
 'src/c/pure.c',
+'src/common/pure2.cpp',
 'src/c/resolve.c',
-'src/c/space.c',
 'src/c/symlink.c',
 'src/c/time.c')
 endif
@@ -252,7 +254,7 @@ sources: [fsrcs, comm_src, cppsrcs],
 include_directories: [cwalk_inc, inc],
 install: true,
 c_args: [mkdtemp_def, getloadavg_def],
-cpp_args: [chrono_def, dladdr_def, mkdtemp_def, win32_symlink_def],
+cpp_args: [have_filesystem, chrono_def, dladdr_def, mkdtemp_def, win32_symlink_def],
 fortran_args: f03type_def,
 dependencies: [libwin, fs_lib, dl],
 link_with: cwalk_dep

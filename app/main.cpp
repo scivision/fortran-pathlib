@@ -168,8 +168,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
 
   std::map<std::string_view, std::function<std::optional<uintmax_t>(std::string_view)>> mmax =
   {
-    {"size", Ffs::file_size},
-    {"space", Ffs::space_available}
+    {"size", Ffs::file_size}
   };
 
   std::map<std::string_view, std::function<size_t(std::string_view)>> smax =
@@ -195,14 +194,15 @@ static void one_arg(std::string_view fun, std::string_view a1){
   else if (mstrbw.contains(fun))
     std::cout << mstrbw[fun](a1, false, false).value_or("") << "\n";
   else if (mmax.contains(fun))
-    std::cout <<  mmax[fun](a1).value_or(0) << "\n";
+    std::cout << mmax[fun](a1).value_or(0) << "\n";
   else if (smax.contains(fun))
     std::cout << smax[fun](a1) << "\n";
   else if (mvoid.contains(fun))
     mvoid[fun](a1);
-  else if (fun == "absolute"){
+  else if (fun == "space")
+    std::cout << fs_space_available(a1).value_or(0) << "\n";
+  else if (fun == "absolute")
     std::cout << Ffs::absolute(a1, true)<< "\n";
-  }
   else if (fun == "modtime"){
 #if defined(__cpp_lib_format)
     const auto t = Ffs::get_modtime(a1);

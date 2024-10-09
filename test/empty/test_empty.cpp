@@ -108,8 +108,8 @@ int main(){
 
     if(!fs_is_windows()){
 
-      if(Ffs::space_available(""))
-        err("Ffs::space_available");
+      if(fs_space_available(""))
+        err("space_available");
 
       if(Ffs::set_permissions("", 0, 0, 0))
         err("set_permissions");

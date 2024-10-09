@@ -228,44 +228,6 @@ size_t fs_with_suffix(const char* path, const char* suffix,
 }
 
 
-size_t fs_root(const char* path, char* result, const size_t buffer_size)
-{
-  // assumes a POSIX path separated input i.e. '/'
-
-  if(buffer_size < 1)
-    return 0;
-
-  result[0] = '\0';
-  if(!fs_is_absolute(path))
-    return 0;
-  // empty path is not absolute
-
-  int N;
-  if(fs_is_windows())
-    N = snprintf(result, buffer_size, "%c:/", path[0]);
-  else
-    N = snprintf(result, buffer_size, "/");
-
-  if (N < 0 || N >= (int) buffer_size){
-    fprintf(stderr, "ERROR:ffilesystem:fs_root: buffer overflow\n");
-    return 0;
-  }
-
-  return (size_t) N;
-}
-
-
-bool fs_is_absolute(const char* path)
-{
-  const size_t L = strlen(path);
-
-  if(fs_is_windows())
-    return L > 2 && isalpha(path[0]) && path[1] == ':' && (path[2] == '/' || path[2] == '\\');
-  else
-    return L > 0 && path[0] == '/';
-}
-
-
 size_t fs_relative_to(const char* base, const char* other, char* result, const size_t buffer_size)
 {
   // need this or separators are not handled correctly

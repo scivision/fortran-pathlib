@@ -2,12 +2,15 @@
     "common": ["src/common/c.cpp", "src/common/common.c", "src/common/compiler.cpp", "src/common/cpu.cpp", "src/common/cygwin.c",
                "src/common/exepath.cpp", "src/common/env.cpp", "src/common/home.cpp", "src/common/libpath.cpp", "src/common/limits.cpp",
                "src/common/mkdtemp.c", "src/common/os.c", "src/common/owner.c", "src/common/partition.c", "src/common/realpath.cpp",
+               "src/common/space.cpp",
                "src/common/sysctl.cpp", "src/common/touch.cpp", "src/common/uid.cpp", "src/common/uname.cpp", "src/common/which.c",
                "src/common/windows.cpp", "src/common/winsock.cpp"],
     "cpp": ["src/common/copy.cpp", "src/common/filesystem.cpp", "src/common/c_ifc.cpp", "src/common/ifc.cpp", "src/common/inquire.cpp",
             "src/common/mkdir.cpp", "src/common/mkdtemp.cpp", "src/common/platform.cpp", "src/common/pure.cpp", "src/common/resolve.cpp",
-            "src/common/space.cpp", "src/common/symlink.cpp", "src/common/time.cpp"],
+            "src/common/symlink.cpp", "src/common/time.cpp"],
     "fortran": ["src/common/fortran/filesystem.F90"],
-    "c": ["src/c/copy.c", "src/c/filesystem.c", "src/c/inquire.c", "src/c/mkdir.c", "src/c/platform.c", "src/c/pure.c", "src/c/resolve.c",
-          "src/c/space.c", "src/c/symlink.c", "src/c/time.c"]
+    "c": ["src/c/copy.c", "src/c/filesystem.c", "src/c/inquire.c", "src/c/mkdir.c", "src/c/platform.c",
+          "src/c/pure.c",
+          "src/common/pure2.cpp",
+          "src/c/resolve.c", "src/c/symlink.c", "src/c/time.c"]
 }

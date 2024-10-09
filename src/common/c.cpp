@@ -123,3 +123,27 @@ size_t fs_realpath(const char* path, char* result, const size_t buffer_size)
 {
   return fs_str2char(fs_realpath(path), result, buffer_size);
 }
+
+size_t fs_root(const char* path, char* result, const size_t buffer_size)
+{
+  return fs_str2char(
+#ifdef HAVE_CXX_FILESYSTEM
+  Ffs::root(
+#else
+  fs_root(
+#endif
+  path), result, buffer_size);
+}
+
+bool fs_is_absolute(const char* path)
+{
+#ifdef HAVE_CXX_FILESYSTEM
+  return Ffs::is_absolute(path);
+#else
+  return fs_is_absolute(std::string_view(path));
+#endif
+}
+
+uintmax_t fs_space_available(const char* path){
+  return fs_space_available(std::string_view(path)).value_or(0);
+}

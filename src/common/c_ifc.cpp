@@ -6,8 +6,6 @@
 
 bool fs_exists(const char* path){ return Ffs::exists(path); }
 
-bool fs_is_absolute(const char* path){ return Ffs::is_absolute(path); }
-
 bool fs_is_char_device(const char* path){ return Ffs::is_char_device(path); }
 
 bool fs_is_dir(const char* path){ return Ffs::is_dir(path); }
@@ -25,11 +23,6 @@ bool fs_is_writable(const char* path){ return Ffs::is_writable(path); }
 uintmax_t fs_file_size(const char* path){
   return Ffs::file_size(path).value_or(0);
 }
-
-uintmax_t fs_space_available(const char* path){
-  return Ffs::space_available(path).value_or(0);
-}
-
 
 std::string::size_type fs_canonical(const char* path, const bool strict, const bool expand_tilde,
                           char* result, const std::string::size_type buffer_size){
@@ -99,11 +92,6 @@ std::string::size_type fs_relative_to(const char* base, const char* other,
 std::string::size_type fs_resolve(const char* path, const bool strict, const bool expand_tilde,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::resolve(path, strict, expand_tilde).value_or(""), result, buffer_size);
-}
-
-std::string::size_type fs_root(const char* path,
-                         char* result, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::root(path), result, buffer_size);
 }
 
 std::string::size_type fs_stem(const char* path,

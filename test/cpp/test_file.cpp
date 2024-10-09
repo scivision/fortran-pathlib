@@ -37,7 +37,7 @@ int main(int argc, char *argv[]){
   if(!Ffs::file_size(drive))
     err("failed to get own file size");
 
-  auto avail = Ffs::space_available(drive);
+  auto avail = fs_space_available(drive);
   if(!avail)
     err("failed to get space available of own drive " + drive);
 

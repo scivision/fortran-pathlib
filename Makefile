@@ -31,7 +31,7 @@ INC := -Iinclude/
 cfeat = -DHAVE_MERSENNE_TWISTER -DHAVE_GETLOADAVG
 cppfeat = -DHAVE_MERSENNE_TWISTER
 
-CXXFLAGS := -std=c++20 -O3 -DNDEBUG $(cppfeat) $(INC)
+CXXFLAGS := -std=c++20 -O3 -DNDEBUG $(cppfeat) $(INC) -DHAVE_CXX_FILESYSTEM
 CFLAGS := -O3 -DNDEBUG $(cfeat) $(INC)
 FFLAGS := -O3 -DNDEBUG
 
@@ -41,12 +41,12 @@ comdir = src/common/
 cdir = src/c/
 fdir = $(comdir)fortran/
 
-COMM_SRCS = $(comdir)c.cpp $(comdir)common.c $(comdir)compiler.cpp $(comdir)cpu.cpp $(comdir)cygwin.c $(comdir)exepath.cpp $(comdir)env.cpp $(comdir).cpp $(comdir)libpath.cpp $(comdir)limits.cpp $(comdir)mkdtemp.c $(comdir)owner.c $(comdir)os.c $(comdir)partition.c $(comdir)realpath.cpp $(comdir)sysctl.cpp $(comdir)touch.cpp $(comdir)uid.cpp $(comdir)uname.cpp $(comdir)which.c $(comdir)windows.cpp $(comdir)winsock.cpp
+COMM_SRCS = $(comdir)c.cpp $(comdir)common.c $(comdir)compiler.cpp $(comdir)cpu.cpp $(comdir)cygwin.c $(comdir)exepath.cpp $(comdir)env.cpp $(comdir).cpp $(comdir)libpath.cpp $(comdir)limits.cpp $(comdir)mkdtemp.c $(comdir)owner.c $(comdir)os.c $(comdir)partition.c $(comdir)realpath.cpp $(comdir)space.cpp $(comdir)sysctl.cpp $(comdir)touch.cpp $(comdir)uid.cpp $(comdir)uname.cpp $(comdir)which.c $(comdir)windows.cpp $(comdir)winsock.cpp
 
 ifeq (cpp,1)
-SRCS = $(comdir)filesystem.cpp $(comdir)c_ifc.cpp $(comdir)copy.cpp $(comdir)ifc.cpp $(comdir)inquire.cpp $(comdir)mkdir.cpp $(comdir)mkdtemp.cpp $(comdir)pure.cpp $(comdir)platform.cpp $(comdir)resolve.cpp $(comdir)space.cpp $(comdir)symlink.cpp $(comdir)time.cpp
+SRCS = $(comdir)filesystem.cpp $(comdir)c_ifc.cpp $(comdir)copy.cpp $(comdir)ifc.cpp $(comdir)inquire.cpp $(comdir)mkdir.cpp $(comdir)mkdtemp.cpp $(comdir)pure.cpp $(comdir)platform.cpp $(comdir)resolve.cpp  $(comdir)symlink.cpp $(comdir)time.cpp
 else
-SRCS = $(cdir)filesystem.c $(cdir)copy.c $(cdir)inquire.c $(cdir)mkdir.c $(cdir)mkdtemp.c $(cdir)pure.c $(cdir)platform.c $(cdir)resolve.c $(cdir)space.c $(cdir)symlink.c $(cdir)time.c
+SRCS = $(comdir)pure2.cpp $(cdir)filesystem.c $(cdir)copy.c $(cdir)inquire.c $(cdir)mkdir.c $(cdir)mkdtemp.c $(cdir)pure.c $(cdir)platform.c $(cdir)resolve.c $(cdir)symlink.c $(cdir)time.c
 endif
 
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o) $(COMM_SRCS:%=$(BUILD_DIR)/%.o)
