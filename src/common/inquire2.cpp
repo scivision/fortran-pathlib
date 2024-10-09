@@ -110,6 +110,35 @@ bool fs_is_char_device(std::string_view path)
 }
 
 
+bool fs_is_writable(std::string_view path)
+{
+#ifdef HAVE_CXX_FILESYSTEM
+  // directory or file writable
+  std::error_code ec;
+  const auto s = std::filesystem::status(path, ec);
+  if(ec || !std::filesystem::exists(s))
+    return false;
+
+#if defined(__cpp_using_enum)
+  using enum std::filesystem::perms;
+#else
+  constexpr std::filesystem::perms owner_write = std::filesystem::perms::owner_write;
+  constexpr std::filesystem::perms group_write = std::filesystem::perms::group_write;
+  constexpr std::filesystem::perms others_write = std::filesystem::perms::others_write;
+  constexpr std::filesystem::perms none = std::filesystem::perms::none;
+#endif
+
+  return (s.permissions() & (owner_write | group_write | others_write)) != none;
+#elif defined(_MSC_VER)
+  // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/access-s-waccess-s
+  return !_access_s(path.data(), 2);
+#else
+  return !access(path.data(), W_OK);
+#endif
+}
+
+
+
 std::optional<uintmax_t> fs_file_size(std::string_view path)
 {
 #ifdef HAVE_CXX_FILESYSTEM

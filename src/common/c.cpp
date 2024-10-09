@@ -162,6 +162,8 @@ bool fs_exists(const char* path){ return fs_exists(std::string_view(path)); }
 
 bool fs_is_file(const char* path){ return fs_is_file(std::string_view(path)); }
 
+bool fs_is_writable(const char* path){ return fs_is_writable(std::string_view(path)); }
+
 bool fs_create_symlink(const char* target, const char* link){
   return fs_create_symlink(std::string_view(target), std::string_view(link));
 }

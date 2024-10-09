@@ -79,8 +79,6 @@ std::map<std::string_view, std::function<bool(std::string_view)>> b_s =
   {
     {"is_exe", Ffs::is_exe},
     {"is_reserved", Ffs::is_reserved},
-    {"is_readable", Ffs::is_readable},
-    {"is_writable", Ffs::is_writable},
     {"is_absolute", Ffs::is_absolute},
     {"mkdir", Ffs::mkdir},
     {"is_safe", Ffs::is_safe_name}

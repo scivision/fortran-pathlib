@@ -86,7 +86,7 @@ if(!p)
 std::cout << "Permissions for " << nowrite << " " << p.value() << "\n";
 
 #ifdef __cpp_lib_string_contains
-if(!p.value().contains("w") && Ffs::is_writable(nowrite)){
+if(!p.value().contains("w") && fs_is_writable(nowrite)){
   std::cerr << "ERROR:  " << nowrite << " should not be writable\n";
   if(!fs_is_windows())
     return EXIT_FAILURE;

@@ -54,23 +54,3 @@ bool Ffs::is_readable(std::string_view path)
 
   return (s.permissions() & (owner_read | group_read | others_read)) != none;
 }
-
-
-bool Ffs::is_writable(std::string_view path)
-{
-  std::error_code ec;
-  const auto s = std::filesystem::status(path, ec);
-  if(ec || !std::filesystem::exists(s))
-    return false;
-
-#if defined(__cpp_using_enum)
-  using enum std::filesystem::perms;
-#else
-  constexpr std::filesystem::perms owner_write = std::filesystem::perms::owner_write;
-  constexpr std::filesystem::perms group_write = std::filesystem::perms::group_write;
-  constexpr std::filesystem::perms others_write = std::filesystem::perms::others_write;
-  constexpr std::filesystem::perms none = std::filesystem::perms::none;
-#endif
-
-  return (s.permissions() & (owner_write | group_write | others_write)) != none;
-}
