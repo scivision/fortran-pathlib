@@ -5,7 +5,7 @@
 #endif
 
 #include <string>
-#include <cstdlib> // malloc, free
+#include <cstdlib>
 #include <set>
 
 #if __has_include(<format>)

@@ -11,7 +11,7 @@
 #define _DEFAULT_SOURCE
 #endif
 
-#include <cstdlib> // putenv, setenv, malloc, free, wcstombs
+#include <cstdlib> // putenv, setenv
 #include <string>
 #include <algorithm> // std::replace
 

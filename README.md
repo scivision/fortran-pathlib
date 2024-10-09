@@ -1,4 +1,4 @@
-# Ffilesystem: for Fortran using C++17 and libc 
+# Ffilesystem: for Fortran using C++17 and libc
 
 [![DOI](https://zenodo.org/badge/433875623.svg)](https://zenodo.org/badge/latestdoi/433875623)
 [![ci](https://github.com/scivision/fortran-filesystem/actions/workflows/ci.yml/badge.svg)](https://github.com/scivision/fortran-filesystem/actions/workflows/ci.yml)
@@ -8,8 +8,8 @@
 [![ci_meson](https://github.com/scivision/fortran-filesystem/actions/workflows/ci_meson.yml/badge.svg)](https://github.com/scivision/fortran-filesystem/actions/workflows/ci_meson.yml)
 
 Platform independent (Linux, macOS, Windows, Cygwin, WSL, BSD, ...) Fortran filesystem "Ffilesystem" path manipulation library.
-Ffilesystem core functions are implemented in C++17, and
-[C++ standard library filesystem](https://en.cppreference.com/w/cpp/filesystem) if available.
+Ffilesystem core functions are implemented in C++17 using `<string_view>`.
+If available, [C++ standard library filesystem](https://en.cppreference.com/w/cpp/filesystem) is used.
 The Fortran interface is also built by default, as the main purpose of this library is to bring full filesystem functionality to Fortran.
 However, the Fortran interface itself is optional.
 Ffilesystem header
@@ -19,8 +19,7 @@ can be used from C and C++ project code--see
 
 The language standards required are at least:
 
-* C++17 interface / backend
-* C99 interface
+* C++17 backend (and interface)
 * Fortran interface (optional): 2003
 
 Ffilesystem uses
@@ -50,7 +49,7 @@ Advanced / conceptual development takes place in [ffilesystem-concepts](https://
 Ffilesystem supports compilers including:
 
 * GCC &ge; 8 (gcc/g++, gfortran)
-    * GCC &ge; 5.5 works with `cmake -Dffilesystem_cpp=off`
+    * GCC &ge; 7 works with `cmake -Dffilesystem_cpp=off`
 * LLVM Clang &ge; 9 (clang/clang++, flang or gfortran)
 * Intel oneAPI (icx, icpx, ifx)
 * AMD AOCC (clang/clang++, flang)
