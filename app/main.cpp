@@ -112,7 +112,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
   {
     {"is_exe", Ffs::is_exe},
     {"is_reserved", Ffs::is_reserved},
-    {"is_readable", Ffs::is_readable},
     {"is_absolute", Ffs::is_absolute},
     {"mkdir", Ffs::mkdir},
     {"is_safe", Ffs::is_safe_name}
@@ -187,6 +186,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << fs_is_file(a1) << "\n";
   else if (fun == "is_symlink")
     std::cout << fs_is_symlink(a1) << "\n";
+  else if (fun == "is_readable")
+    std::cout << fs_is_readable(a1) << "\n";
   else if (fun == "is_writable")
     std::cout << fs_is_writable(a1) << "\n";
   else if (fun == "perm")

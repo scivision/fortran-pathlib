@@ -110,10 +110,39 @@ bool fs_is_char_device(std::string_view path)
 }
 
 
-bool fs_is_writable(std::string_view path)
+bool fs_is_readable(std::string_view path)
 {
 #ifdef HAVE_CXX_FILESYSTEM
+// directory or file readable
+  std::error_code ec;
+  const auto s = std::filesystem::status(path, ec);
+  if(ec || !std::filesystem::exists(s))
+    return false;
+
+#if defined(__cpp_using_enum)
+  using enum std::filesystem::perms;
+#else
+  constexpr std::filesystem::perms none = std::filesystem::perms::none;
+  constexpr std::filesystem::perms owner_read = std::filesystem::perms::owner_read;
+  constexpr std::filesystem::perms group_read = std::filesystem::perms::group_read;
+  constexpr std::filesystem::perms others_read = std::filesystem::perms::others_read;
+#endif
+
+  return (s.permissions() & (owner_read | group_read | others_read)) != none;
+
+#elif defined(_MSC_VER)
+// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/access-s-waccess-s
+  return !_access_s(path.data(), 4);
+#else
+  return !access(path.data(), R_OK);
+#endif
+}
+
+
+bool fs_is_writable(std::string_view path)
+{
   // directory or file writable
+#ifdef HAVE_CXX_FILESYSTEM
   std::error_code ec;
   const auto s = std::filesystem::status(path, ec);
   if(ec || !std::filesystem::exists(s))

@@ -43,7 +43,7 @@ if(!p)
 
 std::cout << "Permissions for " << read << ": " << p.value() << "\n";
 
-if(!Ffs::is_readable(read))
+if(!fs_is_readable(read))
     err(read + " should be readable");
 
 if(!fs_exists(read))
@@ -63,7 +63,7 @@ if(!p)
 std::cout << "Permissions for " << noread << ": " << p.value() << "\n";
 
 #ifdef __cpp_lib_string_contains
-if(!p.value().contains("r") && Ffs::is_readable(noread)){
+if(!p.value().contains("r") && fs_is_readable(noread)){
 
 if(!fs_exists(noread))
     err(noread + " should exist");

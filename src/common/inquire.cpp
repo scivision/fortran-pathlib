@@ -21,7 +21,7 @@ bool Ffs::is_exe(std::string_view path)
 
   // Windows MinGW bug with executable bit
   if(fs_is_mingw())
-    return Ffs::is_readable(path);
+    return fs_is_readable(path);
 
 #if defined(__cpp_using_enum)
   using enum std::filesystem::perms;
@@ -33,24 +33,4 @@ bool Ffs::is_exe(std::string_view path)
 #endif
 
   return (s.permissions() & (owner_exec | group_exec | others_exec)) != none;
-}
-
-
-bool Ffs::is_readable(std::string_view path)
-{
-  std::error_code ec;
-  const auto s = std::filesystem::status(path, ec);
-  if(ec || !std::filesystem::exists(s))
-    return false;
-
-#if defined(__cpp_using_enum)
-  using enum std::filesystem::perms;
-#else
-  constexpr std::filesystem::perms none = std::filesystem::perms::none;
-  constexpr std::filesystem::perms owner_read = std::filesystem::perms::owner_read;
-  constexpr std::filesystem::perms group_read = std::filesystem::perms::group_read;
-  constexpr std::filesystem::perms others_read = std::filesystem::perms::others_read;
-#endif
-
-  return (s.permissions() & (owner_read | group_read | others_read)) != none;
 }
