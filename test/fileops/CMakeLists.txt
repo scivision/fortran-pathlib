@@ -22,4 +22,7 @@ LABELS Fortran
 FIXTURES_REQUIRED "join;mkdir"
 )
 
+set_tests_properties(Fortran_touch PROPERTIES FIXTURES_SETUP touch)
+set_tests_properties(Fortran_copyfile PROPERTIES FIXTURES_REQUIRED filesize)
+
 set_property(TEST Fortran_same PROPERTY FIXTURES_REQUIRED mkdir)
