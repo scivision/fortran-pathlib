@@ -261,17 +261,12 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
     {"with_suffix", Ffs::with_suffix}
   };
 
-  std::map<std::string_view, std::function<bool(std::string_view, std::string_view, bool)>> mvoidb =
-  {
-    {"copy", Ffs::copy_file}
-  };
-
   if (mbool.contains(fun))
     std::cout << mbool[fun](a1, a2) << "\n";
   else if (mstring.contains(fun))
     std::cout << mstring[fun](a1, a2) << "\n";
-  else if (mvoidb.contains(fun))
-    mvoidb[fun](a1, a2, false);
+  else if (fun == "copy")
+    fs_copy_file(a1, a2, false);
   else if (fun == "create_symlink")
     fs_create_symlink(a1, a2);
   else if (fun == "absolute"){

@@ -103,8 +103,6 @@ public:
 
   [[nodiscard]] static std::string with_suffix(std::string_view, std::string_view);
 
-  static bool copy_file(std::string_view, std::string_view, bool);
-
   [[nodiscard]] static bool is_safe_name(std::string_view);
 
   [[nodiscard]] static std::string filesystem_type(std::string_view);
@@ -170,6 +168,8 @@ bool fs_touch(std::string_view);
 bool fs_create_symlink(std::string_view, std::string_view);
 
 bool fs_set_permissions(std::string_view, int, int, int);
+
+bool fs_copy_file(std::string_view, std::string_view, bool);
 
 [[nodiscard]] bool fs_exists(std::string_view path);
 [[nodiscard]] bool fs_is_file(std::string_view);

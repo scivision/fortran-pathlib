@@ -38,6 +38,10 @@ bool fs_win32_create_symlink(const char* target, const char* link){
   return fs_win32_create_symlink(std::string_view(target), std::string_view(link));
 }
 
+bool fs_copy_file(const char* source, const char* dest, bool overwrite){
+  return fs_copy_file(std::string_view(source), std::string_view(dest), overwrite);
+}
+
 size_t fs_hostname(char* name, const size_t buffer_size)
 {
   return fs_str2char(fs_hostname(), name, buffer_size);

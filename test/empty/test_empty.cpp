@@ -96,8 +96,8 @@ int main(){
     if(!Ffs::expanduser("").empty())
       err("Ffs::expanduser");
 
-    if(Ffs::copy_file("", "", false))
-      err("Ffs::copy_file");
+    if(fs_copy_file("", "", false))
+      err("copy_file");
 
     if(Ffs::touch(""))
       err("Ffs::touch");

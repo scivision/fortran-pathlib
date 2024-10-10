@@ -31,6 +31,7 @@ comm_src = files(
 'src/common/c.cpp',
 'src/common/common.c',
 'src/common/compiler.cpp',
+'src/common/copy.cpp',
 'src/common/cpu.cpp',
 'src/common/cygwin.c',
 'src/common/exepath.cpp',
@@ -64,7 +65,6 @@ cwalk_dep = []
 cwalk_inc = []
 
 cppsrcs = files(
-'src/common/copy.cpp',
 'src/common/c_ifc.cpp',
 'src/common/ifc.cpp',
 'src/common/mkdir.cpp',
@@ -80,7 +80,7 @@ cwalk_dep = cwalk_proj.get_variable('cwalk')
 cwalk_inc = cwalk_proj.get_variable('cwalk_inc')
 
 cppsrcs = []
-comm_src += files('src/c/copy.c',
+comm_src += files(
 'src/c/mkdir.c',
 'src/c/pure.c',
 'src/c/resolve.c',
