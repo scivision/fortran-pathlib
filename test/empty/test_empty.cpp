@@ -78,8 +78,8 @@ int main(){
     if(fs_is_dir(""))
       err("is_dir");
 
-    if(Ffs::is_exe(""))
-      err("Ffs::is_exe");
+    if(fs_is_exe(""))
+      err("is_exe");
 
     if(fs_is_file(""))
       err("is_file");

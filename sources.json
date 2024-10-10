@@ -14,7 +14,7 @@
             "src/common/mkdir.cpp", "src/common/mkdtemp.cpp", "src/common/platform.cpp", "src/common/pure.cpp", "src/common/resolve.cpp",
             "src/common/time.cpp"],
     "fortran": ["src/common/fortran/filesystem.F90"],
-    "c": ["src/c/copy.c", "src/c/inquire.c", "src/c/mkdir.c", "src/c/platform.c",
+    "c": ["src/c/copy.c", "src/c/mkdir.c", "src/c/platform.c",
           "src/c/pure.c",
           "src/common/pure2.cpp",
           "src/c/resolve.c", "src/c/time.c"]

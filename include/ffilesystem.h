@@ -63,7 +63,6 @@ public:
   [[nodiscard]] static std::string realpath(std::string_view);
 
   [[nodiscard]] static bool is_absolute(std::string_view);
-  [[nodiscard]] static bool is_exe(std::string_view);
   [[nodiscard]] static bool exists(std::string_view);
   [[nodiscard]] static bool is_reserved(std::string_view);
   [[nodiscard]] static bool is_subdir(std::string_view, std::string_view);
@@ -177,6 +176,7 @@ bool fs_set_permissions(std::string_view, int, int, int);
 [[nodiscard]] bool fs_exists(std::string_view path);
 [[nodiscard]] bool fs_is_file(std::string_view);
 
+[[nodiscard]] bool fs_is_exe(std::string_view);
 
 [[nodiscard]] bool fs_is_readable(std::string_view);
 [[nodiscard]] bool fs_is_writable(std::string_view);

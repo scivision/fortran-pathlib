@@ -110,7 +110,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
 
   std::map<std::string_view, std::function<bool(std::string_view)>> mbool =
   {
-    {"is_exe", Ffs::is_exe},
     {"is_reserved", Ffs::is_reserved},
     {"is_absolute", Ffs::is_absolute},
     {"mkdir", Ffs::mkdir},
@@ -178,6 +177,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
     mvoid[fun](a1);
   else if (fun == "file_size")
     std::cout << fs_file_size(a1).value_or(0) << "\n";
+  else if (fun == "is_exe")
+    std::cout << fs_is_exe(a1) << "\n";
   else if (fun == "is_dir")
     std::cout << fs_is_dir(a1) << "\n";
   else if (fun == "is_char")

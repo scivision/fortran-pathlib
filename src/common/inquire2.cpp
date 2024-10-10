@@ -10,9 +10,6 @@
 #include <system_error>
 #include <iostream>
 
-// inquire.cpp
-// ------------
-
 #ifndef HAVE_CXX_FILESYSTEM
 #if defined(_MSC_VER)
 #define WIN32_LEAN_AND_MEAN
@@ -106,6 +103,48 @@ bool fs_is_char_device(std::string_view path)
   // Windows: https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fstat-fstat32-fstat64-fstati64-fstat32i64-fstat64i32
   return fs_st_mode(path) & S_IFCHR;
   // S_ISCHR not available with MSVC
+#endif
+}
+
+
+bool fs_is_exe(std::string_view path)
+{
+#ifdef HAVE_CXX_FILESYSTEM
+
+  std::error_code ec;
+
+  const auto s = std::filesystem::status(path, ec);
+  // need reserved check for Windows
+  if(ec || !std::filesystem::is_regular_file(s) || Ffs::is_reserved(path))
+    return false;
+
+  // Windows MinGW bug with executable bit
+  if(fs_is_mingw())
+    return fs_is_readable(path);
+
+#if defined(__cpp_using_enum)
+  using enum std::filesystem::perms;
+#else
+  constexpr std::filesystem::perms none = std::filesystem::perms::none;
+  constexpr std::filesystem::perms others_exec = std::filesystem::perms::others_exec;
+  constexpr std::filesystem::perms group_exec = std::filesystem::perms::group_exec;
+  constexpr std::filesystem::perms owner_exec = std::filesystem::perms::owner_exec;
+#endif
+
+  return (s.permissions() & (owner_exec | group_exec | others_exec)) != none;
+
+#else
+
+  return (fs_is_file(path) &&
+#ifdef _WIN32
+  // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/access-s-waccess-s
+  // in Windows, all readable files are executable. Do not use _S_IEXEC, it is not reliable.
+  fs_is_readable(path)
+#else
+  !access(path, X_OK)
+#endif
+  );
+
 #endif
 }
 

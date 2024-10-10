@@ -3,8 +3,6 @@
 
 #include "ffilesystem.h"
 
-bool fs_is_exe(const char* path){ return Ffs::is_exe(path); }
-
 std::string::size_type fs_canonical(const char* path, const bool strict, const bool expand_tilde,
                           char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::canonical(path, strict, expand_tilde).value_or(""), result, buffer_size);

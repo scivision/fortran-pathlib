@@ -46,7 +46,7 @@ COMM_SRCS = $(comdir)inquire2.cpp $(comdir)filesystem.cpp $(comdir)c.cpp $(comdi
 ifeq (cpp,1)
 SRCS = $(comdir)c_ifc.cpp $(comdir)copy.cpp $(comdir)ifc.cpp $(comdir)inquire.cpp $(comdir)mkdir.cpp $(comdir)mkdtemp.cpp $(comdir)pure.cpp $(comdir)platform.cpp $(comdir)resolve.cpp $(comdir)time.cpp
 else
-SRCS = $(comdir)pure2.cpp $(cdir)copy.c $(cdir)inquire.c $(cdir)mkdir.c $(cdir)mkdtemp.c $(cdir)pure.c $(cdir)platform.c $(cdir)resolve.c $(cdir)time.c
+SRCS = $(comdir)pure2.cpp $(cdir)copy.c $(cdir)mkdir.c $(cdir)mkdtemp.c $(cdir)pure.c $(cdir)platform.c $(cdir)resolve.c $(cdir)time.c
 endif
 
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o) $(COMM_SRCS:%=$(BUILD_DIR)/%.o)

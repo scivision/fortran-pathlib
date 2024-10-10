@@ -81,7 +81,6 @@ cwalk_inc = cwalk_proj.get_variable('cwalk_inc')
 
 cppsrcs = []
 comm_src += files('src/c/copy.c',
-'src/c/inquire.c',
 'src/c/mkdir.c',
 'src/c/platform.c',
 'src/c/pure.c',
