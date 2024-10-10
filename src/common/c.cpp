@@ -126,22 +126,12 @@ size_t fs_realpath(const char* path, char* result, const size_t buffer_size)
 
 size_t fs_root(const char* path, char* result, const size_t buffer_size)
 {
-  return fs_str2char(
-#ifdef HAVE_CXX_FILESYSTEM
-  Ffs::root(
-#else
-  fs_root(
-#endif
-  path), result, buffer_size);
+  return fs_str2char(fs_root(path), result, buffer_size);
 }
 
 bool fs_is_absolute(const char* path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
-  return Ffs::is_absolute(path);
-#else
   return fs_is_absolute(std::string_view(path));
-#endif
 }
 
 uintmax_t fs_space_available(const char* path){
@@ -150,6 +140,11 @@ uintmax_t fs_space_available(const char* path){
 
 bool fs_set_permissions(const char* path, int readable, int writable, int executable){
   return fs_set_permissions(std::string_view(path), readable, writable, executable);
+}
+
+std::string::size_type fs_file_name(const char* path,
+                         char* result, const std::string::size_type buffer_size){
+  return fs_str2char(fs_file_name(path), result, buffer_size);
 }
 
 bool fs_remove(const char* path){ return fs_remove(std::string_view(path)); }

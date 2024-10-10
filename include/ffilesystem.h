@@ -73,11 +73,9 @@ public:
   [[nodiscard]] static std::string lexically_normal(std::string_view);
   [[nodiscard]] static std::string make_preferred(std::string_view);
 
-  [[nodiscard]] static std::string file_name(std::string_view);
   [[nodiscard]] static std::string stem(std::string_view);
   [[nodiscard]] static std::string parent(std::string_view);
   [[nodiscard]] static std::string suffix(std::string_view);
-  [[nodiscard]] static std::string root(std::string_view);
   [[nodiscard]] static std::string which(std::string_view);
 
   static bool touch(std::string_view);
@@ -155,6 +153,8 @@ bool fs_setenv(std::string_view, std::string_view);
 [[nodiscard]] std::string fs_get_username();
 
 [[nodiscard]] std::string fs_expanduser(std::string_view);
+
+[[nodiscard]] std::string fs_file_name(std::string_view);
 
 bool fs_touch(std::string_view);
 

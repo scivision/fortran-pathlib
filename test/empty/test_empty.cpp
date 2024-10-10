@@ -33,8 +33,8 @@ int main(){
     if(!Ffs::normal("").empty())
       err("Ffs::normal");
 
-    if(!Ffs::file_name("").empty())
-      err("Ffs::file_name");
+    if(!fs_file_name("").empty())
+      err("file_name");
 
     if(!Ffs::stem("").empty())
       err("Ffs::stem");
@@ -66,14 +66,14 @@ int main(){
     if(!Ffs::which("").empty())
       err("Ffs::which");
 
-    if(!Ffs::root("").empty())
-      err("Ffs::root");
+    if(!fs_root("").empty())
+      err("root");
 
     if(fs_exists(""))
       err("exists");
 
-    if(Ffs::is_absolute(""))
-      err("Ffs::is_absolute");
+    if(fs_is_absolute(""))
+      err("is_absolute");
 
     if(fs_is_dir(""))
       err("is_dir");

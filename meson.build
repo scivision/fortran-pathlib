@@ -44,6 +44,7 @@ comm_src = files(
 'src/common/owner.c',
 'src/common/os.c',
 'src/common/partition.c',
+'src/common/pure2.cpp',
 'src/common/realpath.cpp',
 'src/common/space.cpp',
 'src/common/sysctl.cpp',
@@ -83,7 +84,6 @@ comm_src += files('src/c/copy.c',
 'src/c/mkdir.c',
 'src/c/platform.c',
 'src/c/pure.c',
-'src/common/pure2.cpp',
 'src/c/resolve.c',
 'src/c/time.c')
 endif

@@ -111,7 +111,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
   std::map<std::string_view, std::function<bool(std::string_view)>> mbool =
   {
     {"is_reserved", Ffs::is_reserved},
-    {"is_absolute", Ffs::is_absolute},
     {"mkdir", Ffs::mkdir},
     {"is_safe", Ffs::is_safe_name}
   };
@@ -123,10 +122,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"realpath", Ffs::realpath},
     {"which", Ffs::which},
     {"parent", Ffs::parent},
-    {"root", Ffs::root},
     {"stem", Ffs::stem},
     {"suffix", Ffs::suffix},
-    {"filename", Ffs::file_name},
     {"normal", Ffs::normal},
     {"lexically_normal", Ffs::lexically_normal},
     {"make_preferred", Ffs::make_preferred},
@@ -175,8 +172,14 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << smax[fun](a1) << "\n";
   else if (mvoid.contains(fun))
     mvoid[fun](a1);
+  else if (fun == "root")
+    std::cout << fs_root(a1) << "\n";
+  else if (fun == "filename")
+    std::cout << fs_file_name(a1) << "\n";
   else if (fun == "file_size")
     std::cout << fs_file_size(a1).value_or(0) << "\n";
+  else if (fun == "is_absolute")
+    std::cout << fs_is_absolute(a1) << "\n";
   else if (fun == "is_exe")
     std::cout << fs_is_exe(a1) << "\n";
   else if (fun == "is_dir")

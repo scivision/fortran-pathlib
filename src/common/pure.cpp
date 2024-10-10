@@ -41,11 +41,6 @@ std::string Ffs::normal(std::string_view path){
 }
 
 
-std::string Ffs::file_name(std::string_view path){
-  return std::filesystem::path(path).filename().generic_string();
-}
-
-
 std::string Ffs::stem(std::string_view path){
   return std::filesystem::path(path).filename().stem().generic_string();
 }
@@ -94,21 +89,6 @@ std::string Ffs::suffix(std::string_view path){
 
 std::string Ffs::with_suffix(std::string_view path, std::string_view new_suffix){
   return std::filesystem::path(path).replace_extension(new_suffix).generic_string();
-}
-
-
-std::string Ffs::root(std::string_view path){
-
-  if(auto p = std::filesystem::path(path);
-      p.is_absolute())
-    return p.root_path().generic_string();
-
-  return {};
-}
-
-
-bool Ffs::is_absolute(std::string_view path){
-  return std::filesystem::path(path).is_absolute();
 }
 
 

@@ -48,19 +48,6 @@ size_t fs_normal(const char* path, char* result, const size_t buffer_size)
 }
 
 
-size_t fs_file_name(const char* path, char* result, const size_t buffer_size)
-{
-  char* pos = strrchr(path, '/');
-  if (fs_is_windows() && !pos)
-    pos = strrchr(path, '\\');
-
-  if(!pos)
-    return fs_strncpy(path, result, buffer_size);
-
-  return fs_strncpy(pos+1, result, buffer_size);
-}
-
-
 size_t fs_stem(const char* path, char* result, const size_t buffer_size)
 {
   if(!fs_file_name(path, result, buffer_size))

@@ -36,43 +36,43 @@ void test_as_posix(){
 void test_filename()
 {
 
-if(Ffs::file_name("") != "")
-  err("filename empty: " + Ffs::file_name(""));
+if(fs_file_name("") != "")
+  err("filename empty: " + fs_file_name(""));
 
 std::cout << "PASS:filename:empty\n";
 
-if (Ffs::file_name("a/b/c") != "c")
-  err("file_name failed: " + Ffs::file_name("a/b/c"));
+if (fs_file_name("a/b/c") != "c")
+  err("file_name failed: " + fs_file_name("a/b/c"));
 
-if (Ffs::file_name("a") != "a")
-  err("file_name idempotent failed: " + Ffs::file_name("a"));
+if (fs_file_name("a") != "a")
+  err("file_name idempotent failed: " + fs_file_name("a"));
 
-if(Ffs::file_name("file_name") != "file_name")
-  err("file_name plain filename: " + Ffs::file_name("file_name"));
+if(fs_file_name("file_name") != "file_name")
+  err("file_name plain filename: " + fs_file_name("file_name"));
 
 auto cwd = Ffs::get_cwd();
 if(!cwd)
   err("file_name cwd");
-if(std::string nr = Ffs::file_name(Ffs::root(cwd.value())); !nr.empty())
+if(std::string nr = fs_file_name(fs_root(cwd.value())); !nr.empty())
   err("file_name root: " + nr);
 
-if(Ffs::file_name(".file_name") != ".file_name")
-  err("file_name leading dot filename: " + Ffs::file_name(".file_name"));
+if(fs_file_name(".file_name") != ".file_name")
+  err("file_name leading dot filename: " + fs_file_name(".file_name"));
 
-if(Ffs::file_name("./file_name") != "file_name")
-  err("file_name leading dot filename cwd: " + Ffs::file_name("./file_name"));
+if(fs_file_name("./file_name") != "file_name")
+  err("file_name leading dot filename cwd: " + fs_file_name("./file_name"));
 
-if(Ffs::file_name("file_name.txt") != "file_name.txt")
+if(fs_file_name("file_name.txt") != "file_name.txt")
   err("file_name leading dot filename w/ext");
 
-if(Ffs::file_name("./file_name.txt") != "file_name.txt")
+if(fs_file_name("./file_name.txt") != "file_name.txt")
   err("file_name leading dot filename w/ext and cwd");
 
-if(Ffs::file_name("../file_name.txt") != "file_name.txt")
-  err("file_name leading dot filename w/ext up " + Ffs::file_name("../file_name.txt"));
+if(fs_file_name("../file_name.txt") != "file_name.txt")
+  err("file_name leading dot filename w/ext up " + fs_file_name("../file_name.txt"));
 
-if(fs_is_windows() && Ffs::file_name("c:\\my\\path") != "path")
-  err("file_name windows: " + Ffs::file_name("c:\\my\\path"));
+if(fs_is_windows() && fs_file_name("c:\\my\\path") != "path")
+  err("file_name windows: " + fs_file_name("c:\\my\\path"));
 
 if(fs_is_windows() && fs_pathsep() != ';')
   err("pathsep windows");
