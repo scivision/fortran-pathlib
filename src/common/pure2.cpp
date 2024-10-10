@@ -51,3 +51,26 @@ std::string fs_root(std::string_view path)
   return fs_is_windows() ? std::string(1, path[0]) + ":/" : "/";
 #endif
 }
+
+
+std::string fs_stem(std::string_view path)
+{
+#ifdef HAVE_CXX_FILESYSTEM
+  return std::filesystem::path(path).filename().stem().generic_string();
+#else
+  std::string r = fs_file_name(path);
+  if(r.empty())
+    return {};
+
+  // handle special case a/..
+  if (r == "..")
+    return r;
+
+  // find last dot
+  if (auto pos = r.find_last_of('.');
+        pos != std::string::npos && pos != 0)
+    return std::string(r.substr(0, pos));
+
+  return r;
+#endif
+}

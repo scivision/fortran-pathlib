@@ -53,11 +53,6 @@ std::string::size_type fs_resolve(const char* path, const bool strict, const boo
   return fs_str2char(Ffs::resolve(path, strict, expand_tilde).value_or(""), result, buffer_size);
 }
 
-std::string::size_type fs_stem(const char* path,
-                         char* result, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::stem(path), result, buffer_size);
-}
-
 std::string::size_type fs_suffix(const char* path,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::suffix(path), result, buffer_size);

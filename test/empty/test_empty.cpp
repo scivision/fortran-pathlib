@@ -36,8 +36,8 @@ int main(){
     if(!fs_file_name("").empty())
       err("file_name");
 
-    if(!Ffs::stem("").empty())
-      err("Ffs::stem");
+    if(!fs_stem("").empty())
+      err("stem");
 
     if(!Ffs::join("", "").empty())
       err("Ffs::join");

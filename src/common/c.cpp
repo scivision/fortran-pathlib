@@ -129,6 +129,11 @@ size_t fs_root(const char* path, char* result, const size_t buffer_size)
   return fs_str2char(fs_root(path), result, buffer_size);
 }
 
+std::string::size_type fs_stem(const char* path,
+                         char* result, const std::string::size_type buffer_size){
+  return fs_str2char(fs_stem(path), result, buffer_size);
+}
+
 bool fs_is_absolute(const char* path)
 {
   return fs_is_absolute(std::string_view(path));

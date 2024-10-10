@@ -122,7 +122,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"realpath", Ffs::realpath},
     {"which", Ffs::which},
     {"parent", Ffs::parent},
-    {"stem", Ffs::stem},
     {"suffix", Ffs::suffix},
     {"normal", Ffs::normal},
     {"lexically_normal", Ffs::lexically_normal},
@@ -198,6 +197,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << fs_get_permissions(a1).value_or("") << "\n";
   else if (fun == "read_symlnk")
     std::cout << fs_read_symlink(a1).value_or("") << "\n";
+  else if (fun == "stem")
+    std::cout << fs_stem(a1) << "\n";
   else if (fun == "exists")
     std::cout << fs_exists(a1) << "\n";
   else if (fun == "space")

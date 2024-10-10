@@ -73,7 +73,6 @@ public:
   [[nodiscard]] static std::string lexically_normal(std::string_view);
   [[nodiscard]] static std::string make_preferred(std::string_view);
 
-  [[nodiscard]] static std::string stem(std::string_view);
   [[nodiscard]] static std::string parent(std::string_view);
   [[nodiscard]] static std::string suffix(std::string_view);
   [[nodiscard]] static std::string which(std::string_view);
@@ -166,6 +165,8 @@ bool fs_touch(std::string_view);
 
 [[nodiscard]] std::string fs_realpath(std::string_view);
 [[nodiscard]] std::string fs_trim(std::string r);
+
+[[nodiscard]] std::string fs_stem(std::string_view);
 
 [[nodiscard]] bool fs_is_absolute(std::string_view path);
 [[nodiscard]] bool fs_is_symlink(std::string_view);

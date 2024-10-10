@@ -48,23 +48,6 @@ size_t fs_normal(const char* path, char* result, const size_t buffer_size)
 }
 
 
-size_t fs_stem(const char* path, char* result, const size_t buffer_size)
-{
-  if(!fs_file_name(path, result, buffer_size))
-    return 0;
-
-  // handle special case a/..
-  if (strcmp(result, "..") == 0)
-    return 2;
-
-  char* pos = strrchr(result, '.');
-  if (pos && pos != result)
-    *pos = '\0';
-
-  return strlen(result);
-}
-
-
 size_t fs_join(const char* path, const char* other, char* result, const size_t buffer_size)
 {
   const size_t L1 = strlen(path);

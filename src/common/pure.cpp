@@ -41,11 +41,6 @@ std::string Ffs::normal(std::string_view path){
 }
 
 
-std::string Ffs::stem(std::string_view path){
-  return std::filesystem::path(path).filename().stem().generic_string();
-}
-
-
 std::string Ffs::join(std::string_view path, std::string_view other){
   return Ffs::drop_slash((std::filesystem::path(path) / other).lexically_normal().generic_string());
 }

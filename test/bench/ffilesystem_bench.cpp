@@ -56,7 +56,6 @@ std::map<std::string_view, std::function<std::string(std::string_view)>> s_s =
     {"expanduser", Ffs::expanduser},
     {"which", Ffs::which},
     {"parent", Ffs::parent},
-    {"stem", Ffs::stem},
     {"suffix", Ffs::suffix},
     {"normal", Ffs::normal},
     {"lexically_normal", Ffs::lexically_normal},

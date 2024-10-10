@@ -1,7 +1,3 @@
-if(NOT HAVE_CXX_FILESYSTEM)
-  return()
-endif()
-
 if(TARGET fs_cli)
 
 add_test(NAME Cpp_CLI_Cpp
@@ -13,7 +9,12 @@ COMMAND ${CMAKE_COMMAND}
 
 endif()
 
-foreach(t IN ITEMS file system utf8)
+set(tests file system)
+if(HAVE_CXX_FILESYSTEM)
+  list(APPEND tests utf8)
+endif()
+
+foreach(t IN LISTS tests)
   add_executable(test_cpp_${t} test_${t}.cpp)
   target_link_libraries(test_cpp_${t} PRIVATE ffilesystem)
 
