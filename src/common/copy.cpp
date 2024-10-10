@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <system_error>
-#include <memory> // std::make_unique
+#include <string>
 
 #ifndef HAVE_CXX_FILESYSTEM
 #include <cstdio>  // fopen, fclose, fread, fwrite
@@ -60,7 +60,7 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
 #else
     // https://stackoverflow.com/a/29082484
     const int bufferSize = 4096;
-    auto buf = std::make_unique<char[]>(bufferSize);
+    std::string buf(bufferSize, '\0');
     FILE *rid = fopen(source.data(), "r");
     FILE *wid = fopen(dest.data(), "w");
 
@@ -70,9 +70,9 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
     }
 
     while (!feof(rid)) {
-      size_t bytes = fread(buf.get(), 1, bufferSize, rid);
+      size_t bytes = fread(buf.data(), 1, bufferSize, rid);
       if (bytes)
-        fwrite(buf.get(), 1, bytes, wid);
+        fwrite(buf.data(), 1, bytes, wid);
     }
 
     fclose(rid);
