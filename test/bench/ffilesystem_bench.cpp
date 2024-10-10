@@ -44,12 +44,6 @@ std::map<std::string_view, std::function<std::string()>> s_ =
     {"lib_path", Ffs::lib_path}
   };
 
-std::map<std::string_view, std::function<std::optional<std::string>()>> so_ =
-  {
-    {"tempdir", Ffs::get_tempdir},
-    {"cwd", Ffs::get_cwd}
-  };
-
 std::map<std::string_view, std::function<std::string(std::string_view)>> s_s =
   {
     {"as_posix", Ffs::as_posix},

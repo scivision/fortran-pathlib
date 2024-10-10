@@ -3,7 +3,7 @@ if(TARGET fs_cli)
 add_test(NAME Cpp_CLI_Cpp
 COMMAND ${CMAKE_COMMAND}
 -Dexe=$<TARGET_FILE:fs_cli>
-"-Dregex=Ffs\> 1"
+"-Dregex=^Ffs\> 1"
 -P ${CMAKE_CURRENT_SOURCE_DIR}/../stdin.cmake
 )
 

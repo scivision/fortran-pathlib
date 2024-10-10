@@ -44,6 +44,7 @@ comm_src = files(
 'src/common/owner.c',
 'src/common/os.c',
 'src/common/partition.c',
+'src/common/platform.cpp',
 'src/common/pure2.cpp',
 'src/common/realpath.cpp',
 'src/common/space.cpp',
@@ -69,7 +70,6 @@ cppsrcs = files(
 'src/common/mkdir.cpp',
 'src/common/mkdtemp.cpp',
 'src/common/pure.cpp',
-'src/common/platform.cpp',
 'src/common/resolve.cpp',
 'src/common/time.cpp'
 )
@@ -82,7 +82,6 @@ cwalk_inc = cwalk_proj.get_variable('cwalk_inc')
 cppsrcs = []
 comm_src += files('src/c/copy.c',
 'src/c/mkdir.c',
-'src/c/platform.c',
 'src/c/pure.c',
 'src/c/resolve.c',
 'src/c/time.c')

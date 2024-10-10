@@ -13,11 +13,6 @@ bool fs_equivalent(const char* path1, const char* path2){
   return Ffs::equivalent(path1, path2);
 }
 
-
-std::string::size_type fs_get_cwd(char* path, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::get_cwd().value_or(""), path, buffer_size);
-}
-
 std::string::size_type fs_join(const char* path, const char* other,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::join(path, other), result, buffer_size);
@@ -62,13 +57,6 @@ std::string::size_type fs_with_suffix(const char* path, const char* new_suffix,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::with_suffix(path, new_suffix), result, buffer_size);
 }
-
-bool fs_set_cwd(const char *path){ return Ffs::chdir(path); }
-
-std::string::size_type fs_get_tempdir(char* path, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::get_tempdir().value_or(""), path, buffer_size);
-}
-
 
 bool fs_copy_file(const char* source, const char* dest, bool overwrite){
   return Ffs::copy_file(source, dest, overwrite);

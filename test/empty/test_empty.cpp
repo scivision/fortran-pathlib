@@ -116,7 +116,7 @@ int main(){
 
     }
 
-    if(!Ffs::get_cwd())
+    if(!fs_get_cwd())
       err("get_cwd");
 
     if(Ffs::get_homedir().empty())

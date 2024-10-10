@@ -26,7 +26,7 @@ int main()
   _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-auto cwd = Ffs::get_cwd();
+auto cwd = fs_get_cwd();
 if(!cwd)
   return EXIT_FAILURE;
 

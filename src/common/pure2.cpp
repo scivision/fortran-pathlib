@@ -6,6 +6,13 @@
 #include "ffilesystem.h"
 
 
+// tell if Ffilesystme core is C or C++
+bool fs_cpp(){ return true; }
+
+// C++ version compiler claims to support with given options
+long fs_lang(){ return __cplusplus; }
+
+
 bool fs_is_absolute(std::string_view path)
 {
   if(path.empty())

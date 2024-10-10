@@ -30,7 +30,7 @@ _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
 _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-auto fpath = Ffs::get_cwd();
+auto fpath = fs_get_cwd();
 if(!fpath)
   return EXIT_FAILURE;
 
@@ -73,7 +73,7 @@ if (p != Ffs::expanduser("~"))
 std::cout << "PASS: C++ home directory\n";
 
 // --- tempdir
-auto t = Ffs::get_tempdir();
+auto t = fs_get_tempdir();
 if(!t)
   err("failed to get_tempdir()");
 

@@ -14,7 +14,7 @@
 
 int main() {
 
-  auto cwd = Ffs::get_cwd();
+  auto cwd = fs_get_cwd();
   if (!cwd)
     err("current working dir not found");
 

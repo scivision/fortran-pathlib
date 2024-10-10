@@ -57,12 +57,6 @@ static void no_arg(std::string_view fun){
     {"lib_path", Ffs::lib_path}
   };
 
-  std::map<std::string_view, std::function<std::optional<std::string>()>> mostring =
-  {
-    {"tempdir", Ffs::get_tempdir},
-    {"cwd", Ffs::get_cwd}
-  };
-
   std::map<std::string_view, std::function<int()>> mint =
   {
     {"is_wsl", fs_is_wsl},
@@ -83,8 +77,6 @@ static void no_arg(std::string_view fun){
     std::cout << mbool[fun]() << "\n";
   else if (mstring.contains(fun))
     std::cout << mstring[fun]() << "\n";
-  else if (mostring.contains(fun))
-    std::cout << mostring[fun]().value_or("") << "\n";
   else if (mint.contains(fun))
     std::cout << mint[fun]() << "\n";
   else if (mchar.contains(fun))
@@ -205,6 +197,10 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << fs_space_available(a1).value_or(0) << "\n";
   else if (fun == "absolute")
     std::cout << Ffs::absolute(a1, true)<< "\n";
+  else if (fun == "get_cwd")
+    std::cout << fs_get_cwd().value_or("") << "\n";
+  else if (fun == "tempdir")
+    std::cout << fs_get_tempdir().value_or("") << "\n";
   else if (fun == "modtime"){
 #if defined(__cpp_lib_format)
     const auto t = Ffs::get_modtime(a1);
@@ -217,11 +213,11 @@ static void one_arg(std::string_view fun, std::string_view a1){
   } else if (fun == "fs_modtime")
     std::cout << fs_get_modtime(a1.data()) << "\n";
   else if (fun == "chdir" || fun == "set_cwd") {
-    auto cwd = Ffs::get_cwd();
+    auto cwd = fs_get_cwd();
     if(cwd){
       std::cout << "cwd: " << cwd.value() << "\n";
-      if(Ffs::chdir(a1)){
-        cwd = Ffs::get_cwd();
+      if(fs_set_cwd(a1)){
+        cwd = fs_get_cwd();
         if(cwd)
           std::cout << "new cwd: " << cwd.value() << "\n";
         else

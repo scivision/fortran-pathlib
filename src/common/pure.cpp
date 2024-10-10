@@ -7,14 +7,6 @@
 #include <iostream>
 #include <cctype>
 
-
-// tell if Ffilesystme core is C or C++
-bool fs_cpp(){ return true; }
-
-// C++ version compiler claims to support with given options
-long fs_lang(){ return __cplusplus; }
-
-
 std::string Ffs::drop_slash(std::string_view sv)
 {
   // drop all trailing "/"

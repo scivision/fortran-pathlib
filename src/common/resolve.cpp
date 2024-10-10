@@ -50,7 +50,7 @@ std::string Ffs::absolute(std::string_view path, const bool expand_tilde)
 
   // Linux, MinGW can't handle empty paths
   if(ex.empty())
-    return Ffs::get_cwd().value_or("");
+    return fs_get_cwd().value_or("");
 
   std::error_code ec;
 

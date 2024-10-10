@@ -48,8 +48,6 @@ public:
   [[nodiscard]] static std::string get_hostname();
   [[nodiscard]] static std::string get_username();
   [[nodiscard]] static std::string user_config_dir();
-  [[nodiscard]] static std::optional<std::string> get_tempdir();
-  [[nodiscard]] static std::optional<std::string> get_cwd();
 
   [[nodiscard]] static size_t max_component(std::string_view);
 
@@ -96,7 +94,6 @@ public:
   static bool set_env(std::string_view, std::string_view);
 
   static bool mkdir(std::string_view);
-  static bool chdir(std::string_view);
 
   [[nodiscard]] static bool equivalent(std::string_view, std::string_view);
 
@@ -195,6 +192,11 @@ bool fs_set_permissions(std::string_view, int, int, int);
 [[nodiscard]] std::optional<uintmax_t> fs_file_size(std::string_view);
 
 bool fs_remove(std::string_view);
+
+bool fs_set_cwd(std::string_view);
+
+[[nodiscard]] std::optional<std::string> fs_get_tempdir();
+[[nodiscard]] std::optional<std::string> fs_get_cwd();
 
 #if defined(_MSC_VER)
 int

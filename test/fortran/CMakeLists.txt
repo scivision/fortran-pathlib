@@ -6,15 +6,9 @@ set_property(DIRECTORY PROPERTY LABELS "Fortran")
 
 if(ffilesystem_cli)
 
-if(HAVE_CXX_FILESYSTEM)
-  set(_r "^Ffs\> T")
-else()
-  set(_r "^Ffs\> F")
-endif()
-
 add_test(NAME Fortran_CLI_Cpp
 COMMAND ${CMAKE_COMMAND} -Dexe=$<TARGET_FILE:filesystem_cli>
--Dregex=${_r}
+"-Dregex=^Ffs\> T"
 -P ${CMAKE_CURRENT_SOURCE_DIR}/../stdin.cmake
 )
 

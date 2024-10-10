@@ -14,21 +14,6 @@
 #include <ctype.h> // isalpha
 
 
-bool fs_cpp(){
-// tell if fs core is C or C++
-  return false;
-}
-
-
-long fs_lang(){
-#ifdef __STDC_VERSION__
-  return __STDC_VERSION__;
-#else
-  return 0L;
-#endif
-}
-
-
 size_t fs_normal(const char* path, char* result, const size_t buffer_size)
 {
 // normalize path
