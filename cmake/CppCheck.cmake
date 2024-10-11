@@ -40,6 +40,8 @@ int main(){
 ffilesystem_HAVE_MERSENNE_TWISTER
 )
 
+if(CMAKE_CXX_STANDARD GREATER_EQUAL 20)
+
 # for Ffs::get_modtime
 check_source_compiles(CXX
 "#include <chrono>
@@ -54,7 +56,9 @@ return 0;
 ffilesystem_HAVE_CLOCK_CAST
 )
 
-if(ffilesystem_cli)
+endif()
+
+if(ffilesystem_cli AND CMAKE_CXX_STANDARD GREATER_EQUAL 20)
   check_source_compiles(CXX
   "#include <map>
    int main(){
