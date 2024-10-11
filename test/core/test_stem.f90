@@ -7,7 +7,7 @@ implicit none
 
 
 valgrind : block
-character(:), allocatable :: s
+character(:), allocatable :: s, p
 
 s = stem("")
 if(s /= "") error stop "stem empty: " // s
@@ -50,6 +50,15 @@ if (s /= "") error stop "stem parent directory trailing slash: " // s
 s = stem("a/.")
 if (s /= ".") error stop "stem parent directory ." // s
 
+if(is_windows()) then
+  p = "C:\\a\\ball.text"
+  s = stem(p)
+  if (s /= "ball") error stop "stem(" // p // ") windows path: " // s // " != ball"
+
+endif
+
 end block valgrind
+
+print '(a)', "OK: stem"
 
 end program
