@@ -44,6 +44,14 @@ Inspired by (and benchmarked against)
 Important Ffilesystem functions are [benchmarked](./test/bench/bench.md) to help improve performance.
 Advanced / conceptual development takes place in [ffilesystem-concepts](https://github.com/scivision/ffilesystem-concepts) repo.
 
+Like
+[Microsoft STL](https://github.com/microsoft/STL/issues/2256),
+our Ffilesystem is not designed for UNC paths.
+We recommend using a UNC path to a mapped drive letter.
+We have not fully tested Windows
+[long paths](https://github.com/microsoft/STL/issues/1921)
+and appreciate feedback.
+
 ## Compiler support
 
 Ffilesystem supports compilers including:

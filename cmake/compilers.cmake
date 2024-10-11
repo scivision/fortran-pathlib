@@ -24,6 +24,19 @@ if(GNU_stdfs)
   message(STATUS "adding library ${GNU_stdfs}")
 endif()
 
+# --- compiler standard setting
+set(CMAKE_CXX_STANDARD 17)
+# https://cmake.org/cmake/help/latest/variable/CMAKE_CXX_COMPILE_FEATURES.html
+if("cxx_std_20" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
+  set(CMAKE_CXX_STANDARD 20)
+elseif(HAVE_CXX_FILESYSTEM AND NOT "cxx_std_17" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
+  message(WARNING "${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION} may not support at least C++17 standard")
+endif()
+
+if(CMAKE_VERSION VERSION_LESS 3.25 AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  set(LINUX true)
+endif()
+
 if(ffilesystem_cpp)
   include(${CMAKE_CURRENT_LIST_DIR}/CppCheck.cmake)
   cpp_check()
@@ -57,19 +70,6 @@ if(ffilesystem_cpp AND NOT ffilesystem_fallback AND NOT HAVE_CXX_FILESYSTEM)
   message(FATAL_ERROR "C++ filesystem not available. To fallback to plain C++:
   cmake -Dffilesystem_fallback=on -B build"
   )
-endif()
-
-# --- compiler standard setting
-set(cxx_std 17)
-# https://cmake.org/cmake/help/latest/variable/CMAKE_CXX_COMPILE_FEATURES.html
-if("cxx_std_20" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
-  set(cxx_std 20)
-elseif(HAVE_CXX_FILESYSTEM AND NOT "cxx_std_17" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
-  message(WARNING "${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION} may not support at least C++17 standard")
-endif()
-
-if(CMAKE_VERSION VERSION_LESS 3.25 AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  set(LINUX true)
 endif()
 
 # fixes errors about needing -fPIE

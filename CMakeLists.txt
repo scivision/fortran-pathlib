@@ -33,7 +33,7 @@ endif()
 
 include(cmake/compilers.cmake)
 
-message(STATUS "${PROJECT_NAME} ${PROJECT_VERSION} C++${cxx_std} CMake ${CMAKE_VERSION} ${CMAKE_SYSTEM_NAME} Toolchain ${CMAKE_TOOLCHAIN_FILE}")
+message(STATUS "${PROJECT_NAME} ${PROJECT_VERSION} C++${CMAKE_CXX_STANDARD} CMake ${CMAKE_VERSION} ${CMAKE_SYSTEM_NAME} Toolchain ${CMAKE_TOOLCHAIN_FILE}")
 message(VERBOSE "CMAKE_AR ${CMAKE_AR}
 CMAKE_RANLIB ${CMAKE_RANLIB}
 CMAKE_STRIP ${CMAKE_STRIP}")
@@ -101,7 +101,7 @@ target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_DLADDR}>>:HAVE_DLADDR>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_GETLOADAVG}>>:HAVE_GETLOADAVG>"
 )
-target_compile_features(ffilesystem PRIVATE cxx_std_${cxx_std} c_std_99)
+target_compile_features(ffilesystem PRIVATE cxx_std_${CMAKE_CXX_STANDARD} c_std_99)
 target_compile_options(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANG_AND_ID:C,AppleClang,Clang,GNU>,$<NOT:$<BOOL:${c23_maybe_unused}>>>:-Wno-unused-parameter>"
 )
@@ -158,16 +158,11 @@ set_property(TARGET ffilesystem::filesystem PROPERTY IMPORTED_LINK_INTERFACE_LAN
 # --- CLI
 
 if(ffilesystem_cli)
-  if(HAVE_CXX_FILESYSTEM AND ffilesystem_cpp_map_contains AND cxx_std GREATER_EQUAL 20)
+  if(HAVE_CXX_FILESYSTEM AND ffilesystem_cpp_map_contains AND CMAKE_CXX_STANDARD GREATER_EQUAL 20)
     add_executable(fs_cli app/main.cpp)
     target_link_libraries(fs_cli PRIVATE ffilesystem)
 
-    if("cxx_std_23" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
-      set(app_cxx_std 23)
-    else()
-      set(app_cxx_std ${cxx_std})
-    endif()
-    target_compile_features(fs_cli PRIVATE cxx_std_${app_cxx_std})
+    target_compile_features(fs_cli PRIVATE cxx_std_$<IF:$<IN_LIST:cxx_std_23,CMAKE_CXX_COMPILE_FEATURES>,23,${CMAKE_CXX_STANDARD}>)
 
     install(TARGETS fs_cli EXPORT ${PROJECT_NAME}-targets)
   endif()

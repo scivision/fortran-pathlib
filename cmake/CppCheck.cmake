@@ -4,9 +4,7 @@ function(cpp_check)
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE EXECUTABLE)
 
-set(CMAKE_CXX_STANDARD 20)
-
-# some compilers e.g. Cray claim to have filesystem, but their libstdc++ doesn't have it.
+# some compilers claim to have filesystem, but their libstdc++ doesn't have it.
 check_source_compiles(CXX
 [=[
 #include <cstdlib>
