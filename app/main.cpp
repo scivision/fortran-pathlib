@@ -111,8 +111,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"normal", Ffs::normal},
     {"lexically_normal", Ffs::lexically_normal},
     {"make_preferred", Ffs::make_preferred},
-    {"mkdtemp", Ffs::mkdtemp},
-    {"type", Ffs::filesystem_type}
+    {"mkdtemp", Ffs::mkdtemp}
   };
 
   std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool, bool)>> mstrb =
@@ -135,6 +134,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << mstrb[fun](a1, true, false).value_or("") << "\n";
   else if (mstrbw.contains(fun))
     std::cout << mstrbw[fun](a1, false, false).value_or("") << "\n";
+  else if (fun == "type")
+    std::cout << fs_filesystem_type(a1) << "\n";
   else if (fun == "is_reserved")
     std::cout << fs_is_reserved(a1) << "\n";
   else if (fun == "is_safe")

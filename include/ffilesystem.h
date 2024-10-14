@@ -40,20 +40,12 @@
 class Ffs
 {
 public:
-  [[nodiscard]] static std::string get_shell();
-  [[nodiscard]] static std::string get_hostname();
-  [[nodiscard]] static std::string get_username();
-
-  [[nodiscard]] static size_t max_component(std::string_view);
 
   [[nodiscard]] static std::string expanduser(std::string_view);
-  [[nodiscard]] static std::string realpath(std::string_view);
 
   [[nodiscard]] static bool is_absolute(std::string_view);
   [[nodiscard]] static bool exists(std::string_view);
   [[nodiscard]] static bool is_subdir(std::string_view, std::string_view);
-
-  [[nodiscard]] static std::string as_posix(std::string_view);
 
   [[nodiscard]] static std::string normal(std::string_view);
   [[nodiscard]] static std::string lexically_normal(std::string_view);
@@ -74,9 +66,6 @@ public:
 
   [[nodiscard]] static std::string mkdtemp(std::string_view);
 
-  [[nodiscard]] static std::string get_env(std::string_view);
-  static bool set_env(std::string_view, std::string_view);
-
   [[nodiscard]] static bool equivalent(std::string_view, std::string_view);
 
   [[nodiscard]] static std::string join(std::string_view, std::string_view);
@@ -84,10 +73,6 @@ public:
   [[nodiscard]] static std::string proximate_to(std::string_view, std::string_view);
 
   [[nodiscard]] static std::string with_suffix(std::string_view, std::string_view);
-
-  [[nodiscard]] static std::string filesystem_type(std::string_view);
-
-  [[nodiscard]] static std::string cpu_arch();
 
   [[nodiscard]] static std::string drop_slash(std::string_view);
 
@@ -190,6 +175,9 @@ bool fs_set_cwd(std::string_view);
 
 [[nodiscard]] std::optional<std::string> fs_get_tempdir();
 [[nodiscard]] std::optional<std::string> fs_get_cwd();
+
+
+[[nodiscard]] std::string fs_filesystem_type(std::string_view);
 
 #if defined(_MSC_VER)
 int

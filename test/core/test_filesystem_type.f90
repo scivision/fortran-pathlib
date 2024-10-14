@@ -10,10 +10,10 @@ valgrind : block
 
 character(:), allocatable :: fsname
 
-if(is_cygwin()) then
+if(is_windows()) then
   fsname = filesystem_type(getenv("SYSTEMDRIVE"))
 else
-  fsname = filesystem_type(".")
+  fsname = filesystem_type("/")
 end if
 
 if(len_trim(fsname) == 0) then

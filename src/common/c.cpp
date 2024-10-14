@@ -177,6 +177,11 @@ std::string::size_type fs_file_name(const char* path,
   return fs_str2char(fs_file_name(path), result, buffer_size);
 }
 
+std::string::size_type fs_filesystem_type(const char* path,
+                         char* result, const std::string::size_type buffer_size){
+  return fs_str2char(fs_filesystem_type(path), result, buffer_size);
+}
+
 bool fs_is_reserved(const char* path){ return fs_is_reserved(std::string_view(path)); }
 
 bool fs_is_safe_name(const char* path){ return fs_is_safe_name(std::string_view(path)); }
