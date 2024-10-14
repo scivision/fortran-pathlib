@@ -27,30 +27,30 @@ int main(void){
   std::string r;
   std::string h;
 
-  r = Ffs::expanduser("");
+  r = fs_expanduser("");
 
   if(!r.empty())
     err("expanduser('') != ''  " + r);
 
-  r = Ffs::expanduser(".");
+  r = fs_expanduser(".");
   if (r != ".")
     err("expanduser('.') != '.'" + r);
 
-  r = Ffs::expanduser("~");
-  h = Ffs::get_homedir();
+  r = fs_expanduser("~");
+  h = fs_get_homedir();
   if(r != h)
     err("expanduser('~') != homedir  => " + r + " != " + h);
 
   std::cout << "~: " << h << "\n";
 
-  r = Ffs::expanduser("~/");
-  h = Ffs::get_homedir();
+  r = fs_expanduser("~/");
+  h = fs_get_homedir();
   if (r != h)
     err("expanduser('~/') != homedir + '/'  =>  " + r + " != " + h);
 
   std::cout << "~/: " << h << "\n";
 
-  r = Ffs::expanduser("~//");
+  r = fs_expanduser("~//");
   if (r != h)
     err("expanduser('~//') != homedir");
 

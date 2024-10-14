@@ -45,10 +45,7 @@ static void no_arg(std::string_view fun){
 
   std::map<std::string_view, std::function<std::string()>> mstring =
   {
-    {"compiler", Ffs::compiler},
     {"shell", Ffs::get_shell},
-    {"terminal", Ffs::get_terminal},
-    {"homedir", Ffs::get_homedir},
     {"profile_dir", Ffs::get_profile_dir},
     {"hostname", Ffs::get_hostname},
     {"username", Ffs::get_username},
@@ -83,6 +80,12 @@ static void no_arg(std::string_view fun){
     std::cout << mchar[fun]() << "\n";
   else if (mlong.contains(fun))
     std::cout << mlong[fun]() << "\n";
+  else if (fun == "compiler")
+    std::cout << fs_compiler() << "\n";
+  else if (fun == "homedir")
+    std::cout << fs_get_homedir() << "\n";
+  else if (fun == "terminal")
+    std::cout << fs_get_terminal() << "\n";
   else if (fun == "cpu_arch")
     std::cout << Ffs::cpu_arch() << "\n";
   else if (fun == "max_path")
@@ -110,17 +113,13 @@ static void one_arg(std::string_view fun, std::string_view a1){
   std::map<std::string_view, std::function<std::string(std::string_view)>> mstring =
   {
     {"as_posix", Ffs::as_posix},
-    {"expanduser", Ffs::expanduser},
     {"realpath", Ffs::realpath},
-    {"which", Ffs::which},
     {"parent", Ffs::parent},
     {"suffix", Ffs::suffix},
     {"normal", Ffs::normal},
     {"lexically_normal", Ffs::lexically_normal},
     {"make_preferred", Ffs::make_preferred},
     {"mkdtemp", Ffs::mkdtemp},
-    {"owner_name", Ffs::get_owner_name},
-    {"owner_group", Ffs::get_owner_group},
     {"shortname", Ffs::shortname},
     {"longname", Ffs::longname},
     {"getenv", Ffs::get_env},
@@ -163,6 +162,14 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << smax[fun](a1) << "\n";
   else if (mvoid.contains(fun))
     mvoid[fun](a1);
+  else if (fun == "which")
+    std::cout << fs_which(a1) << "\n";
+  else if (fun == "owner"){
+    std::cout << fs_get_owner_name(a1) << "\n";
+    std::cout << fs_get_owner_group(a1) << "\n";
+  }
+  else if (fun == "expanduser")
+    std::cout << fs_expanduser(a1) << "\n";
   else if (fun == "root")
     std::cout << fs_root(a1) << "\n";
   else if (fun == "filename")
@@ -228,7 +235,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
     }
   } else if (fun == "ls") {
 #if defined __cpp_lib_filesystem
-    for (auto const& dir_entry : std::filesystem::directory_iterator{Ffs::expanduser(a1)}){
+    for (auto const& dir_entry : std::filesystem::directory_iterator{fs_expanduser(a1)}){
       std::filesystem::path p = dir_entry.path();
       std::cout << p;
       if (const auto &s = std::filesystem::file_size(p, ec); s && !ec)

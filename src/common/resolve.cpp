@@ -14,7 +14,7 @@ std::optional<std::string> Ffs::canonical(std::string_view path, const bool stri
     // need this for macOS otherwise it returns the current working directory instead of empty string
 
   const auto ex = expand_tilde
-    ? std::filesystem::path(Ffs::expanduser(path))
+    ? std::filesystem::path(fs_expanduser(path))
     : path;
 
   std::error_code ec;
@@ -45,7 +45,7 @@ std::string Ffs::absolute(std::string_view path, const bool expand_tilde)
   // https://docs.python.org/3/library/pathlib.html#pathlib.Path.absolute
 
   const auto ex = expand_tilde
-    ? std::filesystem::path(Ffs::expanduser(path))
+    ? std::filesystem::path(fs_expanduser(path))
     : path;
 
   // Linux, MinGW can't handle empty paths
@@ -69,7 +69,7 @@ std::string Ffs::absolute(std::string_view path, std::string_view base, const bo
 {
   // variant that allow rebasing on base path
   const auto ex = expand_tilde
-    ? std::filesystem::path(Ffs::expanduser(path))
+    ? std::filesystem::path(fs_expanduser(path))
     : path;
 
   if (ex.is_absolute())

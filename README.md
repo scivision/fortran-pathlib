@@ -27,8 +27,9 @@ Ffilesystem uses
 and the
 [C standard library](https://en.wikipedia.org/wiki/C_standard_library) to access filesystem and system parameters.
 
-Ffilesystem works with several popular C standard library implementations, including
+Ffilesystem works with popular C standard library implementations including:
 [glibc](https://sourceware.org/glibc/),
+[newlib](https://sourceware.org/newlib/),
 [musl](https://musl.libc.org/),
 [Cosmopolitan universal binaries](./Readme_cosmopolitan.md),
 [macOS universal binaries](./Readme_macos.md),

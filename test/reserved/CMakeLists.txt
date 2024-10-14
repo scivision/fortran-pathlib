@@ -1,9 +1,10 @@
-add_executable(test_reserved_c test_reserved.c)
-target_link_libraries(test_reserved_c PRIVATE ffilesystem)
+add_executable(test_reserved_cpp test_reserved.cpp)
+target_link_libraries(test_reserved_cpp PRIVATE ffilesystem)
+target_compile_definitions(test_reserved_cpp PRIVATE $<$<BOOL:${HAVE_CXX_FILESYSTEM}>:HAVE_CXX_FILESYSTEM>)
 
-add_test(NAME C_reserved COMMAND ${CMAKE_COMMAND} -E env $<TARGET_FILE:test_reserved_c>)
+add_test(NAME Cpp_reserved COMMAND ${CMAKE_COMMAND} -E env $<TARGET_FILE:test_reserved_cpp>)
 # the -E env launcher is needed to catch subprocess abort for macOS with Clang
-set_tests_properties(C_reserved PROPERTIES
+set_tests_properties(Cpp_reserved PROPERTIES
 SKIP_REGULAR_EXPRESSION "SIGABRT;[aA]bort"
 )
 

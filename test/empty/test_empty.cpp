@@ -63,8 +63,8 @@ int main(){
     if(Ffs::mkdir(""))
       err("Ffs::mkdir");
 
-    if(!Ffs::which("").empty())
-      err("Ffs::which");
+    if(!fs_which("").empty())
+      err("which");
 
     if(!fs_root("").empty())
       err("root");
@@ -93,8 +93,8 @@ int main(){
     if(Ffs::equivalent("", ""))
       err("Ffs::equivalent");
 
-    if(!Ffs::expanduser("").empty())
-      err("Ffs::expanduser");
+    if(!fs_expanduser("").empty())
+      err("expanduser");
 
     if(fs_copy_file("", "", false))
       err("copy_file");
@@ -119,7 +119,7 @@ int main(){
     if(!fs_get_cwd())
       err("get_cwd");
 
-    if(Ffs::get_homedir().empty())
+    if(fs_get_homedir().empty())
       err("get_homedir");
 
     std::cout << "OK: test_c_empty\n";

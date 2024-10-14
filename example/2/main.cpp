@@ -21,13 +21,13 @@ int main() {
   std::cout << "current working dir " << cwd.value() << "\n";
 
   std::string h;
-  h = Ffs::get_homedir();
+  h = fs_get_homedir();
   if (h.empty())
     err("home dir not found");
 
   std::cout << "home dir " << h << "\n";
 
-  h = Ffs::expanduser("~");
+  h = fs_expanduser("~");
   if (h.empty())
     err("home dir not found");
 

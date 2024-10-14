@@ -40,19 +40,13 @@
 class Ffs
 {
 public:
-  [[nodiscard]] static std::string compiler();
   [[nodiscard]] static std::string get_shell();
-  [[nodiscard]] static std::string get_terminal();
-  [[nodiscard]] static std::string get_homedir();
   [[nodiscard]] static std::string get_profile_dir();
   [[nodiscard]] static std::string get_hostname();
   [[nodiscard]] static std::string get_username();
   [[nodiscard]] static std::string user_config_dir();
 
   [[nodiscard]] static size_t max_component(std::string_view);
-
-  [[nodiscard]] static std::string get_owner_name(std::string_view);
-  [[nodiscard]] static std::string get_owner_group(std::string_view);
 
   [[nodiscard]] static std::string exe_path();
   [[nodiscard]] static std::string lib_path();
@@ -73,7 +67,6 @@ public:
 
   [[nodiscard]] static std::string parent(std::string_view);
   [[nodiscard]] static std::string suffix(std::string_view);
-  [[nodiscard]] static std::string which(std::string_view);
 
   static bool touch(std::string_view);
   [[nodiscard]] static std::optional<std::filesystem::file_time_type> get_modtime(std::string_view);
@@ -107,9 +100,6 @@ public:
 
   [[nodiscard]] static std::string filesystem_type(std::string_view);
 
-  [[nodiscard]] static std::string to_cygpath(std::string_view);
-  [[nodiscard]] static std::string to_winpath(std::string_view);
-
   [[nodiscard]] static std::string cpu_arch();
 
   [[nodiscard]] static std::string drop_slash(std::string_view);
@@ -127,6 +117,9 @@ public:
 void fs_print_error(std::string_view, std::string_view);
 bool fs_win32_create_symlink(std::string_view, std::string_view);
 
+
+[[nodiscard]] std::string fs_which(std::string_view);
+
 [[nodiscard]] std::string fs_longname(std::string_view);
 [[nodiscard]] std::string fs_shortname(std::string_view);
 
@@ -136,6 +129,14 @@ bool fs_win32_create_symlink(std::string_view, std::string_view);
 [[nodiscard]] std::string fs_compiler();
 
 [[nodiscard]] std::string fs_getenv(std::string_view);
+
+
+[[nodiscard]] std::string fs_get_owner_name(std::string_view);
+[[nodiscard]] std::string fs_get_owner_group(std::string_view);
+
+
+[[nodiscard]] std::string fs_to_cygpath(std::string_view);
+[[nodiscard]] std::string fs_to_winpath(std::string_view);
 
 [[nodiscard]] std::string fs_get_shell();
 [[nodiscard]] std::string fs_get_terminal();
@@ -238,11 +239,6 @@ size_t fs_strncpy(const char*, char*, const size_t);
 #  define FFS_NODISCARD
 #endif
 
-#if __has_c_attribute(maybe_unused)
-#  define FFS_MUNUSED [[maybe_unused]]
-#else
-#  define FFS_MUNUSED
-#endif
 
 FFS_NODISCARD bool fs_cpp();
 FFS_NODISCARD long fs_lang();

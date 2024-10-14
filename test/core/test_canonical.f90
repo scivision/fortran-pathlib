@@ -55,7 +55,10 @@ end if
 print *, 'OK: canon_dir = ', p1
 
 ! -- relative, non-existing file
-p1 = canonical('~/../' // dummy)
+p2 = '~/../' // dummy
+p1 = canonical(p2)
+
+print '(a)', "canonical(" // p2 // ") = " // p1
 
 L3 = len_trim(p1)
 if(L3 == 0) error stop "ERROR: relative file did not canonicalize: " // p1

@@ -101,10 +101,9 @@ target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_DLADDR}>>:HAVE_DLADDR>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_GETLOADAVG}>>:HAVE_GETLOADAVG>"
 )
+
 target_compile_features(ffilesystem PRIVATE cxx_std_${CMAKE_CXX_STANDARD} c_std_99)
-target_compile_options(ffilesystem PRIVATE
-"$<$<AND:$<COMPILE_LANG_AND_ID:C,AppleClang,Clang,GNU>,$<NOT:$<BOOL:${c23_maybe_unused}>>>:-Wno-unused-parameter>"
-)
+
 set_target_properties(ffilesystem PROPERTIES
 PUBLIC_HEADER include/ffilesystem.h
 EXPORT_NAME filesystem

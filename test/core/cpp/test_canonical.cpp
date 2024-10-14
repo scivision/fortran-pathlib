@@ -26,7 +26,7 @@ int main(){
 #endif
 
 // -- home directory
-std::string home = Ffs::get_homedir();
+std::string home = fs_get_homedir();
 if(home.empty())
   err("get_homedir() failed");
 

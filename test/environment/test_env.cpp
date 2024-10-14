@@ -54,7 +54,7 @@ std::string pdir = Ffs::get_profile_dir();
 std::cout << "Profile directory " << pdir << "\n";
 
 // --- homedir
-std::string p = Ffs::get_homedir();
+std::string p = fs_get_homedir();
 std::cout << "Home directory " << p << "\n";
 
 if (p.length() != pdir.length())
@@ -67,8 +67,8 @@ if (p.length() != pdir.length())
 if (p != pdir)
   err("profile dir " + pdir + " != home dir " + p);
 
-if (p != Ffs::expanduser("~"))
-  err("home dir " + p + " != expanduser('~') " + Ffs::expanduser("~"));
+if (p != fs_expanduser("~"))
+  err("home dir " + p + " != expanduser('~') " + fs_expanduser("~"));
 
 std::cout << "PASS: C++ home directory\n";
 

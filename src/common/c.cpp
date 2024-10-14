@@ -133,6 +133,16 @@ size_t fs_root(const char* path, char* result, const size_t buffer_size)
   return fs_str2char(fs_root(path), result, buffer_size);
 }
 
+size_t fs_get_owner_name(const char* path, char* result, const size_t buffer_size)
+{
+  return fs_str2char(fs_get_owner_name(path), result, buffer_size);
+}
+
+size_t fs_get_owner_group(const char* path, char* result, const size_t buffer_size)
+{
+  return fs_str2char(fs_get_owner_group(path), result, buffer_size);
+}
+
 std::string::size_type fs_stem(const char* path,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(fs_stem(path), result, buffer_size);
@@ -200,4 +210,17 @@ std::string::size_type fs_get_permissions(const char* path,
 
 uintmax_t fs_file_size(const char* path){
   return fs_file_size(std::string_view(path)).value_or(0);
+}
+
+size_t fs_to_cygpath(const char* path, char* result, const size_t buffer_size){
+  return fs_str2char(fs_to_cygpath(path), result, buffer_size);
+}
+
+size_t fs_to_winpath(const char* path, char* result, const size_t buffer_size){
+  return fs_str2char(fs_to_winpath(path), result, buffer_size);
+}
+
+
+size_t fs_which(const char* name, char* result, const size_t buffer_size){
+  return fs_str2char(fs_which(name), result, buffer_size);
 }

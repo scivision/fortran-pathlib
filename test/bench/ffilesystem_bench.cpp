@@ -36,19 +36,9 @@ auto t = std::chrono::duration<double>::max();
 
 #if defined(HAVE_CXX_FILESYSTEM) && HAVE_CXX_FILESYSTEM
 
-std::map<std::string_view, std::function<std::string()>> s_ =
-  {
-    {"compiler", Ffs::compiler},
-    {"homedir", Ffs::get_homedir},
-    {"exe_path", Ffs::exe_path},
-    {"lib_path", Ffs::lib_path}
-  };
-
 std::map<std::string_view, std::function<std::string(std::string_view)>> s_s =
   {
     {"as_posix", Ffs::as_posix},
-    {"expanduser", Ffs::expanduser},
-    {"which", Ffs::which},
     {"parent", Ffs::parent},
     {"suffix", Ffs::suffix},
     {"normal", Ffs::normal},
@@ -82,10 +72,6 @@ bool b = false;
 
 if (b_s.contains(fname))
   b = b_s[fname](path);
-else if (s_.contains(fname))
-  h = s_[fname]();
-else if (so_.contains(fname))
-  h = so_[fname]().value_or("");
 else if (ssb.contains(fname))
   h = ssb[fname](path, strict, expand_tilde).value_or("");
 else if (s_s.contains(fname))
@@ -102,6 +88,14 @@ else if (fname == "is_symlink")
   b = fs_is_symlink(path);
 else if (fname == "read_symlink")
   h = fs_read_symlink(path).value_or("");
+else if (fname == "which")
+  h = fs_which(path);
+else if (fname == "homedir")
+  h = fs_get_homedir();
+else if (fname == "expanduser")
+  h = fs_expanduser(path);
+else if (fname == "cwd")
+  h = fs_get_cwd().value_or("");
 else
   {
     std::cerr << "Error: unknown function " << fname << "\n";
@@ -118,16 +112,10 @@ for (int i = 0; i < n; ++i)
 
   if (b_s.contains(fname))
     b = b_s[fname](path);
-  else if (s_.contains(fname))
-    h = s_[fname]();
-  else if (so_.contains(fname))
-    h = so_[fname]().value_or("");
   else if (ssb.contains(fname))
     h = ssb[fname](path, strict, expand_tilde).value_or("");
   else if (s_s.contains(fname))
     h = s_s[fname](path);
-  else if (s_so.contains(fname))
-    h = s_so[fname](path).value_or("");
 
   auto t1 = std::chrono::steady_clock::now();
   t = std::min(t, std::chrono::duration_cast<std::chrono::duration<double>>(t1 - t0));

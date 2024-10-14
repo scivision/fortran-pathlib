@@ -146,21 +146,21 @@ if(!fs_is_windows())
     err("test_exe: expected POSIX perms for " + noexe + " to be '-' in index 2");
 }
 
-// test Ffs::which
+// test which
 std::string_view name = (fs_is_windows()) ? "cmake.exe" : "ls";
 
-std::string r = Ffs::which(name);
+std::string r = fs_which(name);
 if(r.length() == 0)
-  std::cerr << "ERROR:test_exe: Ffs::which(" << name << ") should return a path. This can happen on CI systems.\n";
+  std::cerr << "ERROR:test_exe: which(" << name << ") should return a path. This can happen on CI systems.\n";
 
-std::cout << "Ffs::which(" << name << ") " << r << "\n";
+std::cout << "which(" << name << ") " << r << "\n";
 
 // our own chmod(exe)
-r = Ffs::which(exe);
+r = fs_which(exe);
 if(r.length() == 0)
-  err("test_exe: Ffs::which(" + exe + ") should return a path.");
+  err("test_exe: which(" + exe + ") should return a path.");
 
-std::cout << "Ffs::which(" << exe << ") " << r << "\n";
+std::cout << "which(" << exe << ") " << r << "\n";
 
 
 fs_remove(exe);

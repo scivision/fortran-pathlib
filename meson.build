@@ -33,7 +33,7 @@ comm_src = files(
 'src/common/compiler.cpp',
 'src/common/copy.cpp',
 'src/common/cpu.cpp',
-'src/common/cygwin.c',
+'src/common/cygwin.cpp',
 'src/common/exepath.cpp',
 'src/common/env.cpp',
 'src/common/filesystem.cpp',
@@ -42,7 +42,7 @@ comm_src = files(
 'src/common/libpath.cpp',
 'src/common/limits.cpp',
 'src/common/mkdtemp.c',
-'src/common/owner.c',
+'src/common/owner.cpp',
 'src/common/os.c',
 'src/common/partition.c',
 'src/common/platform.cpp',
@@ -54,7 +54,7 @@ comm_src = files(
 'src/common/touch.cpp',
 'src/common/uid.cpp',
 'src/common/uname.cpp',
-'src/common/which.c',
+'src/common/which.cpp',
 'src/common/winsock.cpp',
 'src/common/windows.cpp'
 )

@@ -50,8 +50,6 @@ if(ffilesystem_cpp)
   cpp_check()
 else()
   unset(HAVE_CXX_FILESYSTEM CACHE)
-  include(${CMAKE_CURRENT_LIST_DIR}/CCheck.cmake)
-  c_check()
 endif()
 
 if(UNIX)

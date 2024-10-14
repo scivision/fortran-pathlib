@@ -23,9 +23,11 @@ FC := gfortran
 # Intel oneAPI
 # make CC=icx CXX=icpx FC=ifx
 
-BUILD_DIR := build
+BUILD_DIR := build-make
 
 INC := -Iinclude/
+
+cpp = 1
 
 # optional, but useful
 cfeat = -DHAVE_MERSENNE_TWISTER -DHAVE_GETLOADAVG
@@ -41,12 +43,48 @@ comdir = src/common/
 cdir = src/c/
 fdir = $(comdir)fortran/
 
-COMM_SRCS = $(comdir)pure2.cpp $(comdir)copy.cpp $(comdir)inquire.cpp $(comdir)filesystem.cpp $(comdir)c.cpp $(comdir)common.c $(comdir)compiler.cpp $(comdir)cpu.cpp $(comdir)cygwin.c $(comdir)exepath.cpp $(comdir)env.cpp $(comdir).cpp $(comdir)libpath.cpp $(comdir)limits.cpp $(comdir)mkdtemp.c $(comdir)owner.c $(comdir)os.c $(comdir)partition.c $(comdir)platform.cpp $(comdir)realpath.cpp $(comdir)space.cpp $(comdir)sysctl.cpp $(comdir)symlink.cpp $(comdir)touch.cpp $(comdir)uid.cpp $(comdir)uname.cpp $(comdir)which.c $(comdir)windows.cpp $(comdir)winsock.cpp
+COMM_SRCS = \
+	$(comdir)pure2.cpp \
+	$(comdir)copy.cpp \
+	$(comdir)inquire.cpp \
+	$(comdir)filesystem.cpp \
+	$(comdir)c.cpp \
+	$(comdir)common.c \
+	$(comdir)compiler.cpp \
+	$(comdir)cpu.cpp \
+	$(comdir)cygwin.cpp \
+	$(comdir)exepath.cpp \
+	$(comdir)env.cpp \
+	$(comdir)filesystem.cpp \
+	$(comdir)libpath.cpp \
+	$(comdir)limits.cpp \
+	$(comdir)mkdtemp.c \
+	$(comdir)owner.cpp \
+	$(comdir)os.c \
+	$(comdir)partition.c \
+	$(comdir)platform.cpp \
+	$(comdir)realpath.cpp \
+	$(comdir)space.cpp \
+	$(comdir)sysctl.cpp \
+	$(comdir)symlink.cpp \
+	$(comdir)touch.cpp \
+	$(comdir)uid.cpp \
+	$(comdir)uname.cpp \
+	$(comdir)which.cpp \
+	$(comdir)windows.cpp \
+	$(comdir)winsock.cpp
 
-ifeq (cpp,1)
-SRCS = $(comdir)c_ifc.cpp $(comdir)ifc.cpp $(comdir)mkdir.cpp $(comdir)mkdtemp.cpp $(comdir)pure.cpp $(comdir)resolve.cpp $(comdir)time.cpp
+ifeq ($(cpp),1)
+	SRCS = \
+		$(comdir)c_ifc.cpp \
+		$(comdir)ifc.cpp \
+		$(comdir)mkdir.cpp \
+		$(comdir)mkdtemp.cpp \
+		$(comdir)pure.cpp \
+		$(comdir)resolve.cpp \
+		$(comdir)time.cpp
 else
-SRCS = $(cdir)mkdir.c $(cdir)mkdtemp.c $(cdir)pure.c $(cdir)resolve.c $(cdir)time.c
+	SRCS = $(cdir)mkdir.c $(cdir)pure.c $(cdir)resolve.c $(cdir)time.c
 endif
 
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o) $(COMM_SRCS:%=$(BUILD_DIR)/%.o)
