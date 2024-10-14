@@ -104,6 +104,11 @@ target_compile_definitions(ffilesystem PRIVATE
 
 target_compile_features(ffilesystem PRIVATE cxx_std_${CMAKE_CXX_STANDARD} c_std_99)
 
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU" AND CMAKE_C_COMPILER_VERSION VERSION_LESS 10)
+  # FIXME: nuisance warning on partition.c -- remove when upgraded to partition.cpp
+  target_compile_options(ffilesystem PRIVATE "$<$<COMPILE_LANGUAGE:C>:-Wno-unused-parameter>")
+endif()
+
 set_target_properties(ffilesystem PROPERTIES
 PUBLIC_HEADER include/ffilesystem.h
 EXPORT_NAME filesystem
