@@ -69,6 +69,15 @@ if(!fs_is_windows()){
 
     if(fs_is_file(ref))
       err("is_file", ref);
+
+    // can cause exit code 409 (stack buffer overrun) on Windows for NUL
+    auto s = fs_file_size(ref);
+    if(s and s.value() != 0){
+      std::cerr << "FAILED: file_size() " << s.value() << "\n";
+      err("file_size", ref);
+    }
+    std::cout << "OK: file_size() " << s.value() << "\n";
+
 #ifdef HAVE_CXX_FILESYSTME
     if(!Ffs::canonical(ref.data(), false, true))
       err("canonical", ref);
@@ -89,12 +98,6 @@ if(!fs_is_windows()){
     std::cout << "OK: copy_file() " << ref << "\n";
 
     // touch is ambiguous on reserved, so omit
-    auto s = fs_file_size(ref);
-    if(s and s.value() != 0){
-      std::cerr << "FAILED: file_size() " << s.value() << "\n";
-      err("file_size", ref);
-    }
-    std::cout << "OK: file_size() " << s.value() << "\n";
 
     if(fs_is_symlink(ref))
       err("is_symlink", ref);
