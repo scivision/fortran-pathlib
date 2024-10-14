@@ -63,6 +63,7 @@ COMM_SRCS = \
 	$(comdir)owner.cpp \
 	$(comdir)os.c \
 	$(comdir)partition.c \
+	$(comdir)partition.cpp \
 	$(comdir)platform.cpp \
 	$(comdir)realpath.cpp \
 	$(comdir)space.cpp \

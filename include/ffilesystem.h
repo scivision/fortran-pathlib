@@ -51,7 +51,6 @@ public:
 
   [[nodiscard]] static bool is_absolute(std::string_view);
   [[nodiscard]] static bool exists(std::string_view);
-  [[nodiscard]] static bool is_reserved(std::string_view);
   [[nodiscard]] static bool is_subdir(std::string_view, std::string_view);
 
   [[nodiscard]] static std::string as_posix(std::string_view);
@@ -86,8 +85,6 @@ public:
 
   [[nodiscard]] static std::string with_suffix(std::string_view, std::string_view);
 
-  [[nodiscard]] static bool is_safe_name(std::string_view);
-
   [[nodiscard]] static std::string filesystem_type(std::string_view);
 
   [[nodiscard]] static std::string cpu_arch();
@@ -111,6 +108,9 @@ bool fs_win32_create_symlink(std::string_view, std::string_view);
 bool fs_mkdir(std::string_view);
 
 [[nodiscard]] std::string fs_which(std::string_view);
+
+[[nodiscard]] bool fs_is_reserved(std::string_view);
+[[nodiscard]] bool fs_is_safe_name(std::string_view);
 
 [[nodiscard]] std::string fs_longname(std::string_view);
 [[nodiscard]] std::string fs_shortname(std::string_view);

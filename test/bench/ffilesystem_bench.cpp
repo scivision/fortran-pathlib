@@ -52,11 +52,6 @@ std::map<std::string_view, std::function<std::optional<std::string>(std::string_
     {"resolve", Ffs::resolve}
   };
 
-std::map<std::string_view, std::function<bool(std::string_view)>> b_s =
-  {
-    {"is_reserved", Ffs::is_reserved},
-    {"is_safe", Ffs::is_safe_name}
-  };
 
 constexpr bool strict = false;
 constexpr bool expand_tilde = false;
@@ -65,12 +60,14 @@ constexpr bool expand_tilde = false;
 std::string h;
 bool b = false;
 
-if (b_s.contains(fname))
-  b = b_s[fname](path);
-else if (ssb.contains(fname))
+if (ssb.contains(fname))
   h = ssb[fname](path, strict, expand_tilde).value_or("");
 else if (s_s.contains(fname))
   h = s_s[fname](path);
+else if (fname == "reserved")
+  b = fs_is_reserved(path);
+else if (fname == "exists")
+  b = Ffs::exists
 else if (fname == "exists")
   b = fs_exists(path);
 else if (fname == "is_dir")

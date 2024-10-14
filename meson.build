@@ -46,6 +46,7 @@ comm_src = files(
 'src/common/owner.cpp',
 'src/common/os.c',
 'src/common/partition.c',
+'src/common/partition.cpp',
 'src/common/platform.cpp',
 'src/common/pure2.cpp',
 'src/common/realpath.cpp',

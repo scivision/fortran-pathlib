@@ -18,22 +18,22 @@ std::string s;
 
 s = "test/re/";
 
-if(Ffs::is_safe_name(s))
+if(fs_is_safe_name(s))
   err(s);
 
 s = "test/re";
-if(Ffs::is_safe_name(s))
+if(fs_is_safe_name(s))
   err(s);
 
 s = "hi.";
-bool ok = Ffs::is_safe_name(s);
+bool ok = fs_is_safe_name(s);
 if(fs_is_windows() && ok)
   err(s);
 if(!fs_is_windows() && !ok)
   err(s);
 
 s = "hi there";
-if(Ffs::is_safe_name(s))
+if(fs_is_safe_name(s))
   err(s);
 
 return EXIT_SUCCESS;

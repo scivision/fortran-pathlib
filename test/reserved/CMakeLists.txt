@@ -23,13 +23,9 @@ endforeach()
 
 endif()
 
-if(HAVE_CXX_FILESYSTEM)
 
 add_executable(test_safe_cpp test_safe.cpp)
 target_link_libraries(test_safe_cpp PRIVATE ffilesystem)
 
 add_test(NAME Cpp_safe COMMAND test_safe_cpp)
-
 set_property(TEST Cpp_safe PROPERTY LABELS "Cpp")
-
-endif()

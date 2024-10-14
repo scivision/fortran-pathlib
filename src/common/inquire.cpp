@@ -85,7 +85,7 @@ fs_is_file(std::string_view path)
 #ifdef HAVE_CXX_FILESYSTEM
   std::error_code ec;
   // disqualify reserved names
-  return std::filesystem::is_regular_file(path, ec) && !ec && !Ffs::is_reserved(path);
+  return std::filesystem::is_regular_file(path, ec) && !ec && !fs_is_reserved(path);
 #else
     return fs_st_mode(path) & S_IFREG;
   // S_ISREG not available with MSVC
@@ -115,7 +115,7 @@ bool fs_is_exe(std::string_view path)
 
   const auto s = std::filesystem::status(path, ec);
   // need reserved check for Windows
-  if(ec || !std::filesystem::is_regular_file(s) || Ffs::is_reserved(path))
+  if(ec || !std::filesystem::is_regular_file(s) || fs_is_reserved(path))
     return false;
 
   // Windows MinGW bug with executable bit

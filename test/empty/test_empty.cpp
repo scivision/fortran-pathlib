@@ -53,8 +53,8 @@ int main(){
     if(fs_is_char_device(""))
       err("is_char_device");
 
-    if(Ffs::is_reserved(""))
-      err("Ffs::is_reserved");
+    if(fs_is_reserved(""))
+      err("is_reserved");
 
     if(fs_is_symlink(""))
       err("is_symlink");

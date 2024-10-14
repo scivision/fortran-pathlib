@@ -104,12 +104,6 @@ static void no_arg(std::string_view fun){
 
 static void one_arg(std::string_view fun, std::string_view a1){
 
-  std::map<std::string_view, std::function<bool(std::string_view)>> mbool =
-  {
-    {"is_reserved", Ffs::is_reserved},
-    {"is_safe", Ffs::is_safe_name}
-  };
-
   std::map<std::string_view, std::function<std::string(std::string_view)>> mstring =
   {
     {"parent", Ffs::parent},
@@ -135,14 +129,16 @@ static void one_arg(std::string_view fun, std::string_view a1){
 
   std::error_code ec;
 
-  if(mbool.contains(fun))
-    std::cout << mbool[fun](a1) << "\n";
-  else if (mstring.contains(fun))
+  if (mstring.contains(fun))
     std::cout << mstring[fun](a1) << "\n";
   else if (mstrb.contains(fun))
     std::cout << mstrb[fun](a1, true, false).value_or("") << "\n";
   else if (mstrbw.contains(fun))
     std::cout << mstrbw[fun](a1, false, false).value_or("") << "\n";
+  else if (fun == "is_reserved")
+    std::cout << fs_is_reserved(a1) << "\n";
+  else if (fun == "is_safe")
+    std::cout << fs_is_safe_name(a1) << "\n";
   else if (fun == "touch")
     std::cout << "touch " << a1 << " " << fs_touch(a1) << "\n";
   else if (fun == "getenv")

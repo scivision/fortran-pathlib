@@ -25,80 +25,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <errno.h>
-#include <ctype.h> // isalpha, toupper
+#include <ctype.h> // isalpha
 
 #include "ffilesystem.h"
-
-
-bool fs_is_reserved(const char* path)
-{
-  if(!fs_is_windows())
-    return false;
-
-  char* s = (char*) malloc(fs_get_max_path());
-  if(!s) return false;
-
-  const size_t L = fs_stem(path, s, fs_get_max_path());
-  if(L == 0 || L < 3 || L > 4) {
-    free(s);
-    return false;
-  }
-
-  // convert to upper case
-  for (char* p = s; *p; ++p)
-    *p = (char) toupper(*p);
-
-  // check if the stem is a reserved device name
-  const size_t N = 22;
-  const char* reserved_names[] = {"CON", "PRN", "AUX", "NUL",
-    "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
-    "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
-
-  bool r = false;
-  for (size_t i = 0; i < N; i++) {
-    r = strcmp(s, reserved_names[i]);
-    if(r) break;
-  }
-
-  free(s);
-
-  return r;
-}
-
-
-bool fs_is_safe_name(const char* filename)
-{
-// check that only shell-safe characters are in filename using std::isalnum and a c++ set
-// hasn't been fully tested yet across operating systems and file systems--let us know if character(s) should be unsafe
-// does NOT check for reserved or device names
-// => filenames only, not paths
-// https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file
-// we do not consider whitespaces, quotes, or ticks safe, as they can be confusing in shell scripts and command line usage
-
-const size_t L = strlen(filename);
-
-if(L == 0)
-  return false;
-
-if(fs_is_windows() && filename[L-1] == '.')
-  return false;
-
-for (size_t i = 0; i < L; i++) {
-  if(isalnum(filename[i]))
-    continue;
-
-  switch (filename[i]) {
-    case '_': case '-': case '.': case '~': case '@': case '#': case '$':
-    case '%': case '^': case '&': case '(': case ')': case '[': case ']':
-    case '{': case '}': case '+': case '=': case ',': case '!':
-      continue;
-    default:
-      return false;
-  }
-}
-
-return true;
-}
 
 
 #if defined(__linux__) && __has_include(<linux/magic.h>)
