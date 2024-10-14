@@ -19,10 +19,17 @@
 // preferred import order for stat() -- always include to avoid dev confusion
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <cerrno>
 
 #include <cstring> // std::strerror
 #include <string_view>
+
+#ifndef HAVE_CXX_FILESYSTEM
+#if defined(_WIN32)
+#include <sys/utime.h> // _utime
+#else
+#include <sys/time.h> // utimes
+#endif
+#endif
 
 
 std::time_t fs_get_modtime(const char* path)
@@ -44,6 +51,7 @@ std::time_t fs_get_modtime(const char* path)
 
 }
 
+#ifdef HAVE_CXX_FILESYSTEM
 std::optional<std::filesystem::file_time_type> Ffs::get_modtime(std::string_view path)
 {
   std::error_code ec;
@@ -54,10 +62,13 @@ std::optional<std::filesystem::file_time_type> Ffs::get_modtime(std::string_view
   std::cerr << "ERROR:Ffs:get_modtime: " << ec.message() << "\n";
   return {};
 }
+#endif
 
 
-bool Ffs::set_modtime(std::string_view path)
+bool fs_set_modtime(std::string_view path)
 {
+#ifdef HAVE_CXX_FILESYSTEM
+
   std::error_code ec;
 
   std::filesystem::last_write_time(path, std::filesystem::file_time_type::clock::now(), ec);
@@ -67,4 +78,22 @@ bool Ffs::set_modtime(std::string_view path)
 
   std::cerr << "ERROR:ffilesystem:set_modtime: " << ec.message() << "\n";
   return false;
+
+#else
+
+  if (
+#ifdef _WIN32
+    // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/utime-utime32-utime64-wutime-wutime32-wutime64
+    _utime(path.data(), nullptr)
+#else
+    utimes(path.data(), nullptr)
+#endif
+    ){
+      fs_print_error(path, "fs_set_modtime");
+      return false;
+    }
+
+  return true;
+
+#endif
 }

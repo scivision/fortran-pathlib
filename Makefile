@@ -68,6 +68,7 @@ COMM_SRCS = \
 	$(comdir)space.cpp \
 	$(comdir)sysctl.cpp \
 	$(comdir)symlink.cpp \
+	$(comdir)time.cpp \
 	$(comdir)touch.cpp \
 	$(comdir)uid.cpp \
 	$(comdir)uname.cpp \
@@ -81,10 +82,9 @@ ifeq ($(cpp),1)
 		$(comdir)ifc.cpp \
 		$(comdir)mkdtemp.cpp \
 		$(comdir)pure.cpp \
-		$(comdir)resolve.cpp \
-		$(comdir)time.cpp
+		$(comdir)resolve.cpp
 else
-	SRCS = $(cdir)pure.c $(cdir)resolve.c $(cdir)time.c
+	SRCS = $(cdir)pure.c $(cdir)resolve.c
 endif
 
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o) $(COMM_SRCS:%=$(BUILD_DIR)/%.o)

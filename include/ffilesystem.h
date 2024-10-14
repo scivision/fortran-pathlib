@@ -56,7 +56,6 @@ public:
 
   static bool touch(std::string_view);
   [[nodiscard]] static std::optional<std::filesystem::file_time_type> get_modtime(std::string_view);
-  static bool set_modtime(std::string_view);
 
   [[nodiscard]] static std::optional<std::string> canonical(std::string_view, const bool, const bool);
   [[nodiscard]] static std::optional<std::string> resolve(std::string_view, const bool, const bool);
@@ -91,6 +90,9 @@ bool fs_win32_create_symlink(std::string_view, std::string_view);
 
 
 bool fs_mkdir(std::string_view);
+
+bool fs_set_modtime(std::string_view);
+time_t fs_get_modtime(std::string_view);
 
 [[nodiscard]] std::string fs_which(std::string_view);
 

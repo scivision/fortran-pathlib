@@ -52,6 +52,7 @@ comm_src = files(
 'src/common/space.cpp',
 'src/common/sysctl.cpp',
 'src/common/symlink.cpp',
+'src/common/time.cpp',
 'src/common/touch.cpp',
 'src/common/uid.cpp',
 'src/common/uname.cpp',
@@ -70,8 +71,7 @@ cppsrcs = files(
 'src/common/ifc.cpp',
 'src/common/mkdtemp.cpp',
 'src/common/pure.cpp',
-'src/common/resolve.cpp',
-'src/common/time.cpp'
+'src/common/resolve.cpp'
 )
 else
 
@@ -82,8 +82,8 @@ cwalk_inc = cwalk_proj.get_variable('cwalk_inc')
 cppsrcs = []
 comm_src += files(
 'src/c/pure.c',
-'src/c/resolve.c',
-'src/c/time.c')
+'src/c/resolve.c'
+)
 endif
 
 inc = include_directories('include')
