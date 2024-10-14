@@ -187,14 +187,18 @@ size_t fs_filesystem_type(const char* path, char* name, const size_t buffer_size
 
   fs_print_error(path, "filesystem_type");
   return 0;
-#elif defined(__linux__) && __has_include(<linux/magic.h>)
+#elif defined(__linux__)
+#if __has_include(<linux/magic.h>)
   return fs_strncpy(fs_type_linux(path), name, buffer_size);
+#else
+  fs_print_error(path, "filesystem_type: linux/magic.h not found");
+#endif
 #elif defined(__APPLE__) || defined(BSD)
   struct statfs s;
   if(!statfs(path, &s))
     return fs_strncpy(s.f_fstypename, name, buffer_size);
 #else
-  fprintf(stderr, "ERROR:fs_get_type: Unknown operating system\n");
+  fs_print_error(path, "filesystem_type: Unknown operating system");
 #endif
   return 0;
 }
