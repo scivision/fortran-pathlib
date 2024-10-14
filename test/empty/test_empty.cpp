@@ -60,8 +60,8 @@ int main(){
     if(fs_create_symlink("", ""))
       err("create_symlink");
 
-    if(Ffs::mkdir(""))
-      err("Ffs::mkdir");
+    if(fs_mkdir(""))
+      err("mkdir");
 
     if(!fs_which("").empty())
       err("which");

@@ -21,13 +21,6 @@ std::string Ffs::filesystem_type(std::string_view path)
   return {};
 }
 
-
-size_t Ffs::max_component(std::string_view path)
-{
-  return fs_max_component(path);
-}
-
-
 std::string Ffs::get_profile_dir(){ return fs_get_profile_dir(); }
 
 std::string Ffs::user_config_dir(){ return fs_user_config_dir(); }

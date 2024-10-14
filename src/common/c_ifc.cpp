@@ -58,8 +58,6 @@ std::string::size_type fs_with_suffix(const char* path, const char* new_suffix,
   return fs_str2char(Ffs::with_suffix(path, new_suffix), result, buffer_size);
 }
 
-bool fs_mkdir(const char* path){ return Ffs::mkdir(path); }
-
 bool fs_set_modtime(const char* path){ return Ffs::set_modtime(path); }
 
 #ifdef HAVE_MERSENNE_TWISTER

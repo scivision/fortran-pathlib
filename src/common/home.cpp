@@ -131,7 +131,7 @@ std::string fs_expanduser(std::string_view path)
     return home;
 
 // handle initial duplicated file separators. NOT .lexical_normal to handle "~/.."
-  size_t i = 2;
+  std::string::size_type i = 2;
   while(i < path.length() &&
 #if __cplusplus >= 202002L
   filesep.contains(path[i])

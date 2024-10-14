@@ -32,7 +32,7 @@ size_t fs_get_max_path(){
 }
 
 
-size_t fs_max_component(std::string_view path)
+std::string::size_type fs_max_component(std::string_view path)
 {
   // maximum length of each component of a path. That is, while the maximum
   // total length of a path may be thousands of character, each segment of the
@@ -44,12 +44,12 @@ size_t fs_max_component(std::string_view path)
   if(!GetVolumeInformationA(path.data(), nullptr, 0, nullptr, &lpMaximumComponentLength, nullptr, nullptr, 0))
     fs_print_error(path, "max_component:GetVolumeInformationA");
 
-  return (size_t) lpMaximumComponentLength;
+  return lpMaximumComponentLength;
 
 #elif defined(_PC_NAME_MAX)
-  return (size_t) pathconf(path.data(), _PC_NAME_MAX);
+  return pathconf(path.data(), _PC_NAME_MAX);
 #elif defined(NAME_MAX)
-  return (size_t) NAME_MAX;
+  return NAME_MAX;
 #else
   std::cerr << "ERROR:ffilesystem:max_component(" << path << ") => function not implemented on this platform\n";
   return 0;

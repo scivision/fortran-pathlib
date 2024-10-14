@@ -58,6 +58,7 @@ COMM_SRCS = \
 	$(comdir)filesystem.cpp \
 	$(comdir)libpath.cpp \
 	$(comdir)limits.cpp \
+	$(comdir)mkdir.cpp \
 	$(comdir)mkdtemp.c \
 	$(comdir)owner.cpp \
 	$(comdir)os.c \
@@ -78,13 +79,12 @@ ifeq ($(cpp),1)
 	SRCS = \
 		$(comdir)c_ifc.cpp \
 		$(comdir)ifc.cpp \
-		$(comdir)mkdir.cpp \
 		$(comdir)mkdtemp.cpp \
 		$(comdir)pure.cpp \
 		$(comdir)resolve.cpp \
 		$(comdir)time.cpp
 else
-	SRCS = $(cdir)mkdir.c $(cdir)pure.c $(cdir)resolve.c $(cdir)time.c
+	SRCS = $(cdir)pure.c $(cdir)resolve.c $(cdir)time.c
 endif
 
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o) $(COMM_SRCS:%=$(BUILD_DIR)/%.o)

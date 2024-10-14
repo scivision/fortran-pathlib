@@ -57,7 +57,6 @@ std::map<std::string_view, std::function<std::optional<std::string>(std::string_
 std::map<std::string_view, std::function<bool(std::string_view)>> b_s =
   {
     {"is_reserved", Ffs::is_reserved},
-    {"mkdir", Ffs::mkdir},
     {"is_safe", Ffs::is_safe_name}
   };
 

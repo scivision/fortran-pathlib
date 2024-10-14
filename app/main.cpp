@@ -108,7 +108,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
   std::map<std::string_view, std::function<bool(std::string_view)>> mbool =
   {
     {"is_reserved", Ffs::is_reserved},
-    {"mkdir", Ffs::mkdir},
     {"is_safe", Ffs::is_safe_name}
   };
 
@@ -138,11 +137,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"weakly_resolve", Ffs::resolve}
   };
 
-  std::map<std::string_view, std::function<size_t(std::string_view)>> smax =
-  {
-    {"max_component", Ffs::max_component}
-  };
-
   std::map<std::string_view, std::function<void(std::string_view)>> mvoid =
   {
     {"touch", Ffs::touch}
@@ -158,10 +152,12 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << mstrb[fun](a1, true, false).value_or("") << "\n";
   else if (mstrbw.contains(fun))
     std::cout << mstrbw[fun](a1, false, false).value_or("") << "\n";
-  else if (smax.contains(fun))
-    std::cout << smax[fun](a1) << "\n";
   else if (mvoid.contains(fun))
     mvoid[fun](a1);
+  else if (fun == "max_component")
+    std::cout << fs_max_component(a1) << "\n";
+  else if (fun == "mkdir")
+    std::cout << fs_mkdir(a1) << "\n";
   else if (fun == "which")
     std::cout << fs_which(a1) << "\n";
   else if (fun == "owner"){

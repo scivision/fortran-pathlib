@@ -80,8 +80,6 @@ public:
   [[nodiscard]] static std::string get_env(std::string_view);
   static bool set_env(std::string_view, std::string_view);
 
-  static bool mkdir(std::string_view);
-
   [[nodiscard]] static bool equivalent(std::string_view, std::string_view);
 
   [[nodiscard]] static std::string join(std::string_view, std::string_view);
@@ -111,6 +109,8 @@ public:
 void fs_print_error(std::string_view, std::string_view);
 bool fs_win32_create_symlink(std::string_view, std::string_view);
 
+
+bool fs_mkdir(std::string_view);
 
 [[nodiscard]] std::string fs_which(std::string_view);
 
@@ -147,7 +147,7 @@ bool fs_setenv(std::string_view, std::string_view);
 
 bool fs_touch(std::string_view);
 
-[[nodiscard]] size_t fs_max_component(std::string_view);
+[[nodiscard]] std::string::size_type fs_max_component(std::string_view);
 
 [[nodiscard]] std::string fs_as_posix(std::string_view);
 [[nodiscard]] std::string fs_lib_path();
