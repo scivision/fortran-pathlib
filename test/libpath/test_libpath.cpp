@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     shared = std::atoi(argv[1]);
   }
 
-  std::string path = Ffs::lib_path();
+  std::string path = fs_lib_path();
 
   if(path.empty()){
     std::cerr << "test_binpath: lib_path should be non-empty: " << path << "\n";

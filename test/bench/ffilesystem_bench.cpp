@@ -45,8 +45,6 @@ std::map<std::string_view, std::function<std::string(std::string_view)>> s_s =
     {"lexically_normal", Ffs::lexically_normal},
     {"make_preferred", Ffs::make_preferred},
     {"mkdtemp", Ffs::mkdtemp},
-    {"shortname", Ffs::shortname},
-    {"longname", Ffs::longname},
     {"getenv", Ffs::get_env}
   };
 

@@ -29,13 +29,13 @@ std::string long_path = (argc < 2) ? fs_getenv("PROGRAMFILES") : argv[1];
 if (long_path.empty())
   err("input is empty");
 
-std::string short_path = Ffs::shortname(long_path);
+std::string short_path = fs_shortname(long_path);
 
 std::cout << long_path << " => " << short_path << '\n';
 if(short_path.empty())
   err("short_path is empty");
 
-std::string long_path2 = Ffs::longname(short_path);
+std::string long_path2 = fs_longname(short_path);
 
 std::cout << short_path << " => " << long_path2 << '\n';
 if(long_path2.empty())

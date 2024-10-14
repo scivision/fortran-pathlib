@@ -12,9 +12,6 @@ std::string Ffs::get_shell(){ return fs_get_shell(); }
 std::string Ffs::cpu_arch() { return fs_cpu_arch(); }
 
 
-std::string Ffs::exe_path() { return fs_exe_path(); }
-
-
 std::string Ffs::filesystem_type(std::string_view path)
 {
   if(std::string name(80, '\0');
@@ -69,12 +66,6 @@ bool Ffs::is_subdir(std::string_view subdir, std::string_view dir)
 {
   return fs_is_subdir(subdir.data(), dir.data());
 }
-
-
-std::string Ffs::lib_path() { return fs_lib_path(); }
-
-std::string Ffs::shortname(std::string_view in){ return fs_shortname(in); }
-std::string Ffs::longname(std::string_view in){ return fs_longname(in); }
 
 
 bool Ffs::touch(std::string_view path)

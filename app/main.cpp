@@ -50,8 +50,6 @@ static void no_arg(std::string_view fun){
     {"hostname", Ffs::get_hostname},
     {"username", Ffs::get_username},
     {"user_config_dir", Ffs::user_config_dir},
-    {"exe_path", Ffs::exe_path},
-    {"lib_path", Ffs::lib_path}
   };
 
   std::map<std::string_view, std::function<int()>> mint =
@@ -80,6 +78,10 @@ static void no_arg(std::string_view fun){
     std::cout << mchar[fun]() << "\n";
   else if (mlong.contains(fun))
     std::cout << mlong[fun]() << "\n";
+  else if (fun == "libpath")
+    std::cout << fs_lib_path() << "\n";
+  else if (fun == "exepath")
+    std::cout << fs_exe_path() << "\n";
   else if (fun == "compiler")
     std::cout << fs_compiler() << "\n";
   else if (fun == "homedir")
@@ -120,8 +122,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"lexically_normal", Ffs::lexically_normal},
     {"make_preferred", Ffs::make_preferred},
     {"mkdtemp", Ffs::mkdtemp},
-    {"shortname", Ffs::shortname},
-    {"longname", Ffs::longname},
     {"getenv", Ffs::get_env},
     {"type", Ffs::filesystem_type}
   };

@@ -20,7 +20,7 @@ int main()
   _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-  std::string path = Ffs::exe_path();
+  std::string path = fs_exe_path();
   if (path.empty()){
     std::cerr << "ERROR: exe_path: empty\n";
     return EXIT_FAILURE;

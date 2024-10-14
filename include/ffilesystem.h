@@ -48,9 +48,6 @@ public:
 
   [[nodiscard]] static size_t max_component(std::string_view);
 
-  [[nodiscard]] static std::string exe_path();
-  [[nodiscard]] static std::string lib_path();
-
   [[nodiscard]] static std::string expanduser(std::string_view);
   [[nodiscard]] static std::string realpath(std::string_view);
 
@@ -79,9 +76,6 @@ public:
   [[nodiscard]] static std::string absolute(std::string_view, std::string_view, const bool);
 
   [[nodiscard]] static std::string mkdtemp(std::string_view);
-
-  [[nodiscard]] static std::string shortname(std::string_view);
-  [[nodiscard]] static std::string longname(std::string_view);
 
   [[nodiscard]] static std::string get_env(std::string_view);
   static bool set_env(std::string_view, std::string_view);
