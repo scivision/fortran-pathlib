@@ -35,9 +35,8 @@ end if
 wp = to_winpath(buf)
 print '(a)', "to_winpath(" // buf // "): " // wp
 
-
-
-
 end block valgrind
+
+print '(a)', "OK: Cygwin to_cygpath, to_winpath"
 
 end program main
