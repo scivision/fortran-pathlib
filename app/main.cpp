@@ -45,11 +45,8 @@ static void no_arg(std::string_view fun){
 
   std::map<std::string_view, std::function<std::string()>> mstring =
   {
-    {"shell", Ffs::get_shell},
-    {"profile_dir", Ffs::get_profile_dir},
     {"hostname", Ffs::get_hostname},
     {"username", Ffs::get_username},
-    {"user_config_dir", Ffs::user_config_dir},
   };
 
   std::map<std::string_view, std::function<int()>> mint =
@@ -78,6 +75,14 @@ static void no_arg(std::string_view fun){
     std::cout << mchar[fun]() << "\n";
   else if (mlong.contains(fun))
     std::cout << mlong[fun]() << "\n";
+  else if (fun == "shell")
+    std::cout << fs_get_shell() << "\n";
+  else if (fun == "arch")
+    std::cout << fs_cpu_arch() << "\n";
+  else if (fun == "profile")
+    std::cout << fs_get_profile_dir() << "\n";
+  else if (fun == "config")
+    std::cout << fs_user_config_dir() << "\n";
   else if (fun == "libpath")
     std::cout << fs_lib_path() << "\n";
   else if (fun == "exepath")
@@ -88,8 +93,6 @@ static void no_arg(std::string_view fun){
     std::cout << fs_get_homedir() << "\n";
   else if (fun == "terminal")
     std::cout << fs_get_terminal() << "\n";
-  else if (fun == "cpu_arch")
-    std::cout << Ffs::cpu_arch() << "\n";
   else if (fun == "max_path")
     std::cout << fs_get_max_path() << "\n";
   else if (fun == "loadavg")
@@ -113,7 +116,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
 
   std::map<std::string_view, std::function<std::string(std::string_view)>> mstring =
   {
-    {"as_posix", Ffs::as_posix},
     {"realpath", Ffs::realpath},
     {"parent", Ffs::parent},
     {"suffix", Ffs::suffix},
@@ -154,6 +156,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << mstrbw[fun](a1, false, false).value_or("") << "\n";
   else if (mvoid.contains(fun))
     mvoid[fun](a1);
+  else if (fun == "posix")
+    std::cout << fs_as_posix(a1) << "\n";
   else if (fun == "max_component")
     std::cout << fs_max_component(a1) << "\n";
   else if (fun == "mkdir")

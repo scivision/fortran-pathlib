@@ -27,13 +27,15 @@ int main(){
     _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-    if(!Ffs::as_posix("").empty())
-      err("Ffs::as_posix");
+    std::string_view e = "";
+
+    if(!fs_as_posix(e).empty())
+      err("as_posix");
 
     if(!Ffs::normal("").empty())
       err("Ffs::normal");
 
-    if(!fs_file_name("").empty())
+    if(!fs_file_name(e).empty())
       err("file_name");
 
     if(!fs_stem("").empty())

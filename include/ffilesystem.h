@@ -41,10 +41,8 @@ class Ffs
 {
 public:
   [[nodiscard]] static std::string get_shell();
-  [[nodiscard]] static std::string get_profile_dir();
   [[nodiscard]] static std::string get_hostname();
   [[nodiscard]] static std::string get_username();
-  [[nodiscard]] static std::string user_config_dir();
 
   [[nodiscard]] static size_t max_component(std::string_view);
 

@@ -38,7 +38,6 @@ auto t = std::chrono::duration<double>::max();
 
 std::map<std::string_view, std::function<std::string(std::string_view)>> s_s =
   {
-    {"as_posix", Ffs::as_posix},
     {"parent", Ffs::parent},
     {"suffix", Ffs::suffix},
     {"normal", Ffs::normal},

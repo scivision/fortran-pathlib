@@ -3,15 +3,6 @@
 #include <string>
 
 
-std::string Ffs::as_posix(std::string_view path){ return fs_as_posix(path); }
-
-
-std::string Ffs::get_shell(){ return fs_get_shell(); }
-
-
-std::string Ffs::cpu_arch() { return fs_cpu_arch(); }
-
-
 std::string Ffs::filesystem_type(std::string_view path)
 {
   if(std::string name(80, '\0');
@@ -20,10 +11,6 @@ std::string Ffs::filesystem_type(std::string_view path)
 
   return {};
 }
-
-std::string Ffs::get_profile_dir(){ return fs_get_profile_dir(); }
-
-std::string Ffs::user_config_dir(){ return fs_user_config_dir(); }
 
 std::string Ffs::get_hostname(){ return fs_hostname(); }
 

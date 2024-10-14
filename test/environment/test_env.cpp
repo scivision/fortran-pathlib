@@ -50,7 +50,7 @@ if (std::string s = Ffs::normal(cpath); fpath != s)
 std::cout << "PASS: C++ current working directory\n";
 
 // --- profile dir
-std::string pdir = Ffs::get_profile_dir();
+std::string pdir = fs_get_profile_dir();
 std::cout << "Profile directory " << pdir << "\n";
 
 // --- homedir

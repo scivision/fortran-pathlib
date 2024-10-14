@@ -17,16 +17,16 @@ void test_as_posix(){
 
   std::string p;
 
-  if(!Ffs::as_posix(p).empty())
+  if(!fs_as_posix(p).empty())
     err("test_as_posix: " + p);
 
   if(fs_is_windows()){
     p = "a\\b";
-    if(Ffs::as_posix(p) != "a/b")
-      err("test_as_posix: " + Ffs::as_posix(p) + " != a/b");
+    if(fs_as_posix(p) != "a/b")
+      err("test_as_posix: " + fs_as_posix(p) + " != a/b");
 
     p = "C:\\my\\path";
-    if(Ffs::as_posix(p) != "C:/my/path")
+    if(fs_as_posix(p) != "C:/my/path")
       err("test_as_posix: " + p);
   }
 
