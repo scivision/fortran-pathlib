@@ -86,9 +86,9 @@ std::cout << "PASS: C++ temp directory\n";
 // --- setenv
 std::string k = "FORTtest";
 std::string v = "FORTvalue";
-Ffs::set_env(k, v);
+fs_setenv(k, v);
 
-if (std::string e = Ffs::get_env(k); e != v)
+if (std::string e = fs_getenv(k); e != v)
   err("Fortran: getenv " + k + "=" + e + " != " + v);
 
 std::cout << "OK: C++ environment\n";

@@ -34,7 +34,7 @@ std::string read = "readable.txt";
 std::string noread = "nonreadable.txt";
 std::string nowrite = "nonwritable.txt";
 
-Ffs::touch(read);
+fs_touch(read);
 fs_set_permissions(read, 1, 0, 0);
 
 auto p = fs_get_permissions(read);
@@ -53,7 +53,7 @@ if(!fs_is_file(read))
     err(read + " should be a file");
 
 // for Ffilesystem, even non-readable files "exist" and are "is_file"
-Ffs::touch(noread);
+fs_touch(noread);
 fs_set_permissions(noread, -1, 0, 0);
 
 p = fs_get_permissions(noread);
@@ -77,7 +77,7 @@ std::cerr << "SKIP: due to not having C++23 string contains support\n";
 
 // writable
 if(!fs_is_file(nowrite))
-  Ffs::touch(nowrite);
+  fs_touch(nowrite);
 fs_set_permissions(nowrite, 0, -1, 0);
 
 p = fs_get_permissions(nowrite);

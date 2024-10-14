@@ -43,12 +43,6 @@ static void no_arg(std::string_view fun){
     {"is_cygwin", fs_is_cygwin}
   };
 
-  std::map<std::string_view, std::function<std::string()>> mstring =
-  {
-    {"hostname", Ffs::get_hostname},
-    {"username", Ffs::get_username},
-  };
-
   std::map<std::string_view, std::function<int()>> mint =
   {
     {"is_wsl", fs_is_wsl},
@@ -67,14 +61,16 @@ static void no_arg(std::string_view fun){
 
   if (mbool.contains(fun))
     std::cout << mbool[fun]() << "\n";
-  else if (mstring.contains(fun))
-    std::cout << mstring[fun]() << "\n";
   else if (mint.contains(fun))
     std::cout << mint[fun]() << "\n";
   else if (mchar.contains(fun))
     std::cout << mchar[fun]() << "\n";
   else if (mlong.contains(fun))
     std::cout << mlong[fun]() << "\n";
+  else if (fun == "username")
+    std::cout << fs_get_username() << "\n";
+  else if (fun == "hostname")
+    std::cout << fs_hostname() << "\n";
   else if (fun == "shell")
     std::cout << fs_get_shell() << "\n";
   else if (fun == "arch")
@@ -116,14 +112,12 @@ static void one_arg(std::string_view fun, std::string_view a1){
 
   std::map<std::string_view, std::function<std::string(std::string_view)>> mstring =
   {
-    {"realpath", Ffs::realpath},
     {"parent", Ffs::parent},
     {"suffix", Ffs::suffix},
     {"normal", Ffs::normal},
     {"lexically_normal", Ffs::lexically_normal},
     {"make_preferred", Ffs::make_preferred},
     {"mkdtemp", Ffs::mkdtemp},
-    {"getenv", Ffs::get_env},
     {"type", Ffs::filesystem_type}
   };
 
@@ -139,11 +133,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"weakly_resolve", Ffs::resolve}
   };
 
-  std::map<std::string_view, std::function<void(std::string_view)>> mvoid =
-  {
-    {"touch", Ffs::touch}
-  };
-
   std::error_code ec;
 
   if(mbool.contains(fun))
@@ -154,8 +143,12 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << mstrb[fun](a1, true, false).value_or("") << "\n";
   else if (mstrbw.contains(fun))
     std::cout << mstrbw[fun](a1, false, false).value_or("") << "\n";
-  else if (mvoid.contains(fun))
-    mvoid[fun](a1);
+  else if (fun == "touch")
+    std::cout << "touch " << a1 << " " << fs_touch(a1) << "\n";
+  else if (fun == "getenv")
+    std::cout << fs_getenv(a1) << "\n";
+  else if (fun == "realpath")
+    std::cout << fs_realpath(a1) << "\n";
   else if (fun == "posix")
     std::cout << fs_as_posix(a1) << "\n";
   else if (fun == "max_component")
@@ -257,8 +250,7 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
   std::map<std::string_view, std::function<bool(std::string_view, std::string_view)>> mbool =
   {
     {"is_subdir", Ffs::is_subdir},
-    {"same", Ffs::equivalent},
-    {"setenv", Ffs::set_env}
+    {"same", Ffs::equivalent}
   };
 
   std::map<std::string_view, std::function<std::string(std::string_view, std::string_view)>> mstring =
@@ -272,7 +264,10 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
     std::cout << mbool[fun](a1, a2) << "\n";
   else if (mstring.contains(fun))
     std::cout << mstring[fun](a1, a2) << "\n";
-  else if (fun == "copy")
+  else if (fun == "setenv"){
+    fs_setenv(a1, a2);
+    std::cout << "set env var " << a1 << " to " << a2 << " => " << fs_getenv(a1) << "\n";
+  } else if (fun == "copy")
     fs_copy_file(a1, a2, false);
   else if (fun == "create_symlink")
     fs_create_symlink(a1, a2);

@@ -51,8 +51,8 @@ auto p = fs_get_permissions("not-exist");
 if(p)
     err("test_exe: get_permissions('not-exist') should faile");
 
-Ffs::touch(exe);
-Ffs::touch(noexe);
+fs_touch(exe);
+fs_touch(noexe);
 
 fs_set_permissions(exe, 0, 0, 1);
 fs_set_permissions(noexe, 0, 0, -1);
@@ -89,7 +89,7 @@ fs_remove(exe);
 fs_remove(noexe);
 
 // chmod(true)
-Ffs::touch(exe);
+fs_touch(exe);
 if (!fs_is_file(exe))
     err("test_exe: " + exe + " is not a file.");
 
@@ -120,7 +120,7 @@ if (!fs_is_windows() && p.value()[2] != 'x'){
 }
 
 // chmod(false)
-Ffs::touch(noexe);
+fs_touch(noexe);
 if (!fs_is_file(noexe))
     err("test_exe: " + noexe + " is not a file.");
 

@@ -101,8 +101,8 @@ int main(){
     if(fs_copy_file("", "", false))
       err("copy_file");
 
-    if(Ffs::touch(""))
-      err("Ffs::touch");
+    if(fs_touch(""))
+      err("touch");
 
 
     if(fs_file_size(""))
