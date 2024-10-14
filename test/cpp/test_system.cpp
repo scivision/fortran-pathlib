@@ -21,11 +21,11 @@ int main(){
 
   std::string s = fs_hostname();
   if (s.empty()){
-    std::cerr << "ERROR: failed to get hostname\n";
+    std::cerr << "FAILED: failed to get hostname\n";
     fail++;
   }
   else if (s.length() == max_path){
-    std::cerr << "ERROR: hostname has blank space\n";
+    std::cerr << "FAILED: hostname has blank space\n";
     fail++;
   }
   else
@@ -37,12 +37,12 @@ int main(){
     skip++;
   }
   else if (s.length() == max_path){
-    std::cerr << "ERROR: compiler has blank space\n";
+    std::cerr << "FAILED: compiler has blank space\n";
     fail++;
   }
 #ifdef __cpp_lib_string_contains
   else if (s.contains("%")){
-    std::cerr << "ERROR: fs_compiler has formatting problem\n";
+    std::cerr << "FAILED: fs_compiler has formatting problem\n";
     fail++;
   }
 #endif
@@ -55,19 +55,19 @@ int main(){
     skip++;
   }
   else if (s.length() == max_path){
-    std::cerr << "ERROR: shell has blank space\n";
+    std::cerr << "FAILED: shell has blank space\n";
     fail++;
   }
   else
     std::cout << "OK: shell: " << s << "\n";
 
-  s= fs_get_terminal();
+  s = fs_get_terminal();
   if (s.empty()){
     std::cerr << "unknown terminal\n";
     skip++;
   }
   else if (s.length() == max_path){
-    std::cerr << "ERROR: terminal has blank space\n";
+    std::cerr << "FAILED: terminal has blank space\n";
     fail++;
   }
   else
@@ -75,11 +75,11 @@ int main(){
 
   s = fs_get_username();
   if (s.empty()){
-    std::cerr << "ERROR: failed to get username\n";
+    std::cerr << "FAILED: failed to get username\n";
     fail++;
   }
   else if (s.length() == max_path){
-    std::cerr << "ERROR: username has blank space\n";
+    std::cerr << "FAILED: username has blank space\n";
     fail++;
   }
   else
