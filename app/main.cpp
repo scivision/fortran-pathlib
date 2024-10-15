@@ -193,7 +193,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
   else if (fun == "space")
     std::cout << fs_space_available(a1).value_or(0) << "\n";
   else if (fun == "absolute")
-    std::cout << Ffs::absolute(a1, true)<< "\n";
+    std::cout << fs_absolute(a1, true)<< "\n";
   else if (fun == "get_cwd")
     std::cout << fs_get_cwd().value_or("") << "\n";
   else if (fun == "tempdir")
@@ -269,7 +269,7 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
   else if (fun == "create_symlink")
     fs_create_symlink(a1, a2);
   else if (fun == "absolute"){
-    std::cout << Ffs::absolute(a1, a2, true)<< "\n";
+    std::cout << fs_absolute(a1, a2, true)<< "\n";
   }
   else
     std::cerr << fun << " requires more arguments or is unknown function\n";

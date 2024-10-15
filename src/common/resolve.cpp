@@ -37,55 +37,13 @@ std::optional<std::string> Ffs::canonical(std::string_view path, const bool stri
 }
 
 
-std::string Ffs::absolute(std::string_view path, const bool expand_tilde)
-{
-  // wraps std::filesystem::absolute(path).
-  // path need not exist
-  // Inspired by Python pathlib.Path.absolute()
-  // https://docs.python.org/3/library/pathlib.html#pathlib.Path.absolute
-
-  const auto ex = expand_tilde
-    ? std::filesystem::path(fs_expanduser(path))
-    : path;
-
-  // Linux, MinGW can't handle empty paths
-  if(ex.empty())
-    return fs_get_cwd().value_or("");
-
-  std::error_code ec;
-
-  const auto a = std::filesystem::absolute(ex, ec);
-
-  if(!ec) FFS_LIKELY
-    return a.generic_string();
-
-  std::cerr << "ERROR:ffilesystem:absolute(" << path << ") " << ec.message() << "\n";
-  return {};
-}
-
-
-
-std::string Ffs::absolute(std::string_view path, std::string_view base, const bool expand_tilde)
-{
-  // variant that allow rebasing on base path
-  const auto ex = expand_tilde
-    ? std::filesystem::path(fs_expanduser(path))
-    : path;
-
-  if (ex.is_absolute())
-    return ex.generic_string();
-
-  return Ffs::join(Ffs::absolute(base, expand_tilde), ex.generic_string());
-}
-
-
 std::optional<std::string> Ffs::resolve(std::string_view path, const bool strict, const bool expand_tilde)
 {
   // works like canonical(absolute(path)).
   // Inspired by Python pathlib.Path.resolve()
   // https://docs.python.org/3/library/pathlib.html#pathlib.Path.resolve
 
-  auto a = Ffs::absolute(path, expand_tilde);
+  auto a = fs_absolute(path, expand_tilde);
   if (a.empty()) FFS_UNLIKELY
     return {};
 

@@ -44,6 +44,7 @@ cdir = src/c/
 fdir = $(comdir)fortran/
 
 COMM_SRCS = \
+    $(comdir)absolute.cpp \
 	$(comdir)pure2.cpp \
 	$(comdir)copy.cpp \
 	$(comdir)inquire.cpp \

@@ -230,7 +230,7 @@ main : do
   select case (cmd)
 
   case ("absolute")
-    print '(A)', absolute(arg1, arg2, .false.)
+    print '(A)', absolute(arg1, arg2, .true.)
   case ("with_suffix")
     print '(A)', with_suffix(arg1, arg2)
   case ("is_subdir")

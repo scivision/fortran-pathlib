@@ -1,7 +1,9 @@
 {
     "common": [
         "src/common/filesystem.cpp",
-        "src/common/c.cpp", "src/common/common.c",
+        "src/common/c.cpp",
+        "src/common/common.c",
+        "src/common/absolute.cpp",
         "src/common/copy.cpp",
         "src/common/compiler.cpp", "src/common/cpu.cpp", "src/common/cygwin.cpp",
         "src/common/exepath.cpp", "src/common/env.cpp", "src/common/home.cpp",

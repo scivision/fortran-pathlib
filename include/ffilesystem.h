@@ -41,9 +41,6 @@ class Ffs
 {
 public:
 
-  [[nodiscard]] static std::string expanduser(std::string_view);
-
-  [[nodiscard]] static bool is_absolute(std::string_view);
   [[nodiscard]] static bool is_subdir(std::string_view, std::string_view);
 
   [[nodiscard]] static std::string normal(std::string_view);
@@ -58,9 +55,6 @@ public:
 
   [[nodiscard]] static std::optional<std::string> canonical(std::string_view, const bool, const bool);
   [[nodiscard]] static std::optional<std::string> resolve(std::string_view, const bool, const bool);
-
-  [[nodiscard]] static std::string absolute(std::string_view, const bool);
-  [[nodiscard]] static std::string absolute(std::string_view, std::string_view, const bool);
 
   [[nodiscard]] static std::string mkdtemp(std::string_view);
 
@@ -86,6 +80,10 @@ public:
 
 void fs_print_error(std::string_view, std::string_view);
 bool fs_win32_create_symlink(std::string_view, std::string_view);
+
+
+[[nodiscard]] std::string fs_absolute(std::string_view, const bool);
+[[nodiscard]] std::string fs_absolute(std::string_view, std::string_view, const bool);
 
 
 bool fs_mkdir(std::string_view);

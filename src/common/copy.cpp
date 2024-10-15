@@ -52,7 +52,7 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
   * should result in a file.
   * https://gitlab.kitware.com/utils/kwsys/-/commit/ee3223d7ae9a5b52b0a30efb932436def80c0d92
   */
-  if(copyfile(source.data(), dest.data(), NULL,
+  if(copyfile(source.data(), dest.data(), nullptr,
       COPYFILE_METADATA | COPYFILE_EXCL | COPYFILE_STAT | COPYFILE_XATTR | COPYFILE_DATA) < 0){
     std::cerr << "ERROR:ffilesystem:copy_file: could not clone file " << source << " => " << dest << "\n";
     return false;

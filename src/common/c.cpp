@@ -19,6 +19,12 @@ std::string::size_type fs_str2char(std::string_view s, char* result, const std::
   return s.length();
 }
 
+std::string::size_type fs_absolute(const char* path, const char* base, const bool expand_tilde,
+                          char* out, const std::string::size_type buffer_size){
+  return fs_str2char(fs_absolute(path, base, expand_tilde), out, buffer_size);
+}
+
+
 bool fs_mkdir(const char* path){ return fs_mkdir(std::string_view(path)); }
 
 size_t fs_longname(const char* in, char* result, const size_t buffer_size){

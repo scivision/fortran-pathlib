@@ -26,9 +26,9 @@ if (out /= ref) then
   error stop
 endif
 
-ref = join(get_cwd(), "rel")
+ref = get_cwd() // "/rel"
 out = absolute(in, "")
-if(len_trim(out) == 0) error stop "absolute(path, '') has empty output"
+if(len_trim(out) == 0) error stop "absolute(" // in // ", '') has empty output"
 if(out /= ref)  then
   write(stderr, '(a)') "absolute(" // in // ", '') =" // out // " /= " // ref
   error stop
@@ -42,7 +42,7 @@ if(out /= ref) then
   error stop
 endif
 
-ref = join(get_cwd(), "rel")
+ref = get_cwd() // "/rel"
 out = absolute("", in)
 if(len_trim(out) == 0) error stop "absolute('', path) has empty output"
 if(out /= ref) then
