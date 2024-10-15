@@ -72,7 +72,7 @@ if(!fs_is_windows()){
 
     // can cause exit code 409 (stack buffer overrun) on Windows for NUL
     auto s = fs_file_size(ref);
-    if(s and s.value() != 0){
+    if(s && s.value() != 0){
       std::cerr << "FAILED: file_size() " << s.value() << "\n";
       err("file_size", ref);
     }

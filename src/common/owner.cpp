@@ -44,7 +44,7 @@ std::string fs_get_owner_name(std::string_view path)
     }
   }
 
-  const LPSTR OwnerName = (LPTSTR)GlobalAlloc(GMEM_FIXED, Lowner*sizeof(TCHAR));
+  const auto OwnerName = (LPTSTR)GlobalAlloc(GMEM_FIXED, Lowner*sizeof(TCHAR));
   if (!OwnerName) {
     fs_print_error(path, "owner:GlobalAlloc: failed to allocate memory");
     return {};

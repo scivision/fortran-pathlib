@@ -67,8 +67,6 @@ else if (s_s.contains(fname))
 else if (fname == "reserved")
   b = fs_is_reserved(path);
 else if (fname == "exists")
-  b = Ffs::exists
-else if (fname == "exists")
   b = fs_exists(path);
 else if (fname == "is_dir")
   b = fs_is_dir(path);

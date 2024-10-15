@@ -1,7 +1,12 @@
 #include <string>
-#include <algorithm> // toupper
+#include <algorithm> // toupper, std::ranges::contains, std::find
 #include <set>
 #include <cctype> // std::isalnum
+#include <vector>
+
+#if __has_include(<rnages>)
+#include <ranges>
+#endif
 
 #include <iostream>
 
@@ -38,51 +43,59 @@ bool fs_is_reserved(std::string_view path)
   std::transform(s.begin(), s.end(), s.begin(), ::toupper);
 
 // check if the stem is a reserved device name
-  const std::string_view reserved_names[] = {"CON", "PRN", "AUX", "NUL",
+  const std::vector<std::string_view> r = {"CON", "PRN", "AUX", "NUL",
     "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
     "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
 
-  for (const auto& name : reserved_names) {
-    if (s == name)
-      return true;
-  }
+#ifdef _cpp_lib_ranges_contains  // C++23
+  if (std::ranges::contains(r, s))
+#elif __cpp_lib_ranges // C++20
+  if (std::ranges::find(r, s) != r.end())
+#else // C++17
+  if (std::find(r.begin(), r.end(), s) != r.end())
+#endif
+    return true;
 
 return false;
 }
 
 
+static bool fs_is_safe_char(const char c)
+{
+  // unordered_set<char>  8us
+  // set<char, std::less<>>  6us
+  // vector<char> 0.3us so much faster!
+  const std::vector<char> safe {'_', '-', '.', '~', '@', '#', '$', '%', '^', '&', '(', ')', '[', ']', '{', '}', '+', '=', ',', '!'};
+
+  return std::isalnum(c) ||
+#ifdef __cpp_lib_ranges // C++20
+    std::ranges::find(safe, c)
+#else // C++17
+    std::find(safe.begin(), safe.end(), c)
+#endif
+    != safe.end();
+}
+
+
 bool fs_is_safe_name(std::string_view filename)
 {
-// check that only shell-safe characters are in filename using std::isalnum and a c++ set
-// hasn't been fully tested yet across operating systems and file systems--let us know if character(s) should be unsafe
-// does NOT check for reserved or device names
-// => filenames only, not paths
-// https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file
-// we do not consider whitespaces, quotes, or ticks safe, as they can be confusing in shell scripts and command line usage
+  // check that only shell-safe characters are in filename
+  // hasn't been fully tested yet across operating systems and file systems--let us know if character(s) should be unsafe
+  // does NOT check for reserved or device names
+  // => filenames only, not paths
+  // https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file
+  // we do not consider whitespaces, quotes, or ticks safe, as they can be confusing in shell scripts and command line usage
 
-if(filename.empty())
-  return false;
+  // empty check for MSVC
+  if(fs_is_windows() && !filename.empty() && filename.back() == '.') FFS_UNLIKELY
+    return false;
 
-if(fs_is_windows() && filename.back() == '.')
-  return false;
-
-std::set<char> safe_chars = {'_', '-', '.', '~', '@', '#', '$', '%', '^', '&', '(', ')', '[', ']', '{', '}', '+', '=', ',', '!'};
-
-for (char c : filename) {
-
-  if (std::isalnum(c))
-    continue;
-
-  // .contains() is C++20
-  if(safe_chars.count(c))
-    continue;
-
-  return false;
+#ifdef __cpp_lib_ranges // C++20
+  return std::ranges::all_of(filename, fs_is_safe_char);
+#else // C++11
+  return std::all_of(filename.begin(), filename.end(), fs_is_safe_char);
+#endif
 }
-
-return true;
-}
-
 
 #if defined(__linux__) && __has_include(<linux/magic.h>)
 static inline std::string fs_type_linux(std::string_view path)

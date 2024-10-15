@@ -44,7 +44,6 @@ public:
   [[nodiscard]] static std::string expanduser(std::string_view);
 
   [[nodiscard]] static bool is_absolute(std::string_view);
-  [[nodiscard]] static bool exists(std::string_view);
   [[nodiscard]] static bool is_subdir(std::string_view, std::string_view);
 
   [[nodiscard]] static std::string normal(std::string_view);
