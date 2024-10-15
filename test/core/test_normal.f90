@@ -11,6 +11,24 @@ character(:), allocatable :: p
 p = normal("")
 if(p /= "") error stop "normal() " // p
 
+p = normal("/")
+if(p /= "/") error stop "normal(/) " // p
+
+p = normal("//")
+if(p /= "/") error stop "normal(//) " // p
+
+p = normal(".")
+if(p /= ".") error stop "normal(.) " // p
+
+p = normal("..")
+if(p /= "..") error stop "normal(..) " // p
+
+p = normal("../..")
+if(p /= "../..") error stop "normal(../..) " // p
+
+p = normal("/a")
+if(p /= "/a") error stop "normal(/a) " // p
+
 p = normal("a")
 if(p /= "a") error stop "normal(a) " // p
 
