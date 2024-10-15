@@ -16,8 +16,10 @@ if(.not. is_dir(temp_dir)) then
   error stop
 end if
 
-print '(a)', "OK: Fortran mkdtemp: " // temp_dir
+print '(a)', "mkdtemp: " // temp_dir
 
 end block valgrind
+
+print '(a)', "OK: Fortran mkdtemp"
 
 end program

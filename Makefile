@@ -30,8 +30,8 @@ INC := -Iinclude/
 cpp = 1
 
 # optional, but useful
-cfeat = -DHAVE_MERSENNE_TWISTER -DHAVE_GETLOADAVG
-cppfeat = -DHAVE_MERSENNE_TWISTER
+cfeat =
+cppfeat = -DHAVE_MERSENNE_TWISTER -DHAVE_GETLOADAVG
 
 CXXFLAGS := -std=c++20 -O3 -DNDEBUG $(cppfeat) $(INC) -DHAVE_CXX_FILESYSTEM
 CFLAGS := -O3 -DNDEBUG $(cfeat) $(INC)
@@ -60,7 +60,7 @@ COMM_SRCS = \
 	$(comdir)libpath.cpp \
 	$(comdir)limits.cpp \
 	$(comdir)mkdir.cpp \
-	$(comdir)mkdtemp.c \
+	$(comdir)mkdtemp.cpp \
 	$(comdir)owner.cpp \
 	$(comdir)os.c \
 	$(comdir)partition.cpp \
@@ -81,7 +81,6 @@ ifeq ($(cpp),1)
 	SRCS = \
 		$(comdir)c_ifc.cpp \
 		$(comdir)ifc.cpp \
-		$(comdir)mkdtemp.cpp \
 		$(comdir)pure.cpp \
 		$(comdir)resolve.cpp
 else

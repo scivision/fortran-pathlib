@@ -24,6 +24,10 @@ std::string::size_type fs_absolute(const char* path, const char* base, const boo
   return fs_str2char(fs_absolute(path, base, expand_tilde), out, buffer_size);
 }
 
+std::string::size_type fs_mkdtemp(const char* tmpl, char* result, const std::string::size_type buffer_size){
+  return fs_str2char(fs_mkdtemp(tmpl), result, buffer_size);
+}
+
 
 bool fs_mkdir(const char* path){ return fs_mkdir(std::string_view(path)); }
 

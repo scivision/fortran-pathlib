@@ -29,7 +29,7 @@ if(NOT HAVE_CXX_FILESYSTEM)
   return()
 endif()
 
-# for Ffs::mkdtemp
+# for mkdtemp
 check_source_compiles(CXX
 "#include <random>
 

@@ -1,6 +1,13 @@
-if(NOT HAVE_Fortran_FILESYSTEM)
-  return()
-endif()
+foreach(t IN ITEMS mkdtemp)
+  add_executable(test_${t}_cpp test_${t}.cpp)
+  target_link_libraries(test_${t}_cpp PRIVATE ffilesystem)
+
+  add_test(NAME Cpp_${t} COMMAND test_${t}_cpp)
+  set_property(TEST Cpp_${t} PROPERTY WORKING_DIRECTORY $<TARGET_FILE_DIR:test_${t}_cpp>)
+endforeach()
+
+
+if(HAVE_Fortran_FILESYSTEM)
 
 foreach(t IN ITEMS copyfile fileop mkdir mkdtemp same touch)
   add_executable(test_${t}_fortran test_${t}.f90)
@@ -26,3 +33,5 @@ set_tests_properties(Fortran_touch PROPERTIES FIXTURES_SETUP touch)
 set_tests_properties(Fortran_copyfile PROPERTIES FIXTURES_REQUIRED filesize)
 
 set_property(TEST Fortran_same PROPERTY FIXTURES_REQUIRED mkdir)
+
+endif()

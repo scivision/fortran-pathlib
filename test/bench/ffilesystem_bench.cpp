@@ -42,8 +42,7 @@ std::map<std::string_view, std::function<std::string(std::string_view)>> s_s =
     {"suffix", Ffs::suffix},
     {"normal", Ffs::normal},
     {"lexically_normal", Ffs::lexically_normal},
-    {"make_preferred", Ffs::make_preferred},
-    {"mkdtemp", Ffs::mkdtemp}
+    {"make_preferred", Ffs::make_preferred}
   };
 
 std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool, bool)>> ssb =

@@ -9,7 +9,7 @@
         "src/common/exepath.cpp", "src/common/env.cpp", "src/common/home.cpp",
         "src/common/inquire.cpp",
         "src/common/libpath.cpp", "src/common/limits.cpp",
-        "src/common/mkdtemp.c",
+        "src/common/mkdtemp.cpp",
         "src/common/mkdir.cpp",
         "src/common/os.c", "src/common/owner.cpp",
         "src/common/partition.cpp",
@@ -24,7 +24,7 @@
         "src/common/uid.cpp", "src/common/uname.cpp", "src/common/which.cpp",
         "src/common/windows.cpp", "src/common/winsock.cpp"],
     "cpp": ["src/common/c_ifc.cpp", "src/common/ifc.cpp",
-            "src/common/mkdtemp.cpp", "src/common/pure.cpp", "src/common/resolve.cpp"],
+            "src/common/pure.cpp", "src/common/resolve.cpp"],
     "fortran": ["src/common/fortran/filesystem.F90"],
     "c": ["src/c/pure.c",
           "src/c/resolve.c"]

@@ -42,7 +42,7 @@ comm_src = files(
 'src/common/inquire.cpp',
 'src/common/libpath.cpp',
 'src/common/limits.cpp',
-'src/common/mkdtemp.c',
+'src/common/mkdtemp.cpp',
 'src/common/mkdir.cpp',
 'src/common/owner.cpp',
 'src/common/os.c',
@@ -70,7 +70,6 @@ cwalk_inc = []
 cppsrcs = files(
 'src/common/c_ifc.cpp',
 'src/common/ifc.cpp',
-'src/common/mkdtemp.cpp',
 'src/common/pure.cpp',
 'src/common/resolve.cpp'
 )
@@ -241,8 +240,8 @@ filesystem = library('filesystem',
 sources: [fsrcs, comm_src, cppsrcs],
 include_directories: [cwalk_inc, inc],
 install: true,
-c_args: [mkdtemp_def, getloadavg_def],
-cpp_args: [have_filesystem, chrono_def, dladdr_def, mkdtemp_def],
+c_args: [],
+cpp_args: [have_filesystem, chrono_def, dladdr_def, getloadavg_def, mkdtemp_def],
 fortran_args: f03type_def,
 dependencies: [libwin, fs_lib, dl],
 link_with: cwalk_dep

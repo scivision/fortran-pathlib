@@ -50,13 +50,10 @@ public:
   [[nodiscard]] static std::string parent(std::string_view);
   [[nodiscard]] static std::string suffix(std::string_view);
 
-  static bool touch(std::string_view);
   [[nodiscard]] static std::optional<std::filesystem::file_time_type> get_modtime(std::string_view);
 
   [[nodiscard]] static std::optional<std::string> canonical(std::string_view, const bool, const bool);
   [[nodiscard]] static std::optional<std::string> resolve(std::string_view, const bool, const bool);
-
-  [[nodiscard]] static std::string mkdtemp(std::string_view);
 
   [[nodiscard]] static bool equivalent(std::string_view, std::string_view);
 
@@ -84,6 +81,8 @@ bool fs_win32_create_symlink(std::string_view, std::string_view);
 
 [[nodiscard]] std::string fs_absolute(std::string_view, const bool);
 [[nodiscard]] std::string fs_absolute(std::string_view, std::string_view, const bool);
+
+[[nodiscard]] std::string fs_mkdtemp(std::string_view);
 
 
 bool fs_mkdir(std::string_view);
@@ -332,7 +331,7 @@ size_t fs_get_terminal(char*, const size_t);
 
 bool fs_win32_create_symlink(const char*, const char*);
 
-size_t fs_mkdtemp(char*, const size_t);
+size_t fs_mkdtemp(const char*, char*, const size_t);
 
 size_t fs_hostname(char*, const size_t);
 

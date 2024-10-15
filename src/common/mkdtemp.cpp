@@ -1,3 +1,7 @@
+#if defined(__linux__) && !defined(_DEFAULT_SOURCE)
+#define _DEFAULT_SOURCE
+#endif
+
 #include "ffilesystem.h"
 
 #include <iostream>
@@ -10,10 +14,17 @@
 
 #if defined(HAVE_MERSENNE_TWISTER)
 #include <random>
+#else
+#ifdef _WIN32
+#include <io.h>  // _mktemp
+#else
+#include <unistd.h> // mkdtemp macOS
+#include <stdlib.h> // mkdtemp Linux
+#endif
 #endif
 
 
-#if defined(__cpp_deduction_guides) && defined(HAVE_MERSENNE_TWISTER)
+#if defined(HAVE_CXX_FILESYSTEM) && defined(__cpp_deduction_guides) && defined(HAVE_MERSENNE_TWISTER)
 // CTAD C++17 random string generator
 // https://stackoverflow.com/a/444614
 // https://en.cppreference.com/w/cpp/language/class_template_argument_deduction
@@ -45,20 +56,28 @@ static std::string fs_generate_random_alphanumeric_string(const std::string::siz
 #endif
 
 
-std::string Ffs::mkdtemp(std::string_view prefix)
+std::string fs_mkdtemp(std::string_view prefix)
 {
   // make unique temporary directory starting with prefix
-#if defined(__cpp_deduction_guides) && defined(HAVE_MERSENNE_TWISTER)
+
+if(FS_TRACE) std::cout << "TRACE:Ffs::mkdtemp_mersenne: prefix: " << prefix << "\n";
+
+#if defined(HAVE_CXX_FILESYSTEM) && defined(__cpp_deduction_guides) && defined(HAVE_MERSENNE_TWISTER)
   std::error_code ec;
   std::filesystem::path t;
+
   constexpr std::string::size_type Lname = 16;  // arbitrary length for random string
   const std::filesystem::path temp = std::filesystem::temp_directory_path(ec);
+
+  if(FS_TRACE) std::cout << "TRACE:Ffs::mkdtemp_mersenne: tempdir: " << temp << "\n";
 
   if(!ec) FFS_LIKELY
   {
     do {
-      t = (temp / (prefix.data() + fs_generate_random_alphanumeric_string(Lname)));
-      if(FS_TRACE) std::cout << "TRACE:Ffs::mkdtemp: " << t << "\n";
+      const std::string rname = fs_generate_random_alphanumeric_string(Lname);
+      t = (temp / (prefix.data() + rname));
+      if(FS_TRACE) std::cout << "TRACE:Ffs::mkdtemp_mersenne: randomName: " << rname << "\n";
+      if(FS_TRACE) std::cout << "TRACE:Ffs::mkdtemp_mersenne: fullTemppath: " << t << "\n";
     } while (std::filesystem::is_directory(t, ec) && !ec);
 
     if (std::filesystem::create_directory(t, ec) && !ec) FFS_LIKELY
@@ -66,10 +85,28 @@ std::string Ffs::mkdtemp(std::string_view prefix)
   }
 
   std::cerr << "Ffs::mkdtemp:mkdir: could not create temporary directory " << ec.message() << "\n";
-#else
-  if(std::string buf(fs_get_max_path(), '\0');
-      fs_mkdtemp(buf.data(), buf.size()) > 0)  FFS_LIKELY
-    return buf.c_str();
-#endif
   return {};
+#else
+
+  std::string tmpl(prefix);
+  const char* tmp;
+
+#ifdef _WIN32
+// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/mktemp-wmktemp
+  tmp = _mktemp(tmpl.data());
+  if(tmp)
+    return fs_mkdir(tmp) ? tmp : std::string{};
+#else
+  // https://www.man7.org/linux/man-pages/man3/mkdtemp.3.html
+  // https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/mkdtemp.3.html
+
+  tmp = mkdtemp(tmpl.data());
+  if(tmp)
+    return tmp;
+#endif
+
+  fs_print_error(prefix, "mkdtemp");
+  return {};
+
+#endif
 }
