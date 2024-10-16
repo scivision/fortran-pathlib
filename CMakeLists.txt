@@ -132,9 +132,9 @@ ${CMAKE_DL_LIBS}
 "$<$<BOOL:${WIN32}>:Ole32;Shell32;uuid;Userenv;Advapi32;ws2_32>"
 )
 # both Advapi32 and Userenv must be linked
-# Ole32 is needed for CoTaskMemFree
+# Ole32: CoTaskMemFree
 # Shell32: SHGetKnownFolderPath
-# uuid is needed for KnownFolderID
+# uuid: KnownFolderID
 
 get_property(_ffs_defs TARGET ffilesystem PROPERTY COMPILE_DEFINITIONS)
 message(VERBOSE "Ffilesystem COMPILE_DEFINITIONS: ${_ffs_defs}")
