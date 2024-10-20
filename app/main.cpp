@@ -242,19 +242,15 @@ static void one_arg(std::string_view fun, std::string_view a1){
 }
 
 
-static void two_arg(std::string_view fun, std::string_view a1, std::string_view a2){
-
-  std::map<std::string_view, std::function<std::string(std::string_view, std::string_view)>> mstring =
-  {
-    {"with_suffix", Ffs::with_suffix}
-  };
+static void two_arg(std::string_view fun, std::string_view a1, std::string_view a2)
+{
 
   if (fun == "same")
     std::cout << fs_equivalent(a1, a2) << "\n";
   else if (fun == "join")
     std::cout << fs_join(a1, a2) << "\n";
-  else if (mstring.contains(fun))
-    std::cout << mstring[fun](a1, a2) << "\n";
+  else if (fun == "with_suffix")
+    std::cout << fs_with_suffix(a1, a2) << "\n";
   else if (fun == "is_subdir")
     std::cout << fs_is_subdir(a1, a2) << "\n";
   else if (fun == "relative")

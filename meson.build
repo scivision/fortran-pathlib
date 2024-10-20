@@ -63,19 +63,7 @@ comm_src = files(
 'src/common/windows.cpp'
 )
 
-if use_cpp
-
-cppsrcs = files(
-'src/common/c_ifc.cpp',
-'src/common/pure.cpp'
-)
-else
-
-cppsrcs = []
-comm_src += files(
-'src/c/pure.c'
-)
-endif
+cppsrcs = use_cpp ? files('src/common/pure.cpp') : []
 
 inc = include_directories('include')
 

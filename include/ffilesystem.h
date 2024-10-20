@@ -47,8 +47,6 @@ public:
 
   [[nodiscard]] static std::optional<std::filesystem::file_time_type> get_modtime(std::string_view);
 
-  [[nodiscard]] static std::string with_suffix(std::string_view, std::string_view);
-
   // Disallow creating an instance of this object
   Ffs() = delete;
 };
@@ -56,6 +54,8 @@ public:
 #endif // __cpp_lib_filesystem
 
 // C++ functions available without C++17 filesystem too
+
+[[nodiscard]] std::string fs_with_suffix(std::string_view, std::string_view);
 
 [[nodiscard]] std::string fs_parent(std::string_view);
 [[nodiscard]] std::string fs_suffix(std::string_view);

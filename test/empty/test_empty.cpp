@@ -47,8 +47,8 @@ int main(){
     if(!fs_suffix("").empty())
       err("suffix");
 
-    if(!Ffs::with_suffix("", "").empty())
-      err("Ffs::with_suffix");
+    if(!fs_with_suffix("", "").empty())
+      err("with_suffix");
 
     if(fs_is_char_device(""))
       err("is_char_device");

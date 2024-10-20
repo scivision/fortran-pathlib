@@ -24,8 +24,6 @@
         "src/common/time.cpp",
         "src/common/uid.cpp", "src/common/uname.cpp", "src/common/which.cpp",
         "src/common/windows.cpp", "src/common/winsock.cpp"],
-    "cpp": ["src/common/c_ifc.cpp",
-            "src/common/pure.cpp"],
-    "fortran": ["src/common/fortran/filesystem.F90"],
-    "c": ["src/c/pure.c"]
+    "cpp": ["src/common/pure.cpp"],
+    "fortran": ["src/common/fortran/filesystem.F90"]
 }

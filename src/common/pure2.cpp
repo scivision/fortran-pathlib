@@ -353,3 +353,20 @@ bool fs_is_subdir(std::string_view subdir, std::string_view dir)
 #endif
 
 }
+
+
+std::string fs_with_suffix(std::string_view path, std::string_view new_suffix)
+{
+#ifdef HAVE_CXX_FILESYSTEM
+  return std::filesystem::path(path).replace_extension(new_suffix).generic_string();
+#else
+
+  const std::string parent = fs_parent(path);
+  const std::string stem = fs_stem(path);
+
+  const std::string r = (parent == ".") ? stem : fs_join(parent, stem);
+
+  return r + std::string(new_suffix);
+
+#endif
+}

@@ -65,13 +65,11 @@ json_array(${json} "common" src_common)
 
 if(HAVE_CXX_FILESYSTEM)
   json_array(${json} "cpp" src_cpp)
-else()
-  json_array(${json} "c" src_c)
 endif()
 
 add_library(ffilesystem ${src_common}
 $<$<TARGET_EXISTS:ffilesystem_Fortran>:$<TARGET_OBJECTS:ffilesystem_Fortran>>
-"$<IF:$<BOOL:${HAVE_CXX_FILESYSTEM}>,${src_cpp},${src_c}>"
+"$<$<BOOL:${HAVE_CXX_FILESYSTEM}>:${src_cpp}>"
 )
 
 target_include_directories(ffilesystem PRIVATE ${PROJECT_SOURCE_DIR}/include)

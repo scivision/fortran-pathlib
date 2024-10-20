@@ -79,11 +79,7 @@ COMM_SRCS = \
 	$(comdir)winsock.cpp
 
 ifeq ($(cpp),1)
-	SRCS = \
-		$(comdir)c_ifc.cpp \
-		$(comdir)pure.cpp
-else
-	SRCS = $(cdir)pure.c
+	SRCS = $(comdir)pure.cpp
 endif
 
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o) $(COMM_SRCS:%=$(BUILD_DIR)/%.o)
