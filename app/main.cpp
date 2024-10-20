@@ -199,7 +199,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
   else if (fun == "tempdir")
     std::cout << fs_get_tempdir().value_or("") << "\n";
   else if (fun == "modtime"){
-#if defined(__cpp_lib_format)
+#if defined(HAVE_CXX_FILESYSTEM) && defined(__cpp_lib_format)
     const auto t = fs_get_modtime_fs(a1);
     if(t)
       std::cout << std::format("{}\n", t.value());

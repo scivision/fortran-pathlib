@@ -416,7 +416,7 @@ std::string fs_lexically_normal(std::string_view path){
 #ifdef HAVE_CXX_FILESYSTEM
   return std::filesystem::path(path).lexically_normal().generic_string();
 #else
-  std::cerr << "ERROR:fs_lexically_normal: C++ <filesystem> not available\n";
+  std::cerr << "ERROR:fs_lexically_normal(" << path << "): C++ <filesystem> not available\n";
   return {};
 #endif
 }
@@ -426,7 +426,7 @@ std::string fs_make_preferred(std::string_view path){
 #ifdef HAVE_CXX_FILESYSTEM
   return std::filesystem::path(path).make_preferred().generic_string();
 #else
-  std::cerr << "ERROR:fs_make_preferred: C++ <filesystem> not available\n";
+  std::cerr << "ERROR:fs_make_preferred(" << path << "): C++ <filesystem> not available\n";
   return {};
 #endif
 }

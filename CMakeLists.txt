@@ -133,9 +133,12 @@ set_property(TARGET ffilesystem::filesystem PROPERTY IMPORTED_LINK_INTERFACE_LAN
 # --- CLI
 
 if(ffilesystem_cli)
-  if(HAVE_CXX_FILESYSTEM AND ffilesystem_cpp_map_contains AND CMAKE_CXX_STANDARD GREATER_EQUAL 20)
+  if(ffilesystem_cpp_map_contains AND CMAKE_CXX_STANDARD GREATER_EQUAL 20)
     add_executable(fs_cli app/main.cpp)
+
     target_link_libraries(fs_cli PRIVATE ffilesystem)
+
+    target_compile_definitions(fs_cli PRIVATE "$<$<BOOL:${HAVE_CXX_FILESYSTEM}>:HAVE_CXX_FILESYSTEM>")
 
     target_compile_features(fs_cli PRIVATE cxx_std_$<IF:$<IN_LIST:cxx_std_23,CMAKE_CXX_COMPILE_FEATURES>,23,${CMAKE_CXX_STANDARD}>)
 
