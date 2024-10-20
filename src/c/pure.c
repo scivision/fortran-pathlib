@@ -16,7 +16,7 @@
 size_t fs_normal(const char* path, char* result, const size_t buffer_size)
 {
 // normalize path
-  cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
+  cwk_path_set_style(CWK_STYLE_UNIX);
 
   const size_t L = cwk_path_normalize(path, result, buffer_size);
 
