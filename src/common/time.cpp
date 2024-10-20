@@ -35,8 +35,8 @@
 std::time_t fs_get_modtime(const char* path)
 {
 
-#ifdef HAVE_CLOCK_CAST
-  if(const auto &t_fs = Ffs::get_modtime(path); t_fs){
+#if defined(HAVE_CLOCK_CAST) && defined(HAVE_CXX_FILESYSTEM)
+  if(const auto &t_fs = fs_get_modtime_fs(path); t_fs){
     const auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs.value());
     return std::chrono::system_clock::to_time_t(t_sys);
   }
@@ -52,7 +52,7 @@ std::time_t fs_get_modtime(const char* path)
 }
 
 #ifdef HAVE_CXX_FILESYSTEM
-std::optional<std::filesystem::file_time_type> Ffs::get_modtime(std::string_view path)
+std::optional<std::filesystem::file_time_type> fs_get_modtime_fs(std::string_view path)
 {
   std::error_code ec;
 

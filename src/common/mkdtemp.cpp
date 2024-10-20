@@ -60,7 +60,7 @@ std::string fs_mkdtemp(std::string_view prefix)
 {
   // make unique temporary directory starting with prefix
 
-if(FS_TRACE) std::cout << "TRACE:Ffs::mkdtemp_mersenne: prefix: " << prefix << "\n";
+if(FS_TRACE) std::cout << "TRACE:mkdtemp_mersenne: prefix: " << prefix << "\n";
 
 #if defined(HAVE_CXX_FILESYSTEM) && defined(__cpp_deduction_guides) && defined(HAVE_MERSENNE_TWISTER)
   std::error_code ec;
@@ -69,22 +69,22 @@ if(FS_TRACE) std::cout << "TRACE:Ffs::mkdtemp_mersenne: prefix: " << prefix << "
   constexpr std::string::size_type Lname = 16;  // arbitrary length for random string
   const std::filesystem::path temp = std::filesystem::temp_directory_path(ec);
 
-  if(FS_TRACE) std::cout << "TRACE:Ffs::mkdtemp_mersenne: tempdir: " << temp << "\n";
+  if(FS_TRACE) std::cout << "TRACE:mkdtemp_mersenne: tempdir: " << temp << "\n";
 
   if(!ec) FFS_LIKELY
   {
     do {
       const std::string rname = fs_generate_random_alphanumeric_string(Lname);
       t = (temp / (prefix.data() + rname));
-      if(FS_TRACE) std::cout << "TRACE:Ffs::mkdtemp_mersenne: randomName: " << rname << "\n";
-      if(FS_TRACE) std::cout << "TRACE:Ffs::mkdtemp_mersenne: fullTemppath: " << t << "\n";
+      if(FS_TRACE) std::cout << "TRACE:mkdtemp_mersenne: randomName: " << rname << "\n";
+      if(FS_TRACE) std::cout << "TRACE:mkdtemp_mersenne: fullTemppath: " << t << "\n";
     } while (std::filesystem::is_directory(t, ec) && !ec);
 
     if (std::filesystem::create_directory(t, ec) && !ec) FFS_LIKELY
       return t.generic_string();
   }
 
-  std::cerr << "Ffs::mkdtemp:mkdir: could not create temporary directory " << ec.message() << "\n";
+  std::cerr << "ERROR:Ffilesystem::mkdtemp:mkdir: could not create temporary directory " << ec.message() << "\n";
   return {};
 #else
 

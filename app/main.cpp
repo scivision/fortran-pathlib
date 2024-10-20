@@ -106,8 +106,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
 
   std::map<std::string_view, std::function<std::string(std::string_view)>> mstring =
   {
-    {"lexically_normal", Ffs::lexically_normal},
-    {"make_preferred", Ffs::make_preferred}
+    {"lexically_normal", fs_lexically_normal},
+    {"make_preferred", fs_make_preferred}
   };
 
   std::error_code ec;
@@ -200,7 +200,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << fs_get_tempdir().value_or("") << "\n";
   else if (fun == "modtime"){
 #if defined(__cpp_lib_format)
-    const auto t = Ffs::get_modtime(a1);
+    const auto t = fs_get_modtime_fs(a1);
     if(t)
       std::cout << std::format("{}\n", t.value());
 #else

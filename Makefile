@@ -45,12 +45,11 @@ fdir = $(comdir)fortran/
 
 COMM_SRCS = \
     $(comdir)absolute.cpp \
-	$(comdir)pure2.cpp \
+	$(comdir)pure.cpp \
 	$(comdir)copy.cpp \
 	$(comdir)inquire.cpp \
 	$(comdir)filesystem.cpp \
 	$(comdir)c.cpp \
-	$(comdir)common.c \
 	$(comdir)compiler.cpp \
 	$(comdir)cpu.cpp \
 	$(comdir)cygwin.cpp \
@@ -78,11 +77,7 @@ COMM_SRCS = \
 	$(comdir)windows.cpp \
 	$(comdir)winsock.cpp
 
-ifeq ($(cpp),1)
-	SRCS = $(comdir)pure.cpp
-endif
-
-OBJS := $(SRCS:%=$(BUILD_DIR)/%.o) $(COMM_SRCS:%=$(BUILD_DIR)/%.o)
+OBJS := $(COMM_SRCS:%=$(BUILD_DIR)/%.o)
 
 fbd = $(BUILD_DIR)/$(fdir)
 

@@ -38,20 +38,13 @@
 
 #ifdef __cpp_lib_filesystem
 
-class Ffs
-{
-public:
+[[nodiscard]] std::optional<std::filesystem::file_time_type> fs_get_modtime_fs(std::string_view);
 
-  [[nodiscard]] static std::string lexically_normal(std::string_view);
-  [[nodiscard]] static std::string make_preferred(std::string_view);
+#endif
 
-  [[nodiscard]] static std::optional<std::filesystem::file_time_type> get_modtime(std::string_view);
+[[nodiscard]] std::string fs_lexically_normal(std::string_view);
+[[nodiscard]] std::string fs_make_preferred(std::string_view);
 
-  // Disallow creating an instance of this object
-  Ffs() = delete;
-};
-
-#endif // __cpp_lib_filesystem
 
 // C++ functions available without C++17 filesystem too
 
@@ -248,7 +241,6 @@ FFS_NODISCARD bool fs_is_rosetta();
 FFS_NODISCARD bool fs_is_safe_name(const char*);
 
 void fs_as_posix(char*);
-void fs_drop_slash(char*);
 
 FFS_NODISCARD double fs_cpu_loadavg();
 

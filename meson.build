@@ -29,7 +29,6 @@ fsrcs = fortran ? files('src/common/fortran/filesystem.F90') : []
 
 comm_src = files(
 'src/common/c.cpp',
-'src/common/common.c',
 'src/common/absolute.cpp',
 'src/common/compiler.cpp',
 'src/common/copy.cpp',
@@ -48,7 +47,7 @@ comm_src = files(
 'src/common/os.c',
 'src/common/partition.cpp',
 'src/common/platform.cpp',
-'src/common/pure2.cpp',
+'src/common/pure.cpp',
 'src/common/realpath.cpp',
 'src/common/resolve.cpp',
 'src/common/space.cpp',
@@ -62,8 +61,6 @@ comm_src = files(
 'src/common/winsock.cpp',
 'src/common/windows.cpp'
 )
-
-cppsrcs = use_cpp ? files('src/common/pure.cpp') : []
 
 inc = include_directories('include')
 
@@ -216,7 +213,7 @@ endif
 # -- main library
 
 filesystem = library('filesystem',
-sources: [fsrcs, comm_src, cppsrcs],
+sources: [fsrcs, comm_src],
 include_directories: [inc],
 install: true,
 c_args: [],

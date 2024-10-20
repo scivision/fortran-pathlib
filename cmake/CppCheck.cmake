@@ -42,7 +42,7 @@ ffilesystem_HAVE_MERSENNE_TWISTER
 
 if(CMAKE_CXX_STANDARD GREATER_EQUAL 20)
 
-# for Ffs::get_modtime
+# for fs_get_modtime
 check_source_compiles(CXX
 "#include <chrono>
 #include <filesystem>
