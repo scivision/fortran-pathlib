@@ -18,11 +18,6 @@ std::string Ffs::make_preferred(std::string_view path){
 }
 
 
-std::string Ffs::join(std::string_view path, std::string_view other){
-  return fs_drop_slash((std::filesystem::path(path) / other).lexically_normal().generic_string());
-}
-
-
 std::string Ffs::parent(std::string_view path)
 {
   // have to drop_slash on input to get expected parent path -- necessary for AppleClang

@@ -52,9 +52,8 @@ public:
 
   [[nodiscard]] static std::string join(std::string_view, std::string_view);
 
-  [[nodiscard]] static std::string with_suffix(std::string_view, std::string_view);
 
-  [[nodiscard]] static std::string drop_slash(std::string_view);
+  [[nodiscard]] static std::string with_suffix(std::string_view, std::string_view);
 
   // Disallow creating an instance of this object
   Ffs() = delete;
@@ -63,6 +62,9 @@ public:
 #endif // __cpp_lib_filesystem
 
 // C++ functions available without C++17 filesystem too
+
+
+[[nodiscard]] std::string fs_join(std::string_view, std::string_view);
 
 [[nodiscard]] std::optional<std::string> fs_canonical(std::string_view, const bool, const bool);
 [[nodiscard]] std::optional<std::string> fs_resolve(std::string_view, const bool, const bool);

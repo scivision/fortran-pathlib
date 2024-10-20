@@ -85,6 +85,28 @@ std::string fs_stem(std::string_view path)
 }
 
 
+std::string fs_join(std::string_view path, std::string_view other){
+#ifdef HAVE_CXX_FILESYSTEM
+  return fs_drop_slash((std::filesystem::path(path) / other).lexically_normal().generic_string());
+#else
+  if(path.empty() && other.empty())
+    return {};
+
+  if(path.empty())
+    return fs_drop_slash(other);
+
+  if(other.empty())
+    return fs_drop_slash(path);
+
+  if (other[0] == '/' || (fs_is_windows() && fs_is_absolute(other)))
+    return fs_drop_slash(other);
+
+  return fs_normal(std::string(path) + "/" + std::string(other));
+#endif
+}
+
+
+
 std::vector<std::string> fs_split(std::string_view path)
 {
   if(path.empty())

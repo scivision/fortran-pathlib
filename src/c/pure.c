@@ -12,33 +12,6 @@
 #include <ctype.h> // isalpha
 
 
-size_t fs_join(const char* path, const char* other, char* result, const size_t buffer_size)
-{
-  const size_t L1 = strlen(path);
-  const size_t L2 = strlen(other);
-
-  if(L1 == 0 && L2 == 0)
-    return 0;
-
-  if(L1 == 0)
-    return fs_strncpy(other, result, buffer_size);
-
-  if(L2 == 0)
-    return fs_strncpy(path, result, buffer_size);
-
-  if (other[0] == '/' || (fs_is_windows() && fs_is_absolute(other)))
-    return fs_strncpy(other, result, buffer_size);
-
-  const int L = snprintf(result, buffer_size, "%s/%s", path, other);
-  if (L < 0 || L >= (int) buffer_size){
-    fprintf(stderr, "ERROR:ffilesystem:fs_join: buffer_size %zu too small for string\n", buffer_size);
-    return 0;
-  }
-
-  return fs_normal(result, result, buffer_size);
-}
-
-
 size_t fs_parent(const char* path, char* result, const size_t buffer_size)
 {
 

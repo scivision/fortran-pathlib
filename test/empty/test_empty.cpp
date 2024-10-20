@@ -41,8 +41,8 @@ int main(){
     if(!fs_stem("").empty())
       err("stem");
 
-    if(!Ffs::join("", "").empty())
-      err("Ffs::join");
+    if(!fs_join("", "").empty())
+      err("join");
 
     if(!Ffs::suffix("").empty())
       err("Ffs::suffix");

@@ -244,12 +244,13 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
 
   std::map<std::string_view, std::function<std::string(std::string_view, std::string_view)>> mstring =
   {
-    {"join", Ffs::join},
     {"with_suffix", Ffs::with_suffix}
   };
 
   if (fun == "same")
     std::cout << fs_equivalent(a1, a2) << "\n";
+  else if (fun == "join")
+    std::cout << fs_join(a1, a2) << "\n";
   else if (mstring.contains(fun))
     std::cout << mstring[fun](a1, a2) << "\n";
   else if (fun == "is_subdir")
