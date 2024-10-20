@@ -106,8 +106,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
 
   std::map<std::string_view, std::function<std::string(std::string_view)>> mstring =
   {
-    {"parent", Ffs::parent},
-    {"suffix", Ffs::suffix},
     {"lexically_normal", Ffs::lexically_normal},
     {"make_preferred", Ffs::make_preferred}
   };
@@ -116,6 +114,10 @@ static void one_arg(std::string_view fun, std::string_view a1){
 
   if (mstring.contains(fun))
     std::cout << mstring[fun](a1) << "\n";
+  else if (fun == "parent")
+    std::cout << fs_parent(a1) << "\n";
+  else if (fun == "suffix")
+    std::cout << fs_suffix(a1) << "\n";
   else if (fun == "canonical")
     std::cout << fs_canonical(a1, true, false).value_or("") << "\n";
   else if (fun == "weakly_canonical")

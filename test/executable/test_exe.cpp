@@ -57,8 +57,8 @@ fs_touch(noexe);
 fs_set_permissions(exe, 0, 0, 1);
 fs_set_permissions(noexe, 0, 0, -1);
 
-if(fs_is_exe(Ffs::parent(exe)))
-    err("test_exe: is_exe() should not detect directory " + Ffs::parent(exe));
+if(fs_is_exe(fs_parent(exe)))
+    err("test_exe: is_exe() should not detect directory " + fs_parent(exe));
 
 p = fs_get_permissions(exe);
 if(!p)

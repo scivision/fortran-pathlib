@@ -48,7 +48,7 @@ s = parent(in1)
 if(s == ref1) return
 
 i = 1
-write(stderr, '(a)') "parent("// trim(in1) // ") = " // s // " /= " // ref1
+write(stderr, '(a)') "FAIL: parent("// trim(in1) // ") = " // s // " /= " // ref1
 
 end function
 

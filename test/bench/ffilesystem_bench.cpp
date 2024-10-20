@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <iostream>
 #include <functional>
-#include <map>
 #include <set>
 #include <cstdlib>
 #include <vector>
@@ -36,14 +35,6 @@ auto t = std::chrono::duration<double>::max();
 
 #if defined(HAVE_CXX_FILESYSTEM) && HAVE_CXX_FILESYSTEM
 
-std::map<std::string_view, std::function<std::string(std::string_view)>> s_s =
-  {
-    {"parent", Ffs::parent},
-    {"suffix", Ffs::suffix},
-    {"lexically_normal", Ffs::lexically_normal},
-    {"make_preferred", Ffs::make_preferred}
-  };
-
 constexpr bool strict = false;
 constexpr bool expand_tilde = false;
 
@@ -55,8 +46,10 @@ if (fname == "canonical")
   h = fs_canonical(path, strict, expand_tilde).value_or("");
 else if (fname == "resolve")
   h = fs_resolve(path, strict, expand_tilde).value_or("");
-else if (s_s.contains(fname))
-  h = s_s[fname](path);
+else if (fname == "parent")
+  h = fs_parent(path);
+else if (fname == "suffix")
+  h = fs_suffix(path);
 else if (fname == "normal")
   h = fs_normal(path);
 else if (fname == "reserved")

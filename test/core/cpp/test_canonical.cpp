@@ -33,7 +33,7 @@ if(home.empty())
 if (auto h = fs_canonical("~", true, true); !h || home != h)
   err("fs_canonical(~) " + h.value() + " != get_homedir() " + home);
 
-std::string homep = Ffs::parent(home);
+std::string homep = fs_parent(home);
 if(homep.empty())
   err("parent(get_homedir()) failed");
 

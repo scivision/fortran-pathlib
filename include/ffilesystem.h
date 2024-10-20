@@ -45,13 +45,7 @@ public:
   [[nodiscard]] static std::string lexically_normal(std::string_view);
   [[nodiscard]] static std::string make_preferred(std::string_view);
 
-  [[nodiscard]] static std::string parent(std::string_view);
-  [[nodiscard]] static std::string suffix(std::string_view);
-
   [[nodiscard]] static std::optional<std::filesystem::file_time_type> get_modtime(std::string_view);
-
-  [[nodiscard]] static std::string join(std::string_view, std::string_view);
-
 
   [[nodiscard]] static std::string with_suffix(std::string_view, std::string_view);
 
@@ -63,6 +57,8 @@ public:
 
 // C++ functions available without C++17 filesystem too
 
+[[nodiscard]] std::string fs_parent(std::string_view);
+[[nodiscard]] std::string fs_suffix(std::string_view);
 
 [[nodiscard]] std::string fs_join(std::string_view, std::string_view);
 
