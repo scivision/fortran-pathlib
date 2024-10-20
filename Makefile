@@ -39,8 +39,7 @@ FFLAGS := -O3 -DNDEBUG
 
 ARFLAGS := rcs
 
-comdir = src/common/
-cdir = src/c/
+comdir = src/
 fdir = $(comdir)fortran/
 
 COMM_SRCS = \

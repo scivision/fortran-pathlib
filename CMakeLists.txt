@@ -42,15 +42,10 @@ endif()
 
 # --- filesystem library
 
-include(cmake/json_array.cmake)
-file(READ ${CMAKE_CURRENT_SOURCE_DIR}/sources.json json)
-set(CMAKE_CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/sources.json)
-
 # use separate object for Fortran to work with Visual Studio generator
 if(HAVE_Fortran_FILESYSTEM)
 
-  json_array(${json} "fortran" src_fortran)
-  add_library(ffilesystem_Fortran OBJECT ${src_fortran})
+  add_library(ffilesystem_Fortran OBJECT src/fortran/filesystem.F90)
 
   target_compile_definitions(ffilesystem_Fortran PRIVATE
   $<$<NOT:$<BOOL:${HAVE_F03TYPE}>>:NO_F03TYPE>
@@ -61,9 +56,13 @@ if(HAVE_Fortran_FILESYSTEM)
 
 endif()
 
-json_array(${json} "common" src_common)
 
-add_library(ffilesystem ${src_common}
+add_library(ffilesystem
+src/filesystem.cpp src/c.cpp src/absolute.cpp src/copy.cpp src/compiler.cpp src/cpu.cpp src/cygwin.cpp
+src/exepath.cpp src/env.cpp src/home.cpp src/inquire.cpp src/libpath.cpp src/limits.cpp src/mkdtemp.cpp
+src/mkdir.cpp src/os.c src/owner.cpp src/partition.cpp src/platform.cpp src/pure.cpp src/realpath.cpp
+src/resolve.cpp src/space.cpp src/sysctl.cpp src/symlink.cpp src/touch.cpp src/time.cpp src/uid.cpp
+src/uname.cpp src/which.cpp src/windows.cpp src/winsock.cpp
 $<$<TARGET_EXISTS:ffilesystem_Fortran>:$<TARGET_OBJECTS:ffilesystem_Fortran>>
 )
 
