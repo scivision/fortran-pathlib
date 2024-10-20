@@ -44,7 +44,7 @@ if(!fs_is_dir(fpath.value()))
 
 std::string cpath = std::filesystem::current_path().string();
 
-if (std::string s = Ffs::normal(cpath); fpath != s)
+if (std::string s = fs_normal(cpath); fpath != s)
   err("C cwd " + s + " != Fortran cwd " + fpath.value());
 
 std::cout << "PASS: C++ current working directory\n";

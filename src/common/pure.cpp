@@ -7,16 +7,6 @@
 #include <iostream>
 #include <cctype>
 
-std::string Ffs::drop_slash(std::string_view sv)
-{
-  // drop all trailing "/"
-  std::string s(sv);
-  while(s.length() > 1 && (s.back() == '/' || (fs_is_windows() && s.back() == '\\')))
-    s.pop_back();
-
-  return s;
-}
-
 
 std::string Ffs::lexically_normal(std::string_view path){
   return std::filesystem::path(path).lexically_normal().generic_string();
@@ -28,20 +18,15 @@ std::string Ffs::make_preferred(std::string_view path){
 }
 
 
-std::string Ffs::normal(std::string_view path){
-  return Ffs::drop_slash(std::filesystem::path(path).lexically_normal().generic_string());
-}
-
-
 std::string Ffs::join(std::string_view path, std::string_view other){
-  return Ffs::drop_slash((std::filesystem::path(path) / other).lexically_normal().generic_string());
+  return fs_drop_slash((std::filesystem::path(path) / other).lexically_normal().generic_string());
 }
 
 
 std::string Ffs::parent(std::string_view path)
 {
   // have to drop_slash on input to get expected parent path -- necessary for AppleClang
-  std::string p = std::filesystem::path(Ffs::drop_slash(path)).parent_path().generic_string();
+  std::string p = std::filesystem::path(fs_drop_slash(path)).parent_path().generic_string();
 
   // remove repeated path seperators from p string
   p.erase(std::unique(p.begin(), p.end(), [](char a, char b){ return a == '/' && b == '/'; }), p.end());

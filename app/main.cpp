@@ -108,7 +108,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
   {
     {"parent", Ffs::parent},
     {"suffix", Ffs::suffix},
-    {"normal", Ffs::normal},
     {"lexically_normal", Ffs::lexically_normal},
     {"make_preferred", Ffs::make_preferred}
   };
@@ -133,6 +132,12 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << mstrb[fun](a1, true, false).value_or("") << "\n";
   else if (mstrbw.contains(fun))
     std::cout << mstrbw[fun](a1, false, false).value_or("") << "\n";
+  else if (fun == "parts"){
+    for (const auto &p : fs_split(a1))
+      std::cout << p << "\n";
+  }
+  else if (fun == "normal")
+    std::cout << fs_normal(a1) << "\n";
   else if (fun == "mkdtemp")
     std::cout << fs_mkdtemp(a1) << "\n";
   else if (fun == "type")

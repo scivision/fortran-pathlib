@@ -13,25 +13,6 @@
 #include <ctype.h> // isalpha
 
 
-size_t fs_normal(const char* path, char* result, const size_t buffer_size)
-{
-// normalize path
-  cwk_path_set_style(CWK_STYLE_UNIX);
-
-  const size_t L = cwk_path_normalize(path, result, buffer_size);
-
-  if(L >= buffer_size){
-    fprintf(stderr, "ERROR:ffilesystem:normal: output buffer %zu too small\n", buffer_size);
-    return 0;
-  }
-
-  if(L)
-    fs_as_posix(result);
-
-  return L;
-}
-
-
 size_t fs_join(const char* path, const char* other, char* result, const size_t buffer_size)
 {
   const size_t L1 = strlen(path);

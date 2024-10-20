@@ -40,7 +40,6 @@ std::map<std::string_view, std::function<std::string(std::string_view)>> s_s =
   {
     {"parent", Ffs::parent},
     {"suffix", Ffs::suffix},
-    {"normal", Ffs::normal},
     {"lexically_normal", Ffs::lexically_normal},
     {"make_preferred", Ffs::make_preferred}
   };
@@ -63,6 +62,8 @@ if (ssb.contains(fname))
   h = ssb[fname](path, strict, expand_tilde).value_or("");
 else if (s_s.contains(fname))
   h = s_s[fname](path);
+else if (fname == "normal")
+  h = fs_normal(path);
 else if (fname == "reserved")
   b = fs_is_reserved(path);
 else if (fname == "exists")

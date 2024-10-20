@@ -25,6 +25,7 @@
 
 #include <cstdint>
 #include <cstdlib>
+#include <vector>
 #include <algorithm> // std::min
 #include <string>
 #include <string_view>
@@ -43,7 +44,6 @@ public:
 
   [[nodiscard]] static bool is_subdir(std::string_view, std::string_view);
 
-  [[nodiscard]] static std::string normal(std::string_view);
   [[nodiscard]] static std::string lexically_normal(std::string_view);
   [[nodiscard]] static std::string make_preferred(std::string_view);
 
@@ -72,6 +72,10 @@ public:
 #endif // __cpp_lib_filesystem
 
 // C++ functions available without C++17 filesystem too
+
+[[nodiscard]] std::vector<std::string> fs_split(std::string_view);
+[[nodiscard]] std::string fs_normal(std::string_view);
+[[nodiscard]] std::string fs_drop_slash(std::string_view);
 
 [[nodiscard]] std::string::size_type fs_str2char(std::string_view, char*, const std::string::size_type);
 

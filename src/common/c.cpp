@@ -28,6 +28,11 @@ std::string::size_type fs_mkdtemp(const char* tmpl, char* result, const std::str
   return fs_str2char(fs_mkdtemp(tmpl), result, buffer_size);
 }
 
+std::string::size_type fs_normal(const char* path,
+                         char* result, const std::string::size_type buffer_size){
+  return fs_str2char(fs_normal(path), result, buffer_size);
+}
+
 
 bool fs_mkdir(const char* path){ return fs_mkdir(std::string_view(path)); }
 

@@ -30,7 +30,7 @@ int main(void){
 
     std::cout << "Begin test_reserved\n";
 #ifdef HAVE_CXX_FILESYSTEM
-    r = Ffs::normal(ref);
+    r = fs_normal(ref);
     if (r != ref)
       err("normal", r);
     std::cout << "OK: normal() " << r << "\n";

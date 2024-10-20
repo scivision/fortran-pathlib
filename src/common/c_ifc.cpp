@@ -18,11 +18,6 @@ std::string::size_type fs_join(const char* path, const char* other,
   return fs_str2char(Ffs::join(path, other), result, buffer_size);
 }
 
-std::string::size_type fs_normal(const char* path,
-                         char* result, const std::string::size_type buffer_size){
-  return fs_str2char(Ffs::normal(path), result, buffer_size);
-}
-
 std::string::size_type fs_parent(const char* path,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(Ffs::parent(path), result, buffer_size);

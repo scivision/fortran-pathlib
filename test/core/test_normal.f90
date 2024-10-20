@@ -20,6 +20,12 @@ if(p /= "/") error stop "normal(//) " // p
 p = normal(".")
 if(p /= ".") error stop "normal(.) " // p
 
+p = normal("./")
+if(p /= ".") error stop "normal(./) " // p
+
+p = normal("./.")
+if(p /= ".") error stop "normal(./.) " // p
+
 p = normal("..")
 if(p /= "..") error stop "normal(..) " // p
 
@@ -97,6 +103,9 @@ if(p /= "a/b/c") error stop "normal(././a/./b/././c/./.) " // p
 
 p = normal("a/b/../../c/../..")
 if(p /= "..") error stop "normal(a/b/../../c/../..) " // p
+
+p = normal("a/b/../../../c/../..")
+if(p /= "../..") error stop "normal(a/b/../../../c/../..) " // p
 
 end block valgrind
 
