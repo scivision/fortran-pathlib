@@ -12,7 +12,7 @@ int main(){
   double load = fs_cpu_loadavg();
   if (load <= 0.0){
     std::cerr << "CPU load average not implemented on this platform\n";
-    skip++;
+    // skip++;
   }
   else
     std::cout << "OK: CPU load average: " << load << "\n";
