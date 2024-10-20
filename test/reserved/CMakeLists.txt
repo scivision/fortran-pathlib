@@ -1,6 +1,5 @@
 add_executable(test_reserved_cpp test_reserved.cpp)
 target_link_libraries(test_reserved_cpp PRIVATE ffilesystem)
-target_compile_definitions(test_reserved_cpp PRIVATE $<$<BOOL:${HAVE_CXX_FILESYSTEM}>:HAVE_CXX_FILESYSTEM>)
 
 add_test(NAME Cpp_reserved COMMAND ${CMAKE_COMMAND} -E env $<TARGET_FILE:test_reserved_cpp>)
 # the -E env launcher is needed to catch subprocess abort for macOS with Clang

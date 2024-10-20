@@ -210,6 +210,11 @@ bool fs_is_writable(std::string_view path)
 std::optional<uintmax_t> fs_file_size(std::string_view path)
 {
 #ifdef HAVE_CXX_FILESYSTEM
+
+  // can thrown exception despite noexcept
+  if(!fs_exists(path))
+    return {};
+
   std::error_code ec;
   if(auto s = std::filesystem::file_size(path, ec); !ec)  FFS_LIKELY
     return s;

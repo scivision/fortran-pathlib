@@ -29,12 +29,11 @@ int main(void){
     std::string r;
 
     std::cout << "Begin test_reserved\n";
-#ifdef HAVE_CXX_FILESYSTEM
+
     r = fs_normal(ref);
     if (r != ref)
       err("normal", r);
     std::cout << "OK: normal() " << r << "\n";
-#endif
 
     bool b = fs_is_absolute(ref);
     if (fs_is_windows()){
@@ -78,7 +77,6 @@ if(!fs_is_windows()){
     }
     std::cout << "OK: file_size() " << s.value() << "\n";
 
-#ifdef HAVE_CXX_FILESYSTME
     if(!fs_canonical(ref.data(), false, true))
       err("canonical", ref);
     std::cout << "OK: canonical() " << ref << "\n";
@@ -86,7 +84,6 @@ if(!fs_is_windows()){
     r = fs_relative_to(ref, ref);
     if(r != ".")
       err("relative_to", r);
-#endif
 } // fs_is_windows()
 
     r = fs_expanduser(ref);

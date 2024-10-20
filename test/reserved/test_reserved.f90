@@ -32,4 +32,6 @@ end if
 
 end block valgrind
 
+print '(a)', "OK: Fortran reserved"
+
 end program
