@@ -5,6 +5,7 @@
 #define FS_TRACE 0
 #endif
 
+#include <sys/types.h> // mode_t
 
 
 #ifdef __cplusplus
@@ -32,11 +33,8 @@
 #include <ctime> // time_t
 #include <optional>
 
-#if __has_include(<filesystem>)
+#if HAVE_CXX_FILESYSTEM
 #include <filesystem>
-#endif
-
-#ifdef __cpp_lib_filesystem
 
 [[nodiscard]] std::optional<std::filesystem::file_time_type> fs_get_modtime_fs(std::string_view);
 
@@ -190,7 +188,6 @@ extern "C" {
 #include <stddef.h>
 #include <stdint.h>
 #include <time.h>
-#include <sys/types.h> // mode_t
 
 #ifndef __has_include
 #define __has_include(x) 0

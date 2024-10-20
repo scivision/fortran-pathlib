@@ -12,7 +12,7 @@
 #include <format>
 #endif
 
-#if __has_include(<filesystem>)
+#ifdef HAVE_CXX_FILESYSTEM
 #include <filesystem>
 #endif
 
@@ -224,7 +224,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
       std::cerr << "ERROR get_cwd() before chdir\n";
     }
   } else if (fun == "ls") {
-#if defined __cpp_lib_filesystem
+#ifdef HAVE_CXX_FILESYSTEM
     for (auto const& dir_entry : std::filesystem::directory_iterator{fs_expanduser(a1)}){
       std::filesystem::path p = dir_entry.path();
       std::cout << p;
@@ -232,10 +232,10 @@ static void one_arg(std::string_view fun, std::string_view a1){
         std::cout << " " << s;
 
       std::cout << " " << fs_get_permissions(p.generic_string()).value_or("") << "\n";
+    }
 #else
       std::cerr << "ERROR: ls requires C++17 filesystem\n";
 #endif
-    }
   } else {
     std::cerr << fun << " requires more arguments or is unknown function\n";
   }

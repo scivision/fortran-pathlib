@@ -32,14 +32,12 @@ int main(int argc, char* argv[])
     return EXIT_FAILURE;
   }
 
-  auto s = std::filesystem::status(path);
-
-  if(!std::filesystem::exists(s)){
+  if(!fs_exists(path)){
     std::cerr << "test_binpath: lib_path should exist: " << path << "\n";
     return EXIT_FAILURE;
   }
 
-  if(std::filesystem::is_directory(s)){
+  if(fs_is_dir(path)){
     if(shared){
       std::cerr << "test_binpath: lib_path should not be a directory: " << path << "\n";
       return EXIT_FAILURE;
@@ -49,7 +47,7 @@ int main(int argc, char* argv[])
     }
   }
 
-  if(std::filesystem::is_regular_file(s)){
+  if(fs_is_file(path)){
     std::cout << path << "\n";
     return EXIT_SUCCESS;
   }
