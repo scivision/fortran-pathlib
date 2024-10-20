@@ -79,7 +79,7 @@ if(!fs_is_windows()){
     std::cout << "OK: file_size() " << s.value() << "\n";
 
 #ifdef HAVE_CXX_FILESYSTME
-    if(!Ffs::canonical(ref.data(), false, true))
+    if(!fs_canonical(ref.data(), false, true))
       err("canonical", ref);
     std::cout << "OK: canonical() " << ref << "\n";
 

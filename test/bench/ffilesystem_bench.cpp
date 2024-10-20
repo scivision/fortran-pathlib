@@ -44,13 +44,6 @@ std::map<std::string_view, std::function<std::string(std::string_view)>> s_s =
     {"make_preferred", Ffs::make_preferred}
   };
 
-std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool, bool)>> ssb =
-  {
-    {"canonical", Ffs::canonical},
-    {"resolve", Ffs::resolve}
-  };
-
-
 constexpr bool strict = false;
 constexpr bool expand_tilde = false;
 
@@ -58,8 +51,10 @@ constexpr bool expand_tilde = false;
 std::string h;
 bool b = false;
 
-if (ssb.contains(fname))
-  h = ssb[fname](path, strict, expand_tilde).value_or("");
+if (fname == "canonical")
+  h = fs_canonical(path, strict, expand_tilde).value_or("");
+else if (fname == "resolve")
+  h = fs_resolve(path, strict, expand_tilde).value_or("");
 else if (s_s.contains(fname))
   h = s_s[fname](path);
 else if (fname == "normal")

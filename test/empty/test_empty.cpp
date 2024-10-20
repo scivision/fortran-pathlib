@@ -89,11 +89,11 @@ int main(){
     if(fs_remove(""))
       err("remove");
 
-    if(Ffs::canonical("", false, false))
-      err("Ffs::canonical");
+    if(fs_canonical("", false, false))
+      err("fs_canonical");
 
-    if(Ffs::equivalent("", ""))
-      err("Ffs::equivalent");
+    if(fs_equivalent("", ""))
+      err("equivalent");
 
     if(!fs_expanduser("").empty())
       err("expanduser");

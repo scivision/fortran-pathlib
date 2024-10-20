@@ -112,26 +112,18 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"make_preferred", Ffs::make_preferred}
   };
 
-  std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool, bool)>> mstrb =
-  {
-    {"canonical", Ffs::canonical},
-    {"resolve", Ffs::resolve}
-  };
-
-  std::map<std::string_view, std::function<std::optional<std::string>(std::string_view, bool, bool)>> mstrbw =
-  {
-    {"weakly_canonical", Ffs::canonical},
-    {"weakly_resolve", Ffs::resolve}
-  };
-
   std::error_code ec;
 
   if (mstring.contains(fun))
     std::cout << mstring[fun](a1) << "\n";
-  else if (mstrb.contains(fun))
-    std::cout << mstrb[fun](a1, true, false).value_or("") << "\n";
-  else if (mstrbw.contains(fun))
-    std::cout << mstrbw[fun](a1, false, false).value_or("") << "\n";
+  else if (fun == "canonical")
+    std::cout << fs_canonical(a1, true, false).value_or("") << "\n";
+  else if (fun == "weakly_canonical")
+    std::cout << fs_canonical(a1, false, false).value_or("") << "\n";
+  else if (fun == "resolve")
+    std::cout << fs_resolve(a1, true, false).value_or("") << "\n";
+  else if (fun == "weakly_resolve")
+    std::cout << fs_resolve(a1, false, false).value_or("") << "\n";
   else if (fun == "parts"){
     for (const auto &p : fs_split(a1))
       std::cout << p << "\n";
@@ -250,19 +242,14 @@ static void one_arg(std::string_view fun, std::string_view a1){
 
 static void two_arg(std::string_view fun, std::string_view a1, std::string_view a2){
 
-  std::map<std::string_view, std::function<bool(std::string_view, std::string_view)>> mbool =
-  {
-    {"same", Ffs::equivalent}
-  };
-
   std::map<std::string_view, std::function<std::string(std::string_view, std::string_view)>> mstring =
   {
     {"join", Ffs::join},
     {"with_suffix", Ffs::with_suffix}
   };
 
-  if (mbool.contains(fun))
-    std::cout << mbool[fun](a1, a2) << "\n";
+  if (fun == "same")
+    std::cout << fs_equivalent(a1, a2) << "\n";
   else if (mstring.contains(fun))
     std::cout << mstring[fun](a1, a2) << "\n";
   else if (fun == "is_subdir")

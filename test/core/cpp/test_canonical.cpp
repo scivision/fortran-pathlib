@@ -30,29 +30,29 @@ std::string home = fs_get_homedir();
 if(home.empty())
   err("get_homedir() failed");
 
-if (auto h = Ffs::canonical("~", true, true); !h || home != h)
-  err("Ffs::canonical(~) " + h.value() + " != get_homedir() " + home);
+if (auto h = fs_canonical("~", true, true); !h || home != h)
+  err("fs_canonical(~) " + h.value() + " != get_homedir() " + home);
 
 std::string homep = Ffs::parent(home);
 if(homep.empty())
-  err("Ffs::parent(get_homedir()) failed");
+  err("parent(get_homedir()) failed");
 
 // -- relative dir
 
-if(auto h = Ffs::canonical("~/..", true, true); !h || homep != h)
-  err("Ffs::canonical(~/..) != Ffs::parent(get_homedir()) " + h.value() + " != " + homep);
+if(auto h = fs_canonical("~/..", true, true); !h || homep != h.value())
+  err("fs_canonical(~/..) != parent(get_homedir()) " + h.value() + " != " + homep);
 
 // -- relative file
 if(fs_is_cygwin())
   // Cygwin can't handle non-existing canonical paths
   return EXIT_SUCCESS;
 
-auto h = Ffs::canonical("~/../not-exist.txt", false, true);
+auto h = fs_canonical("~/../not-exist.txt", false, true);
 if(!h)
-  err("Ffs::canonical(\"~/../not-exist.txt\") failed weakly canonical");
+  err("fs_canonical(\"~/../not-exist.txt\") failed weakly canonical");
 
 if (h.value().length() <= 13)
-  err("Ffs::canonical(\"~/../not-exist.txt\") didn't expand ~  " + h.value());
+  err("fs_canonical(\"~/../not-exist.txt\") didn't expand ~  " + h.value());
 
 return EXIT_SUCCESS;
 }

@@ -50,6 +50,7 @@ comm_src = files(
 'src/common/platform.cpp',
 'src/common/pure2.cpp',
 'src/common/realpath.cpp',
+'src/common/resolve.cpp',
 'src/common/space.cpp',
 'src/common/sysctl.cpp',
 'src/common/symlink.cpp',
@@ -66,15 +67,13 @@ if use_cpp
 
 cppsrcs = files(
 'src/common/c_ifc.cpp',
-'src/common/pure.cpp',
-'src/common/resolve.cpp'
+'src/common/pure.cpp'
 )
 else
 
 cppsrcs = []
 comm_src += files(
-'src/c/pure.c',
-'src/c/resolve.c'
+'src/c/pure.c'
 )
 endif
 

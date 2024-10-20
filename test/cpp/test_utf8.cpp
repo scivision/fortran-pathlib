@@ -17,7 +17,7 @@ std::string wink = "😉";
 std::string hello = "你好";
 
 // test allocation
-auto u1 = Ffs::canonical(".", true, false);
+auto u1 = fs_canonical(".", true, false);
 if(!u1)
   return EXIT_FAILURE;
 
@@ -27,7 +27,7 @@ for ( const auto &u : {smiley, wink, hello} ) {
   if (auto u2 = fs_file_name("./" + u); u2 != u)
     err("file_name(./" + smiley + ") != " + u2 + " " + u);
 
-  u1 = Ffs::canonical(u, false, false);
+  u1 = fs_canonical(u, false, false);
   if(!u1)
     return EXIT_FAILURE;
 

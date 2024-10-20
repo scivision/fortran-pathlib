@@ -45,7 +45,7 @@ end if
 print *, "OK: home dir = ", p1
 
 ! -- relative dir
-p1 = canonical("~/..")
+p1 = canonical("~/..", .false., .true.)
 
 L2 = len_trim(p1)
 if (L2 >= L1) then

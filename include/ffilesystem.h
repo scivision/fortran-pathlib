@@ -50,11 +50,6 @@ public:
 
   [[nodiscard]] static std::optional<std::filesystem::file_time_type> get_modtime(std::string_view);
 
-  [[nodiscard]] static std::optional<std::string> canonical(std::string_view, const bool, const bool);
-  [[nodiscard]] static std::optional<std::string> resolve(std::string_view, const bool, const bool);
-
-  [[nodiscard]] static bool equivalent(std::string_view, std::string_view);
-
   [[nodiscard]] static std::string join(std::string_view, std::string_view);
 
   [[nodiscard]] static std::string with_suffix(std::string_view, std::string_view);
@@ -69,6 +64,10 @@ public:
 
 // C++ functions available without C++17 filesystem too
 
+[[nodiscard]] std::optional<std::string> fs_canonical(std::string_view, const bool, const bool);
+[[nodiscard]] std::optional<std::string> fs_resolve(std::string_view, const bool, const bool);
+
+[[nodiscard]] bool fs_equivalent(std::string_view, std::string_view);
 
 [[nodiscard]] std::string fs_relative_to(std::string_view, std::string_view);
 [[nodiscard]] std::string fs_proximate_to(std::string_view, std::string_view);

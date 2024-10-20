@@ -66,6 +66,7 @@ COMM_SRCS = \
 	$(comdir)partition.cpp \
 	$(comdir)platform.cpp \
 	$(comdir)realpath.cpp \
+	$(comdir)resolve.cpp \
 	$(comdir)space.cpp \
 	$(comdir)sysctl.cpp \
 	$(comdir)symlink.cpp \
@@ -80,10 +81,9 @@ COMM_SRCS = \
 ifeq ($(cpp),1)
 	SRCS = \
 		$(comdir)c_ifc.cpp \
-		$(comdir)pure.cpp \
-		$(comdir)resolve.cpp
+		$(comdir)pure.cpp
 else
-	SRCS = $(cdir)pure.c $(cdir)resolve.c
+	SRCS = $(cdir)pure.c
 endif
 
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o) $(COMM_SRCS:%=$(BUILD_DIR)/%.o)

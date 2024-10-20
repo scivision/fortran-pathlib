@@ -4,26 +4,36 @@
 #include <string>
 #include <system_error>
 
+#ifndef HAVE_CXX_FILESYSTEM
+// preferred import order for stat()
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <cerrno>
+#endif
 
-std::optional<std::string> Ffs::canonical(std::string_view path, const bool strict, const bool expand_tilde)
+
+std::optional<std::string> fs_canonical(std::string_view path, const bool strict, const bool expand_tilde)
 {
-  // canonicalizes path, which need not exist
+  // canonicalize path, i.e. resolve all symbolic links, remove ".", ".." and extra slashes
+  // if strict is true, then path must exist
 
   if (path.empty()) FFS_UNLIKELY
     return {};
     // need this for macOS otherwise it returns the current working directory instead of empty string
 
-  const auto ex = expand_tilde
-    ? std::filesystem::path(fs_expanduser(path))
-    : path;
+  const std::string ex = expand_tilde
+    ? fs_expanduser(path)
+    : std::string(path);
+
+#ifdef HAVE_CXX_FILESYSTEM
+
+  // handle differences in ill-defined behaviour of std::filesystem::weakly_canonical() on non-existent paths
+  // canonical(path, false) is distinct from resolve(path, false) for non-existing paths.
+  // don't just always normalize because canonical also resolve symlinks.
+  if (!strict && !fs_is_absolute(ex) && !fs_exists(ex))
+    return fs_normal(ex);
 
   std::error_code ec;
-
-  if (!strict && !ex.is_absolute() && (!std::filesystem::exists(ex, ec) || ec)){
-    // handles differences in ill-defined behaviour of std::filesystem::weakly_canonical() on non-existent paths
-    // canonical(path, false) is distinct from resolve(path, false) for non-existing paths.
-    return fs_normal(ex.generic_string());
-  }
 
   const auto c = strict
     ? std::filesystem::canonical(ex, ec)
@@ -34,26 +44,40 @@ std::optional<std::string> Ffs::canonical(std::string_view path, const bool stri
 
   std::cerr << "ERROR:ffilesystem:canonical(" << path << ") " << ec.message() << "\n";
   return {};
+#else
+
+  // non c++ filesystem uses different strict logic
+  if (!fs_exists(ex)) {
+    if (strict) {
+      std::cerr << "ERROR:ffilesystem:canonical(" << path << ") path does not exist and strict=true\n";
+      return {};
+    }
+    return fs_normal(ex);
+  }
+
+  return fs_realpath(ex);
+
+#endif
 }
 
 
-std::optional<std::string> Ffs::resolve(std::string_view path, const bool strict, const bool expand_tilde)
+std::optional<std::string> fs_resolve(std::string_view path, const bool strict, const bool expand_tilde)
 {
   // works like canonical(absolute(path)).
   // Inspired by Python pathlib.Path.resolve()
   // https://docs.python.org/3/library/pathlib.html#pathlib.Path.resolve
-
   auto a = fs_absolute(path, expand_tilde);
   if (a.empty()) FFS_UNLIKELY
     return {};
 
-  return Ffs::canonical(a, strict, false);
+  return fs_canonical(a, strict, false);
 }
 
 
-bool Ffs::equivalent(std::string_view path1, std::string_view path2)
+bool fs_equivalent(std::string_view path1, std::string_view path2)
 {
   // non-existent paths are not equivalent
+#ifdef HAVE_CXX_FILESYSTEM
   std::error_code ec;
   std::filesystem::path p1(path1);
   std::filesystem::path p2(path2);
@@ -69,4 +93,13 @@ bool Ffs::equivalent(std::string_view path1, std::string_view path2)
   }
 
   return e;
+#else
+  struct stat s1;
+  struct stat s2;
+
+  if(stat(path1.data(), &s1) != 0 || stat(path2.data(), &s2) != 0)
+    return false;
+// https://www.boost.org/doc/libs/1_85_0/libs/filesystem/doc/reference.html#equivalent
+  return s1.st_dev == s2.st_dev && s1.st_ino == s2.st_ino;
+#endif
 }
