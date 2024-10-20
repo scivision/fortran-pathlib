@@ -75,14 +75,10 @@ FIXTURES_SETUP "canonical"
 endif()
 
 
-if(HAVE_CXX_FILESYSTEM)
-
-foreach(t IN ITEMS canonical expanduser core)
+foreach(t IN ITEMS canonical expanduser core realpath)
   add_executable(test_cpp_${t} cpp/test_${t}.cpp)
   target_link_libraries(test_cpp_${t} PRIVATE ffilesystem)
 
   add_test(NAME Cpp_${t} COMMAND test_cpp_${t})
   set_property(TEST Cpp_${t} PROPERTY LABELS Cpp)
 endforeach()
-
-endif()

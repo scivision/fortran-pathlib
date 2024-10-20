@@ -9,10 +9,7 @@ COMMAND ${CMAKE_COMMAND}
 
 endif()
 
-set(tests file system)
-if(HAVE_CXX_FILESYSTEM)
-  list(APPEND tests utf8)
-endif()
+set(tests file system utf8)
 
 foreach(t IN LISTS tests)
   add_executable(test_cpp_${t} test_${t}.cpp)

@@ -33,8 +33,6 @@ std::chrono::duration<double> bench_cpp(
 
 auto t = std::chrono::duration<double>::max();
 
-#if defined(HAVE_CXX_FILESYSTEM) && HAVE_CXX_FILESYSTEM
-
 constexpr bool strict = false;
 constexpr bool expand_tilde = false;
 
@@ -74,6 +72,8 @@ else if (fname == "expanduser")
   h = fs_expanduser(path);
 else if (fname == "cwd")
   h = fs_get_cwd().value_or("");
+else if (fname == "is_reserved")
+  b = fs_is_reserved(path);
 else
   {
     std::cerr << "Error: unknown function " << fname << "\n";
@@ -123,6 +123,13 @@ for (int i = 0; i < n; ++i)
     h = fs_expanduser(path);
   else if (fname == "cwd")
     h = fs_get_cwd().value_or("");
+  else if (fname == "is_reserved")
+    b = fs_is_reserved(path);
+  else
+    {
+      std::cerr << "Error: unknown function " << fname << "\n";
+      return t;
+    }
 
   auto t1 = std::chrono::steady_clock::now();
   t = std::min(t, std::chrono::duration_cast<std::chrono::duration<double>>(t1 - t0));
@@ -130,8 +137,6 @@ for (int i = 0; i < n; ++i)
 
 if(verbose)
   print_cpp(t, n, path, fname, h, b);
-
-#endif
 
 return t;
 }

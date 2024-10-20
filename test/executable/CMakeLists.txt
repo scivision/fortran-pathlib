@@ -1,5 +1,3 @@
-if(HAVE_CXX_FILESYSTEM)
-
 add_executable(test_exe_cpp test_exe.cpp)
 target_link_libraries(test_exe_cpp PRIVATE ffilesystem)
 add_test(NAME Cpp_exe COMMAND test_exe_cpp)
@@ -9,7 +7,6 @@ LABELS "Cpp"
 SKIP_RETURN_CODE 77
 )
 
-endif()
 
 
 if(NOT HAVE_Fortran_FILESYSTEM)

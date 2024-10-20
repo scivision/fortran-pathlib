@@ -1,5 +1,3 @@
-if(HAVE_CXX_FILESYSTEM)
-
 add_executable(test_permissions_cpp test_permissions.cpp)
 target_link_libraries(test_permissions_cpp PRIVATE ffilesystem)
 
@@ -10,7 +8,6 @@ LABELS Cpp
 SKIP_RETURN_CODE 77
 )
 
-endif()
 
 
 

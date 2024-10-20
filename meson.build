@@ -222,7 +222,7 @@ fortran_args: f03type_def,
 dependencies: [libwin, fs_lib, dl],
 )
 
-if use_cpp and cpp_map_contains
+if cpp_map_contains
   executable('fs_cli', sources: 'app/main.cpp', link_with: filesystem, include_directories: inc, install: true)
 endif
 
@@ -240,7 +240,7 @@ if not meson.is_subproject()
     subdir('test/' + d)
   endforeach
 
-  if use_cpp and cpp_map_contains
+  if cpp_map_contains
     executable('ffilesystem_bench', 'test/bench/ffilesystem_bench.cpp', link_with: filesystem, include_directories: inc, install: true)
   endif
 endif

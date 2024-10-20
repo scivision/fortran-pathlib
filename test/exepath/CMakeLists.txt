@@ -1,5 +1,3 @@
-if(HAVE_CXX_FILESYSTEM)
-
 add_executable(test_exepath_cpp test_exepath.cpp)
 target_link_libraries(test_exepath_cpp PRIVATE ffilesystem)
 
@@ -10,7 +8,6 @@ PASS_REGULAR_EXPRESSION $<TARGET_FILE_NAME:test_exepath_cpp>
 LABELS Cpp
 )
 
-endif()
 
 
 if(HAVE_Fortran_FILESYSTEM)

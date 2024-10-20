@@ -2,8 +2,6 @@ if(BUILD_SHARED_LIBS)
   set(_p $<TARGET_FILE:ffilesystem>)
 endif()
 
-if(HAVE_CXX_FILESYSTEM)
-
 add_executable(test_libpath_cpp test_libpath.cpp)
 target_link_libraries(test_libpath_cpp PRIVATE ffilesystem)
 
@@ -21,7 +19,6 @@ PASS_REGULAR_EXPRESSION "${_p}"
 LABELS "Cpp"
 )
 
-endif()
 
 if(HAVE_Fortran_FILESYSTEM)
 

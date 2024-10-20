@@ -24,8 +24,6 @@ set_property(TEST FortranHomedirEnv FortranHomedirNoEnv PROPERTY LABELS Fortran)
 endif()
 
 
-if(HAVE_CXX_FILESYSTEM)
-
 add_executable(cpp_env test_env.cpp)
 target_link_libraries(cpp_env PRIVATE ffilesystem)
 
@@ -35,8 +33,6 @@ add_test(NAME CppHomedirNoEnv COMMAND cpp_env)
 list(APPEND _noenv CppHomedirNoEnv)
 
 set_property(TEST CppHomedirEnv CppHomedirNoEnv PROPERTY LABELS Cpp)
-
-endif()
 
 
 if(CMAKE_VERSION VERSION_LESS 3.22 OR "$ENV{CI}")
