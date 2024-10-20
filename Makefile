@@ -80,7 +80,6 @@ COMM_SRCS = \
 ifeq ($(cpp),1)
 	SRCS = \
 		$(comdir)c_ifc.cpp \
-		$(comdir)ifc.cpp \
 		$(comdir)pure.cpp \
 		$(comdir)resolve.cpp
 else

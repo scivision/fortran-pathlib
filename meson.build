@@ -66,7 +66,6 @@ if use_cpp
 
 cppsrcs = files(
 'src/common/c_ifc.cpp',
-'src/common/ifc.cpp',
 'src/common/pure.cpp',
 'src/common/resolve.cpp'
 )

@@ -42,8 +42,6 @@ class Ffs
 {
 public:
 
-  [[nodiscard]] static bool is_subdir(std::string_view, std::string_view);
-
   [[nodiscard]] static std::string lexically_normal(std::string_view);
   [[nodiscard]] static std::string make_preferred(std::string_view);
 
@@ -73,8 +71,8 @@ public:
 
 
 [[nodiscard]] std::string fs_relative_to(std::string_view, std::string_view);
-
 [[nodiscard]] std::string fs_proximate_to(std::string_view, std::string_view);
+[[nodiscard]] bool fs_is_subdir(std::string_view, std::string_view);
 
 [[nodiscard]] std::vector<std::string> fs_split(std::string_view);
 [[nodiscard]] std::string fs_normal(std::string_view);

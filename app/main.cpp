@@ -252,7 +252,6 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
 
   std::map<std::string_view, std::function<bool(std::string_view, std::string_view)>> mbool =
   {
-    {"is_subdir", Ffs::is_subdir},
     {"same", Ffs::equivalent}
   };
 
@@ -266,6 +265,8 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
     std::cout << mbool[fun](a1, a2) << "\n";
   else if (mstring.contains(fun))
     std::cout << mstring[fun](a1, a2) << "\n";
+  else if (fun == "is_subdir")
+    std::cout << fs_is_subdir(a1, a2) << "\n";
   else if (fun == "relative")
     std::cout << fs_relative_to(a1, a2) << "\n";
   else if (fun == "setenv"){

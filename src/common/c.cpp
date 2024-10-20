@@ -2,6 +2,7 @@
 
 #include <cstdint> // size_t
 #include <iostream>
+#include <string>
 
 #include "ffilesystem.h"
 
@@ -41,6 +42,11 @@ std::string::size_type fs_relative_to(const char* base, const char* other,
 std::string::size_type fs_proximate_to(const char* base, const char* other,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(fs_proximate_to(base, other), result, buffer_size);
+}
+
+bool fs_is_subdir(const char* subdir, const char* dir)
+{
+  return fs_is_subdir(std::string_view(subdir), std::string_view(dir));
 }
 
 
