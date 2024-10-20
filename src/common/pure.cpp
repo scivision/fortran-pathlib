@@ -258,7 +258,8 @@ std::string fs_normal(std::string_view path)
 #else
   const std::vector<std::string> parts = fs_split(path);
   if(parts.empty())
-    return {};
+    return ".";
+
   std::vector<std::string> new_parts;
 
   // drop repeated slashes, "." and ".."
@@ -300,6 +301,9 @@ std::string fs_normal(std::string_view path)
 
   if(r.length() > 1 && r.back() == '/')
     r.pop_back();
+
+  if(r.empty())
+    return ".";
 
   return r;
 #endif

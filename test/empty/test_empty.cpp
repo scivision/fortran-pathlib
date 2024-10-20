@@ -32,9 +32,6 @@ int main(){
     if(!fs_as_posix(e).empty())
       err("as_posix");
 
-    if(!fs_normal("").empty())
-      err("fs_normal");
-
     if(!fs_file_name(e).empty())
       err("file_name");
 
