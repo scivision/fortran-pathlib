@@ -253,12 +253,11 @@ std::vector<std::string> fs_split(std::string_view path)
 std::string fs_normal(std::string_view path)
 {
   // normalize path
+   std::string r;
 #ifdef HAVE_CXX_FILESYSTEM
-  return fs_drop_slash(std::filesystem::path(path).lexically_normal().generic_string());
+  r = std::filesystem::path(path).lexically_normal().generic_string();
 #else
   const std::vector<std::string> parts = fs_split(path);
-  if(parts.empty())
-    return ".";
 
   std::vector<std::string> new_parts;
 
@@ -290,7 +289,6 @@ std::string fs_normal(std::string_view path)
   }
 
   // rebuild path, without trailing slash
-  std::string r;
   // preserve leading slash
   if (path[0] == '/')
     r = "/";
@@ -299,14 +297,15 @@ std::string fs_normal(std::string_view path)
     r += part + "/";
   }
 
+#endif
+
   if(r.length() > 1 && r.back() == '/')
     r.pop_back();
 
   if(r.empty())
-    return ".";
+    r = ".";
 
   return r;
-#endif
 }
 
 
