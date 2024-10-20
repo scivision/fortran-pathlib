@@ -160,14 +160,3 @@ size_t fs_with_suffix(const char* path, const char* suffix,
   strcat(result, suffix);
   return strlen(result);
 }
-
-
-
-size_t fs_proximate_to(const char* base, const char* other, char* result, const size_t buffer_size)
-{
-  const size_t L = fs_relative_to(base, other, result, buffer_size);
-  if(L)
-    return L;
-
-  return fs_strncpy(other, result, buffer_size);
-}

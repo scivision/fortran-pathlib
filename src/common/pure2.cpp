@@ -218,3 +218,16 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
 
 #endif
 }
+
+
+
+std::string fs_proximate_to(std::string_view base, std::string_view other)
+{
+// proximate_to is LEXICAL operation
+#ifdef HAVE_CXX_FILESYSTEM
+  return std::filesystem::path(other).lexically_proximate(base).lexically_normal().generic_string();
+#else
+  std::string r = fs_relative_to(base, other);
+  return (r.empty()) ? std::string(other) : r;
+#endif
+}
