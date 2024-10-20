@@ -79,21 +79,50 @@ else
     std::cerr << "Error: unknown function " << fname << "\n";
     return t;
   }
-if (!b_s.contains(fname) && h.empty()){
+
+#if __cpp_lib_starts_ends_with
+if (!fname.starts_with("is") && h.empty()){
   std::cerr << "Error:Cpp: " << fname << " " << path << " failed on warmup\n";
   return t;
 }
+#endif
 
 for (int i = 0; i < n; ++i)
 {
   auto t0 = std::chrono::steady_clock::now();
 
-  if (b_s.contains(fname))
-    b = b_s[fname](path);
-  else if (ssb.contains(fname))
-    h = ssb[fname](path, strict, expand_tilde).value_or("");
-  else if (s_s.contains(fname))
-    h = s_s[fname](path);
+  if (fname == "canonical")
+    h = fs_canonical(path, strict, expand_tilde).value_or("");
+  else if (fname == "resolve")
+    h = fs_resolve(path, strict, expand_tilde).value_or("");
+  else if (fname == "parent")
+    h = fs_parent(path);
+  else if (fname == "suffix")
+    h = fs_suffix(path);
+  else if (fname == "normal")
+    h = fs_normal(path);
+  else if (fname == "reserved")
+    b = fs_is_reserved(path);
+  else if (fname == "exists")
+    b = fs_exists(path);
+  else if (fname == "is_dir")
+    b = fs_is_dir(path);
+  else if (fname == "is_char")
+    b = fs_is_char_device(path);
+  else if (fname == "is_file")
+    b = fs_is_file(path);
+  else if (fname == "is_symlink")
+    b = fs_is_symlink(path);
+  else if (fname == "read_symlink")
+    h = fs_read_symlink(path).value_or("");
+  else if (fname == "which")
+    h = fs_which(path);
+  else if (fname == "homedir")
+    h = fs_get_homedir();
+  else if (fname == "expanduser")
+    h = fs_expanduser(path);
+  else if (fname == "cwd")
+    h = fs_get_cwd().value_or("");
 
   auto t1 = std::chrono::steady_clock::now();
   t = std::min(t, std::chrono::duration_cast<std::chrono::duration<double>>(t1 - t0));
