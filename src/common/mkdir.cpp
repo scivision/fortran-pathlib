@@ -42,12 +42,9 @@ bool fs_mkdir(std::string_view path)
  if(fs_is_dir(path))
     return true;
 
-  // FIXME: use std::string when fs_normal upgraded to C++
-  std::string buf(fs_get_max_path(), '\0');
-  std::string::size_type L = fs_normal(path.data(), buf.data(), buf.size());
-  if(L == 0)
+  std::string buf = fs_normal(path);
+  if(buf.empty())
     return false;
-  buf.resize(L);
 
   // iterate over path components
   std::string::size_type pos = 0;
