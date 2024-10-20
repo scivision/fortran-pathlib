@@ -64,9 +64,6 @@ comm_src = files(
 
 if use_cpp
 
-cwalk_dep = []
-cwalk_inc = []
-
 cppsrcs = files(
 'src/common/c_ifc.cpp',
 'src/common/ifc.cpp',
@@ -74,10 +71,6 @@ cppsrcs = files(
 'src/common/resolve.cpp'
 )
 else
-
-cwalk_proj = subproject('cwalk')
-cwalk_dep = cwalk_proj.get_variable('cwalk')
-cwalk_inc = cwalk_proj.get_variable('cwalk_inc')
 
 cppsrcs = []
 comm_src += files(
@@ -238,13 +231,12 @@ endif
 
 filesystem = library('filesystem',
 sources: [fsrcs, comm_src, cppsrcs],
-include_directories: [cwalk_inc, inc],
+include_directories: [inc],
 install: true,
 c_args: [],
 cpp_args: [have_filesystem, chrono_def, dladdr_def, getloadavg_def, mkdtemp_def],
 fortran_args: f03type_def,
 dependencies: [libwin, fs_lib, dl],
-link_with: cwalk_dep
 )
 
 if use_cpp and cpp_map_contains
@@ -261,7 +253,7 @@ executable('filesystem_cli',
 endif
 
 if not meson.is_subproject()
-  foreach d : ['core', 'environment', 'executable', 'fortran', 'permissions', 'relative']
+  foreach d : ['core', 'environment', 'executable', 'fortran', 'permissions']
     subdir('test/' + d)
   endforeach
 

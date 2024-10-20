@@ -12,6 +12,7 @@ is_dir is_subdir join
 normal parent root separator stem
 suffix with_suffix
 resolve
+relative proximate
 )
 
 if(HAVE_F03TYPE)
@@ -38,6 +39,10 @@ set_tests_properties(Fortran_filesystem_type PROPERTIES
 SKIP_RETURN_CODE 77
 DISABLED $<AND:$<BOOL:${LINUX}>,$<NOT:$<BOOL:${ffilesystem_HAVE_LINUX_MAGIC}>>>
 )
+
+set_tests_properties(Fortran_relative PROPERTIES FIXTURES_SETUP relative)
+set_tests_properties(Fortran_is_subdir PROPERTIES FIXTURES_REQUIRED relative)
+
 
 set_tests_properties(Fortran_stem PROPERTIES FIXTURES_SETUP stem)
 set_tests_properties(Fortran_with_suffix PROPERTIES FIXTURES_REQUIRED stem)

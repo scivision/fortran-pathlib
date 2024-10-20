@@ -10,13 +10,7 @@ LANGUAGES C CXX
 VERSION 5.8.0
 )
 
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.30.0 AND CMAKE_VERSION VERSION_LESS 3.30.4)
-  cmake_policy(SET CMP0168 OLD)
-  # workaround to stop repeat FetchContent download on each configure for CMake 3.30.0..3.30.3
-endif()
-
 include(CTest) # needed for "ctest -T memcheck"
-include(FetchContent)
 include(GNUInstallDirs)
 
 set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
@@ -48,15 +42,6 @@ endif()
 
 # --- filesystem library
 
-if(NOT HAVE_CXX_FILESYSTEM)
-  set(FETCHCONTENT_QUIET OFF)
-  set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
-
-  FetchContent_Populate(cwalk
-  URL https://github.com/likle/cwalk/archive/refs/tags/v1.2.9.tar.gz
-  )
-endif()
-
 include(cmake/json_array.cmake)
 file(READ ${CMAKE_CURRENT_SOURCE_DIR}/sources.json json)
 set(CMAKE_CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/sources.json)
@@ -77,24 +62,22 @@ if(HAVE_Fortran_FILESYSTEM)
 endif()
 
 json_array(${json} "common" src_common)
-add_library(ffilesystem ${src_common}
-$<$<TARGET_EXISTS:ffilesystem_Fortran>:$<TARGET_OBJECTS:ffilesystem_Fortran>>
-)
+
 if(HAVE_CXX_FILESYSTEM)
   json_array(${json} "cpp" src_cpp)
-  target_sources(ffilesystem PRIVATE ${src_cpp})
 else()
   json_array(${json} "c" src_c)
-  target_sources(ffilesystem PRIVATE ${cwalk_SOURCE_DIR}/src/cwalk.c ${src_c})
 endif()
-target_include_directories(ffilesystem PRIVATE
-${PROJECT_SOURCE_DIR}/include
-$<$<NOT:$<BOOL:${HAVE_CXX_FILESYSTEM}>>:${cwalk_SOURCE_DIR}/include>
+
+add_library(ffilesystem ${src_common}
+$<$<TARGET_EXISTS:ffilesystem_Fortran>:$<TARGET_OBJECTS:ffilesystem_Fortran>>
+"$<IF:$<BOOL:${HAVE_CXX_FILESYSTEM}>,${src_cpp},${src_c}>"
 )
+
+target_include_directories(ffilesystem PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${HAVE_CXX_FILESYSTEM}>>:HAVE_CXX_FILESYSTEM>"
-"$<$<AND:$<COMPILE_LANGUAGE:C>,$<NOT:$<BOOL:${HAVE_CXX_FILESYSTEM}>>>:CWK_EXPORTS>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_CLOCK_CAST}>>:HAVE_CLOCK_CAST>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_MERSENNE_TWISTER}>>:HAVE_MERSENNE_TWISTER>"
 "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${ffilesystem_trace}>>:FS_TRACE=1>"

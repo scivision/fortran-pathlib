@@ -83,7 +83,7 @@ if(!fs_is_windows()){
       err("canonical", ref);
     std::cout << "OK: canonical() " << ref << "\n";
 
-    r = Ffs::relative_to(ref, ref);
+    r = fs_relative_to(ref, ref);
     if(r != ".")
       err("relative_to", r);
 #endif

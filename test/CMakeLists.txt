@@ -20,7 +20,7 @@ endif()
 
 foreach(t IN ITEMS cpp fortran core empty environment
   executable exepath
-  fileops libpath overflow permissions relative reserved symlink windows)
+  fileops libpath overflow permissions reserved symlink windows)
 
 add_subdirectory(${t})
 

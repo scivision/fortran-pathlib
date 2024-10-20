@@ -5,7 +5,6 @@
 #endif
 
 #include "ffilesystem.h"
-#include <cwalk.h>
 
 #include <stdio.h>
 #include <stdlib.h> // malloc
@@ -162,19 +161,6 @@ size_t fs_with_suffix(const char* path, const char* suffix,
   return strlen(result);
 }
 
-
-size_t fs_relative_to(const char* base, const char* other, char* result, const size_t buffer_size)
-{
-  // need this or separators are not handled correctly
-  cwk_path_set_style(fs_is_windows() ? CWK_STYLE_WINDOWS : CWK_STYLE_UNIX);
-
-  const size_t L = cwk_path_get_relative(base, other, result, buffer_size);
-
-  if(L)
-    fs_as_posix(result);
-
-  return L;
-}
 
 
 size_t fs_proximate_to(const char* base, const char* other, char* result, const size_t buffer_size)

@@ -8,7 +8,8 @@ core_tests = ['is_absolute', 'absolute',
 'filename', 'is_dir',
 'is_subdir', 'join', 'normal', 'parent', 'root', 'separator', 'stem',
 'suffix', 'with_suffix',
-'resolve']
+'resolve',
+'relative', 'proximate']
 
 if have_f03type
 core_tests += 'path_t'

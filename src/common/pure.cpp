@@ -64,12 +64,6 @@ std::string Ffs::with_suffix(std::string_view path, std::string_view new_suffix)
 }
 
 
-// relative_to is LEXICAL operation
-std::string Ffs::relative_to(std::string_view base, std::string_view other){
-  return std::filesystem::path(other).lexically_relative(base).lexically_normal().generic_string();
-}
-
-
 // proximate_to is LEXICAL operation
 std::string Ffs::proximate_to(std::string_view base, std::string_view other){
   return std::filesystem::path(other).lexically_proximate(base).lexically_normal().generic_string();

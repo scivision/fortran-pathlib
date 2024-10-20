@@ -57,7 +57,7 @@ s = relative_to(in1, in2)
 if(s == ref) return
 
 i = 1
-write(stderr, '(a)') "relative_to("// trim(in1) // ", "//trim(in2)// ") = " // s // " /= " // ref
+write(stderr, '(a)') "FAIL: relative_to("// trim(in1) // ", "//trim(in2)// ") = " // s // " /= " // ref
 
 end function
 
