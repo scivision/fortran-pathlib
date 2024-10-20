@@ -255,7 +255,7 @@ main : do
     else
       write(stderr, "(a)") "ERROR: failed to create symlink " // trim(arg1) // " -> " // trim(arg2)
     end if
-  case ("copy_file")
+  case ("copy")
     print '(a)', "copying " // trim(arg1) // " -> " // trim(arg2)
     call copy_file(arg1, arg2, ok=ok)
     if (.not. ok) write(stderr, "(a)") "ERROR: failed to copy " // trim(arg1) // " -> " // trim(arg2)

@@ -1,2 +1,3 @@
 option('cpp', type : 'boolean', value : true)
 option('fortran', type : 'boolean', value : true)
+option('trace', type : 'boolean', value: false)

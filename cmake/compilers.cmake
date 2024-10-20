@@ -54,6 +54,7 @@ endif()
 
 if(UNIX)
   list(APPEND CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS})
+
   set(CMAKE_REQUIRED_DEFINITIONS -D_GNU_SOURCE)
   check_cxx_symbol_exists(dladdr "dlfcn.h" ffilesystem_HAVE_DLADDR)
 
@@ -69,6 +70,11 @@ if(HAVE_CXX_FILESYSTEM)
 
 include(${CMAKE_CURRENT_LIST_DIR}/FScheck.cmake)
 fs_check()
+
+else()
+
+  set(CMAKE_REQUIRED_DEFINITIONS -D_GNU_SOURCE)
+  check_symbol_exists(copy_file_range "unistd.h" ffilesystem_HAVE_COPY_FILE_RANGE)
 
 endif(HAVE_CXX_FILESYSTEM)
 

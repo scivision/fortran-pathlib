@@ -1,10 +1,13 @@
 project('ffilesystem', ['c', 'cpp'],
-version: '5.8.0',
+version: '6.0.0',
 default_options: ['c_std=c99', 'cpp_std=c++23,c++20,c++17', 'buildtype=release', 'b_ndebug=if-release'],
 meson_version : '>=1.4.0')
 
 use_cpp = get_option('cpp')
 # mean to use C++17 <filesystem> library
+
+trace = get_option('trace')
+trace_def = trace ? '-DFS_TRACE=1' : []
 
 have_filesystem = use_cpp ? '-DHAVE_CXX_FILESYSTEM' : []
 
@@ -118,6 +121,7 @@ chrono_def = []
 mkdtemp_def = []
 
 fs_lib = []
+def_copy_file = []
 
 if use_cpp
 
@@ -170,14 +174,24 @@ if cpp.links(mkdtemp_src, name: 'C++ Mersenne Twister for mkdtemp()')
   mkdtemp_def = '-DHAVE_MERSENNE_TWISTER'
 endif
 
+else
+
+# -- copy_file_range()
+
+if not is_windows
+  if cpp.has_function('copy_file_range', args: '-D_GNU_SOURCE', prefix: '#include <unistd.h>')
+    def_copy_file = '-DHAVE_COPY_FILE_RANGE'
+  endif
+endif
+
+endif # use_cpp
+
 # -- C++ map.contains
 cpp_map_contains = cpp.compiles('''#include <map>
 int main(){
 std::map<int, char> m{{1, 'a'}, {2, 'b'}};
 return m.contains(2);
 }''', name: 'C++ map.contains')
-
-endif # use_cpp
 
 # -- Fortran feature checks
 f03type_def = []
@@ -217,7 +231,7 @@ sources: [fsrcs, comm_src],
 include_directories: [inc],
 install: true,
 c_args: [],
-cpp_args: [have_filesystem, chrono_def, dladdr_def, getloadavg_def, mkdtemp_def],
+cpp_args: [have_filesystem, chrono_def, dladdr_def, getloadavg_def, mkdtemp_def, def_copy_file, trace_def],
 fortran_args: f03type_def,
 dependencies: [libwin, fs_lib, dl],
 )

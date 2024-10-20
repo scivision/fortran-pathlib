@@ -7,7 +7,7 @@ endif()
 
 project(ffilesystem
 LANGUAGES C CXX
-VERSION 5.8.0
+VERSION 6.0.0
 )
 
 include(CTest) # needed for "ctest -T memcheck"
@@ -76,6 +76,7 @@ target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${ffilesystem_trace}>>:FS_TRACE=1>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_DLADDR}>>:HAVE_DLADDR>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_GETLOADAVG}>>:HAVE_GETLOADAVG>"
+"$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_COPY_FILE_RANGE}>>:HAVE_COPY_FILE_RANGE>"
 )
 
 target_compile_features(ffilesystem PRIVATE cxx_std_${CMAKE_CXX_STANDARD} c_std_99)
