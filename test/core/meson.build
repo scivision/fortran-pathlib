@@ -7,6 +7,7 @@ core_tests = ['is_absolute', 'absolute',
 'filesize', 'space',
 'filename', 'is_dir',
 'is_subdir', 'join', 'normal', 'parent', 'root', 'separator', 'stem',
+'permissions', 'reserved', 'safe',
 'suffix', 'with_suffix',
 'resolve',
 'relative', 'proximate']
@@ -26,17 +27,13 @@ endforeach
 endif
 
 
-if use_cpp
-
-cpp_core = ['canonical', 'core', 'expanduser']
+cpp_core = ['canonical', 'core', 'expanduser', 'locale', 'permissions', 'reserved', 'safe', 'realpath']
 
 foreach t : cpp_core
 
-t_cpp = executable(t + '_cpp', 'cpp/test_' + t + '.cpp', link_with: filesystem, include_directories: inc)
+    t_cpp = executable(t + '_cpp', 'test_' + t + '.cpp', link_with: filesystem,
+      include_directories: [inc, '..'])
 
-test(t + '_cpp', t_cpp, suite: 'cpp')
+    test(t + '_cpp', t_cpp, suite: 'cpp')
 
 endforeach
-
-
-endif

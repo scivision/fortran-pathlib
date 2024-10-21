@@ -8,10 +8,7 @@
 
 #include "ffilesystem.h"
 
-[[noreturn]] static void err(std::string_view msg, std::string_view buf){
-  std::cerr << "FAILED: " << msg << " " << buf << "\n";
-  exit(EXIT_FAILURE);
-}
+#include "ffilesystem_test.h"
 
 int main(void){
 
@@ -32,25 +29,25 @@ int main(void){
 
     r = fs_normal(ref);
     if (r != ref)
-      err("normal", r);
+      err("normal");
     std::cout << "OK: normal() " << r << "\n";
 
     bool b = fs_is_absolute(ref);
     if (fs_is_windows()){
-      if(b) err("is_absolute", ref);
+      if(b) err("is_absolute");
     }
     else{
-      if(!b) err("is_absolute", ref);
+      if(!b) err("is_absolute");
     }
     std::cout << "OK: is_absolute " << r << "\n";
 
     if(fs_is_dir(ref))
-      err("is_dir", ref);
+      err("is_dir");
 
 if(!fs_is_windows()){
 
     if(fs_is_exe(ref))
-      err("is_exe", ref);
+      err("is_exe");
 
     // NOTE: do not test
     //
@@ -63,41 +60,41 @@ if(!fs_is_windows()){
     // it can make the system unusable until reboot!
 
     if(!fs_exists(ref))
-      err("exists", ref);
+      err("exists");
     std::cout << "OK: exists() " << r << "\n";
 
     if(fs_is_file(ref))
-      err("is_file", ref);
+      err("is_file");
 
     // can cause exit code 409 (stack buffer overrun) on Windows for NUL
     auto s = fs_file_size(ref);
     if(s && s.value() != 0){
       std::cerr << "FAILED: file_size() " << s.value() << "\n";
-      err("file_size", ref);
+      err("file_size");
     }
     std::cout << "OK: file_size() " << s.value() << "\n";
 
     if(!fs_canonical(ref.data(), false, true))
-      err("canonical", ref);
+      err("canonical");
     std::cout << "OK: canonical() " << ref << "\n";
 
     r = fs_relative_to(ref, ref);
     if(r != ".")
-      err("relative_to", r);
+      err("relative_to");
 } // fs_is_windows()
 
     r = fs_expanduser(ref);
     if(r != ref)
-      err("expanduser", r);
+      err("expanduser");
 
     if(fs_copy_file(ref, ref, false))
-      err("copy_file", ref);
+      err("copy_file");
     std::cout << "OK: copy_file() " << ref << "\n";
 
     // touch is ambiguous on reserved, so omit
 
     if(fs_is_symlink(ref))
-      err("is_symlink", ref);
+      err("is_symlink");
     std::cout << "OK: is_symlink() " << r << "\n";
 
     std::cout << "PASS: test_reserved.cpp\n";

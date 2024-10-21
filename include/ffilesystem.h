@@ -106,6 +106,7 @@ time_t fs_get_modtime(std::string_view);
 [[nodiscard]] std::string fs_to_cygpath(std::string_view);
 [[nodiscard]] std::string fs_to_winpath(std::string_view);
 
+[[nodiscard]] std::string fs_get_locale_name();
 [[nodiscard]] std::string fs_get_shell();
 [[nodiscard]] std::string fs_get_terminal();
 bool fs_setenv(std::string_view, std::string_view);

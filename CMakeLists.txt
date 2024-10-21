@@ -58,11 +58,22 @@ endif()
 
 
 add_library(ffilesystem
-src/filesystem.cpp src/c.cpp src/absolute.cpp src/copy.cpp src/compiler.cpp src/cpu.cpp src/cygwin.cpp
-src/exepath.cpp src/env.cpp src/home.cpp src/inquire.cpp src/libpath.cpp src/limits.cpp src/mkdtemp.cpp
-src/mkdir.cpp src/os.c src/owner.cpp src/partition.cpp src/platform.cpp src/pure.cpp src/realpath.cpp
-src/resolve.cpp src/space.cpp src/sysctl.cpp src/symlink.cpp src/touch.cpp src/time.cpp src/uid.cpp
-src/uname.cpp src/which.cpp src/windows.cpp src/winsock.cpp
+src/filesystem.cpp src/c.cpp
+src/absolute.cpp
+src/copy.cpp src/compiler.cpp src/cpu.cpp src/cygwin.cpp
+src/exepath.cpp src/env.cpp
+src/home.cpp
+src/inquire.cpp
+src/libpath.cpp src/limits.cpp src/locale.cpp
+src/mkdtemp.cpp src/mkdir.cpp
+src/os.c src/owner.cpp
+src/partition.cpp src/platform.cpp src/pure.cpp
+src/realpath.cpp src/resolve.cpp
+src/space.cpp src/sysctl.cpp src/symlink.cpp
+src/touch.cpp src/time.cpp
+src/uid.cpp
+src/uname.cpp
+src/which.cpp src/windows.cpp src/winsock.cpp
 $<$<TARGET_EXISTS:ffilesystem_Fortran>:$<TARGET_OBJECTS:ffilesystem_Fortran>>
 )
 

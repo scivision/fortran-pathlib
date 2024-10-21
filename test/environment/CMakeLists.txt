@@ -2,20 +2,17 @@ set(_noenv)
 
 if(HAVE_Fortran_FILESYSTEM)
 
-add_executable(test_setenv test_setenv.f90)
-target_link_libraries(test_setenv PRIVATE ffilesystem)
-target_compile_options(test_setenv PRIVATE ${ffilesystem_fortran_test_flags})
-set_property(TARGET test_setenv PROPERTY LINKER_LANGUAGE Fortran)
+foreach(t IN ITEMS env setenv)
+  add_executable(test_fortran_${t} test_${t}.f90)
+  target_link_libraries(test_fortran_${t} PRIVATE ffilesystem)
+  target_compile_options(test_fortran_${t} PRIVATE ${ffilesystem_fortran_test_flags})
+  set_property(TARGET test_fortran_${t} PROPERTY LINKER_LANGUAGE Fortran)
+endforeach()
 
-add_test(NAME SetEnv COMMAND test_setenv)
+add_test(NAME Fortran_${t} COMMAND test_fortran_setenv)
 
-add_executable(test_env test_env.f90)
-target_link_libraries(test_env PRIVATE ffilesystem)
-target_compile_options(test_env PRIVATE ${ffilesystem_fortran_test_flags})
-set_property(TARGET test_env PROPERTY LINKER_LANGUAGE Fortran)
-
-add_test(NAME FortranHomedirEnv COMMAND test_env)
-add_test(NAME FortranHomedirNoEnv COMMAND test_env)
+add_test(NAME FortranHomedirEnv COMMAND test_fortran_env)
+add_test(NAME FortranHomedirNoEnv COMMAND test_fortran_env)
 
 list(APPEND _noenv FortranHomedirNoEnv)
 
@@ -24,11 +21,12 @@ set_property(TEST FortranHomedirEnv FortranHomedirNoEnv PROPERTY LABELS Fortran)
 endif()
 
 
-add_executable(cpp_env test_env.cpp)
-target_link_libraries(cpp_env PRIVATE ffilesystem)
+add_executable(test_cpp_env test_env.cpp)
+target_link_libraries(test_cpp_env PRIVATE ffilesystem)
+target_include_directories(test_cpp_env PRIVATE ..)
 
-add_test(NAME CppHomedirEnv COMMAND cpp_env)
-add_test(NAME CppHomedirNoEnv COMMAND cpp_env)
+add_test(NAME CppHomedirEnv COMMAND test_cpp_env)
+add_test(NAME CppHomedirNoEnv COMMAND test_cpp_env)
 
 list(APPEND _noenv CppHomedirNoEnv)
 

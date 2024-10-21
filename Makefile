@@ -57,6 +57,7 @@ COMM_SRCS = \
 	$(comdir)filesystem.cpp \
 	$(comdir)libpath.cpp \
 	$(comdir)limits.cpp \
+	$(comdir)locale.cpp \
 	$(comdir)mkdir.cpp \
 	$(comdir)mkdtemp.cpp \
 	$(comdir)owner.cpp \

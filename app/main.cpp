@@ -67,6 +67,8 @@ static void no_arg(std::string_view fun){
     std::cout << mchar[fun]() << "\n";
   else if (mlong.contains(fun))
     std::cout << mlong[fun]() << "\n";
+  else if (fun == "locale")
+    std::cout << fs_get_locale_name() << "\n";
   else if (fun == "username")
     std::cout << fs_get_username() << "\n";
   else if (fun == "hostname")

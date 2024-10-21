@@ -8,11 +8,7 @@
 #include <crtdbg.h>
 #endif
 
-
-[[noreturn]] void err(std::string_view m){
-    std::cerr << "ERROR: " << m << "\n";
-    std::exit(EXIT_FAILURE);
-}
+#include "ffilesystem_test.h"
 
 
 int main()

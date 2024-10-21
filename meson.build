@@ -44,6 +44,7 @@ comm_src = files(
 'src/inquire.cpp',
 'src/libpath.cpp',
 'src/limits.cpp',
+'src/locale.cpp',
 'src/mkdtemp.cpp',
 'src/mkdir.cpp',
 'src/owner.cpp',
@@ -250,7 +251,7 @@ executable('filesystem_cli',
 endif
 
 if not meson.is_subproject()
-  foreach d : ['core', 'environment', 'executable', 'fortran', 'permissions']
+  foreach d : ['core', 'environment', 'executable', 'fortran']
     subdir('test/' + d)
   endforeach
 

@@ -13,6 +13,8 @@ normal parent root separator stem
 suffix with_suffix
 resolve
 relative proximate
+reserved safe
+owner permissions
 )
 
 if(HAVE_F03TYPE)
@@ -27,7 +29,10 @@ target_compile_options(test_fortran_${t} PRIVATE ${${PROJECT_NAME}_fortran_test_
 set_property(TARGET test_fortran_${t} PROPERTY LINKER_LANGUAGE Fortran)
 
 add_test(NAME Fortran_${t} COMMAND test_fortran_${t})
-set_property(TEST Fortran_${t} PROPERTY LABELS Fortran)
+set_tests_properties(Fortran_${t} PROPERTIES
+LABELS Fortran
+SKIP_RETURN_CODE 77
+)
 
 endforeach()
 
@@ -36,7 +41,6 @@ $<$<COMPILE_LANG_AND_ID:Fortran,GNU>:-Wno-uninitialized>
 )
 
 set_tests_properties(Fortran_filesystem_type PROPERTIES
-SKIP_RETURN_CODE 77
 DISABLED $<AND:$<BOOL:${LINUX}>,$<NOT:$<BOOL:${ffilesystem_HAVE_LINUX_MAGIC}>>>
 )
 
@@ -75,9 +79,13 @@ FIXTURES_SETUP "canonical"
 endif()
 
 
-foreach(t IN ITEMS canonical expanduser core realpath)
-  add_executable(test_cpp_${t} cpp/test_${t}.cpp)
+foreach(t IN ITEMS canonical expanduser core
+  locale
+  permissions
+  realpath reserved safe)
+  add_executable(test_cpp_${t} test_${t}.cpp)
   target_link_libraries(test_cpp_${t} PRIVATE ffilesystem)
+  target_include_directories(test_cpp_${t} PRIVATE ..)
 
   add_test(NAME Cpp_${t} COMMAND test_cpp_${t})
   set_property(TEST Cpp_${t} PROPERTY LABELS Cpp)

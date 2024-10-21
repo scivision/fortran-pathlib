@@ -14,6 +14,7 @@ set(tests file system utf8)
 foreach(t IN LISTS tests)
   add_executable(test_cpp_${t} test_${t}.cpp)
   target_link_libraries(test_cpp_${t} PRIVATE ffilesystem)
+  target_include_directories(test_cpp_${t} PRIVATE ..)
 
   add_test(NAME Cpp_${t} COMMAND test_cpp_${t})
   set_tests_properties(Cpp_${t} PROPERTIES

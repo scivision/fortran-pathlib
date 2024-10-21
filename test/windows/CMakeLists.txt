@@ -1,5 +1,6 @@
 add_executable(test_Cpp_windows test_windows.cpp)
 target_link_libraries(test_Cpp_windows PRIVATE ffilesystem)
+target_include_directories(test_Cpp_windows PRIVATE ..)
 
 add_test(NAME Cpp_windows COMMAND test_Cpp_windows)
 set_property(TEST Cpp_windows PROPERTY LABELS Cpp)
