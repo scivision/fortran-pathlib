@@ -251,7 +251,7 @@ executable('filesystem_cli',
 endif
 
 if not meson.is_subproject()
-  foreach d : ['core', 'environment', 'executable', 'fortran']
+  foreach d : ['core', 'environment', 'executable']
     subdir('test/' + d)
   endforeach
 

@@ -1,5 +1,29 @@
 include(CheckIncludeFile)
 
+if(HAVE_Fortran_FILESYSTEM AND ffilesystem_cli)
+
+add_test(NAME Fortran_CLI_Cpp
+COMMAND ${CMAKE_COMMAND} -Dexe=$<TARGET_FILE:filesystem_cli>
+"-Dregex=^Ffs\> T"
+-P ${CMAKE_CURRENT_SOURCE_DIR}/stdin.cmake
+)
+set_tests_properties(Fortran_CLI_Cpp PROPERTIES LABELS "Fortran")
+
+endif()
+
+if(TARGET fs_cli)
+
+  add_test(NAME Cpp_CLI_Cpp
+  COMMAND ${CMAKE_COMMAND}
+  -Dexe=$<TARGET_FILE:fs_cli>
+  "-Dregex=^Ffs\> 1"
+  -P ${CMAKE_CURRENT_SOURCE_DIR}/stdin.cmake
+  )
+  set_tests_properties(Cpp_CLI_Cpp PROPERTIES LABELS "Cpp")
+
+endif()
+
+
 if(LINUX)
   check_include_file("linux/magic.h" ffilesystem_HAVE_LINUX_MAGIC)
 endif()
@@ -18,7 +42,7 @@ if(ffilesystem_bench)
   add_subdirectory(bench)
 endif()
 
-foreach(t IN ITEMS cpp fortran core empty environment
+foreach(t IN ITEMS core empty environment
   executable exepath
   fileops libpath overflow symlink windows)
 

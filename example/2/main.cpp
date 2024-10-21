@@ -5,7 +5,11 @@
 #include <cstdlib>
 
 #include "ffilesystem.h"
-#include "ffilesystem_test.h"
+
+[[noreturn]] void err(std::string_view m){
+    std::cerr << "ERROR: " << m << "\n";
+    std::exit(EXIT_FAILURE);
+}
 
 
 int main() {

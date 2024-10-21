@@ -80,7 +80,10 @@ endif()
 
 
 foreach(t IN ITEMS canonical expanduser core
+  filename filesize
+  join
   locale
+  normal
   permissions
   realpath reserved safe)
   add_executable(test_cpp_${t} test_${t}.cpp)
@@ -90,3 +93,7 @@ foreach(t IN ITEMS canonical expanduser core
   add_test(NAME Cpp_${t} COMMAND test_cpp_${t})
   set_property(TEST Cpp_${t} PROPERTY LABELS Cpp)
 endforeach()
+
+if(NOT HAVE_CXX_FILESYSTEM)
+  set_tests_properties(Cpp_filesize PROPERTIES DISABLED $<NOT:$<BOOL:${ffilesystem_HAVE_SYS_STATVFS}>>)
+endif()

@@ -27,7 +27,12 @@ endforeach
 endif
 
 
-cpp_core = ['canonical', 'core', 'expanduser', 'locale', 'permissions', 'reserved', 'safe', 'realpath']
+cpp_core = ['canonical', 'core', 'expanduser',
+'filename', 'filesize',
+'join',
+'locale',
+'normal',
+'permissions', 'reserved', 'safe', 'realpath']
 
 foreach t : cpp_core
 
