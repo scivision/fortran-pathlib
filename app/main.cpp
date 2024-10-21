@@ -167,7 +167,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
   else if (fun == "filename")
     std::cout << fs_file_name(a1) << "\n";
   else if (fun == "file_size")
-    std::cout << fs_file_size(a1).value_or(0) << "\n";
+    std::cout << fs_file_size(a1) << "\n";
   else if (fun == "is_absolute")
     std::cout << fs_is_absolute(a1) << "\n";
   else if (fun == "is_exe")
@@ -193,7 +193,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
   else if (fun == "exists")
     std::cout << fs_exists(a1) << "\n";
   else if (fun == "space")
-    std::cout << fs_space_available(a1).value_or(0) << "\n";
+    std::cout << fs_space_available(a1) << "\n";
   else if (fun == "absolute")
     std::cout << fs_absolute(a1, true)<< "\n";
   else if (fun == "get_cwd")

@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <cstdint>
 #include <iostream>
 #include <string>
 
@@ -30,7 +31,7 @@ int main(void){
     r = fs_normal(ref);
     if (r != ref)
       err("normal");
-    std::cout << "OK: normal() " << r << "\n";
+    std::cout << "OK: normal(" << r << ")\n";
 
     bool b = fs_is_absolute(ref);
     if (fs_is_windows()){
@@ -39,10 +40,42 @@ int main(void){
     else{
       if(!b) err("is_absolute");
     }
-    std::cout << "OK: is_absolute " << r << "\n";
+    std::cout << "OK: is_absolute(" << r << ")\n";
+
+    b = fs_is_reserved(ref);
+    if(fs_is_windows()){
+      if(!b) err("is_reserved");
+    }
+    else{
+      if(b) err("is_reserved");
+    }
+    std::cout << "OK: is_reserved(" << r << ")\n";
 
     if(fs_is_dir(ref))
       err("is_dir");
+    std::cout << "OK: is_dir(" << r << ")\n";
+
+    std::uintmax_t s = fs_file_size(ref);
+    if(s != 0){
+      std::cerr << "FAILED: file_size(" << ref << ") " << s << "\n";
+      err("file_size");
+    }
+    std::cout << "OK: file_size() " << s << "\n";
+
+    s = fs_space_available(ref);
+    if(fs_is_windows()){
+      if(s != 0){
+        std::cerr << "FAILED: space_available(" << ref << ") " << s << "\n";
+        err("space_available");
+      }
+    }
+    else{
+      if(s == 0){
+        std::cerr << "FAILED: space_available(" << ref << ") " << s << "\n";
+        err("space_available");
+      }
+    }
+
 
 if(!fs_is_windows()){
 
@@ -61,18 +94,11 @@ if(!fs_is_windows()){
 
     if(!fs_exists(ref))
       err("exists");
-    std::cout << "OK: exists() " << r << "\n";
+    std::cout << "OK: exists(" << r << ")\n";
 
     if(fs_is_file(ref))
       err("is_file");
-
-    // can cause exit code 409 (stack buffer overrun) on Windows for NUL
-    auto s = fs_file_size(ref);
-    if(s && s.value() != 0){
-      std::cerr << "FAILED: file_size() " << s.value() << "\n";
-      err("file_size");
-    }
-    std::cout << "OK: file_size() " << s.value() << "\n";
+    std::cout << "OK: is_file(" << r << ")\n";
 
     if(!fs_canonical(ref.data(), false, true))
       err("canonical");

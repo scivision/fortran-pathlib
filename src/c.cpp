@@ -226,8 +226,8 @@ bool fs_is_absolute(const char* path)
   return fs_is_absolute(std::string_view(path));
 }
 
-uintmax_t fs_space_available(const char* path){
-  return fs_space_available(std::string_view(path)).value_or(0);
+std::uintmax_t fs_space_available(const char* path){
+  return fs_space_available(std::string_view(path));
 }
 
 bool fs_set_permissions(const char* path, int readable, int writable, int executable){
@@ -283,7 +283,7 @@ std::string::size_type fs_get_permissions(const char* path,
 }
 
 uintmax_t fs_file_size(const char* path){
-  return fs_file_size(std::string_view(path)).value_or(0);
+  return fs_file_size(std::string_view(path));
 }
 
 size_t fs_to_cygpath(const char* path, char* result, const size_t buffer_size){

@@ -19,7 +19,7 @@
 #endif
 #endif
 
-std::optional<uintmax_t> fs_space_available(std::string_view path)
+std::uintmax_t fs_space_available(std::string_view path)
 {
   // filesystem space available for device holding path
 #ifdef HAVE_CXX_FILESYSTEM

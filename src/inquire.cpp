@@ -9,6 +9,7 @@
 #include <string_view>
 #include <system_error>
 #include <iostream>
+#include <cstdint> // uintmax_t
 
 #ifndef HAVE_CXX_FILESYSTEM
 #if defined(_MSC_VER)
@@ -85,7 +86,8 @@ fs_is_file(std::string_view path)
 #ifdef HAVE_CXX_FILESYSTEM
   std::error_code ec;
   // disqualify reserved names
-  return std::filesystem::is_regular_file(path, ec) && !ec && !fs_is_reserved(path);
+  const bool ok = std::filesystem::is_regular_file(path, ec) && !ec;
+  return ok && !fs_is_reserved(path);
 #else
     return fs_st_mode(path) & S_IFREG;
   // S_ISREG not available with MSVC
@@ -207,14 +209,9 @@ bool fs_is_writable(std::string_view path)
 
 
 
-std::optional<uintmax_t> fs_file_size(std::string_view path)
+std::uintmax_t fs_file_size(std::string_view path)
 {
 #ifdef HAVE_CXX_FILESYSTEM
-
-  // can thrown exception despite noexcept
-  if(!fs_exists(path))
-    return {};
-
   std::error_code ec;
   if(auto s = std::filesystem::file_size(path, ec); !ec)  FFS_LIKELY
     return s;

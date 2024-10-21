@@ -1,9 +1,6 @@
-if use_cpp
-
-t_cpp = executable('exe_cpp', 'test_exe.cpp', link_with: filesystem, include_directories: inc)
+t_cpp = executable('exe_cpp', 'test_exe.cpp', link_with: filesystem, include_directories: [inc, '..'])
 test('exe_cpp', t_cpp, suite: 'cpp')
 
-endif
 
 if fortran
 
