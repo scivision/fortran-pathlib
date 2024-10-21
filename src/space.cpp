@@ -33,12 +33,13 @@ std::uintmax_t fs_space_available(std::string_view path)
 
 #else
 
-#ifdef _WIN32
   // Windows MinGW and oneAPI need root() or space is zero.
+  // use root for Unix too for consistency e.g. macOS
   std::string r = fs_root(path);
   if (r.empty())
     return {};
 
+#ifdef _WIN32
   ULARGE_INTEGER bytes_available;
   if(GetDiskFreeSpaceExA(r.data(), &bytes_available, nullptr, nullptr))
     return bytes_available.QuadPart;
@@ -47,7 +48,7 @@ std::uintmax_t fs_space_available(std::string_view path)
 #elif __has_include(<sys/statvfs.h>)
   // https://unix.stackexchange.com/a/703650
   struct statvfs stat;
-  if (!statvfs(path.data(), &stat))
+  if (!statvfs(r.data(), &stat))
     return (stat.f_frsize ? stat.f_frsize : stat.f_bsize) * stat.f_bavail;
 
   fs_print_error(path, "space_available:statvfs");
