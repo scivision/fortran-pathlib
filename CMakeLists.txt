@@ -156,6 +156,9 @@ if(ffilesystem_cli)
     install(TARGETS fs_cli EXPORT ${PROJECT_NAME}-targets)
   endif()
 
+  add_executable(libc_version app/libc.cpp)
+  add_executable(libcpp_version app/libcxx.cpp)
+
   if(HAVE_Fortran_FILESYSTEM)
   add_executable(filesystem_cli app/fortran/main.f90)
   target_link_libraries(filesystem_cli PRIVATE ffilesystem)

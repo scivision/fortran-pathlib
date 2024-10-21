@@ -237,6 +237,11 @@ fortran_args: f03type_def,
 dependencies: [libwin, fs_lib, dl],
 )
 
+if not meson.is_subproject()
+
+executable('libc_version', 'app/libc.cpp')
+executable('libcpp_version', 'app/libcxx.cpp')
+
 if cpp_map_contains
   executable('fs_cli', sources: 'app/main.cpp', link_with: filesystem, include_directories: inc, install: true)
 endif
@@ -247,6 +252,8 @@ executable('filesystem_cli',
   sources: 'app/fortran/main.f90',
   link_with: filesystem,
   install: true)
+
+endif
 
 endif
 

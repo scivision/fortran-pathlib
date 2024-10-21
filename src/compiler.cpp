@@ -24,42 +24,36 @@ std::string fs_compiler()
 #if defined(__INTEL_LLVM_COMPILER)
 
 #ifdef __cpp_lib_format
-  v = std::format("Intel LLVM {} {}", __INTEL_LLVM_COMPILER,  __VERSION__);
+  v = std::format("{} {}", __VERSION__, __INTEL_LLVM_COMPILER);
 #else
-  v = "Intel LLVM " + std::to_string(__INTEL_LLVM_COMPILER) + " " + std::string(__VERSION__);
+  v = std::string(__VERSION__) + " " + std::to_string(__INTEL_LLVM_COMPILER);
 #endif
 
 #elif defined(__NVCOMPILER_LLVM__)
 
 #ifdef __cpp_lib_format
-  v = std::format("NVIDIA nvc {}.{}.{}", __NVCOMPILER_MAJOR__, __NVCOMPILER_MINOR__, __NVCOMPILER_PATCHLEVEL__);
+  v = std::format("NVIDIA {}.{}.{}", __NVCOMPILER_MAJOR__, __NVCOMPILER_MINOR__, __NVCOMPILER_PATCHLEVEL__);
 #else
-  v = "NVIDIA nvc " + std::to_string(__NVCOMPILER_MAJOR__) + "." + std::to_string(__NVCOMPILER_MINOR__) + "." + std::to_string(__NVCOMPILER_PATCHLEVEL__);
+  v = "NVIDIA " + std::to_string(__NVCOMPILER_MAJOR__) + "." + std::to_string(__NVCOMPILER_MINOR__) + "." + std::to_string(__NVCOMPILER_PATCHLEVEL__);
 #endif
 
 #elif defined(__clang__)
 
-#ifdef __cpp_lib_format
-  #ifdef __VERSION__
-    v = std::format("Clang {}", __VERSION__);
-  #else
-    v = std::format("Clang {}.{}.{}", __clang_major__, __clang_minor__, __clang_patchlevel__);
-  #endif
-#else
-  #ifdef __VERSION__
-    v = "Clang " + std::string(__VERSION__);
-  #else
-    v = "Clang " + std::to_string(__clang_major__) + "." + std::to_string(__clang_minor__) + "." + std::to_string(__clang_patchlevel__);
-  #endif
-#endif
+# ifdef __VERSION__
+  v = __VERSION__;
+# elif defined(__cpp_lib_format)
+  v = std::format("Clang {}.{}.{}", __clang_major__, __clang_minor__, __clang_patchlevel__);
+# else
+  v = "Clang " + std::to_string(__clang_major__) + "." + std::to_string(__clang_minor__) + "." + std::to_string(__clang_patchlevel__);
+# endif
 
 #elif defined(__GNUC__)
 
-#ifdef __cpp_lib_format
+# ifdef __cpp_lib_format
 v = std::format("GNU GCC {}.{}.{}", __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__);
-#else
+# else
 v = "GNU GCC " + std::to_string(__GNUC__) + "." + std::to_string(__GNUC_MINOR__) + "." + std::to_string(__GNUC_PATCHLEVEL__);
-#endif
+# endif
 
 #elif defined(_MSC_VER)
   v = "MSVC " + std::to_string(_MSC_FULL_VER);
