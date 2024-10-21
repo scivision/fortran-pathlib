@@ -4,16 +4,14 @@
 #include <tuple>
 #include <cstdlib>
 
-#include <exception>
-#include <stdexcept>
-
 #include "ffilesystem.h"
 
 
-void test_normal() {
+int main() {
+
     std::string p;
 
-    std::vector<std::tuple<std::string_view, std::string_view>> test_cases = {
+    const std::vector<std::tuple<std::string_view, std::string_view>> test_cases = {
         {"", "."},
         {"/", "/"},
         {"//", "/"},
@@ -53,19 +51,11 @@ void test_normal() {
     for (const auto& [input, expected] : test_cases) {
         p = fs_normal(input);
         if (p != expected) {
-            throw std::runtime_error("normal(" + std::string(input) + ") " + std::string(p));
+            std::cerr << "normal(" << input << ") " << p << "\n";
+            return EXIT_FAILURE;
         }
     }
 
-    std::cout << "OK: normal" << std::endl;
-}
-
-int main() {
-    try {
-        test_normal();
-    } catch (const std::exception& e) {
-        std::cerr << e.what() << std::endl;
-        return EXIT_FAILURE;
-    }
+    std::cout << "OK: normal\n";
     return EXIT_SUCCESS;
 }

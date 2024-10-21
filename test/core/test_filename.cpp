@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string_view>
+#include <string>
 #include <vector>
 #include <tuple>
 #include <cstdlib>
@@ -24,8 +24,8 @@ int main() {
   };
 
   if(fs_is_windows()){
-    test_cases.push_back({"C:/", ""});
-    test_cases.push_back({"C:\\ab\\asb", "asb"});
+    test_cases.emplace_back("C:/", "");
+    test_cases.emplace_back("C:\\ab\\asb", "asb");
   }
 
   int i = 0;
