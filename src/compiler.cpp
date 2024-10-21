@@ -31,6 +31,8 @@ std::string fs_compiler()
 
 #elif defined(__NVCOMPILER_LLVM__)
 
+// not __VERSION__ because it emits "EDG g++ mode" instead of "NVIDIA"
+
 #ifdef __cpp_lib_format
   v = std::format("NVIDIA {}.{}.{}", __NVCOMPILER_MAJOR__, __NVCOMPILER_MINOR__, __NVCOMPILER_PATCHLEVEL__);
 #else
