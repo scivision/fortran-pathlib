@@ -85,7 +85,7 @@ foreach(t IN ITEMS canonical expanduser core
   locale
   normal
   parent permissions
-  realpath relative reserved safe)
+  realpath relative reserved root safe)
   add_executable(test_cpp_${t} test_${t}.cpp)
   target_link_libraries(test_cpp_${t} PRIVATE ffilesystem)
   target_include_directories(test_cpp_${t} PRIVATE ..)
