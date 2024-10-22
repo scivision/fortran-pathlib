@@ -47,9 +47,9 @@ if(fs_file_name("file_name") != "file_name")
   err("file_name plain filename: " + fs_file_name("file_name"));
 
 auto cwd = fs_get_cwd();
-if(!cwd)
+if(cwd.empty())
   err("file_name cwd");
-if(std::string nr = fs_file_name(fs_root(cwd.value())); !nr.empty())
+if(std::string nr = fs_file_name(fs_root(cwd)); !nr.empty())
   err("file_name root: " + nr);
 
 if(fs_file_name(".file_name") != ".file_name")

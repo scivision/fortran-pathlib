@@ -71,7 +71,7 @@ else if (fname == "homedir")
 else if (fname == "expanduser")
   h = fs_expanduser(path);
 else if (fname == "cwd")
-  h = fs_get_cwd().value_or("");
+  h = fs_get_cwd();
 else if (fname == "is_reserved")
   b = fs_is_reserved(path);
 else
@@ -122,7 +122,7 @@ for (int i = 0; i < n; ++i)
   else if (fname == "expanduser")
     h = fs_expanduser(path);
   else if (fname == "cwd")
-    h = fs_get_cwd().value_or("");
+    h = fs_get_cwd();
   else if (fname == "is_reserved")
     b = fs_is_reserved(path);
   else

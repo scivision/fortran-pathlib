@@ -165,8 +165,8 @@ bool fs_remove(std::string_view);
 
 bool fs_set_cwd(std::string_view);
 
-[[nodiscard]] std::optional<std::string> fs_get_tempdir();
-[[nodiscard]] std::optional<std::string> fs_get_cwd();
+[[nodiscard]] std::string fs_get_tempdir();
+[[nodiscard]] std::string fs_get_cwd();
 
 
 [[nodiscard]] std::string fs_filesystem_type(std::string_view);

@@ -24,10 +24,10 @@ int main()
 #endif
 
 auto cwd = fs_get_cwd();
-if(!cwd)
+if(cwd.empty())
   return EXIT_FAILURE;
 
-if(fs_is_wsl() && fs_filesystem_type(cwd.value()) == "v9fs"){
+if(fs_is_wsl() && fs_filesystem_type(cwd) == "v9fs"){
   std::cerr << "XFAIL:WSL: test_exe: v9fs to NTFS etc. doesn't work right\n";
   std::exit(77);
 }

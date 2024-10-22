@@ -111,7 +111,7 @@ int main(){
 
     }
 
-    if(!fs_get_cwd())
+    if(fs_get_cwd().empty())
       err("get_cwd");
 
     if(fs_get_homedir().empty())

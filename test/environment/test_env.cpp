@@ -28,23 +28,23 @@ _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
 auto fpath = fs_get_cwd();
-if(!fpath)
+if(fpath.empty())
   return EXIT_FAILURE;
 
-std::cout << "current working dir " << fpath.value() << "\n";
+std::cout << "current working dir " << fpath << "\n";
 
-if(!fs_exists(fpath.value()))
-  err("current working dir " + fpath.value() + " does not exist");
+if(!fs_exists(fpath))
+  err("current working dir " + fpath + " does not exist");
 
-if(!fs_is_dir(fpath.value()))
-  err("current working dir " + fpath.value() + " is not a directory");
+if(!fs_is_dir(fpath))
+  err("current working dir " + fpath + " is not a directory");
 
 const auto cpath = fs_get_cwd();
-if(!cpath)
+if(cpath.empty())
   return EXIT_FAILURE;
 
-if (std::string s = fs_normal(cpath.value()); fpath != s)
-  err("C cwd " + s + " != Fortran cwd " + fpath.value());
+if (std::string s = fs_normal(cpath); fpath != s)
+  err("C cwd " + s + " != Fortran cwd " + fpath);
 
 std::cout << "PASS: C++ current working directory\n";
 
@@ -73,12 +73,12 @@ std::cout << "PASS: C++ home directory\n";
 
 // --- tempdir
 auto t = fs_get_tempdir();
-if(!t)
+if(t.empty())
   err("failed to get_tempdir()");
 
-std::cout << "Temp directory " << t.value() << "\n";
-if (!fs_exists(t.value()))
-  err("Fortran: temp dir " + t.value() + " does not exist");
+std::cout << "Temp directory " << t << "\n";
+if (!fs_exists(t))
+  err("Fortran: temp dir " + t + " does not exist");
 
 std::cout << "PASS: C++ temp directory\n";
 

@@ -27,7 +27,7 @@ std::string fs_absolute(std::string_view path, const bool expand_tilde)
 
   // Linux, MinGW can't handle empty paths
   if(ex.empty())
-    return fs_get_cwd().value_or("");
+    return fs_get_cwd();
 
 #ifdef HAVE_CXX_FILESYSTEM
   std::error_code ec;
@@ -44,12 +44,12 @@ std::string fs_absolute(std::string_view path, const bool expand_tilde)
     return ex;
 
   const auto cwd = fs_get_cwd();
-  if(!cwd)
+  if(cwd.empty())
     return {};
 
-  return (cwd.value().back() != '/')
-    ? cwd.value() + '/' + ex
-    : cwd.value() + ex;
+  return (cwd.back() != '/')
+    ? cwd + '/' + ex
+    : cwd + ex;
 #endif
 }
 

@@ -15,7 +15,7 @@
 #endif
 
 
-std::optional<std::string> fs_get_tempdir()
+std::string fs_get_tempdir()
 {
 #ifdef HAVE_CXX_FILESYSTEM
   std::error_code ec;
@@ -70,7 +70,7 @@ bool fs_set_cwd(std::string_view path)
 }
 
 
-std::optional<std::string> fs_get_cwd()
+std::string fs_get_cwd()
 {
 #ifdef HAVE_CXX_FILESYSTEM
   std::error_code ec;

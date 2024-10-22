@@ -212,13 +212,13 @@ std::string::size_type fs_stem(const char* path,
 }
 
 std::string::size_type fs_get_cwd(char* path, const std::string::size_type buffer_size){
-  return fs_str2char(fs_get_cwd().value_or(""), path, buffer_size);
+  return fs_str2char(fs_get_cwd(), path, buffer_size);
 }
 
 bool fs_set_cwd(const char *path){ return fs_set_cwd(std::string_view(path)); }
 
 std::string::size_type fs_get_tempdir(char* path, const std::string::size_type buffer_size){
-  return fs_str2char(fs_get_tempdir().value_or(""), path, buffer_size);
+  return fs_str2char(fs_get_tempdir(), path, buffer_size);
 }
 
 bool fs_is_absolute(const char* path)

@@ -15,10 +15,10 @@
 int main() {
 
   auto cwd = fs_get_cwd();
-  if (!cwd)
+  if (cwd.empty())
     err("current working dir not found");
 
-  std::cout << "current working dir " << cwd.value() << "\n";
+  std::cout << "current working dir " << cwd << "\n";
 
   std::string h;
   h = fs_get_homedir();

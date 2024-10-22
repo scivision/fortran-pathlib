@@ -19,8 +19,6 @@ endif
 cpp_std = get_option('cpp_std')
 message('C++ standard: ' + cpp_std)
 
-fs = import('fs')
-
 cc = meson.get_compiler('c')
 cpp = meson.get_compiler('cpp')
 
