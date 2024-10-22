@@ -4,7 +4,7 @@
 #include <cctype> // std::isalnum
 #include <vector>
 
-#if __has_include(<rnages>)
+#if __has_include(<ranges>)
 #include <ranges>
 #endif
 
