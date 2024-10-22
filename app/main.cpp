@@ -109,13 +109,13 @@ static void one_arg(std::string_view fun, std::string_view a1){
   else if (fun == "suffix")
     std::cout << fs_suffix(a1) << "\n";
   else if (fun == "canonical")
-    std::cout << fs_canonical(a1, true, false).value_or("") << "\n";
+    std::cout << fs_canonical(a1, true, false) << "\n";
   else if (fun == "weakly_canonical")
-    std::cout << fs_canonical(a1, false, false).value_or("") << "\n";
+    std::cout << fs_canonical(a1, false, false) << "\n";
   else if (fun == "resolve")
-    std::cout << fs_resolve(a1, true, false).value_or("") << "\n";
+    std::cout << fs_resolve(a1, true, false) << "\n";
   else if (fun == "weakly_resolve")
-    std::cout << fs_resolve(a1, false, false).value_or("") << "\n";
+    std::cout << fs_resolve(a1, false, false) << "\n";
   else if (fun == "parts"){
     for (const auto &p : fs_split(a1))
       std::cout << p << "\n";

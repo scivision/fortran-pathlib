@@ -100,7 +100,7 @@ if(!fs_is_windows()){
       err("is_file");
     std::cout << "OK: is_file(" << r << ")\n";
 
-    if(!fs_canonical(ref.data(), false, true))
+    if(fs_canonical(ref.data(), false, true).empty())
       err("canonical");
     std::cout << "OK: canonical() " << ref << "\n";
 

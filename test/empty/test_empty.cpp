@@ -82,7 +82,7 @@ int main(){
     if(fs_remove(""))
       err("remove");
 
-    if(fs_canonical("", false, false))
+    if(!fs_canonical("", false, false).empty())
       err("fs_canonical");
 
     if(fs_equivalent("", ""))

@@ -53,8 +53,8 @@
 
 [[nodiscard]] std::string fs_join(std::string_view, std::string_view);
 
-[[nodiscard]] std::optional<std::string> fs_canonical(std::string_view, const bool, const bool);
-[[nodiscard]] std::optional<std::string> fs_resolve(std::string_view, const bool, const bool);
+[[nodiscard]] std::string fs_canonical(std::string_view, const bool, const bool);
+[[nodiscard]] std::string fs_resolve(std::string_view, const bool, const bool);
 
 [[nodiscard]] bool fs_equivalent(std::string_view, std::string_view);
 

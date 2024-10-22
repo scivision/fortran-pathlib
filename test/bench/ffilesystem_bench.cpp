@@ -41,9 +41,9 @@ std::string h;
 bool b = false;
 
 if (fname == "canonical")
-  h = fs_canonical(path, strict, expand_tilde).value_or("");
+  h = fs_canonical(path, strict, expand_tilde);
 else if (fname == "resolve")
-  h = fs_resolve(path, strict, expand_tilde).value_or("");
+  h = fs_resolve(path, strict, expand_tilde);
 else if (fname == "parent")
   h = fs_parent(path);
 else if (fname == "suffix")
@@ -92,9 +92,9 @@ for (int i = 0; i < n; ++i)
   auto t0 = std::chrono::steady_clock::now();
 
   if (fname == "canonical")
-    h = fs_canonical(path, strict, expand_tilde).value_or("");
+    h = fs_canonical(path, strict, expand_tilde);
   else if (fname == "resolve")
-    h = fs_resolve(path, strict, expand_tilde).value_or("");
+    h = fs_resolve(path, strict, expand_tilde);
   else if (fname == "parent")
     h = fs_parent(path);
   else if (fname == "suffix")

@@ -12,7 +12,7 @@
 #endif
 
 
-std::optional<std::string> fs_canonical(std::string_view path, const bool strict, const bool expand_tilde)
+std::string fs_canonical(std::string_view path, const bool strict, const bool expand_tilde)
 {
   // canonicalize path, i.e. resolve all symbolic links, remove ".", ".." and extra slashes
   // if strict is true, then path must exist
@@ -61,16 +61,13 @@ std::optional<std::string> fs_canonical(std::string_view path, const bool strict
 }
 
 
-std::optional<std::string> fs_resolve(std::string_view path, const bool strict, const bool expand_tilde)
+std::string fs_resolve(std::string_view path, const bool strict, const bool expand_tilde)
 {
   // works like canonical(absolute(path)).
   // Inspired by Python pathlib.Path.resolve()
   // https://docs.python.org/3/library/pathlib.html#pathlib.Path.resolve
-  auto a = fs_absolute(path, expand_tilde);
-  if (a.empty()) FFS_UNLIKELY
-    return {};
 
-  return fs_canonical(a, strict, false);
+  return fs_canonical(fs_absolute(path, expand_tilde), strict, false);
 }
 
 
