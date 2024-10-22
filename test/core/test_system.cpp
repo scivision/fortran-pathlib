@@ -6,6 +6,9 @@
 
 int main(){
 
+  const std::string ci = fs_getenv("CI");
+  bool is_ci = ci == "true";
+
   size_t skip = 0;
   size_t fail = 0;
 
@@ -18,6 +21,14 @@ int main(){
     std::cout << "OK: CPU load average: " << load << "\n";
 
   const auto max_path = fs_get_max_path();
+  const auto max_component = fs_max_component("/");
+  if(max_component < 1){
+    std::cerr << "FAILED: max_component: " << max_component << "\n";
+    fail++;
+  }
+  else
+    std::cout << "OK: max_component: " << max_component << "\n";
+
 
   std::string s = fs_hostname();
   if (s.empty()){
@@ -64,7 +75,8 @@ int main(){
   s = fs_get_terminal();
   if (s.empty()){
     std::cerr << "unknown terminal\n";
-    skip++;
+    if(!is_ci)
+      skip++;
   }
   else if (s.length() == max_path){
     std::cerr << "FAILED: terminal has blank space\n";
@@ -84,7 +96,6 @@ int main(){
   }
   else
     std::cout << "OK: username: " << s << "\n";
-
 
 // -----------------
 

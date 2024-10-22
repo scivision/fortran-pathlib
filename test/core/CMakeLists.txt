@@ -85,13 +85,18 @@ foreach(t IN ITEMS canonical expanduser core
   locale
   normal
   parent permissions
-  realpath relative reserved root safe)
+  realpath relative reserved root
+  safe system
+  )
   add_executable(test_cpp_${t} test_${t}.cpp)
   target_link_libraries(test_cpp_${t} PRIVATE ffilesystem)
   target_include_directories(test_cpp_${t} PRIVATE ..)
 
   add_test(NAME Cpp_${t} COMMAND test_cpp_${t})
-  set_property(TEST Cpp_${t} PROPERTY LABELS Cpp)
+  set_tests_properties(Cpp_${t} PROPERTIES
+  LABELS Cpp
+  SKIP_RETURN_CODE 77
+  )
 endforeach()
 
 if(NOT HAVE_CXX_FILESYSTEM)
