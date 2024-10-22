@@ -1,3 +1,7 @@
+#if defined(__linux__) && !defined(_DEFAULT_SOURCE)
+#define _DEFAULT_SOURCE
+#endif
+
 #include "ffilesystem.h"
 
 #include <string>
@@ -7,7 +11,6 @@
 
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
-#include <direct.h> // _chdir
 #include <windows.h> // GetTempPathA
 #else
 #include <unistd.h> // getcwd, chdir
@@ -57,9 +60,12 @@ bool fs_set_cwd(std::string_view path)
     return true;
 
   std::cerr << "ERROR:ffilesystem:chdir: " << ec.message() << "\n";
+#elif _WIN32
+  // windows.h https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setcurrentdirectory
+  if(SetCurrentDirectoryA(path.data()))  FFS_LIKELY
+    return true;
 #else
-  // unistd.h / direct.h
-  // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/chdir-wchdir?view=msvc-170
+  // unistd.h https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/chdir-wchdir?view=msvc-170
   if(chdir(path.data()) == 0)  FFS_LIKELY
     return true;
 
