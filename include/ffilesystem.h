@@ -152,9 +152,9 @@ bool fs_copy_file(std::string_view, std::string_view, bool);
 [[nodiscard]] std::string fs_root(std::string_view path);
 
 [[nodiscard]] std::uintmax_t fs_space_available(std::string_view);
-[[nodiscard]] std::optional<std::string> fs_read_symlink(std::string_view);
+[[nodiscard]] std::string fs_read_symlink(std::string_view);
 
-[[nodiscard]] std::optional<std::string> fs_get_permissions(std::string_view);
+[[nodiscard]] std::string fs_get_permissions(std::string_view);
 
 [[nodiscard]] bool fs_is_char_device(std::string_view);
 [[nodiscard]] bool fs_is_dir(std::string_view);

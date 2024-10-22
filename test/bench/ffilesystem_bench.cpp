@@ -63,7 +63,7 @@ else if (fname == "is_file")
 else if (fname == "is_symlink")
   b = fs_is_symlink(path);
 else if (fname == "read_symlink")
-  h = fs_read_symlink(path).value_or("");
+  h = fs_read_symlink(path);
 else if (fname == "which")
   h = fs_which(path);
 else if (fname == "homedir")
@@ -114,7 +114,7 @@ for (int i = 0; i < n; ++i)
   else if (fname == "is_symlink")
     b = fs_is_symlink(path);
   else if (fname == "read_symlink")
-    h = fs_read_symlink(path).value_or("");
+    h = fs_read_symlink(path);
   else if (fname == "which")
     h = fs_which(path);
   else if (fname == "homedir")

@@ -40,7 +40,7 @@ bool fs_is_symlink(std::string_view path)
 }
 
 
-std::optional<std::string> fs_read_symlink(std::string_view path)
+std::string fs_read_symlink(std::string_view path)
 {
 #ifdef HAVE_CXX_FILESYSTEM
   std::error_code ec;

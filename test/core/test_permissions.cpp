@@ -23,8 +23,8 @@ int main()
   _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-if(auto p = fs_get_permissions(""); p)
-    err("get_permissions('') should fail, but got: " + p.value());
+if(auto p = fs_get_permissions(""); !p.empty())
+    err("get_permissions('') should fail, but got: " + p);
 
 std::string read = "readable.txt";
 std::string noread = "nonreadable.txt";
@@ -34,10 +34,10 @@ fs_touch(read);
 fs_set_permissions(read, 1, 0, 0);
 
 auto p = fs_get_permissions(read);
-if(!p)
+if(p.empty())
     err("get_permissions('" + read + "') failed");
 
-std::cout << "Permissions for " << read << ": " << p.value() << "\n";
+std::cout << "Permissions for " << read << ": " << p << "\n";
 
 if(!fs_is_readable(read))
     err(read + " should be readable");
@@ -53,13 +53,13 @@ fs_touch(noread);
 fs_set_permissions(noread, -1, 0, 0);
 
 p = fs_get_permissions(noread);
-if(!p)
+if(p.empty())
     err("get_permissions('" + noread + "') failed");
 
-std::cout << "Permissions for " << noread << ": " << p.value() << "\n";
+std::cout << "Permissions for " << noread << ": " << p << "\n";
 
 #ifdef __cpp_lib_string_contains
-if(!p.value().contains("r") && fs_is_readable(noread)){
+if(!p.contains("r") && fs_is_readable(noread)){
 
 if(!fs_exists(noread))
     err(noread + " should exist");
@@ -77,12 +77,12 @@ if(!fs_is_file(nowrite))
 fs_set_permissions(nowrite, 0, -1, 0);
 
 p = fs_get_permissions(nowrite);
-if(!p)
+if(p.empty())
     err("get_permissions('" + nowrite + "') failed");
-std::cout << "Permissions for " << nowrite << " " << p.value() << "\n";
+std::cout << "Permissions for " << nowrite << " " << p << "\n";
 
 #ifdef __cpp_lib_string_contains
-if(!p.value().contains("w") && fs_is_writable(nowrite)){
+if(!p.contains("w") && fs_is_writable(nowrite)){
   std::cerr << "ERROR:  " << nowrite << " should not be writable\n";
   if(!fs_is_windows())
     return EXIT_FAILURE;

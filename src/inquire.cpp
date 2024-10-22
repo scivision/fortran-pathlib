@@ -229,7 +229,7 @@ std::uintmax_t fs_file_size(std::string_view path)
 }
 
 
-std::optional<std::string> fs_get_permissions(std::string_view path)
+std::string fs_get_permissions(std::string_view path)
 {
   if (!fs_exists(path)) {
     fs_print_error(path, "get_permissions: path does not exist");

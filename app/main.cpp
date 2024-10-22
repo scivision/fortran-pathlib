@@ -173,9 +173,9 @@ static void one_arg(std::string_view fun, std::string_view a1){
   else if (fun == "is_writable")
     std::cout << fs_is_writable(a1) << "\n";
   else if (fun == "perm")
-    std::cout << fs_get_permissions(a1).value_or("") << "\n";
+    std::cout << fs_get_permissions(a1) << "\n";
   else if (fun == "read_symlnk")
-    std::cout << fs_read_symlink(a1).value_or("") << "\n";
+    std::cout << fs_read_symlink(a1) << "\n";
   else if (fun == "stem")
     std::cout << fs_stem(a1) << "\n";
   else if (fun == "exists")
@@ -221,7 +221,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
       if (const auto &s = std::filesystem::file_size(p, ec); s && !ec)
         std::cout << " " << s;
 
-      std::cout << " " << fs_get_permissions(p.generic_string()).value_or("") << "\n";
+      std::cout << " " << fs_get_permissions(p.generic_string()) << "\n";
     }
 #else
       std::cerr << "ERROR: ls requires C++17 filesystem\n";
@@ -269,17 +269,17 @@ static void four_arg(std::string_view fun, std::string_view a1, std::string_view
     int x = std::stoi(a4.data());
 
     auto p = fs_get_permissions(a1);
-    if(!p)
+    if(p.empty())
       std::cerr << "ERROR get_permissions(" << a1 << ") before chmod\n";
     else
-      std::cout << "before chmod " << a1 << " " << p.value() << "\n";
+      std::cout << "before chmod " << a1 << " " << p << "\n";
 
     fs_set_permissions(a1, r, w, x);
 
-    if(!p)
+    if(p.empty())
       std::cerr << "ERROR get_permissions(" << a1 << ") after chmod\n";
     else
-      std::cout << "after chmod " << a1 << " " << p.value() << "\n";
+      std::cout << "after chmod " << a1 << " " << p << "\n";
 
   } else {
     std::cerr << fun << " requires more arguments or is unknown function\n";
