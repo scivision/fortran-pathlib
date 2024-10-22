@@ -4,17 +4,6 @@ function(cpp_check)
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE EXECUTABLE)
 
-if(ffilesystem_cli AND CMAKE_CXX_STANDARD GREATER_EQUAL 20)
-  check_source_compiles(CXX
-  "#include <map>
-   int main(){
-    std::map<int, char> m{{1, 'a'}, {2, 'b'}};
-    return m.contains(2);
-   }"
-  ffilesystem_cpp_map_contains
-  )
-endif()
-
 # some compilers claim to have filesystem, but their libstdc++ doesn't have it.
 check_source_compiles(CXX
 [=[
@@ -66,7 +55,8 @@ return 0;
 }"
 ffilesystem_HAVE_CLOCK_CAST
 )
-
+else()
+  unset(ffilesystem_HAVE_CLOCK_CAST CACHE)
 endif()
 
 
