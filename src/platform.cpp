@@ -3,7 +3,6 @@
 #include <string>
 #include <iostream>
 
-#include <optional>
 #include <system_error> // for std::error_code
 
 #if defined(_WIN32)

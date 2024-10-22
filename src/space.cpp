@@ -1,6 +1,5 @@
 #include "ffilesystem.h"
 
-#include <optional>
 #include <cstdint> // uintmax_t
 #include <system_error> // for error_code
 #include <iostream>
