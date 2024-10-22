@@ -59,9 +59,6 @@ compiler()
 
 Character, allocatable: the C/C++ compiler name and version.
 
-* C++ backend: output is non-empty if c++20 std::format is available
-* C backend: output is non-empty for known compilers
-
 ```
 compiler_c()
 ```

@@ -25,20 +25,8 @@ if(GNU_stdfs)
 endif()
 
 # --- compiler standard setting
-if(DEFINED CMAKE_CXX_STANDARD AND CMAKE_CXX_STANDARD LESS 17)
-  message(STATUS "Ffilesystme: CMAKE_CXX_STANDARD: ${CMAKE_CXX_STANDARD} < 17, setting to 17")
+if(CMAKE_CXX_STANDARD LESS 17)
   set(CMAKE_CXX_STANDARD 17)
-endif()
-if(NOT DEFINED CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 17)
-
-  # https://cmake.org/cmake/help/latest/variable/CMAKE_CXX_COMPILE_FEATURES.html
-  if("cxx_std_20" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
-    set(CMAKE_CXX_STANDARD 20)
-  elseif(NOT "cxx_std_17" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
-    message(WARNING "${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION} may not support at least C++17 standard")
-  endif()
-  message(VERBOSE "Ffilesystem CMAKE_CXX_STANDARD: ${CMAKE_CXX_STANDARD}")
 endif()
 
 if(CMAKE_VERSION VERSION_LESS 3.25 AND CMAKE_SYSTEM_NAME STREQUAL "Linux")

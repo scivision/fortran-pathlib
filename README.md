@@ -122,11 +122,7 @@ meson compile -C build
 meson test -C build
 ```
 
-Fortran Package Manager: set environment variables like:
-
-* `FPM_CXXFLAGS=-std=c++20`
-* (Windows-only) `FPM_LDFLAGS="-lOle32 -lShell32 -luuid -lUserenv -lAdvapi32 -lws2_32"`
-
+Fortran Package Manager (FPM):
 
 ```sh
 

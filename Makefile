@@ -33,7 +33,7 @@ cpp = 1
 cfeat =
 cppfeat = -DHAVE_MERSENNE_TWISTER -DHAVE_GETLOADAVG
 
-CXXFLAGS := -std=c++20 -O3 -DNDEBUG $(cppfeat) $(INC) -DHAVE_CXX_FILESYSTEM
+CXXFLAGS := -std=c++17 -O3 -DNDEBUG $(cppfeat) $(INC) -DHAVE_CXX_FILESYSTEM
 CFLAGS := -O3 -DNDEBUG $(cfeat) $(INC)
 FFLAGS := -O3 -DNDEBUG
 

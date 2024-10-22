@@ -9,7 +9,7 @@
 #include "ffilesystem.h"
 
 
-// tell if Ffilesystme core is C or C++
+// tell if Ffilesystem core is C or C++
 bool fs_cpp(){ return true; }
 
 // C++ version compiler claims to support with given options
