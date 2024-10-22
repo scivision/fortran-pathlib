@@ -15,17 +15,17 @@ bool fs_touch(std::string_view path)
     return fs_set_modtime(path.data());
 
   FILE* fid = fopen(path.data(), "w");
-  if(!fid){
+  if(!fid){  FFS_UNLIKELY
     fs_print_error(path, "touch:fopen");
     return false;
   }
 
-  if(fclose(fid) != 0){
+  if(fclose(fid) != 0){  FFS_UNLIKELY
     fs_print_error(path, "touch:fclose");
     return false;
   }
 
-  if(fs_is_file(path.data()))
+  if(fs_is_file(path.data()))  FFS_LIKELY
     return true;
   // is_file check because sometimes fclose() doesn't fail, but the file is not created
 

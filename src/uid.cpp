@@ -18,11 +18,11 @@ bool fs_is_admin(){
 	TOKEN_ELEVATION elevation;
 	DWORD dwSize;
 
-  bool ok = (OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken) &&
+  const bool ok = (OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken) &&
      GetTokenInformation(hToken, TokenElevation, &elevation, sizeof(elevation), &dwSize));
 
   CloseHandle(hToken);
-  if(ok)
+  if(ok)  FFS_LIKELY
     return elevation.TokenIsElevated;
 
   return false;
@@ -53,12 +53,12 @@ std::string fs_get_terminal()
   // https://learn.microsoft.com/en-us/windows/console/getconsolewindow
   // encourages Virtual Terminal Sequences
   auto h = GetConsoleWindow();
-  if(!h){
+  if(!h){  FFS_UNLIKELY
     fs_print_error("no window handle available", "get_terminal");
     return {};
   }
   if(int const L = GetClassNameA(h, name.data(), (int) name.size());
-      L > 0){
+      L > 0){  FFS_LIKELY
     name.resize(L);
     return name;
   }

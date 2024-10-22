@@ -27,7 +27,7 @@ std::string fs_lib_path()
   size_t L=0;
 
   L = GetModuleFileNameA(GetModuleHandleA(FS_DLL_NAME), path.data(), (DWORD) buffer_size);
-  if(L == 0 || L >= buffer_size){
+  if(L == 0 || L >= buffer_size){  FFS_UNLIKELY
     fs_print_error(path, "lib_path");
     return {};
   }
@@ -37,7 +37,7 @@ std::string fs_lib_path()
   return fs_as_posix(path);
 #elif defined(HAVE_DLADDR)
   Dl_info info;
-  if(!dladdr( (void*)&dl_dummy_func, &info)){
+  if(!dladdr( (void*)&dl_dummy_func, &info)){  FFS_UNLIKELY
     fs_print_error("dladdr", "lib_path");
     return {};
   }

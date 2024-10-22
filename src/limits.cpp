@@ -41,11 +41,11 @@ std::string::size_type fs_max_component(std::string_view path)
 #ifdef _WIN32
   DWORD lpMaximumComponentLength = 0;
 
-  if(!GetVolumeInformationA(path.data(), nullptr, 0, nullptr, &lpMaximumComponentLength, nullptr, nullptr, 0))
-    fs_print_error(path, "max_component:GetVolumeInformationA");
+  if(GetVolumeInformationA(path.data(), nullptr, 0, nullptr, &lpMaximumComponentLength, nullptr, nullptr, 0))  FFS_LIKELY
+    return lpMaximumComponentLength;
 
-  return lpMaximumComponentLength;
-
+  fs_print_error(path, "max_component:GetVolumeInformationA");
+  return 0;
 #elif defined(_PC_NAME_MAX)
   return pathconf(path.data(), _PC_NAME_MAX);
 #elif defined(NAME_MAX)

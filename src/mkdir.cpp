@@ -1,6 +1,6 @@
 #include "ffilesystem.h"
 
-#include <string_view>
+#include <string>
 #include <iostream>
 #include <system_error>         // for error_code
 
@@ -43,7 +43,7 @@ bool fs_mkdir(std::string_view path)
     return true;
 
   std::string buf = fs_normal(path);
-  if(buf.empty())
+  if(buf.empty())  FFS_UNLIKELY
     return false;
 
   // iterate over path components
@@ -51,6 +51,7 @@ bool fs_mkdir(std::string_view path)
   // start at 0, then prefix increment to not find initial '/'
   do {
     pos = buf.find('/', ++pos);
+    // must be string to avoid destroyed temporary
     std::string subdir = buf.substr(0, pos);
     if(FS_TRACE) std::cout << "TRACE:mkdir " << subdir << " pos " << pos << "\n";
     if (mkdir(subdir.data(), S_IRWXU) && !(errno == EEXIST || errno == EACCES)) {
@@ -59,12 +60,12 @@ bool fs_mkdir(std::string_view path)
     }
   } while (pos != std::string::npos);
 
-  if(!fs_is_dir(path)){
-    fs_print_error(path, "mkdir: not created");
-    return false;
-  }
+  if(fs_is_dir(path))  FFS_LIKELY
+    return true;
 
-  return true;
+  fs_print_error(path, "mkdir: not created");
+  return false;
+
 
 #endif
 }

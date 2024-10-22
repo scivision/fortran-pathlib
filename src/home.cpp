@@ -35,17 +35,18 @@ static struct passwd* fs_getpwuid()
 {
   const uid_t eff_uid = geteuid();
 
-  struct passwd *pw = getpwuid(eff_uid);
-  if (!pw)
-    fs_print_error(
-#ifdef __cpp_lib_format
-      std::format("uid: {}", eff_uid)
-#else
-      ""
-#endif
-      , "getpwuid");
+  if(struct passwd *pw = getpwuid(eff_uid); pw) FFS_LIKELY
+    return pw;
 
-  return pw;
+  fs_print_error(
+#ifdef __cpp_lib_format
+    std::format("uid: {}", eff_uid)
+#else
+    ""
+#endif
+    , "getpwuid");
+
+  return {};
 }
 #endif
 
@@ -54,7 +55,7 @@ std::string fs_get_homedir()
 {
 
   if(std::string home = fs_getenv(fs_is_windows() ? "USERPROFILE" : "HOME");
-      !home.empty())
+      !home.empty())  FFS_LIKELY
     return fs_as_posix(home);
 
   return fs_get_profile_dir();
