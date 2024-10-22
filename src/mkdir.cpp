@@ -11,13 +11,7 @@
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
-#include <direct.h> // _mkdir
-#ifndef mkdir
-#define mkdir(dir, mode) _mkdir(dir)
-#endif
-#ifndef S_IRWXU
-#define S_IRWXU (_S_IREAD | _S_IWRITE | _S_IEXEC)
-#endif
+#include <windows.h>
 #else
 #include <unistd.h>
 #endif
@@ -54,7 +48,14 @@ bool fs_mkdir(std::string_view path)
     // must be string to avoid destroyed temporary
     std::string subdir = buf.substr(0, pos);
     if(FS_TRACE) std::cout << "TRACE:mkdir " << subdir << " pos " << pos << "\n";
-    if (mkdir(subdir.data(), S_IRWXU) && !(errno == EEXIST || errno == EACCES)) {
+
+#ifdef _WIN32
+  // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createdirectorya
+    if (CreateDirectoryA(subdir.data(), nullptr) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+#else
+    if (mkdir(subdir.data(), S_IRWXU) && !(errno == EEXIST || errno == EACCES))
+#endif
+    {  FFS_UNLIKELY
       fs_print_error(subdir, "mkdir");
       return false;
     }

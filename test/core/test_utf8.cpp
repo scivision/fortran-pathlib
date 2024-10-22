@@ -8,11 +8,10 @@
 int main()
 {
 
-std::string smiley = "😀";
-std::string wink = "😉";
-std::string hello = "你好";
+constexpr std::string smiley = "😀";
+constexpr std::string wink = "😉";
+constexpr std::string hello = "你好";
 
-// test allocation
 auto u1 = fs_canonical(".", true, false);
 if(u1.empty())
   return EXIT_FAILURE;
