@@ -43,30 +43,15 @@ static void no_arg(std::string_view fun){
     {"is_cygwin", fs_is_cygwin}
   };
 
-  std::map<std::string_view, std::function<int()>> mint =
-  {
-    {"is_wsl", fs_is_wsl},
-    {"pid", fs_getpid}
-  };
 
-  std::map<std::string_view, std::function<char()>> mchar =
-  {
-    {"pathsep", fs_pathsep}
-  };
-
-  std::map<std::string_view, std::function<long()>> mlong =
-  {
-    {"lang", fs_lang}
-  };
-
-  if (mbool.contains(fun))
-    std::cout << mbool[fun]() << "\n";
-  else if (mint.contains(fun))
-    std::cout << mint[fun]() << "\n";
-  else if (mchar.contains(fun))
-    std::cout << mchar[fun]() << "\n";
-  else if (mlong.contains(fun))
-    std::cout << mlong[fun]() << "\n";
+  if (fun == "is_wsl")
+    std::cout << fs_is_wsl() << "\n";
+  else if (fun == "pid")
+    std::cout << fs_getpid() << "\n";
+  else if (fun == "pathsep")
+    std::cout << fs_pathsep() << "\n";
+  else if (fun == "lang")
+    std::cout << fs_lang() << "\n";
   else if (fun == "locale")
     std::cout << fs_get_locale_name() << "\n";
   else if (fun == "username")
@@ -99,6 +84,12 @@ static void no_arg(std::string_view fun){
 #else
     std::cout << fs_cpu_loadavg() << "\n";
 #endif
+#if __cplusplus >= 202002L
+  else if (mbool.contains(fun))
+#else
+  else if (mbool.find(fun) != mbool.end())
+#endif
+    std::cout << mbool[fun]() << "\n";
   else
     std::cerr << fun << " not a known function\n";
 
@@ -106,16 +97,13 @@ static void no_arg(std::string_view fun){
 
 static void one_arg(std::string_view fun, std::string_view a1){
 
-  std::map<std::string_view, std::function<std::string(std::string_view)>> mstring =
-  {
-    {"lexically_normal", fs_lexically_normal},
-    {"make_preferred", fs_make_preferred}
-  };
 
   std::error_code ec;
 
-  if (mstring.contains(fun))
-    std::cout << mstring[fun](a1) << "\n";
+  if (fun == "lexically_normal")
+    std::cout << fs_lexically_normal(a1) << "\n";
+  else if (fun == "make_preferred")
+    std::cout << fs_make_preferred(a1) << "\n";
   else if (fun == "parent")
     std::cout << fs_parent(a1) << "\n";
   else if (fun == "suffix")

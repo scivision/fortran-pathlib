@@ -155,22 +155,24 @@ std::string_view path;
 
 std::cout << fs_compiler() << "\n";
 
-std::set<std::string_view, std::less<>> fset;
-
+std::set<std::string_view, std::less<>> funcs;
 if(argc > 3)
-  fset = {argv[3]};
+  funcs = {argv[3]};
 else
-  fset = {"canonical", "resolve", "which", "expanduser", "normal", "cwd", "homedir", "parent", "is_reserved"};
+  funcs = {"canonical", "resolve", "which", "expanduser", "normal", "cwd", "homedir", "parent", "is_reserved"};
 
-
-for (std::set<std::string_view, std::less<>> funcs = fset; std::string_view func : funcs)
+for (std::string_view func : funcs)
   {
   std::set <std::string_view, std::less<>> tildef = {"canonical", "resolve", "normal", "expanduser", "parent"};
 
   if (argc > 2)
     path = argv[2];
   else {
+#if __cplusplus >= 202002L
     if (tildef.contains(func))
+#else
+    if (tildef.find(func) != tildef.end())
+#endif
       path = "~/..";
     else if (func == "which")
       path = (fs_is_windows()) ? "cmake.exe" : "sh";

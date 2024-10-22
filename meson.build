@@ -187,13 +187,6 @@ endif
 
 endif # use_cpp
 
-# -- C++ map.contains
-cpp_map_contains = cpp.compiles('''#include <map>
-int main(){
-std::map<int, char> m{{1, 'a'}, {2, 'b'}};
-return m.contains(2);
-}''', name: 'C++ map.contains')
-
 # -- Fortran feature checks
 f03type_def = []
 
@@ -242,9 +235,7 @@ if not meson.is_subproject()
 executable('libc_version', 'app/libc.cpp')
 executable('libcpp_version', 'app/libcxx.cpp')
 
-if cpp_map_contains
-  executable('fs_cli', sources: 'app/main.cpp', link_with: filesystem, include_directories: inc, install: true)
-endif
+executable('fs_cli', sources: 'app/main.cpp', link_with: filesystem, include_directories: inc, install: true)
 
 if fortran
 
@@ -262,7 +253,5 @@ if not meson.is_subproject()
     subdir('test/' + d)
   endforeach
 
-  if cpp_map_contains
-    executable('ffilesystem_bench', 'test/bench/ffilesystem_bench.cpp', link_with: filesystem, include_directories: inc, install: true)
-  endif
+  executable('ffilesystem_bench', 'test/bench/ffilesystem_bench.cpp', link_with: filesystem, include_directories: inc, install: true)
 endif
