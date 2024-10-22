@@ -245,6 +245,8 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
     std::cout << fs_is_subdir(a1, a2) << "\n";
   else if (fun == "relative")
     std::cout << fs_relative_to(a1, a2) << "\n";
+  else if (fun == "proximate")
+    std::cout << fs_proximate_to(a1, a2) << "\n";
   else if (fun == "setenv"){
     fs_setenv(a1, a2);
     std::cout << "set env var " << a1 << " to " << a2 << " => " << fs_getenv(a1) << "\n";

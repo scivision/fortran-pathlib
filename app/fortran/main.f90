@@ -244,8 +244,10 @@ main : do
     end if
   case ("join")
     print '(A)', join(arg1, arg2)
-  case ("relative_to")
+  case ("relative")
     print '(A)', relative_to(arg1, arg2)
+  case ("proximate")
+    print '(a)', proximate_to(arg1, arg2)
   case ("same")
     print '(L1)', same_file(arg1, arg2)
   case ("create_symlink")
