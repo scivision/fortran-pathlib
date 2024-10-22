@@ -24,8 +24,8 @@ if(GNU_stdfs)
   message(STATUS "adding library ${GNU_stdfs}")
 endif()
 
-# --- compiler standard setting
-if(CMAKE_CXX_STANDARD LESS 17)
+# --- compiler standard setting -- need if(NOT) in case CMAKE_CXX_STANDARD is set but blank.
+if(NOT CMAKE_CXX_STANDARD OR CMAKE_CXX_STANDARD LESS 17)
   set(CMAKE_CXX_STANDARD 17)
 endif()
 

@@ -23,7 +23,6 @@ on:
 
 jobs:
 
-# waiting for public release https://github.com/actions/runner-images/issues/9691#issuecomment-2099267078
   linux-new:
 
     runs-on: ubuntu-24.04
@@ -119,6 +118,28 @@ jobs:
       run: |
         sudo apt update
         sudo apt install --no-install-recommends ${{ env.CC }} ${{ env.CXX }} ${{ env.FC }}
+
+    - uses: actions/checkout@v4
+    - uses: ./.github/workflows/composite-action
+
+
+  cxx-std:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    strategy:
+      matrix:
+        cpp-std: [17, 20, 23]
+        gcc-version: [14]
+        cpp: [true, false]
+        shared: [false]
+
+    env:
+      CC: gcc-${{ matrix.gcc-version }}
+      CXX: g++-${{ matrix.gcc-version }}
+      FC: gfortran-${{ matrix.gcc-version }}
+
+    steps:
 
     - uses: actions/checkout@v4
     - uses: ./.github/workflows/composite-action
