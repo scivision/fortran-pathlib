@@ -1,16 +1,27 @@
 program main
 
-use, intrinsic :: iso_c_binding, only: C_BOOL, C_CHAR
+use filesystem_test
 
 implicit none
 
-interface
-logical(C_BOOL) function has_filename(path) bind(C)
-import
-character(kind=C_CHAR), dimension(*), intent(in) :: path
-end function
-end interface
+integer :: argc, L
 
-if (has_filename("hello.txt")) print '(a)', "has_filename: OK"
+valgrind : block
+
+character(:), allocatable :: filename
+
+argc = command_argument_count()
+
+call get_command_argument(0, length=L)
+allocate(character(L) :: filename)
+call get_command_argument(0, filename)
+
+if (has_filename("hello.txt")) then
+  print '(a)', "OK: has_filename " // filename
+else
+  error stop "ERROR: has_filename should be true " // filename
+end if
+
+end block valgrind
 
 end program
