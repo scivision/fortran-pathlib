@@ -25,8 +25,13 @@ target_compile_features(fs_cpp PUBLIC cxx_std_17)
 
 add_executable(c_fs main_fs.c)
 target_link_libraries(c_fs PRIVATE fs_cpp)
-
 add_test(NAME C_fs COMMAND c_fs)
+
+# when the -L system flag is used, say oneAPI with a too old GCC,
+# a main C++ target may fail to link but Fortran main targets may succeed
+add_executable(cxx_fs main.cpp)
+target_link_libraries(cxx_fs PRIVATE fs_cpp)
+add_test(NAME Cxx_fs COMMAND cxx_fs)
 
 if(ffilesystem_fortran)
   add_executable(fortran_fs main.f90)

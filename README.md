@@ -19,7 +19,7 @@ can be used from C and C++ project code--see
 
 The language standards required are at least:
 
-* C++17 backend (and interface)
+* C++17 standard library [STL](./Readme_libstdc++.md)
 * Fortran interface (optional): 2003
 
 Ffilesystem uses
@@ -60,7 +60,8 @@ Ffilesystem supports compilers including:
 * GCC &ge; 8 (gcc/g++, gfortran)
     * GCC &ge; 7 works with `cmake -Dffilesystem_cpp=off`
 * LLVM Clang &ge; 9 (clang/clang++, flang or gfortran)
-* Intel oneAPI (icx, icpx, ifx)
+* Intel oneAPI &ge; 2023.1 (icx, icpx, ifx)
+* Intel Classic &ge; 2021.9 (icpc, ifort)
 * AMD AOCC (clang/clang++, flang)
 * NVIDIA HPC SDK (nvc++, nvfortran)
 * Visual Studio (C/C++)

@@ -1,6 +1,5 @@
-#include <stdbool.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <iostream>
 
 #include "myfs.h"
 
@@ -9,7 +8,7 @@ int main(int argc, char* argv[]) {
 
   const bool has = (argc < 2) ? has_filename(".") : has_filename(argv[1]);
 
-  printf("%d\n", has);
+  std::cout << has << "\n";
 
   return EXIT_SUCCESS;
 }
