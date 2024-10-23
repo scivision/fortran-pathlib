@@ -10,27 +10,43 @@ unset(CMAKE_REQUIRED_LIBRARIES)
 unset(CMAKE_REQUIRED_DEFINITIONS)
 unset(GNU_stdfs)
 
-if( (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.1.0") OR
-    (LINUX AND CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "23") OR
-    (CMAKE_CXX_COMPILER_ID STREQUAL "NVHPC" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "23.11") )
-  set(GNU_stdfs stdc++fs stdc++)
+if(CMAKE_VERSION VERSION_LESS 3.25 AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  set(LINUX true)
 endif()
-# GCC < 9.1 needs -lstdc++ to avoid C main program link error
-# NVHPC at least 23.11 and newer doesn't need the flags, but at least 23.5 and older do.
-# INtel oneAPI 2021.1 and older needs, but 2023 and newer doesn't. (not sure about 2022)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.1.0")
+  # GCC < 9.1 needs -lstdc++ to avoid C main program link error
+  set(GNU_stdfs stdc++fs stdc++)
+elseif(LINUX AND CMAKE_CXX_COMPILER_ID MATCHES "^Intel$|IntelLLVM|NVHPC")
+  # Intel, IntelLLVM and NVHPC on Linux use GNU libstdc++, so we need to extract the libstdc++ version
+  try_run(ffilesystem_stdcpp_run_ok ffilesystem_stdcpp_build_ok
+    ${CMAKE_CURRENT_BINARY_DIR}
+    SOURCES ${CMAKE_CURRENT_LIST_DIR}/libstdcpp_version.cpp
+    RUN_OUTPUT_VARIABLE ffilesystem_stdcpp_version
+  )
+  if(ffilesystem_stdcpp_run_ok EQUAL 0)
+    if(ffilesystem_stdcpp_version MATCHES "GNU ([0-9]+)")
+      if(CMAKE_MATCH_1 LESS 9)
+        set(GNU_stdfs stdc++fs stdc++)
+      else()
+        message(VERBOSE "GNU libstdc++ ${ffilesystem_stdcpp_version} is new enough to not need -lstdc++")
+      endif()
+    else()
+      message(VERBOSE "Did not determine GNU libstdc++ version ${ffilesystem_stdcpp_version}")
+    endif()
+  else()
+    message(WARNING "Could not determine GNU libstdc++ version ${ffilesystem_stdcpp_build_ok} ${ffilesystem_stdcpp_run_ok} ${ffilesystem_stdcpp_version}")
+  endif()
+endif()
 
 if(GNU_stdfs)
   set(CMAKE_REQUIRED_LIBRARIES ${GNU_stdfs})
-  message(STATUS "adding library ${GNU_stdfs}")
+  message(STATUS "adding C++ library flags ${GNU_stdfs}")
 endif()
 
 # --- compiler standard setting -- need if(NOT) in case CMAKE_CXX_STANDARD is set but blank.
 if(NOT CMAKE_CXX_STANDARD OR CMAKE_CXX_STANDARD LESS 17)
   set(CMAKE_CXX_STANDARD 17)
-endif()
-
-if(CMAKE_VERSION VERSION_LESS 3.25 AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  set(LINUX true)
 endif()
 
 if(ffilesystem_cpp)
