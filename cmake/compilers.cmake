@@ -20,7 +20,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_L
 elseif(LINUX AND CMAKE_CXX_COMPILER_ID MATCHES "^Intel$|IntelLLVM|NVHPC")
   # Intel, IntelLLVM and NVHPC on Linux use GNU libstdc++, so we need to extract the libstdc++ version
   try_run(ffilesystem_stdcpp_run_ok ffilesystem_stdcpp_build_ok
-    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}/libstdcpp_version
     SOURCES ${CMAKE_CURRENT_LIST_DIR}/libstdcpp_version.cpp
     RUN_OUTPUT_VARIABLE ffilesystem_stdcpp_version
   )

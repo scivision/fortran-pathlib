@@ -3,7 +3,8 @@
 Fortran filesystem modules contains numerous procedures and one (optional, default enabled) Fortran type "path_t" that contains properties and methods.
 
 C++ stdlib `<filesystem>` is used extensively within Ffilesystem to implement functions in a platform-agnostic and robust way.
-Fallback to C99 functions is available for compilers that do not support C++ [<filesystem>](https://en.cppreference.com/w/cpp/header/filesystem).
+Fallback to plain C++17 is available for compilers that do not support C++
+[<filesystem>](https://en.cppreference.com/w/cpp/header/filesystem).
 For the interchange of character strings between Fortran and C++ / C, the buffer length is determined at compile time and is available in `fs_get_max_path()` (C, C++) or `max_path()` (Fortran).
 
 ```fortran
