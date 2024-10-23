@@ -83,13 +83,7 @@ bool fs_equivalent(std::string_view path1, std::string_view path2)
     p2 = p2.lexically_normal();
   }
 
-  bool e = std::filesystem::equivalent(p1, p2, ec);
-  if(ec){
-    std::cerr << "ERROR:ffilesystem:equivalent(" << path1 << ", " << path2 << ") " << ec.message() << "\n";
-    e = false;
-  }
-
-  return e;
+  return std::filesystem::equivalent(p1, p2, ec) && !ec;
 #else
   struct stat s1;
   struct stat s2;
