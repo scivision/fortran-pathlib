@@ -97,10 +97,6 @@ void fs_print_error(const char* msg, const char* path){
   fs_print_error(std::string_view(msg), std::string_view(path));
 }
 
-bool fs_win32_create_symlink(const char* target, const char* link){
-  return fs_win32_create_symlink(std::string_view(target), std::string_view(link));
-}
-
 bool fs_copy_file(const char* source, const char* dest, bool overwrite){
   return fs_copy_file(std::string_view(source), std::string_view(dest), overwrite);
 }

@@ -69,7 +69,6 @@
 [[nodiscard]] std::string::size_type fs_str2char(std::string_view, char*, const std::string::size_type);
 
 void fs_print_error(std::string_view, std::string_view);
-bool fs_win32_create_symlink(std::string_view, std::string_view);
 
 
 [[nodiscard]] std::string fs_absolute(std::string_view, const bool);
@@ -320,8 +319,6 @@ size_t fs_lib_path(char*, const size_t);
 size_t fs_compiler(char*, const size_t);
 size_t fs_get_shell(char*, const size_t);
 size_t fs_get_terminal(char*, const size_t);
-
-bool fs_win32_create_symlink(const char*, const char*);
 
 size_t fs_mkdtemp(const char*, char*, const size_t);
 

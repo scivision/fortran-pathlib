@@ -40,24 +40,6 @@ void fs_print_error(std::string_view path, std::string_view fname)
 }
 
 
-bool fs_win32_create_symlink(std::string_view target, std::string_view link)
-{
-
-#if defined(_WIN32) || defined(__CYGWIN__)
-  DWORD p = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
-
-  if(fs_is_dir(target.data()))
-    p |= SYMBOLIC_LINK_FLAG_DIRECTORY;
-
-  if(CreateSymbolicLinkA(link.data(), target.data(), p))
-    return true;
-#endif
-
-  fs_print_error(std::string(target) + " => " + std::string(link), "create_symlink");
-  return false;
-}
-
-
 std::string fs_longname(std::string_view in)
 {
 // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlongpathnamea

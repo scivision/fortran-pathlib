@@ -72,12 +72,14 @@ std::string fs_read_symlink(std::string_view path)
 
 bool fs_create_symlink(std::string_view target, std::string_view link)
 {
+
   if(target.empty()) FFS_UNLIKELY
   {
     std::cerr << "ERROR: create_symlink: target path must not be empty\n";
     // confusing program errors if target is "" -- we'd never make such a symlink in real use.
     return false;
   }
+
   if(link.empty()) FFS_UNLIKELY
   {
     std::cerr << "ERROR: create_symlink: link path must not be empty\n";
@@ -86,8 +88,17 @@ bool fs_create_symlink(std::string_view target, std::string_view link)
   }
 
 #if defined(_WIN32)
-  return fs_win32_create_symlink(target, link);
+
+  DWORD p = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
+
+  if(fs_is_dir(target.data()))
+    p |= SYMBOLIC_LINK_FLAG_DIRECTORY;
+
+  if(CreateSymbolicLinkA(link.data(), target.data(), p))  FFS_LIKELY
+    return true;
+
 #elif defined(HAVE_CXX_FILESYSTEM)
+
   std::error_code ec;
 
   fs_is_dir(target)
@@ -98,13 +109,21 @@ bool fs_create_symlink(std::string_view target, std::string_view link)
     std::cerr << "ERROR:ffilesystem:create_symlink: " << ec.message() << "\n";
 
   return !ec;
+
 #else
+
     // necessary to avoid logic problems on macOS
-  if(!fs_exists(target)) {
+  if(!fs_exists(target)) {  FFS_UNLIKELY
     std::cerr << "ERROR:filesystem:create_symlink: target " << target << "does not exist\n";
     return false;
   }
 
-  return symlink(target.data(), link.data()) == 0;
+  // https://linux.die.net/man/3/symlink
+  if(symlink(target.data(), link.data()) == 0)  FFS_LIKELY
+    return true;
+
 #endif
+
+  fs_print_error(std::string(target) + " => " + std::string(link), "create_symlink");
+  return false;
 }
