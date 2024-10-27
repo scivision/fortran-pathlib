@@ -9,7 +9,7 @@
 int check(std::string_view in, std::string_view ref){
   std::string r = fs_file_name(in);
   if (r != ref) {
-    std::cerr << "FAIL: filename(" << in << ") " << r << std::endl;
+    std::cerr << "FAIL: filename(" << in << ") " << r << "\n";
     return 1;
   }
   return 0;
@@ -35,10 +35,10 @@ int main() {
   }
 
   if (i != 0) {
-    std::cerr << "FAIL: file_name()" << std::endl;
+    std::cerr << "FAIL: file_name()\n";
     return EXIT_FAILURE;
   }
 
-  std::cout << "PASS: filename()" << std::endl;
+  std::cout << "PASS: filename()\n";
   return EXIT_SUCCESS;
 }

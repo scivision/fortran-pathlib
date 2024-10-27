@@ -24,6 +24,6 @@ return v;
 }
 
 int main(){
-    std::cout << get_libc_version() << std::endl;
+    std::cout << get_libc_version() << "\n";
     return 0;
 }

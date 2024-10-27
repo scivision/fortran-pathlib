@@ -9,6 +9,8 @@
 
 int main() {
 
+int fail = 0;
+
 std::vector<std::tuple<std::string_view, std::string_view, std::string_view>> tests;
 
 if(fs_is_windows()){
@@ -46,11 +48,16 @@ tests = {
 for (const auto& [a, b, expected] : tests) {
     std::string result = fs_relative_to(a, b);
     if (result != expected) {
-        std::cerr << "FAILED: relative_to(" << a << ", " << b << ") -> "  << result  << " (expected: "  << expected << ")\n";
-        return EXIT_FAILURE;
+        fail++;
+        std::cerr << "FAIL: relative_to(" << a << ", " << b << ") -> "  << result  << " (expected: "  << expected << ")\n";
     }
 }
 
-  std::cout << "OK: relative" << std::endl;
+if(fail){
+    std::cerr << "FAIL: relative " << fail << " tests failed\n";
+    return EXIT_FAILURE;
+}
+
+  std::cout << "OK: relative\n";
   return EXIT_SUCCESS;
 }

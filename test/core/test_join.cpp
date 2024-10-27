@@ -32,6 +32,6 @@ int main() {
         }
     }
 
-  std::cout << "OK: join" << std::endl;
+  std::cout << "OK: join\n";
   return EXIT_SUCCESS;
 }
