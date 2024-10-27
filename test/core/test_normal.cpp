@@ -62,6 +62,9 @@ if(fs_is_windows()){
     test_cases.emplace_back("a/b/..\\//..///\\/../c\\\\/", "../c");
     test_cases.emplace_back("..a/b/..\\//..///\\/../c\\\\/", "../c");
     test_cases.emplace_back("..\\" , "..");
+    test_cases.emplace_back("c:\\", "c:/");
+    test_cases.emplace_back("c:\\\\", "c:/");
+    test_cases.emplace_back("c:\\\\a/b/../", "c:/a");
 }
 
     for (const auto& [input, expected] : test_cases) {

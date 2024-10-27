@@ -43,17 +43,18 @@ std::string fs_normal(std::string_view path)
 
   // rebuild path
    if (path[0] == '/' || (fs_is_windows() && path[0] == '\\'))
-    r = "/";
+     r = "/";
 
-  for (const auto& part : new_parts){
+  for (const auto& part : new_parts)
     r += part + "/";
-  }
 
 #endif
 
   // no trailing slash
-  if(r.length() > 1 && r.back() == '/')
-    r.pop_back();
+  if(r.length() > 1 && r.back() == '/'){
+    if(!fs_is_windows() || r != fs_root(r))
+      r.pop_back();
+  }
 
   if(r.empty())
     r = ".";
