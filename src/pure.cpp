@@ -72,13 +72,12 @@ std::string fs_file_name(std::string_view path)
 #ifdef HAVE_CXX_FILESYSTEM
   return std::filesystem::path(path).filename().generic_string();
 #else
-  std::string r = fs_as_posix(path);
 
-  if (auto pos = r.find_last_of('/');
-        pos != std::string::npos)
-    return std::string(r.substr(pos + 1));
+  const auto i = path.find_last_of(fs_is_windows() ? "/\\" : "/");
 
-  return r;
+  return (i != std::string::npos)
+    ? std::string(path.substr(i + 1))
+    : std::string(path);
 #endif
 }
 
