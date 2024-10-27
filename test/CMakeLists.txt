@@ -28,7 +28,7 @@ if(LINUX)
   check_include_file("linux/magic.h" ffilesystem_HAVE_LINUX_MAGIC)
 endif()
 
-if(UNIX)
+if(NOT WIN32 AND NOT HAVE_CXX_FILESYSTEM)
   check_include_file("sys/statvfs.h" ffilesystem_HAVE_SYS_STATVFS)
 endif()
 

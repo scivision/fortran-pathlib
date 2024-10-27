@@ -99,6 +99,6 @@ foreach(t IN ITEMS canonical expanduser core
   )
 endforeach()
 
-if(NOT HAVE_CXX_FILESYSTEM)
+if(NOT WIN32 AND NOT HAVE_CXX_FILESYSTEM)
   set_tests_properties(Cpp_filesize PROPERTIES DISABLED $<NOT:$<BOOL:${ffilesystem_HAVE_SYS_STATVFS}>>)
 endif()
