@@ -14,16 +14,6 @@ if(c23_has_c_attribute)
   #endif"
   c23_maybe_unused)
 
-  if(ffilesystem_trace)
-
-  check_source_compiles(C
-  "#if !__has_c_attribute(nodiscard)
-  #error \"no nodiscard\"
-  #endif"
-  c23_nodiscard)
-
-  endif()
-
   # [[reproducible]] [[unsequenced]] support by compilers:
   # https://en.cppreference.com/w/c/compiler_support/23
 
