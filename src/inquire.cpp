@@ -305,28 +305,34 @@ std::string fs_get_permissions(std::string_view path)
   const int m = fs_st_mode(path);
   if(m == 0) FFS_UNLIKELY
     return {};
-  r[0] = (m & _S_IREAD) ? 'r' : '-';
-  r[1] = (m & _S_IWRITE) ? 'w' : '-';
-  r[2] = (m & _S_IEXEC) ? 'x' : '-';
-  r[3] = (m & _S_IREAD) ? 'r' : '-';
-  r[4] = (m & _S_IWRITE) ? 'w' : '-';
-  r[5] = (m & _S_IEXEC) ? 'x' : '-';
-  r[6] = (m & _S_IREAD) ? 'r' : '-';
-  r[7] = (m & _S_IWRITE) ? 'w' : '-';
-  r[8] = (m & _S_IEXEC) ? 'x' : '-';
+  if (m & _S_IREAD)
+    r[0] = 'r';
+  if (m & _S_IWRITE)
+    r[1] = 'w';
+  if (m & _S_IEXEC)
+    r[2] = 'x';
 #else
   const mode_t m = fs_st_mode(path);
   if(m == 0) FFS_UNLIKELY
     return {};
-  r[0] = (m & S_IRUSR) ? 'r' : '-';
-  r[1] = (m & S_IWUSR) ? 'w' : '-';
-  r[2] = (m & S_IXUSR) ? 'x' : '-';
-  r[3] = (m & S_IRGRP) ? 'r' : '-';
-  r[4] = (m & S_IWGRP) ? 'w' : '-';
-  r[5] = (m & S_IXGRP) ? 'x' : '-';
-  r[6] = (m & S_IROTH) ? 'r' : '-';
-  r[7] = (m & S_IWOTH) ? 'w' : '-';
-  r[8] = (m & S_IXOTH) ? 'x' : '-';
+  if (m & S_IRUSR)
+    r[0] = 'r';
+  if (m & S_IWUSR)
+    r[1] = 'w';
+  if (m & S_IXUSR)
+    r[2] = 'x';
+  if (m & S_IRGRP)
+    r[3] = 'r';
+  if (m & S_IWGRP)
+    r[4] = 'w';
+  if (m & S_IXGRP)
+    r[5] = 'x';
+  if (m & S_IROTH)
+    r[6] = 'r';
+  if (m & S_IWOTH)
+    r[7] = 'w';
+  if (m & S_IXOTH)
+    r[8] = 'x';
 #endif
   return r;
 
