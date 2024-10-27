@@ -20,31 +20,29 @@ std::string fs_normal(std::string_view path)
     if (part.empty())
       continue;
 
-    if (part == "."){
-      if (new_parts.empty())
-        new_parts.push_back(part);
-
+    if (part == ".")
       continue;
-    }
 
     if (part == "..") {
-      if (new_parts.empty() || new_parts.back() == "..")
-        new_parts.push_back(part);
-      else
-        new_parts.pop_back();
+
+      if (new_parts.empty()){
+        if(path[0] != '/')
+            new_parts.push_back(part);
+      } else {
+        if (new_parts.back() == "..")
+          new_parts.push_back(part);
+        else
+          new_parts.pop_back();
+      }
 
       continue;
     }
-
-    if(new_parts.size() == 1 && new_parts[0] == ".")
-      new_parts.pop_back();
 
     new_parts.push_back(part);
   }
 
-  // rebuild path, without trailing slash
-  // preserve leading slash
-  if (path[0] == '/')
+  // rebuild path
+   if (path[0] == '/' || (fs_is_windows() && path[0] == '\\'))
     r = "/";
 
   for (const auto& part : new_parts){
@@ -53,6 +51,7 @@ std::string fs_normal(std::string_view path)
 
 #endif
 
+  // no trailing slash
   if(r.length() > 1 && r.back() == '/')
     r.pop_back();
 

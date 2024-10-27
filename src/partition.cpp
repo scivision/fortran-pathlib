@@ -86,7 +86,6 @@ bool fs_is_safe_name(std::string_view filename)
   // https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file
   // we do not consider whitespaces, quotes, or ticks safe, as they can be confusing in shell scripts and command line usage
 
-  // empty check for MSVC
   if(fs_is_windows() && !filename.empty() && filename.back() == '.') FFS_UNLIKELY
     return false;
 

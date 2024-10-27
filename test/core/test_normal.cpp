@@ -11,14 +11,18 @@ int main() {
 
     std::string p;
 
-    const std::vector<std::tuple<std::string_view, std::string_view>> test_cases = {
+    int fail = 0;
+
+    std::vector<std::tuple<std::string_view, std::string_view>> test_cases = {
         {"", "."},
         {"/", "/"},
         {"//", "/"},
+        {"/////", "/"},
         {".", "."},
         {"./", "."},
         {"./.", "."},
         {"..", ".."},
+        {"../", ".."},
         {"a/..", "."},
         {"../..", "../.."},
         {"/a", "/a"},
@@ -45,15 +49,32 @@ int main() {
         {"a/b/../../c/d", "c/d"},
         {"././a/./b/././c/./.", "a/b/c"},
         {"a/b/../../c/../..", ".."},
-        {"a/b/../../../c/../..", "../.."}
+        {"a/b/../../../c/../..", "../.."},
+        {"a/./b/..", "a"},
+        {"a/.///b/../", "a"},
+        {"/a/../..", "/"},
+        {"/a/../../../../", "/"}
     };
+// some tests from https://github.com/gulrak/filesystem/blob/b1982f06c84f08a99fb90bac43c2d03712efe921/test/filesystem_test.cpp#L950
+
+if(fs_is_windows()){
+    test_cases.emplace_back("\\/\\///\\/", "/");
+    test_cases.emplace_back("a/b/..\\//..///\\/../c\\\\/", "../c");
+    test_cases.emplace_back("..a/b/..\\//..///\\/../c\\\\/", "../c");
+    test_cases.emplace_back("..\\" , "..");
+}
 
     for (const auto& [input, expected] : test_cases) {
         p = fs_normal(input);
         if (p != expected) {
-            std::cerr << "normal(" << input << ") " << p << "\n";
-            return EXIT_FAILURE;
+            std::cerr << "FAIL: normal(" << input << ") " << p << " expected " << expected << "\n";
+            fail++;
         }
+    }
+
+    if (fail) {
+        std::cerr << "FAILED " << fail << " normal tests\n";
+        return EXIT_FAILURE;
     }
 
     std::cout << "OK: normal\n";
