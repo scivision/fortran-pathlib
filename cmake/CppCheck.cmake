@@ -2,6 +2,18 @@
 
 function(cpp_check)
 
+set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+
+# normally this check is not triggered, it's a safety belt and more detailed approaches
+# are possible for old compilers.
+# See: https://github.com/gulrak/filesystem/blob/b1982f06c84f08a99fb90bac43c2d03712efe921/include/ghc/filesystem.hpp#L215
+if(CMAKE_CXX_STANDARD LESS 17)
+  check_cxx_symbol_exists(__cpp_lib_string_view "string_view" cpp_string_view)
+  if(NOT cpp_string_view)
+    message(WARNING "C++ stdlib string_view not detected in libstdc++ ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION} CMAKE_CXX_STANDARD ${CMAKE_CXX_STANDARD}")
+  endif()
+endif()
+
 set(CMAKE_TRY_COMPILE_TARGET_TYPE EXECUTABLE)
 
 # some compilers claim to have filesystem, but their libstdc++ doesn't have it.
