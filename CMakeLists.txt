@@ -68,8 +68,8 @@ src/libpath.cpp src/limits.cpp src/locale.cpp
 src/mkdtemp.cpp src/mkdir.cpp
 src/normalize.cpp
 src/os.c src/owner.cpp
-src/partition.cpp src/platform.cpp src/pure.cpp
-src/realpath.cpp src/resolve.cpp
+src/parent.cpp src/partition.cpp src/platform.cpp src/pure.cpp
+src/realpath.cpp src/relative.cpp src/resolve.cpp
 src/space.cpp src/sysctl.cpp src/symlink.cpp
 src/touch.cpp src/time.cpp
 src/uid.cpp

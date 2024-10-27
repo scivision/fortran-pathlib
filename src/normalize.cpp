@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 
 std::string fs_normal(std::string_view path)
@@ -81,4 +82,31 @@ std::string fs_trim(std::string r)
     r.resize(i);
 
   return r;
+}
+
+
+std::vector<std::string> fs_split(std::string_view path)
+{
+  if(path.empty())
+    return {};
+  // break paths into components
+  std::vector<std::string> parts;
+  std::string p = fs_as_posix(path);
+
+  // no empty trailing part for trailing slash
+  if (p.back() == '/')
+    p.pop_back();
+
+  // split path, including last component
+  size_t start = 0;
+  size_t end;
+
+  do {
+    end = p.find_first_of('/', start);
+    if(FS_TRACE) std::cout << "TRACE: split " << start << " " << end << " " << path << " " << p.substr(start, end-start) << "\n";
+    parts.push_back(p.substr(start, end - start));
+    start = end + 1;
+  } while (end != std::string::npos);
+
+  return parts;
 }
