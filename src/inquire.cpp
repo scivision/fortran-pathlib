@@ -251,18 +251,16 @@ std::uintmax_t fs_hard_link_count(std::string_view path)
 
 std::string fs_get_permissions(std::string_view path)
 {
-  if (!fs_exists(path)) {
-    fs_print_error(path, "get_permissions: path does not exist");
-    return {};
-  }
 
   std::string r = "---------";
 
 #ifdef HAVE_CXX_FILESYSTEM
   std::error_code ec;
   const auto s = std::filesystem::status(path, ec);
-  if(ec) FFS_UNLIKELY
+  if(ec){ FFS_UNLIKELY
+    std::cerr << "ERROR:ffilesystem:get_permissions: " << ec.message() << "\n";
     return {};
+  }
 
   const std::filesystem::perms p = s.permissions();
 
@@ -305,6 +303,8 @@ std::string fs_get_permissions(std::string_view path)
 
 #ifdef _MSC_VER
   const int m = fs_st_mode(path);
+  if(m == 0) FFS_UNLIKELY
+    return {};
   r[0] = (m & _S_IREAD) ? 'r' : '-';
   r[1] = (m & _S_IWRITE) ? 'w' : '-';
   r[2] = (m & _S_IEXEC) ? 'x' : '-';
@@ -316,6 +316,8 @@ std::string fs_get_permissions(std::string_view path)
   r[8] = (m & _S_IEXEC) ? 'x' : '-';
 #else
   const mode_t m = fs_st_mode(path);
+  if(m == 0) FFS_UNLIKELY
+    return {};
   r[0] = (m & S_IRUSR) ? 'r' : '-';
   r[1] = (m & S_IWUSR) ? 'w' : '-';
   r[2] = (m & S_IXUSR) ? 'x' : '-';
