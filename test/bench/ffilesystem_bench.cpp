@@ -14,7 +14,7 @@
 void print_cpp(std::chrono::duration<double> t, int n, std::string_view path, std::string_view func, std::string_view w, bool b)
 {
   std::chrono::nanoseconds ns = std::chrono::duration_cast<std::chrono::nanoseconds>(t);
-  double us = ns.count() / 1000.0;
+  double us = static_cast<double>(ns.count()) / 1000.0;
   std::cout << "Cpp: " << n << " x " << func << "(" << path << ") = ";
   if(w.empty())
     std::cout << b;
@@ -46,6 +46,8 @@ else if (fname == "resolve")
   h = fs_resolve(path, strict, expand_tilde);
 else if (fname == "parent")
   h = fs_parent(path);
+else if (fname == "file_name")
+  h = fs_file_name(path);
 else if (fname == "suffix")
   h = fs_suffix(path);
 else if (fname == "normal")
@@ -97,6 +99,8 @@ for (int i = 0; i < n; ++i)
     h = fs_resolve(path, strict, expand_tilde);
   else if (fname == "parent")
     h = fs_parent(path);
+  else if (fname == "file_name")
+    h = fs_file_name(path);
   else if (fname == "suffix")
     h = fs_suffix(path);
   else if (fname == "normal")
@@ -159,11 +163,11 @@ std::set<std::string_view, std::less<>> funcs;
 if(argc > 3)
   funcs = {argv[3]};
 else
-  funcs = {"canonical", "resolve", "which", "expanduser", "normal", "cwd", "homedir", "parent", "is_reserved"};
+  funcs = {"canonical", "resolve", "which", "expanduser", "normal", "cwd", "homedir", "parent", "file_name", "is_reserved"};
 
 for (std::string_view func : funcs)
   {
-  std::set <std::string_view, std::less<>> tildef = {"canonical", "resolve", "normal", "expanduser", "parent"};
+  std::set <std::string_view, std::less<>> tildef = {"canonical", "resolve", "normal", "expanduser", "parent", "file_name"};
 
   if (argc > 2)
     path = argv[2];
