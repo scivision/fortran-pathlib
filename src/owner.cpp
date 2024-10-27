@@ -26,6 +26,7 @@ std::string fs_get_owner_name(std::string_view path)
   PSID pOwnerSid = nullptr;
   SID_NAME_USE eUse = SidTypeUnknown;
 
+  // https://learn.microsoft.com/en-us/windows/win32/api/aclapi/nf-aclapi-getnamedsecurityinfoa
   DWORD dwResult = GetNamedSecurityInfoA(path.data(), SE_FILE_OBJECT, OWNER_SECURITY_INFORMATION, &pOwnerSid, nullptr, nullptr, nullptr, &pSD);
   if (dwResult != ERROR_SUCCESS) {
     fs_print_error(path, "owner:GetNamedSecurityInfo: failed to get security info");
@@ -44,21 +45,14 @@ std::string fs_get_owner_name(std::string_view path)
     }
   }
 
-  const auto OwnerName = (LPTSTR)GlobalAlloc(GMEM_FIXED, Lowner*sizeof(TCHAR));
-  if (!OwnerName) {
-    fs_print_error(path, "owner:GlobalAlloc: failed to allocate memory");
-    return {};
-  }
-
-  if (!LookupAccountSidA(nullptr, pOwnerSid, OwnerName, &Lowner, nullptr, &Ldomain, &eUse)) {
-    fs_print_error(path, "owner:LookupAccountSid: get owner name failed");
-    GlobalFree(OwnerName);
-    return {};
-  }
-
-  std::string owner(OwnerName);
+  std::string owner(Lowner, '\0');
+  const auto r = LookupAccountSidA(nullptr, pOwnerSid, owner.data(), &Lowner, nullptr, &Ldomain, &eUse);
   LocalFree(pSD);
-  GlobalFree(OwnerName);
+  if (!r) {
+    fs_print_error(path, "owner:LookupAccountSid: get owner name failed");
+    return {};
+  }
+  owner.resize(Lowner);
   return owner;
 
 #else
