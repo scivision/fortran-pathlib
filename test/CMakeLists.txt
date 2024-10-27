@@ -1,13 +1,21 @@
 include(CheckIncludeFile)
 
-if(HAVE_Fortran_FILESYSTEM AND ffilesystem_cli)
+if(HAVE_CXX_FILESYSTEM)
+  set(_regex "Ffs> <filesystem>")
+else()
+  set(_regex "Ffs> C")
+endif()
+
+if(TARGET filesystem_cli)
 
 add_test(NAME Fortran_CLI_Cpp
 COMMAND ${CMAKE_COMMAND} -Dexe=$<TARGET_FILE:filesystem_cli>
-"-Dregex=^Ffs\> T"
 -P ${CMAKE_CURRENT_SOURCE_DIR}/stdin.cmake
 )
-set_tests_properties(Fortran_CLI_Cpp PROPERTIES LABELS "Fortran")
+set_tests_properties(Fortran_CLI_Cpp PROPERTIES
+LABELS "Fortran"
+PASS_REGULAR_EXPRESSION ${_regex}
+)
 
 endif()
 
@@ -16,10 +24,12 @@ if(TARGET fs_cli)
   add_test(NAME Cpp_CLI_Cpp
   COMMAND ${CMAKE_COMMAND}
   -Dexe=$<TARGET_FILE:fs_cli>
-  "-Dregex=^Ffs\> 1"
   -P ${CMAKE_CURRENT_SOURCE_DIR}/stdin.cmake
   )
-  set_tests_properties(Cpp_CLI_Cpp PROPERTIES LABELS "Cpp")
+  set_tests_properties(Cpp_CLI_Cpp PROPERTIES
+  LABELS "Cpp"
+  PASS_REGULAR_EXPRESSION ${_regex}
+  )
 
 endif()
 

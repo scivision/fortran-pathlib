@@ -1,3 +1,9 @@
+#ifdef _MSC_VER
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+#endif
+
 #include <iostream>
 #include <cstdlib>
 #include <string>
@@ -30,7 +36,6 @@ static void no_arg(std::string_view fun){
 
   std::map<std::string_view, std::function<bool()>> mbool =
   {
-    {"cpp", fs_cpp},
     {"optimized", fs_is_optimized},
     {"is_admin", fs_is_admin},
     {"is_bsd", fs_is_bsd},
@@ -44,7 +49,9 @@ static void no_arg(std::string_view fun){
   };
 
 
-  if (fun == "is_wsl")
+  if (fun == "backend")
+    std::cout << fs_backend() << "\n";
+  else if (fun == "is_wsl")
     std::cout << fs_is_wsl() << "\n";
   else if (fun == "pid")
     std::cout << fs_getpid() << "\n";

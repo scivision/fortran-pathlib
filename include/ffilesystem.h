@@ -115,6 +115,8 @@ std::string fs_get_profile_dir();
 std::string fs_user_config_dir();
 std::string fs_get_username();
 
+std::string fs_backend();
+
 std::string fs_expanduser(std::string_view);
 
 std::string fs_file_name(std::string_view);
@@ -203,8 +205,6 @@ size_t fs_strncpy(const char*, char*, const size_t);
 #  define __has_c_attribute(x)  0
 #endif
 
-
-bool fs_cpp();
 long fs_lang();
 
 size_t fs_get_max_path();
@@ -306,6 +306,8 @@ size_t fs_expanduser(const char*, char*, const size_t);
 
 uintmax_t fs_file_size(const char*);
 uintmax_t fs_space_available(const char*);
+
+size_t fs_backend(char*, const size_t);
 
 size_t fs_exe_path(char*, const size_t);
 size_t fs_lib_path(char*, const size_t);

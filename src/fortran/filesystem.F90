@@ -24,7 +24,7 @@ assert_is_file, assert_is_dir, &
 touch, get_modtime, set_modtime, &
 remove, get_tempdir, &
 set_permissions, get_permissions, &
-fs_cpp, fs_lang, fs_is_optimized, pathsep, is_safe_name, &
+backend, fs_lang, fs_is_optimized, pathsep, is_safe_name, &
 is_admin, is_bsd, is_macos, is_rosetta, is_windows, is_cygwin, is_wsl, is_mingw, is_linux, is_unix, &
 max_path, max_component, &
 exe_path, lib_path, compiler, compiler_c, get_shell, get_terminal, &
@@ -40,11 +40,6 @@ end interface
 
 
 interface
-
-logical(C_BOOL) function fs_cpp() bind(C)
-!! ffilesystem is using C++ backend?
-import C_BOOL
-end function
 
 logical(C_BOOL) function fs_is_optimized() bind(C)
 !! ffilesystem is optimized for speed?
@@ -483,6 +478,12 @@ integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
 
 integer(C_SIZE_T) function fs_exe_path(path, buffer_size) bind(C)
+import
+character(kind=C_CHAR), intent(out) :: path(*)
+integer(C_SIZE_T), intent(in), value :: buffer_size
+end function
+
+integer(C_SIZE_T) function fs_backend(path, buffer_size) bind(C)
 import
 character(kind=C_CHAR), intent(out) :: path(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
@@ -1080,6 +1081,14 @@ end if
 allocate(character(L) :: r)
 call get_environment_variable(name, value=r)
 
+end function
+
+
+function backend() result(r)
+!! Ffilesystem backend
+include "ifc0a.inc"
+N = fs_backend(cbuf, N)
+include "ifc0b.inc"
 end function
 
 

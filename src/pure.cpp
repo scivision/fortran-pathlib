@@ -1,3 +1,9 @@
+#ifdef _MSC_VER
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+#endif
+
 #include <string>
 #include <cstring>
 #include <iostream>
@@ -5,11 +11,17 @@
 #include "ffilesystem.h"
 
 
-// tell if Ffilesystem core is C or C++
-bool fs_cpp(){ return true; }
-
 // C++ version compiler claims to support with given options
 long fs_lang(){ return __cplusplus; }
+
+
+std::string fs_backend(){
+#ifdef HAVE_CXX_FILESYSTEM
+  return "<filesystem>";
+#else
+  return "C";
+#endif
+}
 
 
 char fs_pathsep(){

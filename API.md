@@ -104,10 +104,10 @@ avg = loadavg()
 
 ---
 
-Logical: ffilesystem is using C++ backend
+character: Ffilesystem backend (e.g. <filesystem> or C)
 
 ```fortran
-fs_cpp()
+fs_backend()
 ```
 
 ---
