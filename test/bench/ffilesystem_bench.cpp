@@ -15,7 +15,7 @@ void print_cpp(std::chrono::duration<double> t, int n, std::string_view path, st
 {
   std::chrono::nanoseconds ns = std::chrono::duration_cast<std::chrono::nanoseconds>(t);
   double us = static_cast<double>(ns.count()) / 1000.0;
-  std::cout << "Cpp: " << n << " x " << func << "(" << path << ") = ";
+  std::cout << fs_backend() << ": " << n << " x " << func << "(" << path << ") = ";
   if(w.empty())
     std::cout << b;
   else
