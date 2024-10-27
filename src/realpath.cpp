@@ -19,6 +19,7 @@ std::string fs_realpath(std::string_view path)
 
 #ifdef _WIN32
 // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfullpathnameA
+// GetFinalPathNameByHandle or GetFullPathName returns the unresolved symlink
   const DWORD L = GetFullPathNameA(path.data(), 0, nullptr, nullptr);
   if(L == 0){  FFS_UNLIKELY
     fs_print_error(path, "realpath:GetFullPathName");
