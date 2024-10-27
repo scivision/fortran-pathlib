@@ -52,6 +52,7 @@ std::string fs_read_symlink(std::string_view path)
 #elif defined(_WIN32)
   // does not work for MinGW, oneAPI Windows, ...
   // fs_canonical(path, false, result, buffer_size) just returns the unresolved symlink as in C++
+  // GetFinalPathNameByHandle also returns the unresolved symlink
   std::cerr << "ERROR:Ffilesystem:read_symlink: not implemented for non-C++: " << path << "\n";
   return {};
 #else

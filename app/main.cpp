@@ -174,7 +174,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << fs_is_writable(a1) << "\n";
   else if (fun == "perm")
     std::cout << fs_get_permissions(a1) << "\n";
-  else if (fun == "read_symlnk")
+  else if (fun == "read_symlink")
     std::cout << fs_read_symlink(a1) << "\n";
   else if (fun == "stem")
     std::cout << fs_stem(a1) << "\n";
