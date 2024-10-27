@@ -236,14 +236,22 @@ std::vector<std::string> fs_split(std::string_view path)
   // break paths into components
   std::vector<std::string> parts;
   std::string p = fs_as_posix(path);
+
+  // no empty trailing part for trailing slash
+  if (p.back() == '/')
+    p.pop_back();
+
   // split path, including last component
   size_t start = 0;
   size_t end;
+
   do {
     end = p.find_first_of('/', start);
+    if(FS_TRACE) std::cout << "TRACE: split " << start << " " << end << " " << path << " " << p.substr(start, end-start) << "\n";
     parts.push_back(p.substr(start, end - start));
     start = end + 1;
   } while (end != std::string::npos);
+
   return parts;
 }
 
@@ -274,10 +282,13 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
   const std::string::size_type Lo = other_parts.size();
 
   // find common prefix, returning empty if no common prefix
+  if(FS_TRACE) std::cout << "TRACE:relative_to: " << b << " " << Lb << " " << o << " " << Lo << "\n";
   size_t i = 0;
-  for (; i < Lb && i < Lo; i++)
+  for (; i < Lb && i < Lo; i++){
+    if(FS_TRACE) std::cout << "TRACE:relative_to: " << parts[i] << " " << other_parts[i] << "\n";
     if (parts[i] != other_parts[i])
       break;
+  }
 
   if (i == 0 && parts[0] != other_parts[0])
     return {};
