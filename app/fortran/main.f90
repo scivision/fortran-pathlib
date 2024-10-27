@@ -124,6 +124,8 @@ main : do
   select case (cmd)
   case ("max_component")
     print '(i0)', max_component(arg1)
+  case ("hard")
+    print '(i0)', hard_link_count(arg1)
   case ("as_posix")
     print '(a)', as_posix(arg1)
   case ('modtime')

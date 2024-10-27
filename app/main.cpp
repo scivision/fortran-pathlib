@@ -123,6 +123,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << fs_resolve(a1, true, false) << "\n";
   else if (fun == "weakly_resolve")
     std::cout << fs_resolve(a1, false, false) << "\n";
+  else if (fun == "hard")
+    std::cout << fs_hard_link_count(a1) << "\n";
   else if (fun == "parts"){
     for (const auto &p : fs_split(a1))
       std::cout << p << "\n";

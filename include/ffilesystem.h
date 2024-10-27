@@ -161,6 +161,7 @@ bool fs_is_char_device(std::string_view);
 bool fs_is_dir(std::string_view);
 
 std::uintmax_t fs_file_size(std::string_view);
+std::uintmax_t fs_hard_link_count(std::string_view);
 
 bool fs_remove(std::string_view);
 
@@ -306,6 +307,7 @@ size_t fs_expanduser(const char*, char*, const size_t);
 
 uintmax_t fs_file_size(const char*);
 uintmax_t fs_space_available(const char*);
+uintmax_t fs_hard_link_count(const char*);
 
 size_t fs_backend(char*, const size_t);
 

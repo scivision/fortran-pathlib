@@ -17,6 +17,7 @@ exists, loadavg, &
 join, &
 copy_file, mkdir, &
 relative_to, proximate_to, &
+hard_link_count, &
 root, same_file, file_size, space_available, &
 file_name, parent, stem, suffix, with_suffix, &
 absolute, &
@@ -242,6 +243,11 @@ character(kind=C_CHAR), intent(in) :: filename(*)
 end function
 
 integer(C_SIZE_T) function fs_file_size(path) bind(C)
+import
+character(kind=C_CHAR), intent(in) :: path(*)
+end function
+
+integer(C_SIZE_T) function fs_hard_link_count(path) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: path(*)
 end function
@@ -742,11 +748,19 @@ is_safe_name = fs_is_safe_name(trim(filename) // C_NULL_CHAR)
 end function
 
 
-integer(int64) function file_size(path)
+integer(int64) function file_size(path) result(r)
 !! size of file (bytes)
 character(*), intent(in) :: path
 
-file_size = fs_file_size(trim(path) // C_NULL_CHAR)
+r = fs_file_size(trim(path) // C_NULL_CHAR)
+end function
+
+
+integer(int64) function hard_link_count(path) result(r)
+!! size of file (bytes)
+character(*), intent(in) :: path
+
+r = fs_hard_link_count(trim(path) // C_NULL_CHAR)
 end function
 
 

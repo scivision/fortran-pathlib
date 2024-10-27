@@ -327,7 +327,7 @@ p = p%join("c/d")
 
 ## integer(int64)
 
-These procedures emit an 64-bit integer value.
+These procedures emit a 64-bit integer value.
 
 len_trim() of p%path()
 
@@ -349,6 +349,12 @@ Space available on drive containing path (bytes):
 p%space_available()
 ! or
 space_available("my/file.txt")
+```
+
+Hard link count of file or directory:
+
+```fortran
+hard_link_count("my/file.txt")
 ```
 
 ## logical
