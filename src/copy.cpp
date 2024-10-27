@@ -23,7 +23,7 @@
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#elif defined(__APPLE__) && defined(__MACH__)
+#elif defined(FFS_MACOS)
 #include <copyfile.h>
 #elif defined(__linux__) || defined(BSD)
 #include <sys/types.h>
@@ -60,7 +60,7 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
       std::cerr << "ERROR:ffilesystem:copy_file: could not copy file " << source << " => " << dest << "\n";
       return false;
     }
-#elif defined(__APPLE__) && defined(__MACH__)
+#elif defined(FFS_MACOS)
   /* copy-on-write file
   * based on kwSys:SystemTools:CloneFileContent
   * https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/copyfile.3.html
