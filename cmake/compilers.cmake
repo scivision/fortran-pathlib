@@ -75,7 +75,7 @@ if(HAVE_CXX_FILESYSTEM)
 include(${CMAKE_CURRENT_LIST_DIR}/FScheck.cmake)
 fs_check()
 
-else()
+elseif(UNIX AND NOT APPLE)
 
   set(CMAKE_REQUIRED_DEFINITIONS -D_GNU_SOURCE)
   check_symbol_exists(copy_file_range "unistd.h" ffilesystem_HAVE_COPY_FILE_RANGE)
