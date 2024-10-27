@@ -12,6 +12,11 @@ std::string fs_normal(std::string_view path)
 #ifdef HAVE_CXX_FILESYSTEM
   r = std::filesystem::path(path).lexically_normal().generic_string();
 #else
+  // leave the empty short-circuit to avoid needless computation
+  // and avoid indexing into an empty string
+  if (path.empty())
+    return ".";
+
   const std::vector<std::string> parts = fs_split(path);
 
   std::vector<std::string> new_parts;
