@@ -29,10 +29,6 @@ std::string fs_parent(std::string_view path)
 
   std::vector<std::string> parts = fs_split(path);
 
-  // drop empty last parts
-  while(parts.size() > 1 && parts.back().empty())
-    parts.pop_back();
-
   if(parts.empty())
     return ".";
 

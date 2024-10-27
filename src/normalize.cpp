@@ -89,7 +89,8 @@ std::vector<std::string> fs_split(std::string_view path)
 {
   if(path.empty())
     return {};
-  // break paths into components
+
+  // break paths into non-empty components
   std::vector<std::string> parts;
   std::string p = fs_as_posix(path);
 
@@ -98,13 +99,15 @@ std::vector<std::string> fs_split(std::string_view path)
     p.pop_back();
 
   // split path, including last component
-  size_t start = 0;
-  size_t end;
+  std::string::size_type start = 0;
+  std::string::size_type end;
 
   do {
     end = p.find_first_of('/', start);
     if(FS_TRACE) std::cout << "TRACE: split " << start << " " << end << " " << path << " " << p.substr(start, end-start) << "\n";
-    parts.push_back(p.substr(start, end - start));
+    // do not add empty parts
+    if (end != start)
+      parts.push_back(p.substr(start, end - start));
     start = end + 1;
   } while (end != std::string::npos);
 
