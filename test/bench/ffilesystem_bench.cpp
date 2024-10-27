@@ -167,7 +167,7 @@ else
 
 for (std::string_view func : funcs)
   {
-  std::set <std::string_view, std::less<>> tildef = {"canonical", "resolve", "normal", "expanduser", "parent", "file_name"};
+  const std::set <std::string_view, std::less<>> tildef = {"canonical", "resolve", "normal", "expanduser", "parent", "file_name"};
 
   if (argc > 2)
     path = argv[2];

@@ -109,7 +109,7 @@ std::string fs_expanduser(std::string_view path)
   if(path.front() != '~')
     return std::string(path);
 
-  std::set <char> filesep = {'/', fs_is_windows() ? '\\' : '/'};
+  const std::set <char> filesep = {'/', fs_is_windows() ? '\\' : '/'};
 
   if(path.length() > 1 &&
      // second character is not a file separator
