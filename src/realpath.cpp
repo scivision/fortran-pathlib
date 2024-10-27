@@ -13,17 +13,6 @@
 #include <string>
 
 
-std::string fs_trim(std::string r)
-{
-  // trim trailing nulls
-  if(const auto i = r.find('\0');
-      i != std::string::npos)
-    r.resize(i);
-
-  return r;
-}
-
-
 std::string fs_realpath(std::string_view path)
 {
   // resolve real path, which need not exist

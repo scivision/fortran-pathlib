@@ -66,6 +66,7 @@ src/home.cpp
 src/inquire.cpp
 src/libpath.cpp src/limits.cpp src/locale.cpp
 src/mkdtemp.cpp src/mkdir.cpp
+src/normalize.cpp
 src/os.c src/owner.cpp
 src/partition.cpp src/platform.cpp src/pure.cpp
 src/realpath.cpp src/resolve.cpp

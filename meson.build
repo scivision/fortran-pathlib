@@ -45,6 +45,7 @@ comm_src = files(
 'src/locale.cpp',
 'src/mkdtemp.cpp',
 'src/mkdir.cpp',
+'src/normalize.cpp',
 'src/owner.cpp',
 'src/os.c',
 'src/partition.cpp',
