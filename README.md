@@ -9,7 +9,9 @@
 
 Platform independent (Linux, macOS, Windows, Cygwin, WSL, BSD, ...) Fortran filesystem "Ffilesystem" path manipulation library.
 Ffilesystem core functions are implemented in C++17 using `<string_view>`.
-If available, [C++ standard library filesystem](https://en.cppreference.com/w/cpp/filesystem) is used.
+If available,
+[C++ standard library filesystem](https://en.cppreference.com/w/cpp/filesystem)
+is used.
 The Fortran interface is also built by default, as the main purpose of this library is to bring full filesystem functionality to Fortran.
 However, the Fortran interface itself is optional.
 Ffilesystem header
@@ -24,8 +26,10 @@ The language standards required are at least:
 
 Ffilesystem uses
 [C++ stdlib filesystem](https://en.cppreference.com/w/cpp/filesystem)
+(or fallback code)
 and the
-[C standard library](https://en.wikipedia.org/wiki/C_standard_library) to access filesystem and system parameters.
+[C standard library](https://en.wikipedia.org/wiki/C_standard_library)
+to access filesystem and system parameters.
 
 Ffilesystem works with popular C standard library implementations including:
 [glibc](https://sourceware.org/glibc/),
@@ -60,8 +64,7 @@ Ffilesystem supports compilers including:
 * Cray: using Cray compilers alone (cc, CC, ftn) or using GCC or Intel backend
 
 The optional default C++ interface requires the compiler and C++ stdlib to support `<filesystem>`.
-The deprecated `<experimental/filesystem>` is NOT supported, because it is missing vital lexical operations fundamental to many filesystem operations.
-To use older compilers, disable C++ support:
+To help debug with older compilers, disable C++ `<filesystem>`:
 
 ```sh
 cmake -Bbuild -Dffilesystem_cpp=off
@@ -177,6 +180,7 @@ Other implementations of C++ filesystem include:
 
 * [Boost.Filesystem](https://www.boost.org/doc/libs/1_86_0/libs/filesystem/doc/index.htm) what the stdlib filesystem is based on, often tries newer features. [Boost.Filesystem source code](https://github.com/boostorg/filesystem)
 * [ghc-filesystem](https://github.com/gulrak/filesystem) for older compilers.
+* deprecated `<experimental/filesystem>` is missing vital lexical operations.
 
 ### Other Fortran filesystem libraries
 
