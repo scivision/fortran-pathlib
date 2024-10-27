@@ -45,14 +45,6 @@ Inspired by (and benchmarked against)
 Important Ffilesystem functions are [benchmarked](./test/bench/bench.md) to help improve performance.
 Advanced / conceptual development takes place in [ffilesystem-concepts](https://github.com/scivision/ffilesystem-concepts) repo.
 
-Like
-[Microsoft STL](https://github.com/microsoft/STL/issues/2256),
-our Ffilesystem is not designed for UNC paths.
-We recommend using a UNC path to a mapped drive letter.
-We have not fully tested Windows
-[long paths](https://github.com/microsoft/STL/issues/1921)
-and appreciate feedback.
-
 ## Compiler support
 
 Ffilesystem supports compilers including:
@@ -175,6 +167,19 @@ It provides the appropriate imported targets for shared or static builds, includ
 
 ## Notes
 
+Possible future enhancements:
+
+* use [statx](https://www.man7.org/linux/man-pages/man2/statx.2.html) if available to inquire if a file is encrypted or compressed, etc.
+
+### Other C++ filesystem libraries
+
+Other implementations of C++ filesystem include:
+
+* [Boost.Filesystem](https://www.boost.org/doc/libs/1_86_0/libs/filesystem/doc/index.htm) what the stdlib filesystem is based on, often tries newer features. [Boost.Filesystem source code](https://github.com/boostorg/filesystem)
+* [ghc-filesystem](https://github.com/gulrak/filesystem) for older compilers.
+
+### Other Fortran filesystem libraries
+
 Other Fortran libraries that provide interfaces to filesystems include the following.
 Generally they have noticeably fewer functions than Ffilesystem.
 They typically implement many functions in Fortran, where with Ffilesystem we implement in C++ or C++ `<filesystem>` if available.
@@ -204,6 +209,18 @@ Intel oneAPI does not support `selected_char_kind('ISO_10646')` as of this writi
 
 filesystem currently uses the default Fortran `character` kind, which is ASCII.
 This typically allows pass-through of UTF-8 characters, but this is not guaranteed.
+
+### Windows long paths
+
+Like
+[Microsoft STL](https://github.com/microsoft/STL/issues/2256),
+our Ffilesystem is not designed for UNC paths.
+We recommend using a UNC path to a mapped drive letter.
+We have not fully tested Windows
+[long paths](https://github.com/microsoft/STL/issues/1921)
+due to
+[limitations](https://www.boost.org/doc/libs/1_86_0/libs/filesystem/doc/reference.html#windows-path-prefixes)
+and appreciate feedback.
 
 ### C++ filesystem discussion
 

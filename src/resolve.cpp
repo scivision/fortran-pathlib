@@ -90,7 +90,7 @@ bool fs_equivalent(std::string_view path1, std::string_view path2)
 
   if(stat(path1.data(), &s1) != 0 || stat(path2.data(), &s2) != 0)
     return false;
-// https://www.boost.org/doc/libs/1_85_0/libs/filesystem/doc/reference.html#equivalent
+// https://www.boost.org/doc/libs/1_86_0/libs/filesystem/doc/reference.html#equivalent
   return s1.st_dev == s2.st_dev && s1.st_ino == s2.st_ino;
 #endif
 }
