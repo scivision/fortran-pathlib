@@ -146,7 +146,7 @@ bool fs_exists(std::string_view path);
 bool fs_is_file(std::string_view);
 
 bool fs_is_exe(std::string_view);
-
+bool fs_is_empty(std::string_view);
 bool fs_is_readable(std::string_view);
 bool fs_is_writable(std::string_view);
 
@@ -229,6 +229,8 @@ int fs_is_wsl();
 bool fs_is_mingw();
 bool fs_is_cygwin();
 bool fs_is_rosetta();
+
+bool fs_is_empty(const char*);
 
 bool fs_is_safe_name(const char*);
 

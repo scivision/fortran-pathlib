@@ -227,6 +227,10 @@ bool fs_is_absolute(const char* path)
   return fs_is_absolute(std::string_view(path));
 }
 
+bool fs_is_empty(const char* path){
+  return fs_is_empty(std::string_view(path));
+}
+
 std::uintmax_t fs_space_available(const char* path){
   return fs_space_available(std::string_view(path));
 }

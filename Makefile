@@ -69,6 +69,7 @@ COMM_SRCS = \
 	$(comdir)realpath.cpp \
 	$(comdir)relative.cpp \
 	$(comdir)resolve.cpp \
+	$(comdir)size.cpp \
 	$(comdir)space.cpp \
 	$(comdir)sysctl.cpp \
 	$(comdir)symlink.cpp \

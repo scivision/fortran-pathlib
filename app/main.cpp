@@ -83,6 +83,8 @@ static void no_arg(std::string_view fun){
     std::cout << fs_get_homedir() << "\n";
   else if (fun == "terminal")
     std::cout << fs_get_terminal() << "\n";
+  else if (fun == "tempdir")
+    std::cout << fs_get_tempdir() << "\n";
   else if (fun == "max_path")
     std::cout << fs_get_max_path() << "\n";
   else if (fun == "loadavg")
@@ -195,8 +197,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << fs_absolute(a1, true)<< "\n";
   else if (fun == "get_cwd")
     std::cout << fs_get_cwd() << "\n";
-  else if (fun == "tempdir")
-    std::cout << fs_get_tempdir() << "\n";
+  else if (fun == "is_empty")
+    std::cout << fs_is_empty(a1) << "\n";
   else if (fun == "modtime"){
 #if defined(HAVE_CXX_FILESYSTEM) && defined(__cpp_lib_format)
     const auto t = fs_get_modtime_fs(a1);

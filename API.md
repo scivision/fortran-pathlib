@@ -361,6 +361,13 @@ hard_link_count("my/file.txt")
 
 These methods emit a logical value.
 
+
+Is directory or file empty. False if path doesn't exist
+
+```fortran
+is_empty("my/dir")
+```
+
 Does directory exist:
 
 ```fortran

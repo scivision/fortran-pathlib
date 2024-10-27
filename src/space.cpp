@@ -28,7 +28,6 @@ std::uintmax_t fs_space_available(std::string_view path)
     return s.available;
 
   std::cerr << "ERROR:ffilesystem:space_available: " << ec.message() << "\n";
-  return {};
 
 #else
 
@@ -54,8 +53,7 @@ std::uintmax_t fs_space_available(std::string_view path)
 #else
   fs_print_error(path, "space_available: function not implemented on this platform");
 #endif
+#endif
 
   return {};
-
-#endif
 }

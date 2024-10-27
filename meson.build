@@ -55,6 +55,7 @@ comm_src = files(
 'src/realpath.cpp',
 'src/relative.cpp',
 'src/resolve.cpp',
+'src/size.cpp',
 'src/space.cpp',
 'src/sysctl.cpp',
 'src/symlink.cpp',

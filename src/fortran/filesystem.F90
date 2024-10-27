@@ -12,6 +12,7 @@ public :: get_homedir, get_profile_dir, user_config_dir, get_username, hostname,
  get_cwd, set_cwd, make_tempdir, which
 public :: normal, expanduser, as_posix, &
 is_absolute, is_char_device, is_dir, is_file, is_exe, is_subdir, is_readable, is_writable, is_reserved, &
+is_empty, &
 is_symlink, read_symlink, create_symlink, &
 exists, loadavg, &
 join, &
@@ -124,6 +125,11 @@ subroutine fs_as_posix(path) bind(C)
 import
 character(kind=C_CHAR), intent(inout) :: path(*)
 end subroutine
+
+logical(C_BOOL) function fs_is_empty(path) bind(C)
+import
+character(kind=C_CHAR), intent(in) :: path(*)
+end function
 
 integer(C_SIZE_T) function fs_canonical(path, strict, expand_tilde, result, buffer_size) bind(C)
 import
@@ -745,6 +751,14 @@ logical function is_safe_name(filename)
 character(*), intent(in) :: filename
 
 is_safe_name = fs_is_safe_name(trim(filename) // C_NULL_CHAR)
+end function
+
+
+logical function is_empty(path)
+!! is directory or file empty
+character(*), intent(in) :: path
+
+is_empty = fs_is_empty(trim(path) // C_NULL_CHAR)
 end function
 
 

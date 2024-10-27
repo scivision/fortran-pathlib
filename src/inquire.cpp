@@ -208,26 +208,6 @@ bool fs_is_writable(std::string_view path)
 }
 
 
-std::uintmax_t fs_file_size(std::string_view path)
-{
-#ifdef HAVE_CXX_FILESYSTEM
-  std::error_code ec;
-  if(auto s = std::filesystem::file_size(path, ec); !ec)  FFS_LIKELY
-    return s;
-
-  std::cerr << "ERROR:ffilesystem:file_size: " << ec.message() << "\n";
-  return {};
-#else
-  if (struct stat s;
-        !stat(path.data(), &s))
-    return s.st_size;
-
-  fs_print_error(path, "file_size");
-  return {};
-#endif
-}
-
-
 std::uintmax_t fs_hard_link_count(std::string_view path)
 {
 #ifdef HAVE_CXX_FILESYSTEM

@@ -71,7 +71,8 @@ src/normalize.cpp
 src/os.c src/owner.cpp
 src/parent.cpp src/partition.cpp src/platform.cpp src/pure.cpp
 src/realpath.cpp src/relative.cpp src/resolve.cpp
-src/space.cpp src/sysctl.cpp src/symlink.cpp
+src/size.cpp src/space.cpp
+src/sysctl.cpp src/symlink.cpp
 src/touch.cpp src/time.cpp
 src/uid.cpp
 src/uname.cpp
