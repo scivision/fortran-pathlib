@@ -10,7 +10,8 @@ LANGUAGES C CXX
 VERSION 6.0.0
 )
 
-include(CTest) # needed for "ctest -T memcheck"
+enable_testing()
+
 include(GNUInstallDirs)
 
 set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
