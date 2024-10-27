@@ -27,7 +27,9 @@ size_t fs_get_max_path(){
 #elif defined (_POSIX_PATH_MAX)
   m = _POSIX_PATH_MAX;
 #endif
-  return (m < 4096) ? m : 4096; // arbitrary absolute maximum
+  return (m < 4096) ? m : 4096;
+  // arbitrary absolute maximum
+  // Ref: https://github.com/gulrak/filesystem/blob/b1982f06c84f08a99fb90bac43c2d03712efe921/include/ghc/filesystem.hpp#L244
 
 }
 
