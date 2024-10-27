@@ -78,8 +78,42 @@ std::string fs_get_owner_name(std::string_view path)
 std::string fs_get_owner_group(std::string_view path)
 {
 #ifdef _WIN32
-  fs_print_error(path, "get_owner_group: not implemented for Windows");
-  return {};
+  // use GetNamedSecurityInfoA to get group name
+
+  DWORD Lgroup = 0;
+  DWORD Ldomain = 0;
+  PSECURITY_DESCRIPTOR pSD = nullptr;
+  PSID pGroupSid = nullptr;
+  SID_NAME_USE eUse = SidTypeUnknown;
+
+  // https://learn.microsoft.com/en-us/windows/win32/api/aclapi/nf-aclapi-getnamedsecurityinfoa
+  DWORD dwResult = GetNamedSecurityInfoA(path.data(), SE_FILE_OBJECT, GROUP_SECURITY_INFORMATION, nullptr, &pGroupSid, nullptr, nullptr, &pSD);
+  if (dwResult != ERROR_SUCCESS) {
+    fs_print_error(path, "get_owner_group:GetNamedSecurityInfo: failed to get security info");
+    return {};
+  }
+
+  // get buffer size
+  if (!LookupAccountSidA(nullptr, pGroupSid, nullptr, &Lgroup,
+                         nullptr, &Ldomain, &eUse))
+  {
+    if (GetLastError() != ERROR_INSUFFICIENT_BUFFER) {
+      fs_print_error(path, "get_owner_group:LookupAccountSid: get buffer size failed");
+      return {};
+    }
+  }
+
+
+  std::string group(Lgroup, '\0');
+  const auto r = LookupAccountSidA(nullptr, pGroupSid, group.data(), &Lgroup, nullptr, &Ldomain, &eUse);
+  LocalFree(pSD);
+  if (!r) {
+    fs_print_error(path, "get_owner_group:LookupAccountSid: get group name failed");
+    return {};
+  }
+  group.resize(Lgroup);
+  return group;
+
 #else
   struct stat s;
   if(stat(path.data(), &s)){
