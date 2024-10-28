@@ -5,7 +5,35 @@
 #include <iostream>
 
 
-std::string fs_normal(std::string_view path)
+std::vector<std::string>
+fs_normal_vector(std::string_view path)
+{
+  const std::vector<std::string> parts = fs_split(path);
+
+  std::vector<std::string> n;
+
+  // drop repeated slashes, "." and ".."
+  for (const auto& p : parts) {
+    if (p.empty() || p == ".")
+      continue;
+
+    if (p == "..") {
+      if (!n.empty() && n.back() != "..")
+        n.pop_back();
+      else if (path[0] != '/')
+        n.push_back(p);
+      continue;
+    }
+
+    n.push_back(p);
+  }
+
+  return n;
+}
+
+
+std::string
+fs_normal(std::string_view path)
 {
   // normalize path
    std::string r;
@@ -17,42 +45,14 @@ std::string fs_normal(std::string_view path)
   if (path.empty())
     return ".";
 
-  const std::vector<std::string> parts = fs_split(path);
-
-  std::vector<std::string> new_parts;
-
-  // drop repeated slashes, "." and ".."
-  for (const auto& part : parts) {
-    if (part.empty())
-      continue;
-
-    if (part == ".")
-      continue;
-
-    if (part == "..") {
-
-      if (new_parts.empty()){
-        if(path[0] != '/')
-            new_parts.push_back(part);
-      } else {
-        if (new_parts.back() == "..")
-          new_parts.push_back(part);
-        else
-          new_parts.pop_back();
-      }
-
-      continue;
-    }
-
-    new_parts.push_back(part);
-  }
+  const std::vector<std::string> parts = fs_normal_vector(path);
 
   // rebuild path
    if (path[0] == '/' || (fs_is_windows() && path[0] == '\\'))
      r = "/";
 
-  for (const auto& part : new_parts)
-    r += part + "/";
+  for (const auto& p : parts)
+    r += p + "/";
 
 #endif
 
@@ -69,7 +69,8 @@ std::string fs_normal(std::string_view path)
 }
 
 
-std::string fs_drop_slash(std::string_view sv)
+std::string
+fs_drop_slash(std::string_view sv)
 {
   // drop all trailing "/"
   std::string s(sv);
@@ -79,7 +80,8 @@ std::string fs_drop_slash(std::string_view sv)
 }
 
 
-std::string fs_trim(std::string r)
+std::string
+fs_trim(std::string r)
 {
   // trim trailing nulls
   if(const auto i = r.find('\0');
@@ -90,7 +92,8 @@ std::string fs_trim(std::string r)
 }
 
 
-std::vector<std::string> fs_split(std::string_view path)
+std::vector<std::string>
+fs_split(std::string_view path)
 {
   if(path.empty())
     return {};

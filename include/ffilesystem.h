@@ -63,6 +63,7 @@ std::string fs_proximate_to(std::string_view, std::string_view);
 bool fs_is_subdir(std::string_view, std::string_view);
 
 std::vector<std::string> fs_split(std::string_view);
+std::vector<std::string> fs_normal_vector(std::string_view);
 std::string fs_normal(std::string_view);
 std::string fs_drop_slash(std::string_view);
 
