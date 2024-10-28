@@ -7,7 +7,12 @@ implicit none
 
 if(root("") /= "") error stop "root empty"
 
-if(.not. is_windows() .and. root("/a/b") /= "/") error stop "relative root should be empty"
+if(is_windows()) then
+  if(root_name("C:/a/b") /= "C:") error stop "root name should be C:"
+else
+  if(root("/a/b") /= "/") error stop "relative root should be empty"
+  if(root_name("/a/b") /= "") error stop "root name should be empty"
+endif
 
 print '(A)', "OK: root: C++"
 

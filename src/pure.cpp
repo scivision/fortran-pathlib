@@ -79,7 +79,7 @@ bool fs_is_absolute(std::string_view path)
   return std::filesystem::path(path).is_absolute();
 #else
   if(fs_is_windows())
-    return path.length() > 2 && std::isalpha(path.front()) && path[1] == ':' && (path[2] == '/' || (fs_is_windows() && path[2] == '\\'));
+    return path.length() > 2 && !(fs_root_name(path).empty()) && (path[2] == '/' || (fs_is_windows() && path[2] == '\\'));
   else
     return path.front() == '/';
 #endif
@@ -112,6 +112,19 @@ std::string fs_root(std::string_view path)
   return std::filesystem::path(path).root_path().generic_string();
 #else
   return fs_is_windows() ? std::string(1, path.front()) + ":/" : "/";
+#endif
+}
+
+
+std::string fs_root_name(std::string_view path)
+{
+#ifdef HAVE_CXX_FILESYSTEM
+  return std::filesystem::path(path).root_name().generic_string();
+#else
+  if(fs_is_windows() && path.length() > 1 && std::isalpha(path.front()) && path[1] == ':')
+    return std::string(path.substr(0, 2));
+
+  return {};
 #endif
 }
 

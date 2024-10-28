@@ -153,6 +153,7 @@ bool fs_is_readable(std::string_view);
 bool fs_is_writable(std::string_view);
 
 std::string fs_root(std::string_view path);
+std::string fs_root_name(std::string_view path);
 
 std::uintmax_t fs_space_available(std::string_view);
 std::string fs_read_symlink(std::string_view);
@@ -251,7 +252,9 @@ size_t fs_file_name(const char*, char*, const size_t);
 size_t fs_stem(const char*, char*, const size_t);
 size_t fs_parent(const char*, char*, const size_t);
 size_t fs_suffix(const char*, char*, const size_t);
+
 size_t fs_root(const char*, char*, const size_t);
+size_t fs_root_name(const char*, char*, const size_t);
 
 size_t fs_with_suffix(const char*, const char*, char*, const size_t);
 

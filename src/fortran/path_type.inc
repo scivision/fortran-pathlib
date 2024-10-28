@@ -39,6 +39,7 @@ procedure, public :: parent=>m_parent
 procedure, public :: file_name=>m_file_name
 procedure, public :: stem=>m_stem
 procedure, public :: root=>m_root
+procedure, public :: root_name=>m_root_name
 procedure, public :: suffix=>m_suffix
 procedure, public :: expanduser=>m_expanduser
 procedure, public :: with_suffix=>m_with_suffix

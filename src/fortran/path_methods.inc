@@ -287,6 +287,13 @@ character(:), allocatable :: r
 r = root(self%path_str)
 end function
 
+function m_root_name(self) result(r)
+!! returns root name of path
+class(path_t), intent(in) :: self
+character(:), allocatable :: r
+r = root_name(self%path_str)
+end function
+
 
 logical function m_same_file(self, other) result(r)
 class(path_t), intent(in) :: self, other

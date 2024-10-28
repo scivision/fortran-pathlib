@@ -163,6 +163,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << fs_expanduser(a1) << "\n";
   else if (fun == "root")
     std::cout << fs_root(a1) << "\n";
+  else if (fun == "root_name")
+    std::cout << fs_root_name(a1) << "\n";
   else if (fun == "filename")
     std::cout << fs_file_name(a1) << "\n";
   else if (fun == "file_size")

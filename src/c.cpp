@@ -197,6 +197,11 @@ size_t fs_root(const char* path, char* result, const size_t buffer_size)
   return fs_str2char(fs_root(path), result, buffer_size);
 }
 
+size_t fs_root_name(const char* path, char* result, const size_t buffer_size)
+{
+  return fs_str2char(fs_root_name(path), result, buffer_size);
+}
+
 size_t fs_get_owner_name(const char* path, char* result, const size_t buffer_size)
 {
   return fs_str2char(fs_get_owner_name(path), result, buffer_size);

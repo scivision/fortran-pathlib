@@ -150,6 +150,8 @@ main : do
     print '(A)', parent(arg1)
   case ("root")
     print '(A)', root(arg1)
+  case ("root_name")
+    print '(A)', root_name(arg1)
   case ("stem")
     print '(A)', stem(arg1)
   case ("suffix")

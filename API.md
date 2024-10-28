@@ -642,7 +642,7 @@ character(:), allocatable :: p%filesystem_type()
 filesystem_type("my/file.txt")  !< "NTFS" or "ext4" or ...
 ```
 
-Get drive root. E.g. Unix "/"  Windows "c:/"
+Get drive root path. E.g. Unix "/"  Windows "c:/"
 Requires absolute path or will return empty string.
 
 ```fortran
@@ -651,6 +651,14 @@ p%root()
 root("/a/b/c") !< "/" on Unix, "" on Windows
 
 root ("c:/a/b/c") !< "c:" on Windows, "" on Unix
+```
+
+Get drive root name. On non-Windows, returns empty string.
+
+```fortran
+p%root_name()
+! or
+root_name("c:/a/b/c") !< "c:" on Windows, "" on Unix
 ```
 
 Expand user home directory.

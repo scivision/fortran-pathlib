@@ -19,7 +19,7 @@ join, &
 copy_file, mkdir, &
 relative_to, proximate_to, &
 hard_link_count, &
-root, same_file, file_size, space_available, &
+root, root_name, same_file, file_size, space_available, &
 file_name, parent, stem, suffix, with_suffix, &
 absolute, &
 assert_is_file, assert_is_dir, &
@@ -420,6 +420,13 @@ integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
 
 integer(C_SIZE_T) function fs_root(path, result, buffer_size) bind(C)
+import
+character(kind=C_CHAR), intent(in) :: path(*)
+character(kind=C_CHAR), intent(out) :: result(*)
+integer(C_SIZE_T), intent(in), value :: buffer_size
+end function
+
+integer(C_SIZE_T) function fs_root_name(path, result, buffer_size) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: path(*)
 character(kind=C_CHAR), intent(out) :: result(*)
@@ -937,6 +944,16 @@ character(*), intent(in) :: path
 
 include "ifc0a.inc"
 N = fs_root(trim(path) // C_NULL_CHAR, cbuf, N)
+include "ifc0b.inc"
+end function
+
+
+function root_name(path) result(r)
+!! returns root name of path
+character(*), intent(in) :: path
+
+include "ifc0a.inc"
+N = fs_root_name(trim(path) // C_NULL_CHAR, cbuf, N)
 include "ifc0b.inc"
 end function
 

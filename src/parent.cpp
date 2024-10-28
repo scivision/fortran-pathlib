@@ -36,7 +36,7 @@ std::string fs_parent(std::string_view path)
   if(parts.empty())
     return ".";
 
-  if (fs_is_windows() && parts.size() == 1 && parts[0].length() == 2 && std::isalpha(parts[0][0]) && parts[0][1] == ':')
+  if (fs_is_windows() && parts.size() == 1 && parts[0].length() == 2 && !fs_root_name(parts[0]).empty())
     return parts[0] + "/";
 
   // drop last part
@@ -65,7 +65,7 @@ std::string fs_parent(std::string_view path)
       return ".";
   }
 
-  if (fs_is_windows() && p.length() == 2 && std::isalpha(p[0]) && p[1] == ':')
+  if (fs_is_windows() && p.length() == 2 && !fs_root_name(p).empty())
     p += "/";
 
   return p;

@@ -151,7 +151,7 @@ std::string fs_filesystem_type(std::string_view path)
 
   // Cygwin: assume user input Cygwin path root directly.
   if(!fs_is_cygwin()){
-    if (r.length() == 2 && std::isalpha(r[0]) && r[1] == ':')
+    if (r.length() == 2 && !fs_root_name(r).empty())
         r += "\\";
 
     r = fs_root(r);
