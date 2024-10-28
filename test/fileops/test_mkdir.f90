@@ -9,12 +9,16 @@ valgrind : block
 character(:), allocatable :: pwd, p1
 logical :: ok
 
-! call mkdir("")  !< error stops
+call mkdir("", ok)
+if(ok) error stop "mkdir: empty path"
 
 pwd = get_cwd()
 if(len_trim(pwd) == 0) error stop "get_cwd: " // pwd
 
 print '(a)', "test_mkdir: pwd " // pwd
+
+call mkdir(pwd)
+!! test that existing directory does not cause error
 
 p1 = pwd // "/test-filesystem-dir1"
 call mkdir(p1)

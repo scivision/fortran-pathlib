@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <system_error>         // for error_code
+#include <vector>
 
 #ifndef HAVE_CXX_FILESYSTEM
 // preferred import order for stat()
@@ -21,6 +22,12 @@
 
 bool fs_mkdir(std::string_view path)
 {
+ // for clarity
+  if(path.empty()){
+    std::cerr << "ERROR:Ffs:mkdir empty path\n";
+    return false;
+  }
+
 #ifdef HAVE_CXX_FILESYSTEM
 
   std::error_code ec;
@@ -33,40 +40,41 @@ bool fs_mkdir(std::string_view path)
 
 #else
 
- if(fs_is_dir(path))
-    return true;
+  std::string buf;
 
-  std::string buf = fs_normal(path);
-  if(buf.empty())  FFS_UNLIKELY
-    return false;
+  const std::vector<std::string> parts = fs_split(path);
 
-  // iterate over path components
-  std::string::size_type pos = 0;
-  // start at 0, then prefix increment to not find initial '/'
-  do {
-    pos = buf.find('/', ++pos);
-    // must be string to avoid destroyed temporary
-    std::string subdir = buf.substr(0, pos);
-    if(FS_TRACE) std::cout << "TRACE:mkdir " << subdir << " pos " << pos << "\n";
+  // if first part is root
+  if(path[0] == '/' || (fs_is_windows() && path[0] == '\\'))
+    buf = "/";
 
+  // iterate over parts
+  for(const auto& p : parts){
+    buf += p + "/";
+    if(FS_TRACE) std::cout << "TRACE:mkdir " << buf << "\n";
+    // create directory
 #ifdef _WIN32
-  // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createdirectorya
-    if (CreateDirectoryA(subdir.data(), nullptr) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+    // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createdirectorya
+    if (CreateDirectoryA(buf.data(), nullptr) == 0){
+      const auto err = GetLastError();
+      if (!(err == ERROR_ALREADY_EXISTS || err == ERROR_ACCESS_DENIED)){ FFS_UNLIKELY
+        fs_print_error(buf, "mkdir:CreateDirectory");
+        return false;
+      }
+    }
 #else
-    if (mkdir(subdir.data(), S_IRWXU) && !(errno == EEXIST || errno == EACCES))
-#endif
-    {  FFS_UNLIKELY
-      fs_print_error(subdir, "mkdir");
+    if (mkdir(buf.data(), S_IRWXU) && !(errno == EEXIST || errno == EACCES)){  FFS_UNLIKELY
+      fs_print_error(buf, "mkdir");
       return false;
     }
-  } while (pos != std::string::npos);
+#endif
+  }
 
   if(fs_is_dir(path))  FFS_LIKELY
     return true;
 
   fs_print_error(path, "mkdir: not created");
   return false;
-
 
 #endif
 }
