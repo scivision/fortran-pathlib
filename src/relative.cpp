@@ -18,39 +18,36 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
   if(base.empty() || other.empty())
     return {};
 
-  const std::string b = fs_normal(base);
-  const std::string o = fs_normal(other);
+  const std::vector<std::string> b = fs_normal_vector(base);
+  const std::vector<std::string> o = fs_normal_vector(other);
 
   if(b == o)
     return ".";
 
-  const std::vector<std::string> parts = fs_split(b);
-  const std::vector<std::string> other_parts = fs_split(o);
-
-  const std::string::size_type Lb = parts.size();
-  const std::string::size_type Lo = other_parts.size();
+  const std::string::size_type Lb = b.size();
+  const std::string::size_type Lo = o.size();
 
   // find common prefix, returning empty if no common prefix
-  if(FS_TRACE) std::cout << "TRACE:relative_to: " << b << " " << Lb << " " << o << " " << Lo << "\n";
+  if(FS_TRACE) std::cout << "TRACE:relative_to: normal_vector lengths " << Lb << " " << Lo << "\n";
   size_t i = 0;
   for (; i < Lb && i < Lo; i++){
-    if(FS_TRACE) std::cout << "TRACE:relative_to: " << parts[i] << " " << other_parts[i] << "\n";
-    if (parts[i] != other_parts[i])
+    if(FS_TRACE) std::cout << "TRACE:relative_to: " << b[i] << " " << o[i] << "\n";
+    if (b[i] != o[i])
       break;
   }
 
-  if (i == 0 && parts[0] != other_parts[0])
+  if (i == 0 && b[0] != o[0])
     return {};
 
 
   // build relative path
 
   std::string r;
-  for (size_t j = i; j < parts.size(); j++)
+  for (size_t j = i; j < Lb; j++)
     r += "../";
 
-  for (size_t j = i; j < other_parts.size(); j++)
-    r += other_parts[j] + "/";
+  for (size_t j = i; j < Lo; j++)
+    r += o[j] + "/";
 
   return fs_drop_slash(r);
 
