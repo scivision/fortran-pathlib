@@ -181,6 +181,10 @@ std::string fs_with_suffix(std::string_view path, std::string_view new_suffix)
   const std::string parent = fs_parent(path);
   const std::string stem = fs_stem(path);
 
+  // handle directory case: stem is empty
+  if(stem.empty())
+    return fs_join(path, new_suffix);
+
   const std::string r = (parent == ".") ? stem : fs_join(parent, stem);
 
   return r + std::string(new_suffix);

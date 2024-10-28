@@ -34,7 +34,20 @@ if(r /= 'c:/a/hi.h5') then
 end if
 
 r = with_suffix("my/file.h5", ".hdf5")
-if ("my/file.hdf5" /= r) error stop "with_suffix() failed: " // r
+if (r /= "my/file.hdf5") error stop "with_suffix() failed: " // r
+
+r = with_suffix("a/boo", ".h5")
+if (r /= "a/boo.h5") error stop "with_suffix() failed: " // r
+
+r = with_suffix("boo", ".h5")
+if (r /= "boo.h5") error stop "with_suffix() failed: " // r
+
+!> this is an odd case that would't be expected to be used
+r = with_suffix("a/b/c.d/", ".hdf5")
+if (r /= "a/b/c.d/.hdf5") error stop "with_suffix() failed: " // r
+
+r = with_suffix("dir.h5/", ".hdf5")
+if (r /= "dir.h5/.hdf5") error stop "with_suffix() failed: " // r
 
 end block valgrind
 
