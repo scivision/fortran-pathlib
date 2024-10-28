@@ -31,13 +31,14 @@ std::string fs_parent(std::string_view path)
 
 #else
 
+  // we don't fully normalize, but we do drop repeated slashes
   std::vector<std::string> parts = fs_split(path);
 
   if(parts.empty())
     return ".";
 
-  if (fs_is_windows() && parts.size() == 1 && parts[0].length() == 2 && !fs_root_name(parts[0]).empty())
-    return parts[0] + "/";
+  if (fs_is_windows() && parts.size() == 1 && !fs_root_name(parts[0]).empty())
+    return fs_root(path);
 
   // drop last part
   parts.pop_back();
@@ -65,6 +66,7 @@ std::string fs_parent(std::string_view path)
       return ".";
   }
 
+  // need this for <filesystem> and our method to make x: x:/
   if (fs_is_windows() && p.length() == 2 && !fs_root_name(p).empty())
     p += "/";
 

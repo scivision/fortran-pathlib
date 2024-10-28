@@ -24,11 +24,7 @@ void print_cpp(std::chrono::duration<double> t, int n, std::string_view path, st
 }
 
 
-std::chrono::duration<double> bench_cpp(
-  [[maybe_unused]] int n,
-  [[maybe_unused]] std::string_view path,
-  [[maybe_unused]] std::string_view fname,
-  [[maybe_unused]] bool verbose)
+std::chrono::duration<double> bench_cpp(int n, std::string_view path, std::string_view fname, bool verbose)
 {
 
 auto t = std::chrono::duration<double>::max();

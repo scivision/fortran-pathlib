@@ -103,7 +103,8 @@ std::string fs_file_name(std::string_view path)
 
 std::string fs_root(std::string_view path)
 {
-  // our root = root_name / root_directory
+  // root_path = root_name / root_directory
+
   // empty path is not absolute
   if(!fs_is_absolute(path))
     return {};
@@ -111,7 +112,7 @@ std::string fs_root(std::string_view path)
 #ifdef HAVE_CXX_FILESYSTEM
   return std::filesystem::path(path).root_path().generic_string();
 #else
-  return fs_is_windows() ? std::string(1, path.front()) + ":/" : "/";
+  return fs_root_name(path) + "/";
 #endif
 }
 
