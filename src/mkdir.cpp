@@ -45,7 +45,7 @@ bool fs_mkdir(std::string_view path)
   const std::vector<std::string> parts = fs_split(path);
 
   // if first part is root
-  if(path[0] == '/' || (fs_is_windows() && path[0] == '\\'))
+  if(fs_slash_first(path))
     buf = "/";
 
   // iterate over parts

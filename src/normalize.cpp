@@ -8,6 +8,9 @@
 std::vector<std::string>
 fs_normal_vector(std::string_view path)
 {
+  if(path.empty())
+    return {};
+
   const std::vector<std::string> parts = fs_split(path);
 
   std::vector<std::string> n;
@@ -20,7 +23,7 @@ fs_normal_vector(std::string_view path)
     if (p == "..") {
       if (!n.empty() && n.back() != "..")
         n.pop_back();
-      else if (path[0] != '/')
+      else if (path.front() != '/')
         n.push_back(p);
       continue;
     }
@@ -48,7 +51,7 @@ fs_normal(std::string_view path)
   const std::vector<std::string> parts = fs_normal_vector(path);
 
   // rebuild path
-   if (path[0] == '/' || (fs_is_windows() && path[0] == '\\'))
+   if (fs_slash_first(path))
      r = "/";
 
   for (const auto& p : parts)

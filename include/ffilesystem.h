@@ -45,6 +45,7 @@ std::string fs_make_preferred(std::string_view);
 
 
 // C++ functions available without C++17 filesystem too
+bool fs_slash_first(std::string_view);
 
 std::string fs_with_suffix(std::string_view, std::string_view);
 

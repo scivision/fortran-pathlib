@@ -9,6 +9,10 @@
 
 std::string fs_parent(std::string_view path)
 {
+
+  if(path.empty())
+    return ".";
+
   std::string p;
 #ifdef HAVE_CXX_FILESYSTEM
   // have to drop_slash on input to get expected parent path -- necessary for AppleClang
@@ -40,7 +44,7 @@ std::string fs_parent(std::string_view path)
 
   // rebuild path
   // preserve leading slash
-  if (path[0] == '/')
+  if (path.front() == '/')
     p = "/";
 
   for (const auto& part : parts){
