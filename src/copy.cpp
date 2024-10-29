@@ -89,6 +89,7 @@ if (FS_TRACE) std::cout << "TRACE::ffilesystem:copy_file: using copy_file_range\
     return false;
   }
 
+  // leave fstat here to avoid source file race conditino
   struct stat  stat;
   if (fstat(rid, &stat) == -1) {
     std::cerr << "ERROR:ffilesystem:copy_file: could not fstat file to read " << source << "\n";
