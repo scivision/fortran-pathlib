@@ -6,15 +6,14 @@
 #include <vector>
 
 #ifndef HAVE_CXX_FILESYSTEM
-// preferred import order for stat()
 #include <sys/types.h>
-#include <sys/stat.h>  // mkdir
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #else
 #include <unistd.h>
+#include <sys/stat.h>  // mkdir
 #endif
 
 #endif
@@ -63,6 +62,7 @@ bool fs_mkdir(std::string_view path)
       }
     }
 #else
+  // https://www.man7.org/linux/man-pages/man2/mkdir.2.html
     if (mkdir(buf.data(), S_IRWXU) && !(errno == EEXIST || errno == EACCES)){  FFS_UNLIKELY
       fs_print_error(buf, "mkdir");
       return false;
