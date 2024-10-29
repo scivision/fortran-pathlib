@@ -45,7 +45,8 @@ static void no_arg(std::string_view fun){
     {"is_unix", fs_is_unix},
     {"is_windows", fs_is_windows},
     {"is_mingw", fs_is_mingw},
-    {"is_cygwin", fs_is_cygwin}
+    {"is_cygwin", fs_is_cygwin},
+    {"has_statx", fs_has_statx}
   };
 
 

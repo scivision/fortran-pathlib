@@ -31,7 +31,7 @@ cpp = 1
 
 # optional, but useful
 cfeat =
-cppfeat =
+cppfeat = -DUSE_STATX
 
 CXXFLAGS := -std=c++17 -O3 -DNDEBUG $(cppfeat) $(INC) -DHAVE_CXX_FILESYSTEM
 CFLAGS := -O3 -DNDEBUG $(cfeat) $(INC)

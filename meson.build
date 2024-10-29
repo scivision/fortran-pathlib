@@ -75,7 +75,7 @@ is_windows = host_machine.system() == 'windows'
 dladdr_def = []
 dl = []
 
-if not is_windows
+if not is_windows and get_option('default_library') == 'shared'
   dl = cpp.find_library('dl', required: false)
 
   have_dladdr = cpp.links('''#define _GNU_SOURCE
@@ -181,6 +181,8 @@ libwin = [cc.find_library('Userenv'), cc.find_library('ws2_32')]
 
 endif
 
+def_statx = get_option('statx') ? '-DUSE_STATX' : []
+
 # -- main library
 
 filesystem = library('filesystem',
@@ -188,7 +190,7 @@ sources: [fsrcs, comm_src],
 include_directories: [inc],
 install: true,
 c_args: [],
-cpp_args: [have_filesystem, chrono_def, dladdr_def, def_copy_file, trace_def],
+cpp_args: [have_filesystem, chrono_def, dladdr_def, def_copy_file, def_statx, trace_def],
 fortran_args: f03type_def,
 dependencies: [libwin, fs_lib, dl],
 )

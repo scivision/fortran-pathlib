@@ -9,7 +9,7 @@
 #include "ffilesystem.h"
 
 
-int main(int argc, char* argv[])
+int main()
 {
 #ifdef _MSC_VER
   _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
@@ -20,15 +20,10 @@ int main(int argc, char* argv[])
   _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-  int shared = 0;
-  if(argc > 1){
-    shared = std::atoi(argv[1]);
-  }
-
   std::string path = fs_lib_path();
 
   if(path.empty()){
-    std::cerr << "test_binpath: lib_path should be non-empty: " << path << "\n";
+    std::cerr << "test_binpath: lib_path is empty: " << path << "\n";
     return EXIT_FAILURE;
   }
 
@@ -38,13 +33,8 @@ int main(int argc, char* argv[])
   }
 
   if(fs_is_dir(path)){
-    if(shared){
-      std::cerr << "test_binpath: lib_path should not be a directory: " << path << "\n";
-      return EXIT_FAILURE;
-    } else {
-      std::cout << path << "\n";
-      return EXIT_SUCCESS;
-    }
+    std::cerr << "test_binpath: lib_path should not be a directory: " << path << "\n";
+    return EXIT_FAILURE;
   }
 
   if(fs_is_file(path)){

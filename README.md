@@ -150,6 +150,19 @@ print *, "path: ", p%path() !< getter
 The CMake and Meson scripts detect if Fortran 2003 `type` is available and enable `path_t` by default.
 To manually enable / disable `path_t` with CMake set command option `cmake -DHAVE_F03TYPE=1` or `cmake -DHAVE_F03TYPE=0` respectively.
 
+By default `stat()` is used on non-Windows systems to get file information.
+On glibc systems,
+[statx()](https://www.man7.org/linux/man-pages/man2/statx.2.html)
+may be used if available by setting build option
+
+```sh
+cmake -Dffilesystem_statx=true -Bbuild
+
+# or
+
+meson setup -Dstatx=true build
+```
+
 ## Usage from other projects
 
 The [example](./example) directory contains a use pattern from external projects.
@@ -162,18 +175,18 @@ To find ffilesystem in your CMake project:
 find_package(ffilesystem CONFIG REQUIRED)
 ```
 
-Note the CMake package variables `ffilesystem_cpp` and `ffilesystem_fortran` indicate whether ffilesystem was built with C++ and/or Fortran support.
+CMake package variables `ffilesystem_cpp` and `ffilesystem_fortran` indicate whether ffilesystem was built with C++ `<filesystem>` and/or Fortran support.
 
 [ffilesystem.cmake](./cmake/ffilesystem.cmake) would be included from the other project to find or build Ffilesystem automatically.
 It provides the appropriate imported targets for shared or static builds, including Windows DLL handling.
 
 ## Notes
 
-Possible future enhancements:
-
-* use [statx](https://www.man7.org/linux/man-pages/man2/statx.2.html) if available to inquire if a file is encrypted or compressed, etc.
-
 GCC 6.x and older aren't supported due to lack of C++17 string_view support.
+
+### Possible future features
+
+Use statx() if available to inquire if a file is encrypted or compressed, etc.
 
 ### Other C++ filesystem libraries
 

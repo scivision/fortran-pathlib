@@ -7,21 +7,12 @@ implicit none
 valgrind : block
 
 character(:), allocatable :: path
-logical :: shared
-
-shared = getarg(1) == '1'
 
 path = lib_path()
 
-if(.not. exists(path)) error stop path // " does not exist"
+if(len_trim(path) == 0) error stop "lib_path() is empty"
 
-if(is_dir(path)) then
-  if(shared) error stop "test_libpath: for shared libraries a full path to the library file is expected: " // path
-  print '(a)', path
-  stop
-end if
-
-if (.not. is_file(path)) error stop path // " is neither a file nor a directory"
+if (.not. is_file(path)) error stop path // " is not a file"
 
 print '(a)', path
 

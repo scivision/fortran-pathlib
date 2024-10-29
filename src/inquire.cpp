@@ -23,14 +23,37 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#if defined(__linux__) && defined(USE_STATX)
+#include <fcntl.h>   // AT_* constants for statx()
+#endif
+
+
+bool fs_has_statx()
+{
+// https://www.man7.org/linux/man-pages/man2/statx.2.html
+#if defined(STATX_MODE)
+  return true;
+#else
+  return false;
+#endif
+}
+
 
 int
 fs_st_mode(std::string_view path)
 {
+#if defined(STATX_MODE) && defined(USE_STATX)
+// Linux Glibc only
+// https://www.gnu.org/software/gnulib/manual/html_node/statx.html
+// https://www.man7.org/linux/man-pages/man2/statx.2.html
+  struct statx s;
+  if(statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT, STATX_MODE, &s) == 0)
+    return s.stx_mode;
+#else
   struct stat s;
   if(!stat(path.data(), &s))
     return s.st_mode;
-
+#endif
   // std::cerr << "ERROR:ffilesystem:fs_st_mode(" << path << ") " << strerror(errno)) << "\n";
   return 0;
 }
@@ -64,7 +87,7 @@ fs_exists(std::string_view path)
 bool
 fs_is_dir(std::string_view path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM)
 // NOTE: Windows top-level drive "C:" needs a trailing slash "C:/"
   std::error_code ec;
   return std::filesystem::is_directory(path, ec) && !ec;

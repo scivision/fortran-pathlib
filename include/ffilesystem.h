@@ -33,7 +33,8 @@
 #include <ctime> // time_t
 #include <optional>
 
-#if HAVE_CXX_FILESYSTEM
+#ifdef HAVE_CXX_FILESYSTEM
+
 #include <filesystem>
 
 std::optional<std::filesystem::file_time_type> fs_get_modtime_fs(std::string_view);
@@ -227,6 +228,8 @@ int fs_is_wsl();
 bool fs_is_mingw();
 bool fs_is_cygwin();
 bool fs_is_rosetta();
+
+bool fs_has_statx();
 
 bool fs_is_empty(const char*);
 
