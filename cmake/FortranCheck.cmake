@@ -1,5 +1,11 @@
 function(fortran_check)
 
+if((CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" AND CMAKE_Fortran_COMPILER_VERSION VERSION_GREATER_EQUAL 7)
+  OR CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM")
+    set(HAVE_F03TYPE true CACHE BOOL "Has Fortran 2003 derived types")
+    return()
+endif()
+
 set(CMAKE_TRY_COMPILE_TARGET_TYPE EXECUTABLE)
 
 check_source_compiles(Fortran
