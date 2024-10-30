@@ -24,20 +24,15 @@
 #include <sys/stat.h>
 
 
-#if defined(_MSC_VER)
 int
-#else
-mode_t
-#endif
 fs_st_mode(std::string_view path)
 {
   struct stat s;
-  if(stat(path.data(), &s)){
-    // std::cerr << "ERROR:ffilesystem:fs_st_mode(" << path << ") " << strerror(errno)) << "\n";
-    return 0;
-  }
+  if(!stat(path.data(), &s))
+    return s.st_mode;
 
-  return s.st_mode;
+  // std::cerr << "ERROR:ffilesystem:fs_st_mode(" << path << ") " << strerror(errno)) << "\n";
+  return 0;
 }
 
 

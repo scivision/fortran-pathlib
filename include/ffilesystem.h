@@ -176,12 +176,7 @@ std::string fs_get_cwd();
 
 std::string fs_filesystem_type(std::string_view);
 
-#if defined(_MSC_VER)
-int
-#else
-mode_t
-#endif
-fs_st_mode(std::string_view path);
+int fs_st_mode(std::string_view path);
 
 // ---------------------------------------------------------------------------
 
