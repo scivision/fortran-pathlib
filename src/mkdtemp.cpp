@@ -18,7 +18,7 @@
 #include <string>
 #include <system_error>         // for error_code
 
-#if defined(HAVE_MERSENNE_TWISTER)
+#if defined(HAVE_CXX_FILESYSTEM)
 #include <random>
 #else
 #ifdef _WIN32
@@ -30,7 +30,7 @@
 #endif
 
 
-#if defined(HAVE_CXX_FILESYSTEM) && defined(__cpp_deduction_guides) && defined(HAVE_MERSENNE_TWISTER)
+#if defined(HAVE_CXX_FILESYSTEM) && defined(__cpp_deduction_guides)
 // CTAD C++17 random string generator
 // https://stackoverflow.com/a/444614
 // https://en.cppreference.com/w/cpp/language/class_template_argument_deduction
@@ -68,7 +68,7 @@ std::string fs_mkdtemp(std::string_view prefix)
 
 if(FS_TRACE) std::cout << "TRACE:mkdtemp_mersenne: prefix: " << prefix << "\n";
 
-#if defined(HAVE_CXX_FILESYSTEM) && defined(__cpp_deduction_guides) && defined(HAVE_MERSENNE_TWISTER)
+#if defined(HAVE_CXX_FILESYSTEM) && defined(__cpp_deduction_guides)
   std::error_code ec;
   std::filesystem::path t;
 

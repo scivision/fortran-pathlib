@@ -41,17 +41,6 @@ if(NOT HAVE_CXX_FILESYSTEM)
   return()
 endif()
 
-# for mkdtemp
-check_source_compiles(CXX
-"#include <random>
-
-int main(){
-  std::mt19937 mt_rand(0);
-  return 0;
-}"
-ffilesystem_HAVE_MERSENNE_TWISTER
-)
-
 if(CMAKE_CXX_STANDARD GREATER_EQUAL 20)
 
 # for fs_get_modtime

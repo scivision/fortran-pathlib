@@ -31,7 +31,7 @@ cpp = 1
 
 # optional, but useful
 cfeat =
-cppfeat = -DHAVE_MERSENNE_TWISTER -DHAVE_GETLOADAVG
+cppfeat = -DHAVE_GETLOADAVG
 
 CXXFLAGS := -std=c++17 -O3 -DNDEBUG $(cppfeat) $(INC) -DHAVE_CXX_FILESYSTEM
 CFLAGS := -O3 -DNDEBUG $(cfeat) $(INC)

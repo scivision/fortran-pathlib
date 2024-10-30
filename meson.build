@@ -162,21 +162,6 @@ if cpp.links(chrono_src, dependencies: fs_lib, name: 'C++20 chrono')
   chrono_def = '-DHAVE_CLOCK_CAST'
 endif
 
-# -- Mersenne mkdtemp check
-
-mkdtemp_src = '''
-#include <random>
-
-int main(){
-  std::mt19937 mt_rand(0);
-  return 0;
-}
-'''
-
-if cpp.links(mkdtemp_src, name: 'C++ Mersenne Twister for mkdtemp()')
-  mkdtemp_def = '-DHAVE_MERSENNE_TWISTER'
-endif
-
 else
 
 # -- copy_file_range()
@@ -227,7 +212,7 @@ sources: [fsrcs, comm_src],
 include_directories: [inc],
 install: true,
 c_args: [],
-cpp_args: [have_filesystem, chrono_def, dladdr_def, getloadavg_def, mkdtemp_def, def_copy_file, trace_def],
+cpp_args: [have_filesystem, chrono_def, dladdr_def, getloadavg_def, def_copy_file, trace_def],
 fortran_args: f03type_def,
 dependencies: [libwin, fs_lib, dl],
 )
