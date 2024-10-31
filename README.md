@@ -53,8 +53,7 @@ Advanced / conceptual development takes place in [ffilesystem-concepts](https://
 
 Ffilesystem supports compilers including:
 
-* GCC &ge; 8 (gcc/g++, gfortran)
-    * GCC &ge; 7 works with `cmake -Dffilesystem_cpp=off`
+* GCC &ge; 7 (gcc/g++, gfortran) (GCC &ge; 8 needed for `<filesystem>` backend)
 * LLVM Clang &ge; 9 (clang/clang++, flang or gfortran)
 * Intel oneAPI &ge; 2023.1 (icx, icpx, ifx)
 * Intel Classic &ge; 2021.9 (icpc, ifort)
@@ -173,6 +172,8 @@ It provides the appropriate imported targets for shared or static builds, includ
 Possible future enhancements:
 
 * use [statx](https://www.man7.org/linux/man-pages/man2/statx.2.html) if available to inquire if a file is encrypted or compressed, etc.
+
+GCC 6.x and older aren't supported due to lack of C++17 string_view support.
 
 ### Other C++ filesystem libraries
 
