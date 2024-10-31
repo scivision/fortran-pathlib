@@ -12,14 +12,6 @@ int main(){
   size_t skip = 0;
   size_t fail = 0;
 
-  double load = fs_cpu_loadavg();
-  if (load <= 0.0){
-    std::cerr << "CPU load average not implemented on this platform\n";
-    // skip++;
-  }
-  else
-    std::cout << "OK: CPU load average: " << load << "\n";
-
   const auto max_path = fs_get_max_path();
   const auto max_component = fs_max_component("/");
   if(max_component < 1){

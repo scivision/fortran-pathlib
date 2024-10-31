@@ -33,7 +33,6 @@ comm_src = files(
 'src/absolute.cpp',
 'src/compiler.cpp',
 'src/copy.cpp',
-'src/cpu.cpp',
 'src/cygwin.cpp',
 'src/exepath.cpp',
 'src/env.cpp',
@@ -93,29 +92,6 @@ if not is_windows
   ''', dependencies: dl, name: 'dladdr')
   if have_dladdr
     dladdr_def = '-DHAVE_DLADDR'
-  endif
-endif
-
-# -- getloadavg check
-getloadavg_def = []
-
-if not is_windows
-  have_getloadavg = cc.links('''
-  #if defined(__linux__) && !defined(_DEFAULT_SOURCE)
-  #define _DEFAULT_SOURCE
-  #endif
-
-  #include <stdlib.h>
-
-  int main(void){
-    double load[3] = {0.0, 0.0, 0.0};
-    if (getloadavg(load, 3) < 0)
-      return 1;
-    return 0;
-  }
-  ''', name: 'getloadavg')
-  if have_getloadavg
-    getloadavg_def = '-DHAVE_GETLOADAVG'
   endif
 endif
 
@@ -212,7 +188,7 @@ sources: [fsrcs, comm_src],
 include_directories: [inc],
 install: true,
 c_args: [],
-cpp_args: [have_filesystem, chrono_def, dladdr_def, getloadavg_def, def_copy_file, trace_def],
+cpp_args: [have_filesystem, chrono_def, dladdr_def, def_copy_file, trace_def],
 fortran_args: f03type_def,
 dependencies: [libwin, fs_lib, dl],
 )

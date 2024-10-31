@@ -31,7 +31,7 @@ cpp = 1
 
 # optional, but useful
 cfeat =
-cppfeat = -DHAVE_GETLOADAVG
+cppfeat =
 
 CXXFLAGS := -std=c++17 -O3 -DNDEBUG $(cppfeat) $(INC) -DHAVE_CXX_FILESYSTEM
 CFLAGS := -O3 -DNDEBUG $(cfeat) $(INC)
@@ -50,7 +50,6 @@ COMM_SRCS = \
 	$(comdir)filesystem.cpp \
 	$(comdir)c.cpp \
 	$(comdir)compiler.cpp \
-	$(comdir)cpu.cpp \
 	$(comdir)cygwin.cpp \
 	$(comdir)exepath.cpp \
 	$(comdir)env.cpp \

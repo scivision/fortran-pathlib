@@ -61,22 +61,39 @@ endif()
 add_library(ffilesystem
 src/filesystem.cpp src/c.cpp
 src/absolute.cpp
-src/copy.cpp src/compiler.cpp src/cpu.cpp src/cygwin.cpp
-src/exepath.cpp src/env.cpp
+src/copy.cpp
+src/compiler.cpp
+src/cygwin.cpp
+src/exepath.cpp
+src/env.cpp
 src/home.cpp
 src/inquire.cpp
-src/libpath.cpp src/limits.cpp src/locale.cpp
-src/mkdtemp.cpp src/mkdir.cpp
+src/libpath.cpp
+src/limits.cpp
+src/locale.cpp
+src/mkdtemp.cpp
+src/mkdir.cpp
 src/normalize.cpp
-src/os.c src/owner.cpp
-src/parent.cpp src/partition.cpp src/platform.cpp src/pure.cpp
-src/realpath.cpp src/relative.cpp src/resolve.cpp
-src/size.cpp src/space.cpp
-src/sysctl.cpp src/symlink.cpp
-src/touch.cpp src/time.cpp
+src/os.c
+src/owner.cpp
+src/parent.cpp
+src/partition.cpp
+src/platform.cpp
+src/pure.cpp
+src/realpath.cpp
+src/relative.cpp
+src/resolve.cpp
+src/size.cpp
+src/space.cpp
+src/sysctl.cpp
+src/symlink.cpp
+src/touch.cpp
+src/time.cpp
 src/uid.cpp
 src/uname.cpp
-src/which.cpp src/windows.cpp src/winsock.cpp
+src/which.cpp
+src/windows.cpp
+src/winsock.cpp
 $<$<TARGET_EXISTS:ffilesystem_Fortran>:$<TARGET_OBJECTS:ffilesystem_Fortran>>
 )
 
@@ -87,7 +104,6 @@ target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_CLOCK_CAST}>>:HAVE_CLOCK_CAST>"
 "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${ffilesystem_trace}>>:FS_TRACE=1>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_DLADDR}>>:HAVE_DLADDR>"
-"$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_GETLOADAVG}>>:HAVE_GETLOADAVG>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_COPY_FILE_RANGE}>>:HAVE_COPY_FILE_RANGE>"
 )
 

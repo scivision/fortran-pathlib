@@ -87,12 +87,6 @@ static void no_arg(std::string_view fun){
     std::cout << fs_get_tempdir() << "\n";
   else if (fun == "max_path")
     std::cout << fs_get_max_path() << "\n";
-  else if (fun == "loadavg")
-#if defined(__cpp_lib_format)
-    std::cout << std::format("{:0.3f}\n", fs_cpu_loadavg());
-#else
-    std::cout << fs_cpu_loadavg() << "\n";
-#endif
 #if __cplusplus >= 202002L
   else if (mbool.contains(fun))
 #else

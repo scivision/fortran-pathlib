@@ -96,14 +96,6 @@ arch = cpu_arch()
 
 ---
 
-real: CPU load average for last one minute
-
-```fortran
-avg = loadavg()
-```
-
----
-
 character: Ffilesystem backend (e.g. <filesystem> or C)
 
 ```fortran

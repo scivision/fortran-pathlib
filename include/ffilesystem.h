@@ -234,8 +234,6 @@ bool fs_is_safe_name(const char*);
 
 void fs_as_posix(char*);
 
-double fs_cpu_loadavg();
-
 size_t fs_normal(const char*, char*, const size_t);
 
 size_t fs_realpath(const char*, char*, const size_t);

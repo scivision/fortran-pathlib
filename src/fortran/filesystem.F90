@@ -14,7 +14,7 @@ public :: normal, expanduser, as_posix, &
 is_absolute, is_char_device, is_dir, is_file, is_exe, is_subdir, is_readable, is_writable, is_reserved, &
 is_empty, &
 is_symlink, read_symlink, create_symlink, &
-exists, loadavg, &
+exists, &
 join, &
 copy_file, mkdir, &
 relative_to, proximate_to, &
@@ -85,10 +85,6 @@ end function
 
 integer(C_INT) function is_wsl() bind(C, name="fs_is_wsl")
 !! Windows Subsystem for Linux (WSL) version (0 is not WSL)
-import
-end function
-
-real(C_DOUBLE) function loadavg() bind(C, name="fs_cpu_loadavg")
 import
 end function
 

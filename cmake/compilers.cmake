@@ -62,9 +62,6 @@ if(UNIX)
   set(CMAKE_REQUIRED_DEFINITIONS -D_GNU_SOURCE)
   check_cxx_symbol_exists(dladdr "dlfcn.h" ffilesystem_HAVE_DLADDR)
 
-  set(CMAKE_REQUIRED_DEFINITIONS -D_DEFAULT_SOURCE)
-  check_symbol_exists(getloadavg "stdlib.h" ffilesystem_HAVE_GETLOADAVG)
-
   unset(CMAKE_REQUIRED_DEFINITIONS)
 endif()
 
