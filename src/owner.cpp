@@ -4,14 +4,17 @@
 #include <Windows.h>
 #else
 #include <sys/types.h>
-#include <pwd.h>      // for getpwuid
-// preferred import order for stat()
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <pwd.h>      // for getpwuid
 #include <grp.h>     // for getgrgid
 #endif
 
+#if defined(__linux__) && defined(USE_STATX)
+#include <fcntl.h>   // AT_* constants for statx()
+#endif
+
 #include <string>
+#include <iostream>
 
 #include "ffilesystem.h"
 
@@ -57,20 +60,22 @@ std::string fs_get_owner_name(std::string_view path)
 
 #else
 
+#if defined(STATX_UID) && defined(USE_STATX)
+// https://www.man7.org/linux/man-pages/man2/statx.2.html
+  if (FS_TRACE) std::cout << "TRACE: statx() owner_name " << path << "\n";
+  struct statx s;
+  if(statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT, STATX_UID, &s) == 0){
+    auto pw = getpwuid(s.stx_uid);
+#else
   struct stat s;
-  if(stat(path.data(), &s)){
-     fs_print_error(path, "get_owner:stat");
-    return {};
+  if(!stat(path.data(), &s)){
+    auto pw = getpwuid(s.st_uid);
+#endif
+    return pw->pw_name;
   }
 
-  const struct passwd *pw = getpwuid(s.st_uid);
-  if(!pw){
-    fs_print_error(path, "get_owner:getpwuid");
-    return {};
-  }
-
-  return pw->pw_name;
-
+  fs_print_error(path, "get_owner:getpwuid");
+  return {};
 #endif
 }
 
@@ -115,18 +120,23 @@ std::string fs_get_owner_group(std::string_view path)
   return group;
 
 #else
+
+#if defined(STATX_GID) && defined(USE_STATX)
+// https://www.man7.org/linux/man-pages/man2/statx.2.html
+  if (FS_TRACE) std::cout << "TRACE: statx() owner_name " << path << "\n";
+  struct statx s;
+  if(statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT, STATX_GID, &s) == 0){
+    auto gr = getgrgid(s.stx_gid);
+#else
   struct stat s;
-  if(stat(path.data(), &s)){
-     fs_print_error(path, "get_owner_group:stat");
-    return {};
+  if(!stat(path.data(), &s)){
+    auto gr = getgrgid(s.st_gid);
+#endif
+    return gr->gr_name;
   }
 
-  const struct group *grp = getgrgid(s.st_gid);
-  if(!grp){
-    fs_print_error(path, "get_owner_group:getgrgid");
-    return {};
-  }
+  fs_print_error(path, "get_owner_group");
+  return {};
 
-  return grp->gr_name;
 #endif
 }
