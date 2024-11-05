@@ -71,7 +71,7 @@ print '(a)', "Permissions for " // trim(noread)// ": "// p
 
 if (len_trim(p) == 0) error stop "get_permissions('"//trim(noread)//"') should not be empty"
 
-if(.not. is_windows()) then
+if(.not. (is_windows() .or. is_cygwin())) then
 if (p(1:1) == "r") error stop trim(noread)//" should not be readable " // p
 if (index(p, "r") == 0) then
   if (is_readable(noread)) error stop "is_readable: "//trim(noread)//" should not be readable"
