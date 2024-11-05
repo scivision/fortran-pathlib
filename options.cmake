@@ -5,7 +5,7 @@ option(ffilesystem_fallback "Fallback to non-C++ if C++ stdlib is not working" o
 option(ffilesystem_trace "debug trace output" off)
 option(ffilesystem_bench "enable benchmark tests")
 
-option(ffilesystem_statx "use statx() if available")
+option(ffilesystem_statx "use statx() if available" on)
 
 option(BUILD_SHARED_LIBS "Build shared libraries")
 option(ffilesystem_coverage "Code coverage tests")
