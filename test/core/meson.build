@@ -29,6 +29,7 @@ endif
 
 cpp_core = ['canonical', 'core', 'expanduser',
 'filename', 'filesize',
+'hard_link',
 'join',
 'locale',
 'normal',

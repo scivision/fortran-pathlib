@@ -79,15 +79,18 @@ FIXTURES_SETUP "canonical"
 endif()
 
 
-foreach(t IN ITEMS canonical expanduser core
-  filename filesize
-  join
-  locale
-  normal
-  parent permissions
-  realpath relative reserved root
-  safe system
-  )
+set(cpp_tests canonical expanduser core
+filename filesize
+hard_link
+join
+locale
+normal
+parent permissions
+realpath relative reserved root
+safe system
+)
+
+foreach(t IN LISTS cpp_tests)
   add_executable(test_cpp_${t} test_${t}.cpp)
   target_link_libraries(test_cpp_${t} PRIVATE ffilesystem)
   target_include_directories(test_cpp_${t} PRIVATE ..)
