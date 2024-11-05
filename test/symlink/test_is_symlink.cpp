@@ -31,6 +31,8 @@ if(!fs_is_symlink(tfile)) {
   return EXIT_FAILURE;
 }
 
+std::cout << "PASS: file is_symlink(" << tfile << ")\n";
+
 const std::string tdir = fs_parent(tfile);
 if (!fs_is_dir(tdir)){
     std::cerr << "is_dir(" << tdir << ") should be true for symlink directory\n";
@@ -40,6 +42,8 @@ if (!fs_is_symlink(tdir)){
     std::cerr << "is_symlink(" << tdir << ") should be true for symlink directory\n";
     return EXIT_FAILURE;
 }
+
+std::cout << "PASS: directory is_symlink(" << tdir << ")\n";
 
 std::cout << "OK: is_symlink\n";
 return EXIT_SUCCESS;

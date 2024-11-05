@@ -21,6 +21,10 @@
 #endif
 #endif
 
+#if defined(__linux__) && defined(USE_STATX)
+#include <fcntl.h>   // AT_* constants for statx()
+#endif
+
 
 bool fs_is_symlink(std::string_view path)
 {
@@ -37,12 +41,20 @@ bool fs_is_symlink(std::string_view path)
 
   std::cerr << "ERROR:ffilesystem:is_symlink(" << path << "): " << ec.message() << "\n";
   return false;
+#elif defined(STATX_MODE) && defined(USE_STATX)
+// Linux Glibc only
+// https://www.gnu.org/software/gnulib/manual/html_node/statx.html
+// https://www.man7.org/linux/man-pages/man2/statx.2.html
+  if (FS_TRACE) std::cout << "TRACE: statx() is_symlink " << path << "\n";
+  struct statx s;
+  if(statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT | AT_SYMLINK_NOFOLLOW, STATX_MODE, &s) == 0) FFS_LIKELY
+    return S_ISLNK(s.stx_mode);
 #else
-  struct stat buf;
+  struct stat s;
 
-  if(!lstat(path.data(), &buf)) FFS_LIKELY
-    return S_ISLNK(buf.st_mode);
-  // return (buf.st_mode & S_IFMT) == S_IFLNK; // equivalent
+  if(!lstat(path.data(), &s)) FFS_LIKELY
+    return S_ISLNK(s.st_mode);
+  // return (s.st_mode & S_IFMT) == S_IFLNK; // equivalent
 #endif
 
   fs_print_error(path, "is_symlink");
