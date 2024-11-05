@@ -9,6 +9,7 @@
 #include <set>
 #include <iostream>
 
+#ifndef HAVE_CXX_FILESYSTEM
 // preferred import order for stat()
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -18,6 +19,12 @@
 #include <windows.h>
 #else
 #include <dirent.h>  // opendir, readdir, closedir
+#endif
+
+#if defined(__linux__) && defined(USE_STATX)
+#include <fcntl.h>   // AT_* constants for statx()
+#endif
+
 #endif
 
 
@@ -30,14 +37,20 @@ std::uintmax_t fs_file_size(std::string_view path)
 
   std::cerr << "ERROR:ffilesystem:file_size: " << ec.message() << "\n";
   return {};
+#elif defined(STATX_SIZE) && defined(USE_STATX)
+// https://www.man7.org/linux/man-pages/man2/statx.2.html
+  if (FS_TRACE) std::cout << "TRACE: statx() file_size " << path << "\n";
+  struct statx s;
+  if(statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT, STATX_SIZE, &s) == 0) FFS_LIKELY
+    return s.stx_size;
 #else
   if (struct stat s;
         !stat(path.data(), &s))  FFS_LIKELY
     return s.st_size;
+#endif
 
   fs_print_error(path, "file_size");
   return {};
-#endif
 }
 
 

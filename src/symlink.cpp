@@ -19,10 +19,11 @@
 #ifndef _WIN32
 #include <unistd.h> // readlink(), symlink()
 #endif
-#endif
 
 #if defined(__linux__) && defined(USE_STATX)
 #include <fcntl.h>   // AT_* constants for statx()
+#endif
+
 #endif
 
 
