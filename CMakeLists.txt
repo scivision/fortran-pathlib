@@ -64,6 +64,7 @@ src/absolute.cpp
 src/copy.cpp
 src/compiler.cpp
 src/cygwin.cpp
+src/equivalent.cpp
 src/exepath.cpp
 src/env.cpp
 src/home.cpp

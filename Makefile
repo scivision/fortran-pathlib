@@ -51,6 +51,7 @@ COMM_SRCS = \
 	$(comdir)c.cpp \
 	$(comdir)compiler.cpp \
 	$(comdir)cygwin.cpp \
+	$(comdir)equivalent.cpp \
 	$(comdir)exepath.cpp \
 	$(comdir)env.cpp \
 	$(comdir)filesystem.cpp \

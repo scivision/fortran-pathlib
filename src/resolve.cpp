@@ -4,13 +4,6 @@
 #include <string>
 #include <system_error>
 
-#ifndef HAVE_CXX_FILESYSTEM
-// preferred import order for stat()
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <cerrno>
-#endif
-
 
 std::string fs_canonical(std::string_view path, const bool strict, const bool expand_tilde)
 {
@@ -68,29 +61,4 @@ std::string fs_resolve(std::string_view path, const bool strict, const bool expa
   // https://docs.python.org/3/library/pathlib.html#pathlib.Path.resolve
 
   return fs_canonical(fs_absolute(path, expand_tilde), strict, false);
-}
-
-
-bool fs_equivalent(std::string_view path1, std::string_view path2)
-{
-  // non-existent paths are not equivalent
-#ifdef HAVE_CXX_FILESYSTEM
-  std::error_code ec;
-  std::filesystem::path p1(path1);
-  std::filesystem::path p2(path2);
-  if(fs_is_mingw()){
-    p1 = p1.lexically_normal();
-    p2 = p2.lexically_normal();
-  }
-
-  return std::filesystem::equivalent(p1, p2, ec) && !ec;
-#else
-  struct stat s1;
-  struct stat s2;
-
-  if(stat(path1.data(), &s1) != 0 || stat(path2.data(), &s2) != 0)
-    return false;
-// https://www.boost.org/doc/libs/1_86_0/libs/filesystem/doc/reference.html#equivalent
-  return s1.st_dev == s2.st_dev && s1.st_ino == s2.st_ino;
-#endif
 }
