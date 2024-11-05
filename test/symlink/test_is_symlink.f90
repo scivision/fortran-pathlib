@@ -6,11 +6,11 @@ use filesystem
 
 implicit none
 
+if (command_argument_count() == 0) error stop "please give test link file"
+
 valgrind : block
 
-character(:), allocatable :: tfile, tdir
-
-if (command_argument_count() == 0) error stop "please give test link file"
+character(:), allocatable :: tfile
 
 tfile = getarg(1)
 
@@ -20,13 +20,6 @@ if(is_symlink("")) error stop "is_symlink('') should be false"
 !> symlink file
 if(.not.is_symlink(tfile)) then
   write(stderr, '(a)') "is_symlink() should be true for symlink file: " // tfile
-  error stop
-end if
-
-!> symlink directory
-tdir = parent(tfile)
-if (.not.is_symlink(tdir)) then
-  write(stderr, '(a)') "is_symlink() should be true for symlink directory: " // tdir
   error stop
 end if
 

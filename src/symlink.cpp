@@ -24,18 +24,29 @@
 
 bool fs_is_symlink(std::string_view path)
 {
-#if defined(_WIN32)
-  const DWORD a = GetFileAttributesA(path.data());
-  return (a != INVALID_FILE_ATTRIBUTES) && (a & FILE_ATTRIBUTE_REPARSE_POINT);
+#if defined(__MINGW32__)
+  if (const DWORD a = GetFileAttributesA(path.data());
+        a != INVALID_FILE_ATTRIBUTES)  FFS_LIKELY
+    return a & FILE_ATTRIBUTE_REPARSE_POINT;
 #elif defined(HAVE_CXX_FILESYSTEM)
+// std::filesystem::symlink_status doesn't detect symlinks on MinGW
   std::error_code ec;
-  return std::filesystem::is_symlink(path, ec) && !ec;
+  const auto s = std::filesystem::symlink_status(path, ec);
+  if(!ec) FFS_LIKELY
+    return std::filesystem::is_symlink(s);
+
+  std::cerr << "ERROR:ffilesystem:is_symlink(" << path << "): " << ec.message() << "\n";
+  return false;
 #else
   struct stat buf;
 
-  return !lstat(path.data(), &buf) && S_ISLNK(buf.st_mode);
+  if(!lstat(path.data(), &buf)) FFS_LIKELY
+    return S_ISLNK(buf.st_mode);
   // return (buf.st_mode & S_IFMT) == S_IFLNK; // equivalent
 #endif
+
+  fs_print_error(path, "is_symlink");
+  return false;
 }
 
 
