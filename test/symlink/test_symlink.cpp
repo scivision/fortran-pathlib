@@ -58,24 +58,31 @@ int main([[maybe_unused]] int argc, char* argv[]) {
   std::cout << "PASSED: create_symlink " << link << "\n";
 
 
-    std::string rtgt = fs_read_symlink(link);
-    if (rtgt != tgt) {
-      std::cerr << "read_symlink() failed: " << rtgt << " != " << tgt << "\n";
-      return EXIT_FAILURE;
-    }
-    std::cout << "PASSED: read_symlink " << rtgt << " == " << tgt << "\n";
+  std::string rtgt = fs_read_symlink(link);
+  if (rtgt != tgt) {
+    std::cerr << "read_symlink() failed: " << rtgt << " != " << tgt << "\n";
+    return EXIT_FAILURE;
+  }
+  std::cout << "PASSED: read_symlink " << rtgt << " == " << tgt << "\n";
 
-    rtgt = fs_read_symlink(tgt);
-    if(!rtgt.empty()){
-      std::cerr << "read_symlink() should return empty string for non-symlink file: " << rtgt << "\n";
-      return EXIT_FAILURE;
-    }
+  std::string ctgt = fs_canonical(link, true, false);
+  if (ctgt != tgt) {
+    std::cerr << "canonical() on symlink failed: " << ctgt << " != " << tgt << "\n";
+    return EXIT_FAILURE;
+  }
+  std::cout << "PASSED: canonical() on symlink " << ctgt << " == " << tgt << "\n";
 
-    rtgt = fs_read_symlink("not-exist-file");
-    if (!rtgt.empty()) {
-      std::cerr << "read_symlink() should return empty string for non-existent file: " << rtgt << "\n";
-      return EXIT_FAILURE;
-    }
+  rtgt = fs_read_symlink(tgt);
+  if(!rtgt.empty()){
+    std::cerr << "read_symlink() should return empty string for non-symlink file: " << rtgt << "\n";
+    return EXIT_FAILURE;
+  }
+
+  rtgt = fs_read_symlink("not-exist-file");
+  if (!rtgt.empty()) {
+    std::cerr << "read_symlink() should return empty string for non-existent file: " << rtgt << "\n";
+    return EXIT_FAILURE;
+  }
 
 
   if (fs_is_symlink(linko)) {
