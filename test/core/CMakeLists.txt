@@ -82,6 +82,7 @@ endif()
 set(cpp_tests canonical expanduser core
 filename filesize
 hard_link
+is_absolute
 join
 locale
 normal

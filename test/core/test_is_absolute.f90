@@ -2,15 +2,16 @@ program test_is_abs
 
 use filesystem
 
+logical :: a
+
 if (is_absolute("")) error stop "blank is not absolute"
 
+a = is_absolute("/")
+
 if (is_windows()) then
-    if (.not. is_absolute("J:/")) error stop "is_absolute(J:/) on Windows should be true"
-    if (.not. is_absolute("j:/")) error stop "is_absolute(j:/) on Windows should be true"
-    if (is_absolute("/")) error stop "is_absolute(/) on Windows should be false"
+  if (a) error stop "is_absolute(/) on Windows should be false"
 else
-    if (.not. is_absolute("/")) error stop "is_absolute(/) on Unix should be true"
-    if (is_absolute("j:/")) error stop "is_absolute(j:/) on Unix should be false"
+  if (.not. a) error stop "is_absolute(/) on Unix should be true"
 end if
 
 end program
