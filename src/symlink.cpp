@@ -72,7 +72,7 @@ std::string fs_read_symlink(std::string_view path)
     return {};
   }
 
-#if defined(_WIN32)
+#if defined(__MINGW32__)
   // this resolves Windows symbolic links (reparse points and junctions)
   // it also resolves the case insensitivity of Windows paths to the disk case
   // References:
