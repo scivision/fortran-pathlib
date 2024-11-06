@@ -23,6 +23,9 @@ std::string fs_absolute(std::string_view path, const bool expand_tilde)
   const std::string ex = expand_tilde
     ? fs_expanduser(path)
     : std::string(path);
+
+  if (fs_is_absolute(ex))
+    return ex;
 #endif
 
   // Linux, MinGW can't handle empty paths
@@ -40,9 +43,6 @@ std::string fs_absolute(std::string_view path, const bool expand_tilde)
   std::cerr << "ERROR:Ffilesystem:absolute(" << path << ") " << ec.message() << "\n";
   return {};
 #else
-  if (fs_is_absolute(ex))
-    return ex;
-
   const auto cwd = fs_get_cwd();
   if(cwd.empty())
     return {};

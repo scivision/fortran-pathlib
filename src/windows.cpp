@@ -62,11 +62,12 @@ std::string fs_win32_final_path(std::string_view path)
   // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfinalpathnamebyhandlea
 
 #if defined(_WIN32)
+  if(FS_TRACE) std::cout << "TRACE: win32_final_path(" << path << ")\n";
   // dwDesiredAccess=0 to allow getting parameters even without read permission
   // FILE_FLAG_BACKUP_SEMANTICS required to open a directory
   HANDLE h = CreateFileA(path.data(), 0, 0, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
   if(h == INVALID_HANDLE_VALUE){
-    std::cerr << "ERROR:Ffilesystem:read_symlink:CreateFile open\n";
+    std::cerr << "ERROR:Ffilesystem:win32_final_path:CreateFile open\n";
     return {};
   }
 
@@ -77,16 +78,16 @@ std::string fs_win32_final_path(std::string_view path)
 
   switch (L) {
     case ERROR_PATH_NOT_FOUND:
-      std::cerr << "ERROR:win32_read_symlink:GetFinalPathNameByHandle: path not found\n";
+      std::cerr << "ERROR:win32_final_path:GetFinalPathNameByHandle: path not found\n";
       return {};
     case ERROR_NOT_ENOUGH_MEMORY:
-      std::cerr << "ERROR:win32_read_symlink:GetFinalPathNameByHandle: buffer too small\n";
+      std::cerr << "ERROR:win32_final_path:GetFinalPathNameByHandle: buffer too small\n";
       return {};
     case ERROR_INVALID_PARAMETER:
-      std::cerr << "ERROR:win32_read_symlink:GetFinalPathNameByHandle: invalid parameter\n";
+      std::cerr << "ERROR:win32_final_path:GetFinalPathNameByHandle: invalid parameter\n";
       return {};
     case 0:
-      std::cerr << "ERROR:win32_read_symlink:GetFinalPathNameByHandle: unknown error\n";
+      std::cerr << "ERROR:win32_final_path:GetFinalPathNameByHandle: unknown error\n";
       return {};
   }
 
