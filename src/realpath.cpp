@@ -18,23 +18,7 @@ std::string fs_realpath(std::string_view path)
   // resolve real path, which need not exist
 
 #ifdef _WIN32
-// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfullpathnameA
-// GetFinalPathNameByHandle or GetFullPathName returns the unresolved symlink
-  const DWORD L = GetFullPathNameA(path.data(), 0, nullptr, nullptr);
-  if(L == 0){  FFS_UNLIKELY
-    fs_print_error(path, "realpath:GetFullPathName");
-    return {};
-  }
-  // this form includes the null terminator
-  std::string r(L, '\0');
-  // weak detection of race condition (cwd change)
-  if(GetFullPathNameA(path.data(), L, r.data(), nullptr) == L-1){  FFS_LIKELY
-    r.resize(L-1);
-    return fs_as_posix(r);
-  }
-
-  fs_print_error(path, "realpath:GetFullPathName");
-  return {};
+  return fs_exists(path) ? fs_win32_final_path(path) : fs_win32_full_name(path);
 #else
   std::string r(fs_get_max_path(), '\0');
   const char* t = realpath(path.data(), r.data());

@@ -27,13 +27,18 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 15
 
+    strategy:
+      fail-fast: false
+      matrix:
+        cpp: [false, true]
+
     # github actions generally broken for shared lib, even when exe in cwd
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Configure
-      run: cmake -B build -Dffilesystem_fortran:BOOL=no --log-level=VERBOSE
+      run: cmake -B build -Dffilesystem_cpp:BOOL=${{ matrix.cpp }} -Dffilesystem_fortran:BOOL=no --log-level=VERBOSE
 
     - name: build Release
       run: cmake --build build --config Release

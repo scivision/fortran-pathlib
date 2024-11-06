@@ -174,6 +174,8 @@ bool fs_set_cwd(std::string_view);
 std::string fs_get_tempdir();
 std::string fs_get_cwd();
 
+std::string fs_win32_final_path(std::string_view path);
+std::string fs_win32_full_name(std::string_view path);
 
 std::string fs_filesystem_type(std::string_view);
 

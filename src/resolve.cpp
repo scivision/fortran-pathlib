@@ -26,6 +26,9 @@ std::string fs_canonical(std::string_view path, const bool strict, const bool ex
   if (!strict && !fs_is_absolute(ex) && !fs_exists(ex))
     return fs_normal(ex);
 
+  if (fs_is_mingw() && fs_is_symlink(ex))
+    return fs_win32_final_path(ex);
+
   std::error_code ec;
 
   const auto c = strict

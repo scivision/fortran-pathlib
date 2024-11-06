@@ -6,6 +6,7 @@
 #include <iostream>
 #include <system_error>
 #include <cerrno>
+#include <string>
 #include <algorithm> // std::replace
 
 #include "ffilesystem.h"
@@ -19,6 +20,89 @@ std::string fs_as_posix(std::string_view path)
     std::replace( s.begin(), s.end(), '\\', '/');
 
   return s;
+}
+
+
+std::string fs_win32_full_name(std::string_view path)
+{
+// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfullpathnameA
+// GetFinalPathNameByHandle or GetFullPathName returns the unresolved symlink
+
+#ifdef _WIN32
+  const DWORD L = GetFullPathNameA(path.data(), 0, nullptr, nullptr);
+  if(L == 0){  FFS_UNLIKELY
+    fs_print_error(path, "realpath:GetFullPathName");
+    return {};
+  }
+  // this form includes the null terminator
+  std::string r(L, '\0');
+  // weak detection of race condition (cwd change)
+  if(GetFullPathNameA(path.data(), L, r.data(), nullptr) == L-1){  FFS_LIKELY
+    r.resize(L-1);
+    return fs_as_posix(r);
+  }
+
+  fs_print_error(path, "realpath:GetFullPathName");
+  return {};
+#else
+  return std::string(path);
+#endif
+}
+
+
+std::string fs_win32_final_path(std::string_view path)
+{
+  // resolves Windows symbolic links (reparse points and junctions)
+  // it also resolves the case insensitivity of Windows paths to the disk case
+  // PATH MUST EXIST
+  //
+  // References:
+  // https://stackoverflow.com/a/50182947
+  // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilea
+  // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfinalpathnamebyhandlea
+
+#if defined(_WIN32)
+  // dwDesiredAccess=0 to allow getting parameters even without read permission
+  // FILE_FLAG_BACKUP_SEMANTICS required to open a directory
+  HANDLE h = CreateFileA(path.data(), 0, 0, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
+  if(h == INVALID_HANDLE_VALUE){
+    std::cerr << "ERROR:Ffilesystem:read_symlink:CreateFile open\n";
+    return {};
+  }
+
+  std::string r(fs_get_max_path(), '\0');
+
+  DWORD L = GetFinalPathNameByHandleA(h, r.data(), r.size(), FILE_NAME_NORMALIZED);
+  CloseHandle(h);
+
+  switch (L) {
+    case ERROR_PATH_NOT_FOUND:
+      std::cerr << "ERROR:win32_read_symlink:GetFinalPathNameByHandle: path not found\n";
+      return {};
+    case ERROR_NOT_ENOUGH_MEMORY:
+      std::cerr << "ERROR:win32_read_symlink:GetFinalPathNameByHandle: buffer too small\n";
+      return {};
+    case ERROR_INVALID_PARAMETER:
+      std::cerr << "ERROR:win32_read_symlink:GetFinalPathNameByHandle: invalid parameter\n";
+      return {};
+    case 0:
+      std::cerr << "ERROR:win32_read_symlink:GetFinalPathNameByHandle: unknown error\n";
+      return {};
+  }
+
+  r.resize(L);
+
+#ifdef __cpp_lib_starts_ends_with
+  if (r.starts_with("\\\\?\\"))
+#else
+  if (r.substr(0, 4) == "\\\\?\\")
+#endif
+    r = r.substr(4);
+
+  return fs_as_posix(r);
+#else
+  return std::string(path);
+#endif
 }
 
 
