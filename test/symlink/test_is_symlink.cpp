@@ -1,15 +1,17 @@
 #include <iostream>
 #include "ffilesystem.h"
 #include <cstdlib>
+#include <string_view>
 
 int main(int argc, char* argv[]) {
 
-if (argc == 1) {
-    std::cerr << "please give test link file\n";
+if (argc < 3) {
+    std::cerr << "please give test link file and link dir\n";
     return EXIT_FAILURE;
 }
 
-const std::string tfile = argv[1];
+std::string_view tfile = argv[1];
+std::string_view tdir = argv[2];
 
 if (fs_is_symlink("not-exist-file")) {
   std::cerr << "is_symlink() should be false for non-existent file\n";
@@ -33,7 +35,6 @@ if(!fs_is_symlink(tfile)) {
 
 std::cout << "PASS: file is_symlink(" << tfile << ")\n";
 
-const std::string tdir = fs_parent(tfile);
 if (!fs_is_dir(tdir)){
     std::cerr << "is_dir(" << tdir << ") should be true for symlink directory\n";
     return EXIT_FAILURE;

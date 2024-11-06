@@ -11,10 +11,17 @@ message(VERBOSE "CMake test link file ${test_symlink_file2}")
 
 
 add_executable(test_is_symlink_cpp test_is_symlink.cpp)
-add_test(NAME Cpp_is_symlink COMMAND test_is_symlink_cpp ${test_symlink_file})
+add_test(NAME Cpp_is_symlink COMMAND test_is_symlink_cpp ${test_symlink_file} ${test_symlink_dir2})
 set_tests_properties(Cpp_is_symlink PROPERTIES FIXTURES_SETUP is_symlink)
 
-foreach(t IN ITEMS is_symlink_cpp)
+add_executable(test_symlink_cpp test_symlink.cpp)
+add_test(NAME Cpp_symlink COMMAND test_symlink_cpp)
+set_tests_properties(Cpp_symlink PROPERTIES
+FIXTURES_SETUP symlink
+FIXTURES_REQUIRED is_symlink
+)
+
+foreach(t IN ITEMS is_symlink_cpp symlink_cpp)
   target_link_libraries(test_${t} PRIVATE ffilesystem)
 endforeach()
 
@@ -26,7 +33,7 @@ add_test(NAME Fortran_is_symlink COMMAND test_is_symlink_fortran ${test_symlink_
 set_tests_properties(Fortran_is_symlink PROPERTIES FIXTURES_SETUP is_symlink)
 
 add_executable(test_symlink_fortran test_symlink.f90)
-add_test(NAME Fortran_symlink COMMAND test_symlink_fortran $<BOOL:${WIN32}>)
+add_test(NAME Fortran_symlink COMMAND test_symlink_fortran)
 set_tests_properties(Fortran_symlink PROPERTIES
 FIXTURES_SETUP symlink
 FIXTURES_REQUIRED is_symlink

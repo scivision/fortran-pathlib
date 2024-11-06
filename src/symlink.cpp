@@ -65,20 +65,67 @@ bool fs_is_symlink(std::string_view path)
 
 std::string fs_read_symlink(std::string_view path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
+
+  if(!fs_is_symlink(path)) FFS_UNLIKELY
+  {
+    std::cerr << "ERROR:Ffilesystem:read_symlink(" << path << ") is not a symlink\n";
+    return {};
+  }
+
+#if defined(_WIN32)
+  // this resolves Windows symbolic links (reparse points and junctions)
+  // it also resolves the case insensitivity of Windows paths to the disk case
+  // References:
+  // https://stackoverflow.com/a/50182947
+  // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilea
+  // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfinalpathnamebyhandlea
+
+  HANDLE h = CreateFileA(path.data(), 0, 0, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
+  if(h == INVALID_HANDLE_VALUE){
+    std::cerr << "ERROR:Ffilesystem:read_symlink:CreateFile open\n";
+    return {};
+  }
+
+  std::string r(fs_get_max_path(), '\0');
+
+  DWORD L = GetFinalPathNameByHandleA(h, r.data(), r.size(), FILE_NAME_NORMALIZED);
+  CloseHandle(h);
+
+  switch (L) {
+    case ERROR_PATH_NOT_FOUND:
+      std::cerr << "ERROR:win32_read_symlink:GetFinalPathNameByHandle: path not found\n";
+      return {};
+    case ERROR_NOT_ENOUGH_MEMORY:
+      std::cerr << "ERROR:win32_read_symlink:GetFinalPathNameByHandle: buffer too small\n";
+      return {};
+    case ERROR_INVALID_PARAMETER:
+      std::cerr << "ERROR:win32_read_symlink:GetFinalPathNameByHandle: invalid parameter\n";
+      return {};
+    case 0:
+      std::cerr << "ERROR:win32_read_symlink:GetFinalPathNameByHandle: unknown error\n";
+      return {};
+  }
+
+  r.resize(L);
+
+#ifdef __cpp_lib_starts_ends_with
+  if (r.starts_with("\\\\?\\"))
+#else
+  if (r.substr(0, 4) == "\\\\?\\")
+#endif
+    r = r.substr(4);
+
+  return fs_as_posix(r);
+
+#elif defined(HAVE_CXX_FILESYSTEM)
+
   std::error_code ec;
   if(auto p = std::filesystem::read_symlink(path, ec); !ec) FFS_LIKELY
     return p.generic_string();
 
-  // std::filesystem::canonical fallback not helpful here -- link is still not resolved
   std::cerr << "ERROR:ffilesystem:read_symlink: " << ec.message() << "\n";
   return {};
-#elif defined(_WIN32)
-  // does not work for MinGW, oneAPI Windows, ...
-  // fs_canonical(path, false, result, buffer_size) just returns the unresolved symlink as in C++
-  // GetFinalPathNameByHandle or GetFullPathName also returns the unresolved symlink
-  std::cerr << "ERROR:Ffilesystem:read_symlink: not implemented for non-C++: " << path << "\n";
-  return {};
+
 #else
   // https://www.man7.org/linux/man-pages/man2/readlink.2.html
   const auto m = fs_get_max_path();

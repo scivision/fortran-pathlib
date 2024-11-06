@@ -5,16 +5,11 @@ use filesystem
 
 implicit none
 
-logical :: win32_symlink
-
 valgrind: block
 
 logical :: ok
 
 character(:), allocatable :: tgt, rtgt, link, linko, tgt_dir, link_dir
-
-win32_symlink = .false.
-if(command_argument_count() > 0) win32_symlink = getarg(1) /= '0'
 
 tgt_dir = parent(getarg(0))
 
@@ -64,33 +59,28 @@ end if
 call create_symlink(tgt, link)
 print '(a)', "PASSED: create_symlink " // link
 
-if(win32_symlink) then
-  write(stderr,"(a)") "Skipping read_symlink() test on Windows"
-else
-
-  !> read_symlink
-  rtgt = read_symlink(link)
-  if(rtgt /= tgt) then
-    write(stderr, '(a)') "read_symlink() failed: " // rtgt // " /= " // tgt
-    error stop
-  end if
-  print '(a)', "PASSED: read_symlink " // rtgt // " == " // tgt
-
-  !> read_symlink non-symlink
-  rtgt = read_symlink(tgt)
-  if (len_trim(rtgt) > 0) then
-    write(stderr, '(a)') "read_symlink() should return empty string for non-symlink file: " // rtgt
-    error stop
-  end if
-
-  !> read_symlink non-existent
-  rtgt = read_symlink("not-exist-file")
-  if (len_trim(rtgt) > 0) then
-    write(stderr, '(a)') "read_symlink() should return empty string for non-existent file: " // rtgt
-    error stop
-  end if
-
+!> read_symlink
+rtgt = read_symlink(link)
+if(rtgt /= tgt) then
+  write(stderr, '(a)') "read_symlink() failed: " // rtgt // " /= " // tgt
+  error stop
 end if
+print '(a)', "PASSED: read_symlink " // rtgt // " == " // tgt
+
+!> read_symlink non-symlink
+rtgt = read_symlink(tgt)
+if (len_trim(rtgt) > 0) then
+  write(stderr, '(a)') "read_symlink() should return empty string for non-symlink file: " // rtgt
+  error stop
+end if
+
+!> read_symlink non-existent
+rtgt = read_symlink("not-exist-file")
+if (len_trim(rtgt) > 0) then
+  write(stderr, '(a)') "read_symlink() should return empty string for non-existent file: " // rtgt
+  error stop
+end if
+
 
 
 if (is_symlink(linko)) then
