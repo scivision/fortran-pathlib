@@ -18,7 +18,7 @@ void fs_print_error(std::string_view path, std::string_view fname)
 #if defined(_WIN32) || defined(__CYGWIN__)
   const DWORD error = GetLastError();
 
-  std::cerr << std::system_category().message(GetLastError()) << "\n";
+  std::cerr << std::system_category().message(error) << "\n";
 
   if(error == ERROR_PRIVILEGE_NOT_HELD)
     std::cerr << "Enable Windows developer mode to use symbolic links: https://learn.microsoft.com/en-us/windows/apps/get-started/developer-mode-features-and-debugging \n";
@@ -40,5 +40,10 @@ void fs_print_error(std::string_view path, std::string_view fname, const std::er
 
 void fs_print_error(std::string_view path1, std::string_view path2, std::string_view fname, const std::error_code& ec)
 {
-  std::cerr << "ERROR:Ffilesystem:" << fname << "(" << path1 <<  ", " << path2 << ")  " << ec.message() << "\n";
+  std::cerr << "ERROR:Ffilesystem:" << fname << "(" << path1 <<  ", " << path2 << ")  ";
+
+  if(ec)
+    std::cerr << ec.message();
+
+  std::cerr << "\n";
 }
