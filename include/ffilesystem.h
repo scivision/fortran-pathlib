@@ -32,6 +32,7 @@
 #include <string_view>
 #include <ctime> // time_t
 #include <optional>
+#include <system_error>
 
 #ifdef HAVE_CXX_FILESYSTEM
 
@@ -72,6 +73,8 @@ std::string fs_drop_slash(std::string_view);
 std::string::size_type fs_str2char(std::string_view, char*, const std::string::size_type);
 
 void fs_print_error(std::string_view, std::string_view);
+void fs_print_error(std::string_view, std::string_view, const std::error_code&);
+void fs_print_error(std::string_view, std::string_view, std::string_view, const std::error_code&);
 
 
 std::string fs_absolute(std::string_view, const bool);

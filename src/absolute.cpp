@@ -1,5 +1,4 @@
 #include <string>
-#include <iostream>
 #include <system_error>
 
 #include "ffilesystem.h"
@@ -40,7 +39,7 @@ std::string fs_absolute(std::string_view path, const bool expand_tilde)
   if(!ec) FFS_LIKELY
     return a.generic_string();
 
-  std::cerr << "ERROR:Ffilesystem:absolute(" << path << ") " << ec.message() << "\n";
+  fs_print_error(path, "absolute", ec);
   return {};
 #else
   const auto cwd = fs_get_cwd();

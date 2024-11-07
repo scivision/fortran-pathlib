@@ -34,7 +34,7 @@ bool fs_mkdir(std::string_view path)
   if (std::filesystem::create_directories(path, ec) || (!ec && fs_is_dir(path))) FFS_LIKELY
     return true;
 
-  std::cerr << "ERROR:Ffs:mkdir(" << path << ") " << ec.message() << "\n";
+  fs_print_error(path, "mkdir", ec);
   return false;
 
 #else

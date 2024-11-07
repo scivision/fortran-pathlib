@@ -1,6 +1,6 @@
 #include <string>
 #include "ffilesystem.h"
-#include <iostream>
+
 #include <system_error>
 
 // preferred import order for stat()
@@ -49,7 +49,7 @@ bool fs_set_permissions(std::string_view path, int readable, int writable, int e
   if(!ec) FFS_LIKELY
     return true;
 
-  std::cerr << "ERROR:ffilesystem:set_permissions: " << ec.message() << "\n";
+  fs_print_error(path, "set_permissions", ec);
   return false;
 #else
 
@@ -95,7 +95,7 @@ std::string fs_get_permissions(std::string_view path)
   std::error_code ec;
   const auto s = std::filesystem::status(path, ec);
   if(ec){ FFS_UNLIKELY
-    std::cerr << "ERROR:ffilesystem:get_permissions: " << ec.message() << "\n";
+    fs_print_error(path, "get_permissions", ec);
     return {};
   }
 

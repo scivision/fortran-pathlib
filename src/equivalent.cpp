@@ -18,8 +18,11 @@
 bool fs_equivalent(std::string_view path1, std::string_view path2)
 {
   // non-existent paths are not equivalent
-#ifdef HAVE_CXX_FILESYSTEM
+
   std::error_code ec;
+
+#ifdef HAVE_CXX_FILESYSTEM
+
   std::filesystem::path p1(path1);
   std::filesystem::path p2(path2);
   if(fs_is_mingw()){
@@ -31,8 +34,6 @@ bool fs_equivalent(std::string_view path1, std::string_view path2)
   if(!ec)
     return e;
 
-  std::cerr << "ERROR:ffilesystem:equivalent(" << path1 << ", " << path2 << ") " << ec.message() << "\n";
-  return false;
 #elif defined(STATX_BASIC_STATS) && defined(USE_STATX)
 // https://www.man7.org/linux/man-pages/man2/statx.2.html
   if (FS_TRACE) std::cout << "TRACE: statx() equivalent " << path1 << " " << path2 << "\n";
@@ -51,6 +52,6 @@ bool fs_equivalent(std::string_view path1, std::string_view path2)
   if(!stat(path1.data(), &s1) && !stat(path2.data(), &s2))
     return s1.st_dev == s2.st_dev && s1.st_ino == s2.st_ino;
 #endif
-  fs_print_error(path1, "equivalent");
+  fs_print_error(path1, path2, "equivalent", ec);
   return false;
 }

@@ -68,8 +68,10 @@ std::string fs_mkdtemp(std::string_view prefix)
 
 if(FS_TRACE) std::cout << "TRACE:mkdtemp_mersenne: prefix: " << prefix << "\n";
 
-#if defined(HAVE_CXX_FILESYSTEM) && defined(__cpp_deduction_guides)
   std::error_code ec;
+
+#if defined(HAVE_CXX_FILESYSTEM) && defined(__cpp_deduction_guides)
+
   std::filesystem::path t;
 
   constexpr std::string::size_type Lname = 16;  // arbitrary length for random string
@@ -90,8 +92,6 @@ if(FS_TRACE) std::cout << "TRACE:mkdtemp_mersenne: prefix: " << prefix << "\n";
       return t.generic_string();
   }
 
-  std::cerr << "ERROR:Ffilesystem::mkdtemp:mkdir: could not create temporary directory " << ec.message() << "\n";
-  return {};
 #else
 
   std::string tmpl(prefix);
@@ -110,9 +110,8 @@ if(FS_TRACE) std::cout << "TRACE:mkdtemp_mersenne: prefix: " << prefix << "\n";
   if(tmp)
     return tmp;
 #endif
-
-  fs_print_error(prefix, "mkdtemp");
-  return {};
-
 #endif
+
+  fs_print_error(prefix, "mkdtemp", ec);
+  return {};
 }

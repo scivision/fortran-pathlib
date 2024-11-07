@@ -48,7 +48,7 @@ std::string fs_exe_path()
   // https://man7.org/linux/man-pages/man2/readlink.2.html
   const size_t L = readlink("/proc/self/exe", path.data(), buffer_size);
   if(!L){
-    fs_print_error("readlink", "exe_path");
+    fs_print_error("", "exe_path:readlink");
     return {};
   }
   path.resize(L);

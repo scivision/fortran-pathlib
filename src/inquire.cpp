@@ -228,8 +228,10 @@ bool fs_is_writable(std::string_view path)
 
 std::uintmax_t fs_hard_link_count(std::string_view path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
   std::error_code ec;
+
+#ifdef HAVE_CXX_FILESYSTEM
+
   if(auto s = std::filesystem::hard_link_count(path, ec); !ec)  FFS_LIKELY
     return s;
 
@@ -249,6 +251,6 @@ std::uintmax_t fs_hard_link_count(std::string_view path)
 
 #endif
 
-  fs_print_error(path, "hard_link_count");
+  fs_print_error(path, "hard_link_count", ec);
   return {};
 }

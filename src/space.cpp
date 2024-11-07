@@ -27,7 +27,7 @@ std::uintmax_t fs_space_available(std::string_view path)
   if(auto s = std::filesystem::space(path, ec); !ec)  FFS_LIKELY
     return s.available;
 
-  std::cerr << "ERROR:ffilesystem:space_available: " << ec.message() << "\n";
+  fs_print_error(path, "space_available", ec);
 
 #else
 

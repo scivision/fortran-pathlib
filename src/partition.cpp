@@ -168,7 +168,6 @@ std::string fs_filesystem_type(std::string_view path)
     return fs_trim(name);
 
   fs_print_error(path, "filesystem_type");
-  return {};
 #elif defined(__linux__)
 #if __has_include(<linux/magic.h>)
   return fs_type_linux(path);

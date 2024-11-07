@@ -9,10 +9,12 @@
 #include <cerrno>
 #endif
 
+
 void fs_print_error(std::string_view path, std::string_view fname)
 {
 
-  std::cerr << "ERROR:ffilesystem:" << fname <<"(" << path << ")  ";
+  std::cerr << "ERROR:Ffilesystem:" << fname << "(" << path << ")  ";
+
 #if defined(_WIN32) || defined(__CYGWIN__)
   const DWORD error = GetLastError();
 
@@ -24,4 +26,19 @@ void fs_print_error(std::string_view path, std::string_view fname)
   auto econd = std::generic_category().default_error_condition(errno);
   std::cerr << econd.message() << "\n";
 #endif
+}
+
+
+void fs_print_error(std::string_view path, std::string_view fname, const std::error_code& ec)
+{
+  std::cerr << "ERROR:Ffilesystem:" << fname << "(" << path << ")  ";
+  if(ec)
+    std::cerr << ec.message();
+
+  std::cerr << "\n";
+}
+
+void fs_print_error(std::string_view path1, std::string_view path2, std::string_view fname, const std::error_code& ec)
+{
+  std::cerr << "ERROR:Ffilesystem:" << fname << "(" << path1 <<  ", " << path2 << ")  " << ec.message() << "\n";
 }

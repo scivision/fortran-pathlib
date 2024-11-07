@@ -24,7 +24,7 @@ std::string fs_get_tempdir()
   if(auto p = std::filesystem::temp_directory_path(ec); !ec) FFS_LIKELY
     return p.generic_string();
 
-  std::cerr << "ERROR:ffilesystem:get_tempdir: " << ec.message() << "\n";
+  fs_print_error("", "get_tempdir", ec);
   return {};
 #else
 
@@ -53,13 +53,13 @@ std::string fs_get_tempdir()
 
 bool fs_set_cwd(std::string_view path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
+
   std::error_code ec;
+
+#ifdef HAVE_CXX_FILESYSTEM
   std::filesystem::current_path(path, ec);
   if(!ec) FFS_LIKELY
     return true;
-
-  std::cerr << "ERROR:ffilesystem:chdir: " << ec.message() << "\n";
 #elif _WIN32
   // windows.h https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setcurrentdirectory
   if(SetCurrentDirectoryA(path.data()))  FFS_LIKELY
@@ -68,21 +68,21 @@ bool fs_set_cwd(std::string_view path)
   // unistd.h https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/chdir-wchdir?view=msvc-170
   if(chdir(path.data()) == 0)  FFS_LIKELY
     return true;
-
-  fs_print_error(path, "set_cwd");
 #endif
+
+  fs_print_error(path, "set_cwd", ec);
   return false;
 }
 
 
 std::string fs_get_cwd()
 {
-#ifdef HAVE_CXX_FILESYSTEM
+
   std::error_code ec;
+
+#ifdef HAVE_CXX_FILESYSTEM
   if(auto s = std::filesystem::current_path(ec); !ec) FFS_LIKELY
     return s.generic_string();
-
-  std::cerr << "ERROR:ffilesystem:get_cwd: " << ec.message() << "\n";
 #elif defined(_WIN32)
 // windows.h https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcurrentdirectory
   const DWORD L = GetCurrentDirectoryA(0, nullptr);
@@ -103,6 +103,6 @@ std::string fs_get_cwd()
     return fs_trim(buf);
 #endif
 
-  fs_print_error("", "get_cwd");
+  fs_print_error("", "get_cwd", ec);
   return {};
 }

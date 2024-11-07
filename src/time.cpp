@@ -68,7 +68,7 @@ std::optional<std::filesystem::file_time_type> fs_get_modtime_fs(std::string_vie
   if(std::filesystem::file_time_type t_fs = std::filesystem::last_write_time(path, ec); !ec) FFS_LIKELY
     return t_fs;
 
-  std::cerr << "ERROR:Ffs:get_modtime: " << ec.message() << "\n";
+  fs_print_error(path, "fs_get_modtime_fs", ec);
   return {};
 }
 #endif
@@ -85,7 +85,7 @@ bool fs_set_modtime(std::string_view path)
     return true;
   // techinically IWYU <chrono> but that can break some compilers, and it works without the include.
 
-  std::cerr << "ERROR:ffilesystem:set_modtime: " << ec.message() << "\n";
+  fs_print_error(path, "fs_set_modtime", ec);
   return false;
 
 #else

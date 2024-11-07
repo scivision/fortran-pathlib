@@ -38,7 +38,7 @@ std::string fs_canonical(std::string_view path, const bool strict, const bool ex
   if(!ec) FFS_LIKELY
     return c.generic_string();
 
-  std::cerr << "ERROR:ffilesystem:canonical(" << path << ") " << ec.message() << "\n";
+  fs_print_error(path, "canonical", ec);
   return {};
 #else
 

@@ -43,21 +43,22 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
 // WORKAROUND: Windows MinGW GCC 11..13, Intel oneAPI Linux: bug with overwrite_existing failing on overwrite
 
   if(overwrite && fs_is_file(dest) && !fs_remove(dest)) FFS_UNLIKELY
-    std::cerr << "ERROR:Ffilesystem:copy_file: could not remove existing destination file: " << dest << "\n";
+    fs_print_error(dest, "copy_file:remove");
 
   std::error_code ec;
   if(std::filesystem::copy_file(source, dest, opt, ec) && !ec) FFS_LIKELY
     return true;
 
-  std::cerr << "ERROR:ffilesystem:copy_file: " << ec.message() << "\n";
+  fs_print_error(source, "copy_file", ec);
   return false;
 #else
+
   if(overwrite && fs_is_file(dest) && !fs_remove(dest))
-    std::cerr << "ERROR:ffilesystem:copy_file: could not remove existing destination file " << dest << "\n";
+    fs_print_error(dest, "copy_file:remove");
 
 #if defined(_WIN32)
     if(!CopyFileA(source.data(), dest.data(), true)){
-      std::cerr << "ERROR:ffilesystem:copy_file: could not copy file " << source << " => " << dest << "\n";
+      fs_print_error(source, "copy_file:CopyFile");
       return false;
     }
 #elif defined(FFS_MACOS)
@@ -72,7 +73,7 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
   */
   if(copyfile(source.data(), dest.data(), nullptr,
       COPYFILE_METADATA | COPYFILE_EXCL | COPYFILE_STAT | COPYFILE_XATTR | COPYFILE_DATA) < 0){
-    std::cerr << "ERROR:ffilesystem:copy_file: could not clone file " << source << " => " << dest << "\n";
+    fs_print_error(source, "copy_file:copyfile");
     return false;
   }
 #elif defined(HAVE_COPY_FILE_RANGE)
@@ -85,14 +86,14 @@ if (FS_TRACE) std::cout << "TRACE::ffilesystem:copy_file: using copy_file_range\
 
   const int rid = open(source.data(), O_RDONLY);
   if (rid == -1) {
-    std::cerr << "ERROR:ffilesystem:copy_file: could not open file to read " << source << "\n";
+    fs_print_error(source, "copy_file:open");
     return false;
   }
 
   // leave fstat here to avoid source file race conditino
   struct stat  stat;
   if (fstat(rid, &stat) == -1) {
-    std::cerr << "ERROR:ffilesystem:copy_file: could not fstat file to read " << source << "\n";
+    fs_print_error(source, "copy_file:fstat");
     close(rid);
     return false;
   }
@@ -101,7 +102,7 @@ if (FS_TRACE) std::cout << "TRACE::ffilesystem:copy_file: using copy_file_range\
 
   const int wid = open(dest.data(), O_CREAT | O_WRONLY | O_TRUNC, 0644);
   if (wid == -1) {
-    std::cerr << "ERROR:ffilesystem:copy_file: could not open file to write " << dest << "\n";
+    fs_print_error(dest, "copy_file:open");
     close(rid);
     return false;
   }
@@ -111,7 +112,7 @@ if (FS_TRACE) std::cout << "TRACE::ffilesystem:copy_file: using copy_file_range\
   do {
     ret = copy_file_range(rid, nullptr, wid, nullptr, len, 0);
     if (ret == -1) {
-        std::cerr << "ERROR:ffilesystem:copy_file:copy_file_range: could not copy file " << source << " => " << dest << "\n";
+        fs_print_error(dest, "copy_file:copy_file_range");
         close(rid);
         close(wid);
         return false;
@@ -132,13 +133,13 @@ if (FS_TRACE) std::cout << "TRACE::ffilesystem:copy_file: using fallback fread/f
 
   FILE *rid = fopen(source.data(), "r");
   if (!rid) {
-    std::cerr << "ERROR:ffilesystem:copy_file: could not open file to read " << source << "\n";
+    fs_print_error(source, "copy_file:fopen");
     return false;
   }
 
   FILE *wid = fopen(dest.data(), "w");
   if (!wid) {
-    std::cerr << "ERROR:ffilesystem:copy_file: could not open file to write " << dest << "\n";
+    fs_print_error(dest, "copy_file:fopen");
     fclose(rid);
     return false;
   }

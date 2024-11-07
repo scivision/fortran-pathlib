@@ -19,7 +19,6 @@
 
 #include <cstdio> // remove()
 
-#include <iostream>
 #include <string_view>
 #include <system_error>         // for error_code
 
@@ -28,14 +27,12 @@
 
 bool fs_remove(std::string_view path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
+
   std::error_code ec;
 
+#ifdef HAVE_CXX_FILESYSTEM
   if(std::filesystem::remove(path, ec) && !ec) FFS_LIKELY
     return true;
-
-  std::cerr << "ERROR:FFs:remove: " << ec.message() << "\n";
-  return false;
 #else
 
 #ifdef _WIN32
@@ -47,8 +44,8 @@ bool fs_remove(std::string_view path)
   if(remove(path.data()) == 0)
     return true;
 #endif
-   fs_print_error(path, "remove");
-   return false;
-
 #endif
+
+  fs_print_error(path, "remove", ec);
+  return false;
 }

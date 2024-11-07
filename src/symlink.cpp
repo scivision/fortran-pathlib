@@ -29,19 +29,19 @@
 
 bool fs_is_symlink(std::string_view path)
 {
+
+  std::error_code ec;
+
 #if defined(__MINGW32__) || (defined(_WIN32) && !defined(HAVE_CXX_FILESYSTEM))
   if (const DWORD a = GetFileAttributesA(path.data());
         a != INVALID_FILE_ATTRIBUTES)  FFS_LIKELY
     return a & FILE_ATTRIBUTE_REPARSE_POINT;
 #elif defined(HAVE_CXX_FILESYSTEM)
 // std::filesystem::symlink_status doesn't detect symlinks on MinGW
-  std::error_code ec;
   const auto s = std::filesystem::symlink_status(path, ec);
   if(!ec) FFS_LIKELY
     return std::filesystem::is_symlink(s);
 
-  std::cerr << "ERROR:ffilesystem:is_symlink(" << path << "): " << ec.message() << "\n";
-  return false;
 #elif defined(STATX_MODE) && defined(USE_STATX)
 // Linux Glibc only
 // https://www.gnu.org/software/gnulib/manual/html_node/statx.html
@@ -58,7 +58,7 @@ bool fs_is_symlink(std::string_view path)
   // return (s.st_mode & S_IFMT) == S_IFLNK; // equivalent
 #endif
 
-  fs_print_error(path, "is_symlink");
+  fs_print_error(path, "is_symlink", ec);
   return false;
 }
 
@@ -66,36 +66,33 @@ bool fs_is_symlink(std::string_view path)
 std::string fs_read_symlink(std::string_view path)
 {
 
-  if(!fs_is_symlink(path)) FFS_UNLIKELY
-  {
+  if(!fs_is_symlink(path)){ FFS_UNLIKELY
     std::cerr << "ERROR:Ffilesystem:read_symlink(" << path << ") is not a symlink\n";
     return {};
   }
 
+  std::error_code ec;
+
 #if defined(__MINGW32__) || (defined(_WIN32) && !defined(HAVE_CXX_FILESYSTEM))
   return fs_win32_final_path(path);
 #elif defined(HAVE_CXX_FILESYSTEM)
-
-  std::error_code ec;
   if(auto p = std::filesystem::read_symlink(path, ec); !ec) FFS_LIKELY
     return p.generic_string();
-
-  std::cerr << "ERROR:ffilesystem:read_symlink: " << ec.message() << "\n";
-  return {};
 
 #else
   // https://www.man7.org/linux/man-pages/man2/readlink.2.html
   const auto m = fs_get_max_path();
   std::string r(m, '\0');
   const ssize_t Lr = readlink(path.data(), r.data(), m);
-  if (Lr < 0){
-    fs_print_error(path, "read_symlink");
-    return {};
+  if (Lr > 0){
+    // readlink() does not null-terminate the result
+    r.resize(Lr);
+    return r;
   }
-  // readlink() does not null-terminate the result
-  r.resize(Lr);
-  return r;
 #endif
+
+  fs_print_error(path, "read_symlink", ec);
+  return {};
 }
 
 
@@ -116,6 +113,8 @@ bool fs_create_symlink(std::string_view target, std::string_view link)
     return false;
   }
 
+  std::error_code ec;
+
 #if defined(_WIN32)
 
   DWORD p = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
@@ -128,16 +127,12 @@ bool fs_create_symlink(std::string_view target, std::string_view link)
 
 #elif defined(HAVE_CXX_FILESYSTEM)
 
-  std::error_code ec;
-
   fs_is_dir(target)
     ? std::filesystem::create_directory_symlink(target, link, ec)
     : std::filesystem::create_symlink(target, link, ec);
 
-  if(ec) FFS_UNLIKELY
-    std::cerr << "ERROR:ffilesystem:create_symlink: " << ec.message() << "\n";
-
-  return !ec;
+  if(!ec) FFS_LIKELY
+    return true;
 
 #else
 
@@ -153,6 +148,6 @@ bool fs_create_symlink(std::string_view target, std::string_view link)
 
 #endif
 
-  fs_print_error(std::string(target) + " => " + std::string(link), "create_symlink");
+  fs_print_error(target, link, "create_symlink", ec);
   return false;
 }
