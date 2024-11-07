@@ -234,14 +234,21 @@ std::uintmax_t fs_hard_link_count(std::string_view path)
     return s;
 
   std::cerr << "ERROR:ffilesystem:hard_link_count: " << ec.message() << "\n";
-  return {};
-#else
+#elif defined(STATX_BASIC_STATS) && defined(USE_STATX)
+// https://www.man7.org/linux/man-pages/man2/statx.2.html
+  if (FS_TRACE) std::cout << "TRACE: statx() hard_link " << path << "\n";
+  struct statx s;
 
+  if( statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT, STATX_BASIC_STATS, &s) == 0 ) FFS_LIKELY
+    return s.stx_nlink;
+
+#else
   if (struct stat s;
         !stat(path.data(), &s))
     return s.st_nlink;
 
+#endif
+
   fs_print_error(path, "hard_link_count");
   return {};
-#endif
 }
