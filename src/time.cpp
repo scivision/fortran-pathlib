@@ -31,6 +31,10 @@
 #endif
 #endif
 
+#if defined(__linux__) && defined(USE_STATX)
+#include <fcntl.h>   // AT_* constants for statx()
+#endif
+
 
 std::time_t fs_get_modtime(const char* path)
 {
@@ -40,15 +44,20 @@ std::time_t fs_get_modtime(const char* path)
     const auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs.value());
     return std::chrono::system_clock::to_time_t(t_sys);
   }
-  return {};
+#elif defined(STATX_MTIME) && defined(USE_STATX)
+// https://www.man7.org/linux/man-pages/man2/statx.2.html
+  if (FS_TRACE) std::cout << "TRACE: statx() get_modtime " << path << "\n";
+  struct statx s;
+
+  if( statx(AT_FDCWD, path, AT_NO_AUTOMOUNT, STATX_MTIME, &s) == 0 ) FFS_LIKELY
+    return s.stx_mtime.tv_sec;
 #else
   if (struct stat s; !stat(path, &s))
     return s.st_mtime;
-
-  std::cerr << "ERROR:Ffs:fs_get_modtime: " << std::strerror(errno) << "\n";
-  return {};
 #endif
 
+  fs_print_error(path, "fs_get_modtime");
+  return {};
 }
 
 #ifdef HAVE_CXX_FILESYSTEM
