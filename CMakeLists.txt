@@ -79,6 +79,7 @@ src/os.c
 src/owner.cpp
 src/parent.cpp
 src/partition.cpp
+src/permissions.cpp
 src/platform.cpp
 src/pure.cpp
 src/realpath.cpp

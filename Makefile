@@ -65,6 +65,7 @@ COMM_SRCS = \
 	$(comdir)os.c \
 	$(comdir)parent.cpp \
 	$(comdir)partition.cpp \
+	$(comdir)permissions.cpp \
 	$(comdir)platform.cpp \
 	$(comdir)realpath.cpp \
 	$(comdir)relative.cpp \

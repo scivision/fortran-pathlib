@@ -50,6 +50,7 @@ comm_src = files(
 'src/os.c',
 'src/parent.cpp',
 'src/partition.cpp',
+'src/permissions.cpp',
 'src/platform.cpp',
 'src/pure.cpp',
 'src/realpath.cpp',
