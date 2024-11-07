@@ -1,9 +1,13 @@
-#include "ffilesystem.h"
+#if defined(__linux__) && !defined(_DEFAULT_SOURCE)
+#define _DEFAULT_SOURCE
+#endif
 
 #if defined(_WIN32) || defined(__CYGWIN__)
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif
+
+#include "ffilesystem.h"
 
 #include <iostream>
 #include <string>
