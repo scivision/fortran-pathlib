@@ -72,6 +72,7 @@ src/inquire.cpp
 src/libpath.cpp
 src/limits.cpp
 src/locale.cpp
+src/log.cpp
 src/mkdtemp.cpp
 src/mkdir.cpp
 src/normalize.cpp
