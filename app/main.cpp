@@ -5,8 +5,10 @@
 #include <functional>
 #include <map>
 #include <ctime>
+#include <system_error>
 
-#include <chrono> // needed to std::format() std::filesystem::file_time_type
+#include <chrono> // IWYU pragma: keep
+// needed to std::format() std::filesystem::file_time_type
 
 #if __has_include(<format>)
 #include <format>

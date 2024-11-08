@@ -1,11 +1,12 @@
 #include <string>
+#include <string_view>
+
 #include <algorithm> // toupper, std::ranges::contains, std::find
-#include <set>
 #include <cctype> // std::isalnum
 #include <vector>
 
 #if __has_include(<ranges>)
-#include <ranges>
+#include <ranges>  // IWYU pragma: keep
 #endif
 
 #include <iostream>

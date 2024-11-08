@@ -12,9 +12,11 @@
 
 #include "ffilesystem.h"
 
-#include <iostream>
+#include <iostream> // IWYU pragma: keep
 #include <system_error>
-#include <string>
+
+#include <string>  // IWYU pragma: keep
+#include <string_view>
 
 #ifndef HAVE_CXX_FILESYSTEM
 #include <cstdio>  // fopen, fclose, fread, fwrite

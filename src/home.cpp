@@ -1,15 +1,16 @@
 #include <string>
-#include <cstdlib>
+#include <string_view>
+
 #include <set>
 
-#if __has_include(<format>)
+#if __has_include(<format>) && defined(_WIN32)
 #include <format>
 #endif
 
-#include <iostream>
 
 // get_profile_dir
 #ifdef _WIN32
+#include <iostream>
 #define WIN32_LEAN_AND_MEAN
 #include <UserEnv.h> // GetUserProfileDirectoryA
 #include <Windows.h>

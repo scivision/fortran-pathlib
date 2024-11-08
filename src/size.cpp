@@ -6,11 +6,13 @@
 
 #include <string_view>
 #include <system_error>
+
+#include <cstdint>  // uintmax_t
+
+#ifndef HAVE_CXX_FILESYSTEM
 #include <set>
 #include <iostream>
 
-#ifndef HAVE_CXX_FILESYSTEM
-// preferred import order for stat()
 #include <sys/types.h>
 #include <sys/stat.h>
 

@@ -1,8 +1,12 @@
 // interfaces for C
 
-#include <cstdint> // size_t
+#include <cstddef> // size_t
+#include <cstdint> // uintmax_t
+
 #include <iostream>
+
 #include <string>
+#include <string_view>
 
 #include "ffilesystem.h"
 

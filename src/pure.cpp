@@ -1,6 +1,12 @@
 #include <string>
+#include <string_view>
+
 #include <cstring>
 #include <iostream>
+
+#ifndef HAVE_CXX_FILESYSTEM
+#include <cctype>
+#endif
 
 #include "ffilesystem.h"
 

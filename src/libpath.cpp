@@ -13,6 +13,8 @@
 static void dl_dummy_func() {}
 #endif
 
+#include <string>
+
 #include "ffilesystem.h"
 
 

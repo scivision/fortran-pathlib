@@ -1,4 +1,5 @@
 #include <string_view>
+#include <cstdio> // fopen, fclose
 
 #include "ffilesystem.h"
 
@@ -30,6 +31,6 @@ bool fs_touch(std::string_view path)
     return true;
   // is_file check because sometimes fclose() doesn't fail, but the file is not created
 
-  fs_print_error(std::string(path) + " was not created", "touch");
+  fs_print_error(path, "touch");
   return false;
 }

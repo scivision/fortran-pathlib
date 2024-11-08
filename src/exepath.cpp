@@ -4,13 +4,11 @@
 
 #include "ffilesystem.h"
 
-#include <iostream>
 #include <string>
-#include <cstdint> // uint32_t
 
 #if defined(__unix__)
 // https://github.com/cpredef/predef/blob/master/OperatingSystems.md#bsd-environment
-#include <sys/param.h>
+#include <sys/param.h> // IWYU pragma: keep
 #endif
 
 #if defined(_WIN32) || defined(__CYGWIN__)
@@ -19,6 +17,7 @@
 #endif
 
 #ifdef __APPLE__
+#include <cstdint> // uint32_t
 #include <mach-o/dyld.h> // _NSGetExecutablePath
 #elif defined(__linux__) || defined(__CYGWIN__)
 #include <unistd.h> // readlink

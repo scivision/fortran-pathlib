@@ -1,8 +1,12 @@
 #include "ffilesystem.h"
 
 #include <string>
+#include <string_view>
+
+#ifndef HAVE_CXX_FILESYSTEM
 #include <vector>
 #include <iostream>
+#endif
 
 
 std::string fs_relative_to(std::string_view base, std::string_view other)
@@ -29,7 +33,7 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
 
   // find common prefix, returning empty if no common prefix
   if(FS_TRACE) std::cout << "TRACE:relative_to: normal_vector lengths " << Lb << " " << Lo << "\n";
-  size_t i = 0;
+  std::string::size_type i = 0;
   for (; i < Lb && i < Lo; i++){
     if(FS_TRACE) std::cout << "TRACE:relative_to: " << b[i] << " " << o[i] << "\n";
     if (b[i] != o[i])
@@ -43,10 +47,10 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
   // build relative path
 
   std::string r;
-  for (size_t j = i; j < Lb; j++)
+  for (std::string::size_type j = i; j < Lb; j++)
     r += "../";
 
-  for (size_t j = i; j < Lo; j++)
+  for (std::string::size_type j = i; j < Lo; j++)
     r += o[j] + "/";
 
   return fs_drop_slash(r);

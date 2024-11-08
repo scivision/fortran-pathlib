@@ -3,10 +3,12 @@
 #endif
 
 #include <cstdlib> // putenv, setenv, getenv
+
 #include <string>
-#include <algorithm> // std::replace
+#include <string_view>
 
 #ifdef _WIN32
+#include <algorithm> // std::replace
 #include <Objbase.h> // CoTaskMemFree
 #include <KnownFolders.h> // FOLDERID_LocalAppData
 #include <Shlobj.h> // SHGetKnownFolderPath

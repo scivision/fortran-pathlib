@@ -5,15 +5,17 @@
 #include "ffilesystem.h"
 
 #include <string>
-#include <iostream>
+#include <string_view>
 
 #include <system_error> // for std::error_code
 
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h> // GetTempPathA
+#include <windows.h> // IWYU pragma: keep
+// GetTempPathA
 #else
-#include <unistd.h> // getcwd, chdir
+#include <unistd.h> // IWYU pragma: keep
+// getcwd, chdir
 #endif
 
 

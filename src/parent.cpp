@@ -1,10 +1,15 @@
 #include "ffilesystem.h"
 
 #include <string>
-#include <vector>
-#include <iostream>
+#include <string_view>
 
-#include <cctype>
+#ifdef HAVE_CXX_FILESYSTEM
+#include <algorithm> // std::unique
+#include <iostream> // IWYU pragma: keep
+#else
+#include <vector>
+#endif
+
 
 
 std::string fs_parent(std::string_view path)

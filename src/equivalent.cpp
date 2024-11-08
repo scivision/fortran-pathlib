@@ -6,7 +6,7 @@
 
 #include <string_view>
 #include <system_error>
-#include <iostream>
+#include <iostream>  // IWYU pragma: keep
 
 #ifndef HAVE_CXX_FILESYSTEM
 // preferred import order for stat()

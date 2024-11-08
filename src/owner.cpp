@@ -7,8 +7,8 @@
 #include <aclapi.h> // GetNamedSecurityInfo
 #include <Windows.h>
 #else
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <sys/types.h>  // IWYU pragma: keep
+#include <sys/stat.h>  // IWYU pragma: keep
 #include <pwd.h>      // for getpwuid
 #include <grp.h>     // for getgrgid
 #endif
@@ -18,6 +18,8 @@
 #endif
 
 #include <string>
+#include <string_view>
+
 #include <iostream>
 
 #include "ffilesystem.h"

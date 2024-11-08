@@ -1,4 +1,6 @@
+#ifdef __APPLE__
 #include <cerrno>
+#endif
 
 #include "ffilesystem.h"
 

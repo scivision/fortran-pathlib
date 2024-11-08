@@ -10,7 +10,9 @@
 #else
 #include <cstdlib> // for realpath
 #endif
+
 #include <string>
+#include <string_view>
 
 
 std::string fs_realpath(std::string_view path)

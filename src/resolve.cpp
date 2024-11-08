@@ -1,8 +1,13 @@
 #include "ffilesystem.h"
 
-#include <iostream>
+#include <iostream>  // IWYU pragma: keep
+
 #include <string>
+#include <string_view>
+
+#ifndef HAVE_CXX_FILESYSTEM
 #include <system_error>
+#endif
 
 
 std::string fs_canonical(std::string_view path, const bool strict, const bool expand_tilde)

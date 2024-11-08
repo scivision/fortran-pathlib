@@ -1,11 +1,14 @@
 #include <string>
+#include <string_view>
+
 #include "ffilesystem.h"
 
 #include <system_error>
 
-// preferred import order for stat()
+#ifndef HAVE_CXX_FILESYSTEM
 #include <sys/types.h>
 #include <sys/stat.h> // permissions constants
+#endif
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN

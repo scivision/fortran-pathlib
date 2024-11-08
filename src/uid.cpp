@@ -3,7 +3,8 @@
 #include <windows.h>  // GetTokenInformation
 #else
 #include <unistd.h>  // geteuid, getpid
-#include <sys/types.h>  // geteuid, pid_t
+#include <sys/types.h>  // IWYU pragma: keep
+// geteuid, pid_t
 #endif
 
 #include <string>

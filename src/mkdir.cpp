@@ -1,11 +1,14 @@
 #include "ffilesystem.h"
 
-#include <string>
+#include <string>  // IWYU pragma: keep
+#include <string_view>
+
 #include <iostream>
 #include <system_error>         // for error_code
-#include <vector>
+#include <vector>  // IWYU pragma: keep
 
 #ifndef HAVE_CXX_FILESYSTEM
+#include <cerrno>
 #include <sys/types.h>
 
 #ifdef _WIN32

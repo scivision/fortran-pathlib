@@ -1,4 +1,5 @@
 #include <string>
+#include <string_view>
 
 #ifdef __CYGWIN__
 #include <sys/cygwin.h>

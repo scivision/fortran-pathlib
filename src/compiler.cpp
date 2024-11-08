@@ -1,7 +1,7 @@
 #include <string>
 
 #if __has_include(<format>)
-#include <format>
+#include <format> // IWYU pragma: keep
 #endif
 
 #include "ffilesystem.h"

@@ -7,7 +7,7 @@
 
 #include <string_view>
 #include <system_error>
-#include <iostream>
+#include <iostream>  // IWYU pragma: keep
 #include <cstdint> // uintmax_t
 
 #ifndef HAVE_CXX_FILESYSTEM
@@ -19,9 +19,8 @@
 #endif
 #endif
 
-// preferred import order for stat()
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <sys/types.h>  // IWYU pragma: keep
+#include <sys/stat.h>   // IWYU pragma: keep
 
 #if defined(__linux__) && defined(USE_STATX)
 #include <fcntl.h>   // AT_* constants for statx()

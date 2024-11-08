@@ -1,5 +1,9 @@
 #include <string>
+#include <string_view>
+
+#ifdef HAVE_CXX_FILESYSTEM
 #include <system_error>
+#endif
 
 #include "ffilesystem.h"
 

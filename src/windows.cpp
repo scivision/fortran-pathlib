@@ -3,9 +3,11 @@
 #include <windows.h>
 #endif
 
-#include <iostream>
+#include <iostream>  // IWYU pragma: keep
 
 #include <string>
+#include <string_view>
+
 #include <algorithm> // std::replace
 
 #include "ffilesystem.h"
