@@ -1,9 +1,3 @@
-#ifdef _MSC_VER
-#ifndef _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-#endif
-
 #if defined(__linux__) && !defined(_DEFAULT_SOURCE)
 #define _DEFAULT_SOURCE
 #endif

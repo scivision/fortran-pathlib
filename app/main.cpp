@@ -1,9 +1,3 @@
-#ifdef _MSC_VER
-#ifndef _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-#endif
-
 #include <iostream>
 #include <cstdlib>
 #include <string>
@@ -205,7 +199,13 @@ static void one_arg(std::string_view fun, std::string_view a1){
       std::cout << std::format("{}\n", t.value());
 #else
     const auto t = fs_get_modtime(a1.data());
-    std::cout << std::ctime(&t) << "\n"; // NOSONAR
+    #if defined(_MSC_VER)
+      std::string buf(26, '\0');
+      ctime_s(buf.data(), buf.size(), &t);
+      std::cout << buf << "\n";
+    #else
+      std::cout << std::ctime(&t) << "\n"; // NOSONAR
+    #endif
 #endif
   } else if (fun == "fs_modtime")
     std::cout << fs_get_modtime(a1.data()) << "\n";

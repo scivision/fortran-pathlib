@@ -42,7 +42,7 @@ if(NOT WIN32 AND NOT HAVE_CXX_FILESYSTEM)
   check_include_file("sys/statvfs.h" ffilesystem_HAVE_SYS_STATVFS)
 endif()
 
-add_compile_definitions($<$<BOOL:${WIN32}>:_CRT_SECURE_NO_WARNINGS>)
+add_compile_definitions($<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>)
 
 set(${PROJECT_NAME}_fortran_test_flags
   "$<$<AND:$<Fortran_COMPILER_ID:GNU>,$<VERSION_LESS:$<Fortran_COMPILER_VERSION>,13>>:-Wno-maybe-uninitialized>"
