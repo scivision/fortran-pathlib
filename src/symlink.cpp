@@ -139,13 +139,7 @@ bool fs_create_symlink(std::string_view target, std::string_view link)
     return true;
 
 #else
-
-    // necessary to avoid logic problems on macOS
-  if(!fs_exists(target)) {  FFS_UNLIKELY
-    std::cerr << "ERROR:filesystem:create_symlink: target " << target << "does not exist\n";
-    return false;
-  }
-
+  // https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/symlink.2.html
   // https://linux.die.net/man/3/symlink
   if(symlink(target.data(), link.data()) == 0)  FFS_LIKELY
     return true;

@@ -66,7 +66,7 @@ std::string fs_win32_final_path(std::string_view path)
   // FILE_FLAG_BACKUP_SEMANTICS required to open a directory
   HANDLE h = CreateFileA(path.data(), 0, 0, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
   if(h == INVALID_HANDLE_VALUE){
-    std::cerr << "ERROR:Ffilesystem:win32_final_path:CreateFile open\n";
+    fs_print_error(path, "win32_final_path:CreateFile");
     return {};
   }
 

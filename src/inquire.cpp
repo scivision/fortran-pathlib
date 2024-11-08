@@ -235,7 +235,6 @@ std::uintmax_t fs_hard_link_count(std::string_view path)
   if(auto s = std::filesystem::hard_link_count(path, ec); !ec)  FFS_LIKELY
     return s;
 
-  std::cerr << "ERROR:ffilesystem:hard_link_count: " << ec.message() << "\n";
 #elif defined(STATX_BASIC_STATS) && defined(USE_STATX)
 // https://www.man7.org/linux/man-pages/man2/statx.2.html
   if (FS_TRACE) std::cout << "TRACE: statx() hard_link " << path << "\n";
