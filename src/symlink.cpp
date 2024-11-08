@@ -119,7 +119,7 @@ bool fs_create_symlink(std::string_view target, std::string_view link)
 
   std::error_code ec;
 
-#if defined(_WIN32)
+#if defined(__MINGW32__) || (defined(_WIN32) && !defined(HAVE_CXX_FILESYSTEM))
 
   DWORD p = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
 
