@@ -46,12 +46,14 @@ fs_st_mode(std::string_view path)
 // Linux Glibc only
 // https://www.gnu.org/software/gnulib/manual/html_node/statx.html
 // https://www.man7.org/linux/man-pages/man2/statx.2.html
-  struct statx s;
-  if(statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT, STATX_MODE, &s) == 0)
+
+  if(struct statx s;
+      statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT, STATX_MODE, &s) == 0)
     return s.stx_mode;
 #else
-  struct stat s;
-  if(!stat(path.data(), &s))
+
+  if(struct stat s;
+      !stat(path.data(), &s))
     return s.st_mode;
 #endif
   // std::cerr << "ERROR:ffilesystem:fs_st_mode(" << path << ") " << strerror(errno)) << "\n";

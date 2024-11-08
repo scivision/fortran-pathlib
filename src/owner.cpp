@@ -43,24 +43,18 @@ std::string fs_get_owner_name(std::string_view path)
 // get buffer size
 
   // segfaults if you do not use dwDomainName and eUse
-  if (!LookupAccountSidA(nullptr, pOwnerSid, nullptr, &Lowner,
-                         nullptr, &Ldomain, &eUse))
-  {
-    if (GetLastError() != ERROR_INSUFFICIENT_BUFFER) {
-      fs_print_error(path, "owner:LookupAccountSid: get buffer size failed");
-      return {};
-    }
+  if (!LookupAccountSidA(nullptr, pOwnerSid, nullptr, &Lowner, nullptr, &Ldomain, &eUse) && GetLastError() != ERROR_INSUFFICIENT_BUFFER) {
+    fs_print_error(path, "owner:LookupAccountSid: get buffer size failed");
+    return {};
   }
 
   std::string owner(Lowner, '\0');
   const auto r = LookupAccountSidA(nullptr, pOwnerSid, owner.data(), &Lowner, nullptr, &Ldomain, &eUse);
   LocalFree(pSD);
-  if (!r) {
-    fs_print_error(path, "owner:LookupAccountSid: get owner name failed");
-    return {};
+  if (r){
+    owner.resize(Lowner);
+    return owner;
   }
-  owner.resize(Lowner);
-  return owner;
 
 #else
 
@@ -77,10 +71,10 @@ std::string fs_get_owner_name(std::string_view path)
 #endif
     return pw->pw_name;
   }
+#endif
 
   fs_print_error(path, "get_owner:getpwuid");
   return {};
-#endif
 }
 
 
@@ -103,25 +97,19 @@ std::string fs_get_owner_group(std::string_view path)
   }
 
   // get buffer size
-  if (!LookupAccountSidA(nullptr, pGroupSid, nullptr, &Lgroup,
-                         nullptr, &Ldomain, &eUse))
-  {
-    if (GetLastError() != ERROR_INSUFFICIENT_BUFFER) {
-      fs_print_error(path, "get_owner_group:LookupAccountSid: get buffer size failed");
-      return {};
-    }
+  if (!LookupAccountSidA(nullptr, pGroupSid, nullptr, &Lgroup, nullptr, &Ldomain, &eUse) && GetLastError() != ERROR_INSUFFICIENT_BUFFER) {
+    fs_print_error(path, "get_owner_group:LookupAccountSid: get buffer size failed");
+    return {};
   }
 
 
   std::string group(Lgroup, '\0');
   const auto r = LookupAccountSidA(nullptr, pGroupSid, group.data(), &Lgroup, nullptr, &Ldomain, &eUse);
   LocalFree(pSD);
-  if (!r) {
-    fs_print_error(path, "get_owner_group:LookupAccountSid: get group name failed");
-    return {};
+  if (r){
+    group.resize(Lgroup);
+    return group;
   }
-  group.resize(Lgroup);
-  return group;
 
 #else
 
@@ -139,8 +127,8 @@ std::string fs_get_owner_group(std::string_view path)
     return gr->gr_name;
   }
 
+#endif
+
   fs_print_error(path, "get_owner_group");
   return {};
-
-#endif
 }

@@ -20,7 +20,7 @@ std::string fs_hostname()
 
 #if defined(_WIN32)
   if(WSADATA wsaData; !WSAStartup(MAKEWORD(2, 0), &wsaData)){
-    ret = gethostname(name.data(), (int) name.size());
+    ret = gethostname(name.data(), static_cast<int>(name.size()));
     WSACleanup();
   }
 

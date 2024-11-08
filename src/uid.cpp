@@ -35,9 +35,9 @@ bool fs_is_admin(){
 int fs_getpid()
 {
 #ifdef _WIN32
-  return (int) GetCurrentProcessId();
+  return static_cast<int>(GetCurrentProcessId());
 #else
-  return (int) getpid();
+  return static_cast<int>(getpid());
 #endif
 }
 
@@ -52,15 +52,11 @@ std::string fs_get_terminal()
 
   // https://learn.microsoft.com/en-us/windows/console/getconsolewindow
   // encourages Virtual Terminal Sequences
-  auto h = GetConsoleWindow();
-  if(!h){  FFS_UNLIKELY
-    fs_print_error("no window handle available", "get_terminal");
-    return {};
-  }
-  if(int const L = GetClassNameA(h, name.data(), (int) name.size());
-      L > 0){  FFS_LIKELY
-    name.resize(L);
-    return name;
+  if (HWND h = GetConsoleWindow(); h) {
+    if (int L = GetClassNameA(h, name.data(), static_cast<int>(name.size())); L > 0) {
+      name.resize(L);
+      return name;
+    }
   }
 
   fs_print_error("", "get_terminal");

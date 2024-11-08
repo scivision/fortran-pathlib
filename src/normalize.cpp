@@ -60,12 +60,10 @@ fs_normal(std::string_view path)
 #endif
 
   // no trailing slash
-  if(r.length() > 1 && r.back() == '/'){
-    if(!fs_is_windows() || r != fs_root(r))
-      r.pop_back();
-  }
+  if (r.length() > 1 && r.back() == '/' && (!fs_is_windows() || r != fs_root(r)))
+    r.pop_back();
 
-  if(r.empty())
+  if (r.empty())
     r = ".";
 
   return r;
