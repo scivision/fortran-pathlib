@@ -2,13 +2,7 @@
 #define _DEFAULT_SOURCE
 #endif
 
-#if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-
-
-
-#include <cstdlib> // putenv, setenv
+#include <cstdlib> // putenv, setenv, getenv
 #include <string>
 #include <algorithm> // std::replace
 
@@ -23,9 +17,23 @@
 
 std::string fs_getenv(std::string_view name)
 {
-  auto buf = std::getenv(name.data());
-  if(!buf) // not error because sometimes we just check if envvar is defined
-    return {};
+  // don't emit error because sometimes we just check if envvar is defined
+
+  #ifdef _MSC_VER
+    size_t L;
+    getenv_s(&L, nullptr, 0, name.data());
+    if (L == 0)
+      return {};
+
+    std::string buf(L, '\0');
+    getenv_s(&L, &buf[0], L, name.data());
+    buf.resize(L - 1); // remove the null terminator
+  #else
+    auto buf = std::getenv(name.data());
+    if(!buf)
+      return {};
+  #endif
+
 
   return buf;
 }
