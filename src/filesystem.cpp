@@ -1,17 +1,3 @@
-// functions from C++ filesystem
-
-// NOTE: this segfaults: std::filesystem::path p(nullptr);
-
-
-#ifdef _MSC_VER
-#ifndef _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-#ifndef _CRT_NONSTDC_NO_WARNINGS
-#define _CRT_NONSTDC_NO_WARNINGS
-#endif
-#endif
-
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
