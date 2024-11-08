@@ -2,12 +2,6 @@
 #define _DEFAULT_SOURCE
 #endif
 
-#ifdef _MSC_VER
-#ifndef _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-#endif
-
 #include "ffilesystem.h"
 
 #include <iostream>
@@ -99,7 +93,10 @@ if(FS_TRACE) std::cout << "TRACE:mkdtemp_mersenne: prefix: " << prefix << "\n";
 
 #ifdef _WIN32
 // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/mktemp-wmktemp
-  tmp = _mktemp(tmpl.data());
+  if (_mktemp_s(tmpl.data(), tmpl.size() + 1) == 0)
+    tmp = tmpl.c_str();
+  else
+    tmp = nullptr;
   if(tmp)
     return fs_mkdir(tmp) ? tmp : std::string{};
 #else
