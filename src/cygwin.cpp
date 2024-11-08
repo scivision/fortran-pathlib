@@ -2,60 +2,32 @@
 
 #ifdef __CYGWIN__
 #include <sys/cygwin.h>
+#else
+#define CCP_WIN_A_TO_POSIX 0
+#define CCP_POSIX_TO_WIN_A 0
 #endif
 
 #include "ffilesystem.h"
 
 
-std::string fs_to_cygpath(std::string_view path){
-
+static std::string fs_convert_path(std::string_view path, [[maybe_unused]] const int what)
+{
 #ifdef __CYGWIN__
-  const auto what = CCP_WIN_A_TO_POSIX;
-
   const ssize_t L = cygwin_conv_path(what, path.data(), nullptr, 0);
-  if(L < 0){
-    fs_print_error(path, "cygwin_conv_path:size");
-    return {};
+  if(L > 0){
+    if (std::string r(L, '\0'); !cygwin_conv_path(what, path.data(), r.data(), L))
+      return r;
   }
-
-  std::string r(L, '\0');
-
-  // this call does not return size
-  if(cygwin_conv_path(what, path.data(), r.data(), L)) {
-    fs_print_error(path, "cygwin_conv_path");
-    return {};
-  }
-
-  return r;
-#else
-    fs_print_error(path, "to_cygpath: only for Cygwin");
-    return {};
 #endif
+
+  fs_print_error(path, "cygwin_convert_path");
+  return {};
 }
 
+std::string fs_to_cygpath(std::string_view path) {
+  return fs_convert_path(path, CCP_WIN_A_TO_POSIX);
+}
 
-std::string fs_to_winpath(std::string_view path){
-
-#ifdef __CYGWIN__
-  const auto what = CCP_POSIX_TO_WIN_A;
-
-  const ssize_t L = cygwin_conv_path(what, path.data(), nullptr, 0);
-  if(L < 0){
-    fs_print_error(path, "cygwin_conv_path:size");
-    return {};
-  }
-
-  std::string r(L, '\0');
-
-  // this call does not return size
-  if(cygwin_conv_path(what, path.data(), r.data(), L)) {
-    fs_print_error(path, "cygwin_conv_path");
-    return {};
-  }
-
-  return r;
-#else
-    fs_print_error(path, "to_cygpath: only for Cygwin");
-    return {};
-#endif
+std::string fs_to_winpath(std::string_view path) {
+  return fs_convert_path(path, CCP_POSIX_TO_WIN_A);
 }
