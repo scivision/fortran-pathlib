@@ -1,9 +1,3 @@
-#ifdef _MSC_VER
-#ifndef _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-#endif
-
 #include <string>
 #include <cstring>
 #include <iostream>
@@ -64,7 +58,11 @@ std::string::size_type fs_strncpy(const char* path, char* result, const std::str
   }
 
   if(L)
-    std::strncpy(result, path, buffer_size);
+    #ifdef _MSC_VER
+      strncpy_s(result, buffer_size, path, _TRUNCATE);
+    #else
+      std::strncpy(result, path, buffer_size);
+    #endif
 
   return L;
 }
