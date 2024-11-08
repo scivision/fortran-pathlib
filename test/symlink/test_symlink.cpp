@@ -6,8 +6,8 @@
 
 int main([[maybe_unused]] int argc, char* argv[]) {
 
-  std::string tgt_dir = fs_parent(argv[0]);
-  std::string tgt = tgt_dir + "/test.txt";
+  const std::string tgt_dir = fs_parent(argv[0]);
+  const std::string tgt = tgt_dir + "/test.txt";
 
   if (fs_exists(tgt)) {
     std::cout << "deleting old target " << tgt << "\n";
@@ -25,9 +25,9 @@ int main([[maybe_unused]] int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  std::string link = tgt_dir + "/test.link";
-  std::string linko = tgt_dir + "/test_oo.link";
-  std::string link_dir = tgt_dir + "/my_link.dir";
+  const std::string link = tgt_dir + "/test.link";
+  const std::string linko = tgt_dir + "/test_oo.link";
+  const std::string link_dir = tgt_dir + "/my_link.dir";
 
   if(fs_create_symlink(tgt, "")){
     std::cerr << "ERROR: create_symlink() should fail with empty link\n";
@@ -66,7 +66,13 @@ int main([[maybe_unused]] int argc, char* argv[]) {
   std::cout << "PASSED: read_symlink " << rtgt << " == " << tgt << "\n";
 
   std::string ctgt = fs_canonical(link, true, false);
-  if (ctgt != tgt) {
+  if(ctgt.empty()){
+    std::cerr << "ERROR: canonical() is empty\n";
+    return EXIT_FAILURE;
+  }
+
+  // Cygwin will have /cygdrive/c and /home/ as roots
+  if (!fs_is_cygwin() && ctgt != tgt) {
     std::cerr << "canonical() on symlink failed: " << ctgt << " != " << tgt << "\n";
     return EXIT_FAILURE;
   }
