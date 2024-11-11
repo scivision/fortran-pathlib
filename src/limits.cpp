@@ -41,19 +41,19 @@ std::string_view::size_type fs_max_component([[maybe_unused]] std::string_view p
   // path has a maximum length too--typically 255 characters.
 
 #ifdef _WIN32
-  DWORD lpMaximumComponentLength = 0;
 
-  if(GetVolumeInformationA(path.data(), nullptr, 0, nullptr, &lpMaximumComponentLength, nullptr, nullptr, 0))  FFS_LIKELY
-    return lpMaximumComponentLength;
+  if(DWORD L = 0;
+      GetVolumeInformationA(fs_root(path).data(), nullptr, 0, nullptr, &L, nullptr, nullptr, 0) != 0)  FFS_LIKELY
+    return L;
 
   fs_print_error(path, "max_component:GetVolumeInformationA");
-  return 0;
+  return {};
 #elif defined(_PC_NAME_MAX)
   return pathconf(path.data(), _PC_NAME_MAX);
 #elif defined(NAME_MAX)
   return NAME_MAX;
 #else
   std::cerr << "ERROR:ffilesystem:max_component(" << path << ") => function not implemented on this platform\n";
-  return 0;
+  return {};
 #endif
 }
