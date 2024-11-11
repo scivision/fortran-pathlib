@@ -11,7 +11,7 @@ public :: get_homedir, get_profile_dir, user_config_dir, get_username, hostname,
  canonical, resolve, realpath, fs_getpid, &
  get_cwd, set_cwd, make_tempdir, which
 public :: normal, expanduser, as_posix, &
-is_absolute, is_char_device, is_dir, is_file, is_exe, is_subdir, is_readable, is_writable, is_reserved, &
+is_absolute, is_char_device, is_case_sensitive, is_dir, is_file, is_exe, is_subdir, is_readable, is_writable, is_reserved, &
 is_empty, &
 is_symlink, read_symlink, create_symlink, &
 exists, &
@@ -331,6 +331,12 @@ character(kind=C_CHAR), intent(in) :: path(*)
 end function
 
 logical(C_BOOL) function fs_is_file(path) bind(C)
+import
+character(kind=C_CHAR), intent(in) :: path(*)
+end function
+
+logical(C_BOOL) function fs_is_case_sensitive(path) bind(C)
+!! filesystem is case sensitive
 import
 character(kind=C_CHAR), intent(in) :: path(*)
 end function
@@ -803,6 +809,14 @@ logical function is_char_device(path)
 character(*), intent(in) :: path
 
 is_char_device = fs_is_char_device(trim(path) // C_NULL_CHAR)
+end function
+
+
+logical function is_case_sensitive(path)
+!! is filesystem case sensitive
+character(*), intent(in) :: path
+
+is_case_sensitive = fs_is_case_sensitive(trim(path) // C_NULL_CHAR)
 end function
 
 

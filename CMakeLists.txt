@@ -61,6 +61,7 @@ endif()
 add_library(ffilesystem
 src/filesystem.cpp src/c.cpp
 src/absolute.cpp
+src/case.cpp
 src/copy.cpp
 src/compiler.cpp
 src/cygwin.cpp
@@ -84,6 +85,7 @@ src/partition.cpp
 src/permissions.cpp
 src/platform.cpp
 src/pure.cpp
+src/random.cpp
 src/realpath.cpp
 src/relative.cpp
 src/resolve.cpp

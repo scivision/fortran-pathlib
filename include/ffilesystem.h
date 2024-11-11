@@ -45,6 +45,8 @@ std::optional<std::filesystem::file_time_type> fs_get_modtime_fs(std::string_vie
 std::string fs_lexically_normal(std::string_view);
 std::string fs_make_preferred(std::string_view);
 
+bool fs_is_case_sensitive(std::string_view);
+std::string fs_generate_random_alphanumeric_string(const std::string::size_type);
 
 // C++ functions available without C++17 filesystem too
 bool fs_slash_first(std::string_view);
@@ -269,6 +271,7 @@ bool fs_mkdir(const char*);
 bool fs_exists(const char*);
 
 bool fs_is_absolute(const char*);
+bool fs_is_case_sensitive(const char*);
 bool fs_is_char_device(const char*);
 bool fs_is_dir(const char*);
 bool fs_is_file(const char*);

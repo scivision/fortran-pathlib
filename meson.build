@@ -31,6 +31,7 @@ fsrcs = fortran ? files('src/fortran/filesystem.F90') : []
 comm_src = files(
 'src/c.cpp',
 'src/absolute.cpp',
+'src/case.cpp',
 'src/compiler.cpp',
 'src/copy.cpp',
 'src/cygwin.cpp',
@@ -55,6 +56,7 @@ comm_src = files(
 'src/permissions.cpp',
 'src/platform.cpp',
 'src/pure.cpp',
+'src/random.cpp',
 'src/realpath.cpp',
 'src/relative.cpp',
 'src/resolve.cpp',

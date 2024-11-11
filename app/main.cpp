@@ -166,6 +166,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << fs_is_absolute(a1) << "\n";
   else if (fun == "is_exe")
     std::cout << fs_is_exe(a1) << "\n";
+  else if (fun == "is_case_sensitive")
+    std::cout << fs_is_case_sensitive(a1) << "\n";
   else if (fun == "is_dir")
     std::cout << fs_is_dir(a1) << "\n";
   else if (fun == "is_char")

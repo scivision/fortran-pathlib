@@ -160,6 +160,8 @@ main : do
     print '(L1)', is_absolute(arg1)
   case ("exists")
     print '(L1)', exists(arg1)
+  case ("is_case_sensitive")
+    print '(L1)', is_case_sensitive(arg1)
   case ("is_dir")
     print '(L1)', is_dir(arg1)
   case ("is_file")

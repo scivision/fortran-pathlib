@@ -49,6 +49,7 @@ COMM_SRCS = \
 	$(comdir)inquire.cpp \
 	$(comdir)filesystem.cpp \
 	$(comdir)c.cpp \
+	$(comdir)case.cpp \
 	$(comdir)compiler.cpp \
 	$(comdir)cygwin.cpp \
 	$(comdir)equivalent.cpp \
@@ -69,6 +70,7 @@ COMM_SRCS = \
 	$(comdir)partition.cpp \
 	$(comdir)permissions.cpp \
 	$(comdir)platform.cpp \
+	$(comdir)random.cpp \
 	$(comdir)realpath.cpp \
 	$(comdir)relative.cpp \
 	$(comdir)resolve.cpp \
