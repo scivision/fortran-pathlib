@@ -25,29 +25,18 @@ std::string fs_lib_path()
  // https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
 
   std::string path(fs_get_max_path(), '\0');
-  const size_t buffer_size = path.size();
-  size_t L=0;
 
-  L = GetModuleFileNameA(GetModuleHandleA(FS_DLL_NAME), path.data(), (DWORD) buffer_size);
-  if(L == 0 || L >= buffer_size){  FFS_UNLIKELY
-    fs_print_error(path, "lib_path");
-    return {};
+  const size_t L = GetModuleFileNameA(GetModuleHandleA(FS_DLL_NAME), path.data(), static_cast<DWORD>(path.size()));
+  if(L > 0 && GetLastError() != ERROR_INSUFFICIENT_BUFFER){  FFS_LIKELY
+    path.resize(L);
+    return fs_as_posix(path);
   }
-
-  path.resize(L);
-
-  return fs_as_posix(path);
 #elif defined(HAVE_DLADDR)
-  Dl_info info;
-  if(!dladdr( (void*)&dl_dummy_func, &info)){  FFS_UNLIKELY
-    fs_print_error("dladdr", "lib_path");
-    return {};
-  }
-
-  return info.dli_fname;
-#else
-  std::cerr << "Ffilesystem:lib_path: not implemented for this platform\n";
-  return {};
+  if(Dl_info info;
+      dladdr( (void*)&dl_dummy_func, &info))  FFS_LIKELY
+    return info.dli_fname;
 #endif
 
+  fs_print_error("", "lib_path");
+  return {};
 }
