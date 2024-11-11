@@ -110,6 +110,12 @@ Logical: ffilesystem was compiled with optimizations:
 fs_is_optimized()
 ```
 
+Logical: path of filesystem detected as case sensitive. Path must be writable for check.
+
+```fortran
+is_case_sensitive("/my/path")
+```
+
 integer (long): the C `__STDC_VERSION__` or C++ level of macro `__cplusplus`
 
 ```fortran

@@ -314,7 +314,9 @@ int main(){
 
 const std::string cwd = fs_get_cwd();
 
-std::cout << "Ffilesystem. Backend: " << fs_backend() << " max path: " << fs_get_max_path() << " max component: " << fs_max_component(cwd) << "\n";
+std::cout << "Ffilesystem. Backend: " << fs_backend() << "\n";
+std::cout << "maximum path length: " << fs_get_max_path() << "\n";
+std::cout << "maximum path component length: " << fs_max_component(cwd) << "\n";
 std::cout << "current working directory (CWD): " << cwd << "\n";
 std::cout << "Compiler: " << fs_compiler() << "\n";
 std::cout << "Optimized: " << fs_is_optimized() << " Trace: " << FS_TRACE << "\n";
@@ -329,7 +331,7 @@ std::cout << "Homedir: " << fs_get_homedir() << "\n";
 std::cout << "CWD filesystem Type: " << fs_filesystem_type(cwd) << "\n";
 
 if(fs_is_admin())
-  std::cerr << "WARNING: running as admin / sudo\n";
+  std::cerr << "WARNING: running as admin / sudo" << std::endl;
 
 std::cout << std::endl;  // flush for CI etc.
 
