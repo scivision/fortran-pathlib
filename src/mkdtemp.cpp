@@ -16,7 +16,7 @@
 #include <io.h>  // _mktemp
 #else
 #include <unistd.h> // mkdtemp macOS
-#include <stdlib.h> // mkdtemp Linux
+#include <cstdlib> // mkdtemp Linux
 #endif
 #endif
 

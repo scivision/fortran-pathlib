@@ -9,6 +9,8 @@
 
 int main() {
 
+int fail = 0;
+
 std::vector<std::tuple<std::string_view, std::string_view>> tests = {
   {"", ""},
   {"a/b", ""},
@@ -17,18 +19,23 @@ std::vector<std::tuple<std::string_view, std::string_view>> tests = {
 };
 
 if (fs_is_windows()) {
+  tests.emplace_back("c:", "c:");
   tests.emplace_back("c:/a/b", "c:/");
-  tests.emplace_back("/etc", "");
+  tests.emplace_back("/etc", "/");
+  tests.emplace_back("\\etc", "/");
   tests.emplace_back("c:\\", "c:/");
+  tests.emplace_back("c:/", "c:/");
+  tests.emplace_back("\\", "/");
 } else {
   tests.emplace_back("/a/b", "/");
   tests.emplace_back("c:/etc", "");
 }
 
 for (const auto& [input, expected] : tests) {
-  if (fs_root(input) != expected) {
-    std::cerr << "FAILED: root(" << input << ") " << fs_root(input) << "  expected: " << expected << "\n";
-    return EXIT_FAILURE;
+  const std::string r = fs_root(input);
+  if (r != expected) {
+    std::cerr << "FAILED: root(" << input << ") = " << r << " != " << expected << "\n";
+    fail++;
   }
 }
 
@@ -50,12 +57,17 @@ if(fs_is_windows()){
 }
 
 for(const auto& [input, expected] : tests){
-  if (fs_root_name(input) != expected) {
-    std::cerr << "FAILED: root_name(" << input << ") " << fs_root_name(input) << "  expected: " << expected << "\n";
-    return EXIT_FAILURE;
+  const std::string r = fs_root_name(input);
+  if (r != expected) {
+    std::cerr << "FAILED: root_name(" << input << ") = " << r << " != " << expected << "\n";
+    fail++;
   }
 }
 
+if(fail){
+  std::cerr << "ERROR: root(), root_name(): " << fail << " tests failed\n";
+  return EXIT_FAILURE;
+}
 
   std::cout << "OK: root(), root_name(): C++\n";
   return EXIT_SUCCESS;

@@ -172,12 +172,7 @@ if (s1 /= "") error stop "ERROR:test: relative_to: " //s1
 
 !> root
 p1 = path_t("/c/b")
-
-if (is_windows()) then
-  s1 = ""
-else
-  s1 = "/"
-end if
+s1 = "/"
 if (p1%root() /= s1) error stop "ERROR:test: root: " // p1%root() // " /= " // s1
 
 !> stem
