@@ -5,7 +5,7 @@
 #include <iostream>
 
 #ifndef HAVE_CXX_FILESYSTEM
-#include <cctype>
+#include <cctype> // std::isalpha
 #endif
 
 #include "ffilesystem.h"

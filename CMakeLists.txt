@@ -69,6 +69,7 @@ src/exepath.cpp
 src/env.cpp
 src/home.cpp
 src/inquire.cpp
+src/lexical.cpp
 src/libpath.cpp
 src/limits.cpp
 src/locale.cpp
