@@ -131,7 +131,9 @@ add_compile_options(
 # this flag needs to be applied EVERYWHERE incl. submodule projects
 # or runtime errors / weird behavior with unresolved procedures that actually exist.
 # -standard-semantics is no good because it breaks linkage within oneAPI itself e.g. oneMPI library!
-if(NOT WIN32)
+if(WIN32)
+  add_compile_options("$<$<COMPILE_LANGUAGE:Fortran>:/fpscomp:logicals>")
+else()
   add_compile_options("$<$<COMPILE_LANGUAGE:Fortran>:-fpscomp;logicals>")
 endif()
 
