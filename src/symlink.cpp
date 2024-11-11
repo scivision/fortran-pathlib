@@ -84,12 +84,11 @@ std::string fs_read_symlink(std::string_view path)
 #elif defined(HAVE_CXX_FILESYSTEM)
   if(auto p = std::filesystem::read_symlink(path, ec); !ec) FFS_LIKELY
     return p.generic_string();
-
 #else
   // https://www.man7.org/linux/man-pages/man2/readlink.2.html
-  const auto m = fs_get_max_path();
-  std::string r(m, '\0');
-  const ssize_t Lr = readlink(path.data(), r.data(), m);
+  std::string r(fs_get_max_path(), '\0');
+
+  const ssize_t Lr = readlink(path.data(), r.data(), r.size());
   if (Lr > 0){
     // readlink() does not null-terminate the result
     r.resize(Lr);
