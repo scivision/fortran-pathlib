@@ -310,6 +310,21 @@ int main(){
   _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
+std::cout << "Ffilesystem. Backend: " << fs_backend() << " max path: " << fs_get_max_path() << " max component: " << fs_max_component(".") << "\n";
+std::cout << "Compiler: " << fs_compiler() << "\n";
+std::cout << "Optimized: " << fs_is_optimized() << " Trace: " << FS_TRACE << "\n";
+
+std::cout << "CPU arch: " << fs_cpu_arch() << "\n";
+std::cout << "C++ " << fs_lang() << "\n";
+std::cout << "Locale: " << fs_get_locale_name() << "\n";
+std::cout << "Username: " << fs_get_username() << "\n";
+std::cout << "Hostname: " << fs_hostname() << "\n";
+std::cout << "Shell: " << fs_get_shell() << "\n";
+std::cout << "Terminal: " << fs_get_terminal() << "\n";
+std::cout << "Homedir: " << fs_get_homedir() << "\n";
+std::cout << "current working directory (CWD): " << fs_get_cwd() << "\n";
+std::cout << "CWD filesystem Type: " << fs_filesystem_type(fs_get_cwd()) << "\n";
+
 if(fs_is_admin())
   std::cerr << "WARNING: running as admin / sudo\n";
 
