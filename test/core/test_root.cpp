@@ -26,7 +26,7 @@ if (fs_is_windows()) {
 }
 
 for (const auto& [input, expected] : tests) {
-  if (fs_root(std::string(input)) != expected) {
+  if (fs_root(input) != expected) {
     std::cerr << "FAILED: root(" << input << ") " << fs_root(input) << "  expected: " << expected << "\n";
     return EXIT_FAILURE;
   }
@@ -50,7 +50,7 @@ if(fs_is_windows()){
 }
 
 for(const auto& [input, expected] : tests){
-  if (fs_root_name(std::string(input)) != expected) {
+  if (fs_root_name(input) != expected) {
     std::cerr << "FAILED: root_name(" << input << ") " << fs_root_name(input) << "  expected: " << expected << "\n";
     return EXIT_FAILURE;
   }

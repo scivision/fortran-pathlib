@@ -4,8 +4,8 @@
 #ifdef __CYGWIN__
 #include <sys/cygwin.h>
 #else
-#define CCP_WIN_A_TO_POSIX 0
-#define CCP_POSIX_TO_WIN_A 0
+constexpr int CCP_WIN_A_TO_POSIX = 0;
+constexpr int CCP_POSIX_TO_WIN_A = 0;
 #endif
 
 #include "ffilesystem.h"
