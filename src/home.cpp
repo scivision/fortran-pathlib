@@ -61,38 +61,28 @@ std::string fs_get_profile_dir()
 {
   #ifdef _WIN32
   // https://learn.microsoft.com/en-us/windows/win32/api/userenv/nf-userenv-getuserprofiledirectorya
-  const std::string::size_type m = fs_get_max_path();
-  std::string path(m, '\0');
+  std::string path(fs_get_max_path(), '\0');
   // works on MSYS2, MSVC, oneAPI
-  auto N = (DWORD) m;
   HANDLE hToken = nullptr;
+  auto N = static_cast<DWORD>(path.size());
 
-  bool ok = OpenProcessToken( GetCurrentProcess(), TOKEN_QUERY, &hToken) != 0;
+  const bool ok = OpenProcessToken( GetCurrentProcess(), TOKEN_QUERY, &hToken) != 0 &&
+    GetUserProfileDirectoryA(hToken, path.data(), &N);
 
-  if(!ok){
-    CloseHandle(hToken);
-    fs_print_error(path, "get_profile_dir:OpenProcessToken");
-    return {};
-  }
-
-  ok = GetUserProfileDirectoryA(hToken, path.data(), &N);
   CloseHandle(hToken);
 
-  if (!ok){
-    fs_print_error(path, "get_profile_dir:GetUserProfileDirectory");
-    return {};
+  if (ok){
+    path.resize(N-1);
+    return fs_as_posix(path);
   }
-
-  path.resize(N-1);
-
-  return fs_as_posix(path);
 #else
   const struct passwd *pw = fs_getpwuid();
-  if (!pw)
-    return {};
-
-  return pw->pw_dir;
+  if (pw)
+    return pw->pw_dir;
 #endif
+
+  fs_print_error("", "get_profile_dir");
+  return {};
 }
 
 
@@ -150,27 +140,21 @@ std::string fs_get_username()
 {
 #ifdef _WIN32
   // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getusernamea
-  const std::string::size_type m = fs_get_max_path();
-  std::string name(m, '\0');
-  auto L = (DWORD) m;
+  std::string name(fs_get_max_path(), '\0');
+  auto L = static_cast<DWORD>(name.size());
   // Windows.h
-  if(GetUserNameA(name.data(), &L) == 0){
-    fs_print_error("", "get_username:GetUserName");
-    return {};
+  if(GetUserNameA(name.data(), &L) != 0){
+    name.resize(L-1);
+    return name;
   }
-
-  name.resize(L-1);
-
-  return name;
 #else
   const struct passwd *pw = fs_getpwuid();
-  if (!pw){
-    fs_print_error("", "get_username:getpwuid");
-    return {};
-  }
-
-  return pw->pw_name;
+  if (pw)
+    return pw->pw_name;
 #endif
+
+  fs_print_error("", "get_username");
+  return {};
 }
 
 
@@ -185,9 +169,7 @@ std::string fs_get_shell()
     HMODULE hMod;
     DWORD cbNeeded;
 
-    const std::string::size_type m = fs_get_max_path();
-
-    std::string name(m, '\0');
+    std::string name(fs_get_max_path(), '\0');
 
     if( Process32First(h, &pe)) {
       const DWORD pid = GetCurrentProcessId();
@@ -197,12 +179,11 @@ std::string fs_get_shell()
                                 PROCESS_VM_READ,
                                 FALSE, pe.th32ParentProcessID );
           if ( EnumProcessModules( hProcess, &hMod, sizeof(hMod), &cbNeeded) ) {
-              const auto L = GetModuleBaseNameA( hProcess, hMod, name.data(), (DWORD) m );
+              const auto L = GetModuleBaseNameA( hProcess, hMod, name.data(), static_cast<DWORD>(name.size()) );
               CloseHandle( hProcess );
-              if(L == 0){
-                fs_print_error(name, "get_shell:GetModuleBaseName");
-                return {};
-              }
+              if(L == 0)
+                goto err;
+
               name.resize(L);
               break;
           }
@@ -216,9 +197,14 @@ if(FS_TRACE) std::cout << "TRACE: get_shell: " << name << " PID: " << pid << " P
     return name;
 #else
     const struct passwd *pw = fs_getpwuid();
-    if (!pw)
-      return {};
-
-    return pw->pw_shell;
+    if (pw)
+      return pw->pw_shell;
 #endif
+
+#ifndef _MSC_VER
+[[maybe_unused]]
+#endif
+err:
+  fs_print_error("", "get_shell");
+  return {};
 }
