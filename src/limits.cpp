@@ -11,6 +11,7 @@
 #endif
 
 #include <cstddef> // size_t
+#include <string>
 #include <string_view>
 #include <iostream> // IWYU pragma: keep
 
@@ -34,7 +35,7 @@ size_t fs_get_max_path(){
 }
 
 
-std::string_view::size_type fs_max_component([[maybe_unused]] std::string_view path)
+std::string::size_type fs_max_component([[maybe_unused]] std::string_view path)
 {
   // maximum length of each component of a path. That is, while the maximum
   // total length of a path may be thousands of character, each segment of the

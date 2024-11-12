@@ -17,7 +17,9 @@
 #include <system_error>
 
 
-#ifndef HAVE_CXX_FILESYSTEM
+#ifdef HAVE_CXX_FILESYSTEM
+#include <filesystem>
+#else
 // preferred import order for stat()
 #include <sys/types.h>
 #include <sys/stat.h>

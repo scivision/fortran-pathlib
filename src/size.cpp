@@ -9,7 +9,9 @@
 
 #include <cstdint>  // uintmax_t
 
-#ifndef HAVE_CXX_FILESYSTEM
+#ifdef HAVE_CXX_FILESYSTEM
+#include <filesystem>
+#else
 #include <set>
 #include <iostream>
 

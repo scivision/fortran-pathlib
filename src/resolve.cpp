@@ -4,9 +4,10 @@
 
 #include <string>
 #include <string_view>
-
-#ifndef HAVE_CXX_FILESYSTEM
 #include <system_error>
+
+#ifdef HAVE_CXX_FILESYSTEM
+#include <filesystem>
 #endif
 
 

@@ -5,8 +5,8 @@
 #include <ranges>  // IWYU pragma: keep
 #endif
 
-#include <algorithm> // toupper, std::ranges::contains, std::find
-#include <cctype> // std::isalnum
+#include <algorithm> // std::transform, std::ranges::contains, std::find
+#include <cctype> // std::isalnum, toupper
 #include <vector>
 
 #include "ffilesystem.h"

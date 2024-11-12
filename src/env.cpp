@@ -9,7 +9,8 @@
 
 #ifdef _WIN32
 #include <algorithm> // std::replace
-#include <Objbase.h> // CoTaskMemFree
+#include <Objbase.h> // IWYU pragma: keep
+// CoTaskMemFree
 #include <KnownFolders.h> // FOLDERID_LocalAppData
 #include <Shlobj.h> // SHGetKnownFolderPath
 #endif

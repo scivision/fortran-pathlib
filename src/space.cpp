@@ -2,12 +2,13 @@
 
 #include <cstdint> // uintmax_t
 #include <system_error> // for error_code
-#include <iostream>
 
 #include <string_view>
 
 
-#ifndef HAVE_CXX_FILESYSTEM
+#ifdef HAVE_CXX_FILESYSTEM
+#include <filesystem>
+#else
 #include <string>
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN

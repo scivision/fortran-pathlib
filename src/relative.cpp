@@ -3,7 +3,9 @@
 #include <string>
 #include <string_view>
 
-#ifndef HAVE_CXX_FILESYSTEM
+#ifdef HAVE_CXX_FILESYSTEM
+#include <filesystem>
+#else
 #include <vector>
 #include <iostream>
 #endif

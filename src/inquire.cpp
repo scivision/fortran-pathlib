@@ -10,7 +10,9 @@
 #include <iostream>  // IWYU pragma: keep
 #include <cstdint> // uintmax_t
 
-#ifndef HAVE_CXX_FILESYSTEM
+#ifdef HAVE_CXX_FILESYSTEM
+#include <filesystem>
+#else
 #if defined(_MSC_VER)
 #define WIN32_LEAN_AND_MEAN
 #include <io.h> // _access_s

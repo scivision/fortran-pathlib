@@ -5,14 +5,17 @@
 
 #include <system_error>
 
-#ifndef HAVE_CXX_FILESYSTEM
+#ifdef HAVE_CXX_FILESYSTEM
+#include <filesystem>
+#else
 #include <sys/types.h>
 #include <sys/stat.h> // permissions constants
 #endif
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
-#include <io.h> // chmod
+#include <io.h> // IWYU pragma: keep
+// chmod
 #endif
 
 

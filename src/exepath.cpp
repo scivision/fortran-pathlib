@@ -6,6 +6,8 @@
 
 #include <string>
 
+#include <cstddef> // size_t
+
 #if defined(__unix__)
 // https://github.com/cpredef/predef/blob/master/OperatingSystems.md#bsd-environment
 #include <sys/param.h> // IWYU pragma: keep

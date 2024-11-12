@@ -14,13 +14,13 @@
 #endif
 
 #if defined(__linux__) && defined(USE_STATX)
+#include <iostream>
 #include <fcntl.h>   // AT_* constants for statx()
 #endif
 
 #include <string>
 #include <string_view>
 
-#include <iostream>
 
 #include "ffilesystem.h"
 

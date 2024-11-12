@@ -11,9 +11,12 @@
 
 #include <system_error>         // for error_code
 
-#ifndef HAVE_CXX_FILESYSTEM
+#ifdef HAVE_CXX_FILESYSTEM
+#include <filesystem>
+#else
 #ifdef _WIN32
-#include <io.h>  // _mktemp
+#include <io.h>  // IWYU pragma: keep
+// _mktemp_s
 #else
 #include <unistd.h> // mkdtemp macOS
 #include <cstdlib> // mkdtemp Linux

@@ -4,7 +4,7 @@
 #include <set>
 
 #if __has_include(<format>) && defined(_WIN32)
-#include <format>
+#include <format>  // IWYU pragma: keep
 #endif
 
 

@@ -7,7 +7,9 @@
 #include <system_error>         // for error_code
 #include <vector>  // IWYU pragma: keep
 
-#ifndef HAVE_CXX_FILESYSTEM
+#ifdef HAVE_CXX_FILESYSTEM
+#include <filesystem>
+#else
 #include <cerrno>
 #include <sys/types.h>
 

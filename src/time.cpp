@@ -21,7 +21,9 @@
 #include <cstring> // std::strerror
 #include <string_view>
 
-#ifndef HAVE_CXX_FILESYSTEM
+#ifdef HAVE_CXX_FILESYSTEM
+#include <filesystem>
+#else
 #if defined(_WIN32)
 #include <sys/utime.h> // _utime
 #else

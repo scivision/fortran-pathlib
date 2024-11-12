@@ -4,6 +4,10 @@
 
 #include "ffilesystem.h"
 
+#ifdef HAVE_CXX_FILESYSTEM
+#include <filesystem>
+#endif
+
 #include <string>
 #include <string_view>
 

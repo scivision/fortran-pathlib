@@ -2,6 +2,7 @@
 #include <string_view>
 
 #ifdef HAVE_CXX_FILESYSTEM
+#include <filesystem>
 #include <system_error>
 #endif
 

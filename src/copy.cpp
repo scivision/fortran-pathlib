@@ -18,7 +18,9 @@
 #include <string>  // IWYU pragma: keep
 #include <string_view>
 
-#ifndef HAVE_CXX_FILESYSTEM
+#ifdef HAVE_CXX_FILESYSTEM
+#include <filesystem>
+#else
 #include <cstdio>  // fopen, fclose, fread, fwrite
 #include <cstdlib>
 

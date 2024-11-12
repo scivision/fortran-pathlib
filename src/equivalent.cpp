@@ -8,8 +8,9 @@
 #include <system_error>
 #include <iostream>  // IWYU pragma: keep
 
-#ifndef HAVE_CXX_FILESYSTEM
-// preferred import order for stat()
+#ifdef HAVE_CXX_FILESYSTEM
+#include <filesystem>
+#else
 #include <sys/types.h>
 #include <sys/stat.h>
 

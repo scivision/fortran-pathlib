@@ -3,7 +3,9 @@
 #include <Windows.h>
 #endif
 
-#if !defined(HAVE_CXX_FILESYSTEM) && !defined(_WIN32)
+#if defined(HAVE_CXX_FILESYSTEM)
+#include <filesystem>
+#elif !defined(_WIN32)
 #include <cstdio> // remove()
 #endif
 

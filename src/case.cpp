@@ -3,7 +3,8 @@
 #include <string_view>
 #include <string>
 
-#include <algorithm> // tolower
+#include <algorithm> // std::transform
+#include <cctype> // std::tolower
 
 bool fs_is_case_sensitive(std::string_view path)
 {
