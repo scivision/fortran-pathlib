@@ -32,7 +32,8 @@ max_path, max_component, &
 exe_path, lib_path, compiler, compiler_c, get_shell, get_terminal, &
 longname, shortname, getenv, setenv, getarg, &
 is_alpha, filesystem_type, devnull, cpu_arch, &
-to_cygpath, to_winpath
+to_cygpath, to_winpath, &
+stdin_tty
 
 
 !> legacy function name make_absolute() is actually absolute()
@@ -45,6 +46,11 @@ interface
 
 logical(C_BOOL) function fs_is_optimized() bind(C)
 !! ffilesystem is optimized for speed?
+import C_BOOL
+end function
+
+logical(C_BOOL) function stdin_tty() bind(C)
+!! stdin is a terminal
 import C_BOOL
 end function
 

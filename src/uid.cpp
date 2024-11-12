@@ -1,11 +1,14 @@
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>  // GetTokenInformation
+#include <io.h> // _isatty
 #else
-#include <unistd.h>  // geteuid, getpid
+#include <unistd.h>  // geteuid, getpid, isatty
 #include <sys/types.h>  // IWYU pragma: keep
 // geteuid, pid_t
 #endif
+
+ #include <cstdio> // fileno
 
 #include <string>
 
@@ -39,6 +42,18 @@ int fs_getpid()
   return static_cast<int>(GetCurrentProcessId());
 #else
   return static_cast<int>(getpid());
+#endif
+}
+
+
+bool fs_stdin_tty()
+{
+// detect if stdin is connected to a terminal
+  return
+#ifdef _WIN32
+    _isatty(_fileno(stdin));
+#else
+    isatty(fileno(stdin));
 #endif
 }
 

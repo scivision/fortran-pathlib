@@ -65,6 +65,8 @@ static void no_arg(std::string_view fun){
     std::cout << fs_hostname() << "\n";
   else if (fun == "shell")
     std::cout << fs_get_shell() << "\n";
+  else if (fun == "stdin_tty")
+    std::cout << fs_stdin_tty() << "\n";
   else if (fun == "arch")
     std::cout << fs_cpu_arch() << "\n";
   else if (fun == "profile")

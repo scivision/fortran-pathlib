@@ -158,6 +158,8 @@ bool fs_is_empty(std::string_view);
 bool fs_is_readable(std::string_view);
 bool fs_is_writable(std::string_view);
 
+bool fs_stdin_tty();
+
 std::string fs_root(std::string_view path);
 std::string fs_root_name(std::string_view path);
 
