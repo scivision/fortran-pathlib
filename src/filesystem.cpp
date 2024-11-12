@@ -3,7 +3,9 @@
 #include <Windows.h>
 #endif
 
-#if defined(HAVE_CXX_FILESYSTEM)
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
 #elif !defined(_WIN32)
 #include <cstdio> // remove()
@@ -18,10 +20,10 @@
 bool fs_remove(std::string_view path)
 {
 
-  std::error_code ec;
+  Fserr::error_code ec;
 
-#ifdef HAVE_CXX_FILESYSTEM
-  if(std::filesystem::remove(path, ec) && !ec) FFS_LIKELY
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  if(Fs::remove(path, ec) && !ec) FFS_LIKELY
     return true;
 #else
 

@@ -10,15 +10,15 @@
 #include <iostream>  // IWYU pragma: keep
 #include <cstdint> // uintmax_t
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
-#else
-#if defined(_MSC_VER)
+#elif defined(_MSC_VER)
 #define WIN32_LEAN_AND_MEAN
 #include <io.h> // _access_s
 #else
 #include <unistd.h>
-#endif
 #endif
 
 #include <sys/types.h>  // IWYU pragma: keep
@@ -68,9 +68,9 @@ fs_exists(std::string_view path)
   // fs_exists() is true even if path is non-readable
   // this is like Python pathlib.Path.exists()
   // unlike kwSys:SystemTools:FileExists which uses R_OK instead of F_OK like this project.
-#ifdef HAVE_CXX_FILESYSTEM
-  std::error_code ec;
-  return std::filesystem::exists(path, ec) && !ec;
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  Fserr::error_code ec;
+  return Fs::exists(path, ec) && !ec;
 #else
 
 #ifdef _MSC_VER
@@ -90,10 +90,10 @@ fs_exists(std::string_view path)
 bool
 fs_is_dir(std::string_view path)
 {
-#if defined(HAVE_CXX_FILESYSTEM)
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
 // NOTE: Windows top-level drive "C:" needs a trailing slash "C:/"
-  std::error_code ec;
-  return std::filesystem::is_directory(path, ec) && !ec;
+  Fserr::error_code ec;
+  return Fs::is_directory(path, ec) && !ec;
 #else
   return fs_st_mode(path) & S_IFDIR;
   // S_ISDIR not available with MSVC
@@ -104,10 +104,10 @@ fs_is_dir(std::string_view path)
 bool
 fs_is_file(std::string_view path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
-  std::error_code ec;
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  Fserr::error_code ec;
   // disqualify reserved names
-  const bool ok = std::filesystem::is_regular_file(path, ec) && !ec;
+  const bool ok = Fs::is_regular_file(path, ec) && !ec;
   return ok && !fs_is_reserved(path);
 #else
     return fs_st_mode(path) & S_IFREG;
@@ -119,9 +119,9 @@ fs_is_file(std::string_view path)
 bool fs_is_char_device(std::string_view path)
 {
 // special character device like /dev/null
-#ifdef HAVE_CXX_FILESYSTEM
-  std::error_code ec;
-  return std::filesystem::is_character_file(path, ec) && !ec;
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  Fserr::error_code ec;
+  return Fs::is_character_file(path, ec) && !ec;
 #else
   // Windows: https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fstat-fstat32-fstat64-fstati64-fstat32i64-fstat64i32
   return fs_st_mode(path) & S_IFCHR;
@@ -132,26 +132,29 @@ bool fs_is_char_device(std::string_view path)
 
 bool fs_is_exe(std::string_view path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
+#if (defined(HAVE_BOOST_FILESYSTEM) && BOOST_FILESYSTEM_VERSION >= 4) || defined(HAVE_CXX_FILESYSTEM)
 
-  std::error_code ec;
+  Fserr::error_code ec;
 
-  const auto s = std::filesystem::status(path, ec);
+  const auto s = Fs::status(path, ec);
   // need reserved check for Windows
-  if(ec || !std::filesystem::is_regular_file(s) || fs_is_reserved(path))
+  if(ec || !Fs::is_regular_file(s) || fs_is_reserved(path))
     return false;
 
   // Windows MinGW bug with executable bit
   if(fs_is_mingw())
     return fs_is_readable(path);
 
-#if defined(__cpp_using_enum)
-  using enum std::filesystem::perms;
+#if defined(HAVE_BOOST_FILESYSTEM)
+  constexpr Fs::perms none = Fs::perms::no_perms;
+  constexpr Fs::perms others_exec = Fs::perms::others_exe;
+  constexpr Fs::perms group_exec = Fs::perms::group_exe;
+  constexpr Fs::perms owner_exec = Fs::perms::owner_exe;
 #else
-  constexpr std::filesystem::perms none = std::filesystem::perms::none;
-  constexpr std::filesystem::perms others_exec = std::filesystem::perms::others_exec;
-  constexpr std::filesystem::perms group_exec = std::filesystem::perms::group_exec;
-  constexpr std::filesystem::perms owner_exec = std::filesystem::perms::owner_exec;
+  constexpr Fs::perms none = Fs::perms::none;
+  constexpr Fs::perms others_exec = Fs::perms::others_exec;
+  constexpr Fs::perms group_exec = Fs::perms::group_exec;
+  constexpr Fs::perms owner_exec = Fs::perms::owner_exec;
 #endif
 
   return (s.permissions() & (owner_exec | group_exec | others_exec)) != none;
@@ -174,20 +177,21 @@ bool fs_is_exe(std::string_view path)
 
 bool fs_is_readable(std::string_view path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
 // directory or file readable
-  std::error_code ec;
-  const auto s = std::filesystem::status(path, ec);
-  if(ec || !std::filesystem::exists(s))
+  Fserr::error_code ec;
+  const auto s = Fs::status(path, ec);
+  if(ec || !Fs::exists(s))
     return false;
 
-#if defined(__cpp_using_enum)
-  using enum std::filesystem::perms;
+  constexpr Fs::perms owner_read = Fs::perms::owner_read;
+  constexpr Fs::perms group_read = Fs::perms::group_read;
+  constexpr Fs::perms others_read = Fs::perms::others_read;
+
+#ifdef HAVE_BOOST_FILESYSTEM
+  constexpr Fs::perms none = Fs::perms::no_perms;
 #else
-  constexpr std::filesystem::perms none = std::filesystem::perms::none;
-  constexpr std::filesystem::perms owner_read = std::filesystem::perms::owner_read;
-  constexpr std::filesystem::perms group_read = std::filesystem::perms::group_read;
-  constexpr std::filesystem::perms others_read = std::filesystem::perms::others_read;
+  constexpr Fs::perms none = Fs::perms::none;
 #endif
 
   return (s.permissions() & (owner_read | group_read | others_read)) != none;
@@ -204,19 +208,20 @@ bool fs_is_readable(std::string_view path)
 bool fs_is_writable(std::string_view path)
 {
   // directory or file writable
-#ifdef HAVE_CXX_FILESYSTEM
-  std::error_code ec;
-  const auto s = std::filesystem::status(path, ec);
-  if(ec || !std::filesystem::exists(s))
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  Fserr::error_code ec;
+  const auto s = Fs::status(path, ec);
+  if(ec || !Fs::exists(s))
     return false;
 
-#if defined(__cpp_using_enum)
-  using enum std::filesystem::perms;
+  constexpr Fs::perms owner_write = Fs::perms::owner_write;
+  constexpr Fs::perms group_write = Fs::perms::group_write;
+  constexpr Fs::perms others_write = Fs::perms::others_write;
+
+#ifdef HAVE_BOOST_FILESYSTEM
+  constexpr Fs::perms none = Fs::perms::no_perms;
 #else
-  constexpr std::filesystem::perms owner_write = std::filesystem::perms::owner_write;
-  constexpr std::filesystem::perms group_write = std::filesystem::perms::group_write;
-  constexpr std::filesystem::perms others_write = std::filesystem::perms::others_write;
-  constexpr std::filesystem::perms none = std::filesystem::perms::none;
+  constexpr Fs::perms none = Fs::perms::none;
 #endif
 
   return (s.permissions() & (owner_write | group_write | others_write)) != none;
@@ -231,11 +236,11 @@ bool fs_is_writable(std::string_view path)
 
 std::uintmax_t fs_hard_link_count(std::string_view path)
 {
-  std::error_code ec;
+  Fserr::error_code ec;
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
 
-  if(auto s = std::filesystem::hard_link_count(path, ec); !ec)  FFS_LIKELY
+  if(auto s = Fs::hard_link_count(path, ec); !ec)  FFS_LIKELY
     return s;
 
 #elif defined(STATX_BASIC_STATS) && defined(USE_STATX)

@@ -18,7 +18,9 @@
 #include <string>  // IWYU pragma: keep
 #include <string_view>
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
 #else
 #include <cstdio>  // fopen, fclose, fread, fwrite
@@ -40,17 +42,17 @@
 
 bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite)
 {
-#ifdef HAVE_CXX_FILESYSTEM
-  auto opt = std::filesystem::copy_options::none;
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  auto opt = Fs::copy_options::none;
   if (overwrite)
-    opt = std::filesystem::copy_options::overwrite_existing;
+    opt = Fs::copy_options::overwrite_existing;
 // WORKAROUND: Windows MinGW GCC 11..13, Intel oneAPI Linux: bug with overwrite_existing failing on overwrite
 
   if(overwrite && fs_is_file(dest) && !fs_remove(dest)) FFS_UNLIKELY
     fs_print_error(dest, "copy_file:remove");
 
-  std::error_code ec;
-  if(std::filesystem::copy_file(source, dest, opt, ec) && !ec) FFS_LIKELY
+  Fserr::error_code ec;
+  if(Fs::copy_file(source, dest, opt, ec) && !ec) FFS_LIKELY
     return true;
 
   fs_print_error(source, "copy_file", ec);

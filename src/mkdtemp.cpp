@@ -11,16 +11,16 @@
 
 #include <system_error>         // for error_code
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
-#else
-#ifdef _WIN32
+#elif defined(_WIN32)
 #include <io.h>  // IWYU pragma: keep
 // _mktemp_s
 #else
 #include <unistd.h> // mkdtemp macOS
 #include <cstdlib> // mkdtemp Linux
-#endif
 #endif
 
 
@@ -30,14 +30,14 @@ std::string fs_mkdtemp(std::string_view prefix)
 
 if(FS_TRACE) std::cout << "TRACE:mkdtemp_mersenne: prefix: " << prefix << "\n";
 
-  std::error_code ec;
+  Fserr::error_code ec;
 
-#if defined(HAVE_CXX_FILESYSTEM)
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
 
-  std::filesystem::path t;
+  Fs::path t;
 
   constexpr std::string::size_type Lname = 16;  // arbitrary length for random string
-  const std::filesystem::path temp = std::filesystem::temp_directory_path(ec);
+  const Fs::path temp = Fs::temp_directory_path(ec);
 
   if(FS_TRACE) std::cout << "TRACE:mkdtemp: tempdir: " << temp << "\n";
 
@@ -48,9 +48,9 @@ if(FS_TRACE) std::cout << "TRACE:mkdtemp_mersenne: prefix: " << prefix << "\n";
       t = (temp / (prefix.data() + rname));
       if(FS_TRACE) std::cout << "TRACE:mkdtemp: randomName: " << rname << "\n";
       if(FS_TRACE) std::cout << "TRACE:mkdtemp: fullTemppath: " << t << "\n";
-    } while (std::filesystem::is_directory(t, ec) && !ec);
+    } while (Fs::is_directory(t, ec) && !ec);
 
-    if (std::filesystem::create_directory(t, ec) && !ec) FFS_LIKELY
+    if (Fs::create_directory(t, ec) && !ec) FFS_LIKELY
       return t.generic_string();
   }
 

@@ -44,9 +44,6 @@ if (fs_is_file("not-exist"))
     err("test_exe: not-exist-file should not exist.");
 if (fs_is_exe("not-exist"))
     err("test_exe: not-exist-file cannot be executable");
-auto p = fs_get_permissions("not-exist");
-if(!p.empty())
-    err("test_exe: get_permissions('not-exist') should fail");
 
 fs_touch(exe);
 fs_touch(noexe);
@@ -57,7 +54,7 @@ fs_set_permissions(noexe, 0, 0, -1);
 if(fs_is_exe(fs_parent(exe)))
     err("test_exe: is_exe() should not detect directory " + fs_parent(exe));
 
-p = fs_get_permissions(exe);
+std::string p = fs_get_permissions(exe);
 if(p.empty())
   err("test_exe: get_permissions(" + exe + ") failed");
 

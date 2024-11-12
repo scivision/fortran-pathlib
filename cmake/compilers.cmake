@@ -54,7 +54,11 @@ if(NOT CMAKE_CXX_STANDARD OR CMAKE_CXX_STANDARD LESS 17)
   set(CMAKE_CXX_STANDARD 17)
 endif()
 
-if(ffilesystem_cpp)
+if(ffilesystem_boost)
+  find_package(Boost REQUIRED COMPONENTS filesystem)
+  message(STATUS "Boost filesystem found: ${Boost_DIR}")
+  set(HAVE_BOOST_FILESYSTEM ON)
+elseif(ffilesystem_cpp)
   include(${CMAKE_CURRENT_LIST_DIR}/CppCheck.cmake)
   cpp_check()
 else()
@@ -77,17 +81,21 @@ if(HAVE_CXX_FILESYSTEM)
 include(${CMAKE_CURRENT_LIST_DIR}/FScheck.cmake)
 fs_check()
 
+elseif(HAVE_BOOST_FILESYSTEM)
+  #FIXME: check that Boost filesystem is OK
 elseif(UNIX AND NOT APPLE)
 
   set(CMAKE_REQUIRED_DEFINITIONS -D_GNU_SOURCE)
   check_symbol_exists(copy_file_range "unistd.h" ffilesystem_HAVE_COPY_FILE_RANGE)
 
-endif(HAVE_CXX_FILESYSTEM)
+endif()
 
-if(ffilesystem_cpp AND NOT ffilesystem_fallback AND NOT HAVE_CXX_FILESYSTEM)
-  message(FATAL_ERROR "C++ filesystem not available. To fallback to plain C++:
-  cmake -Dffilesystem_fallback=on -B build"
-  )
+if(NOT ffilesystem_fallback)
+  if(ffilesystem_cpp AND NOT HAVE_CXX_FILESYSTEM AND NOT HAVE_BOOST_FILESYSTEM)
+    message(FATAL_ERROR "C++ filesystem not available. To fallback to plain C++:
+    cmake -Dffilesystem_fallback=on -B build"
+    )
+  endif()
 endif()
 
 # fixes errors about needing -fPIE

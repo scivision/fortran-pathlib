@@ -1,6 +1,8 @@
 #include "ffilesystem.h"
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
 #endif
 
@@ -46,8 +48,8 @@ fs_normal(std::string_view path)
 {
   // normalize path
    std::string r;
-#ifdef HAVE_CXX_FILESYSTEM
-  r = std::filesystem::path(path).lexically_normal().generic_string();
+#if defined(HAVE_CXX_FILESYSTEM) || (defined(HAVE_BOOST_FILESYSTEM) && BOOST_FILESYSTEM_VERSION >= 4)
+  r = Fs::path(path).lexically_normal().generic_string();
 #else
   // leave the empty short-circuit to avoid needless computation
   // and avoid indexing into an empty string

@@ -7,7 +7,9 @@
 #include <system_error>         // for error_code
 #include <vector>  // IWYU pragma: keep
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
 #else
 #include <cerrno>
@@ -32,11 +34,11 @@ bool fs_mkdir(std::string_view path)
     return false;
   }
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
 
-  std::error_code ec;
+  Fserr::error_code ec;
   // old MacOS return false even if directory was created
-  if (std::filesystem::create_directories(path, ec) || (!ec && fs_is_dir(path))) FFS_LIKELY
+  if (Fs::create_directories(path, ec) || (!ec && fs_is_dir(path))) FFS_LIKELY
     return true;
 
   fs_print_error(path, "mkdir", ec);

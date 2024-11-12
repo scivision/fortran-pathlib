@@ -17,7 +17,9 @@
 #include <system_error>
 
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
 #else
 // preferred import order for stat()
@@ -38,17 +40,17 @@
 bool fs_is_symlink(std::string_view path)
 {
 
-  std::error_code ec;
+  Fserr::error_code ec;
 
-#if defined(__MINGW32__) || (defined(_WIN32) && !defined(HAVE_CXX_FILESYSTEM))
+#if defined(__MINGW32__) || (defined(_WIN32) && !defined(HAVE_CXX_FILESYSTEM) && !defined(HAVE_BOOST_FILESYSTEM))
   if (const DWORD a = GetFileAttributesA(path.data());
         a != INVALID_FILE_ATTRIBUTES)  FFS_LIKELY
     return a & FILE_ATTRIBUTE_REPARSE_POINT;
-#elif defined(HAVE_CXX_FILESYSTEM)
-// std::filesystem::symlink_status doesn't detect symlinks on MinGW
-  const auto s = std::filesystem::symlink_status(path, ec);
+#elif defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+// Fs::symlink_status doesn't detect symlinks on MinGW
+  const auto s = Fs::symlink_status(path, ec);
   if(!ec) FFS_LIKELY
-    return std::filesystem::is_symlink(s);
+    return Fs::is_symlink(s);
 
 #elif defined(STATX_MODE) && defined(USE_STATX)
 // Linux Glibc only
@@ -79,12 +81,12 @@ std::string fs_read_symlink(std::string_view path)
     return {};
   }
 
-  std::error_code ec;
+  Fserr::error_code ec;
 
-#if defined(__MINGW32__) || (defined(_WIN32) && !defined(HAVE_CXX_FILESYSTEM))
+#if defined(__MINGW32__) || (defined(_WIN32) && !defined(HAVE_CXX_FILESYSTEM) && !defined(HAVE_BOOST_FILESYSTEM))
   return fs_win32_final_path(path);
-#elif defined(HAVE_CXX_FILESYSTEM)
-  if(auto p = std::filesystem::read_symlink(path, ec); !ec) FFS_LIKELY
+#elif defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  if(auto p = Fs::read_symlink(path, ec); !ec) FFS_LIKELY
     return p.generic_string();
 #else
   // https://www.man7.org/linux/man-pages/man2/readlink.2.html
@@ -120,9 +122,9 @@ bool fs_create_symlink(std::string_view target, std::string_view link)
     return false;
   }
 
-  std::error_code ec;
+  Fserr::error_code ec;
 
-#if defined(__MINGW32__) || (defined(_WIN32) && !defined(HAVE_CXX_FILESYSTEM))
+#if defined(__MINGW32__) || (defined(_WIN32) && !defined(HAVE_CXX_FILESYSTEM) && !defined(HAVE_BOOST_FILESYSTEM))
 
   DWORD p = SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
 
@@ -132,11 +134,11 @@ bool fs_create_symlink(std::string_view target, std::string_view link)
   if(CreateSymbolicLinkA(link.data(), target.data(), p))  FFS_LIKELY
     return true;
 
-#elif defined(HAVE_CXX_FILESYSTEM)
+#elif defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
 
   fs_is_dir(target)
-    ? std::filesystem::create_directory_symlink(target, link, ec)
-    : std::filesystem::create_symlink(target, link, ec);
+    ? Fs::create_directory_symlink(target, link, ec)
+    : Fs::create_symlink(target, link, ec);
 
   if(!ec) FFS_LIKELY
     return true;

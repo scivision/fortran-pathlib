@@ -4,13 +4,16 @@
 #include "ffilesystem.h"
 
 #include <system_error>
+#include <iostream>
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
-#else
+#endif
+
 #include <sys/types.h>
 #include <sys/stat.h> // permissions constants
-#endif
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -21,35 +24,52 @@
 
 bool fs_set_permissions(std::string_view path, int readable, int writable, int executable)
 {
-#ifdef HAVE_CXX_FILESYSTEM
-  std::filesystem::path pth(path);
+#if (defined(HAVE_BOOST_FILESYSTEM) && BOOST_FILESYSTEM_VERSION >= 4) || defined(HAVE_CXX_FILESYSTEM)
+  Fs::path pth(path);
 
-#if defined(__cpp_using_enum)
-  using enum std::filesystem::perms;
+  constexpr Fs::perms owner_read = Fs::perms::owner_read;
+  constexpr Fs::perms owner_write = Fs::perms::owner_write;
+
+#ifdef HAVE_BOOST_FILESYSTEM
+  constexpr Fs::perms owner_exec = Fs::perms::owner_exe;
+  constexpr Fs::perms add = Fs::perms::add_perms;
+  constexpr Fs::perms remove = Fs::perms::remove_perms;
 #else
-  constexpr std::filesystem::perms owner_read = std::filesystem::perms::owner_read;
-  constexpr std::filesystem::perms owner_write = std::filesystem::perms::owner_write;
-  constexpr std::filesystem::perms owner_exec = std::filesystem::perms::owner_exec;
+  constexpr Fs::perms owner_exec = Fs::perms::owner_exec;
+  constexpr Fs::perm_options add = Fs::perm_options::add;
+  constexpr Fs::perm_options remove = Fs::perm_options::remove;
 #endif
 
-  std::error_code ec;
+  Fserr::error_code ec;
   // need to error if path doesn't exist and no operations are requested
-  if(!std::filesystem::exists(pth, ec))
+  if(!Fs::exists(pth, ec))
     ec = std::make_error_code(std::errc::no_such_file_or_directory);
 
   if (readable != 0)
-    std::filesystem::permissions(pth, owner_read,
-      (readable > 0) ? std::filesystem::perm_options::add : std::filesystem::perm_options::remove,
+    Fs::permissions(pth,
+#ifdef HAVE_BOOST_FILESYSTEM
+      owner_read & ((readable > 0) ? add : remove),
+#else
+      owner_read, readable > 0 ? add : remove,
+#endif
       ec);
 
   if (!ec && writable != 0)
-    std::filesystem::permissions(pth, owner_write,
-      (writable > 0) ? std::filesystem::perm_options::add : std::filesystem::perm_options::remove,
+    Fs::permissions(pth,
+#ifdef HAVE_BOOST_FILESYSTEM
+      owner_write & ((writable > 0) ? add : remove),
+#else
+      owner_write, writable > 0 ? add : remove,
+#endif
       ec);
 
   if (!ec && executable != 0)
-    std::filesystem::permissions(pth, owner_exec,
-      (executable > 0) ? std::filesystem::perm_options::add : std::filesystem::perm_options::remove,
+    Fs::permissions(pth,
+#ifdef HAVE_BOOST_FILESYSTEM
+      owner_exec & ((executable > 0) ? add : remove),
+#else
+      owner_exec, executable > 0 ? add : remove,
+#endif
       ec);
 
   if(!ec) FFS_LIKELY
@@ -102,29 +122,33 @@ std::string fs_get_permissions(std::string_view path)
 
   std::string r = "---------";
 
-#ifdef HAVE_CXX_FILESYSTEM
-  std::error_code ec;
-  const auto s = std::filesystem::status(path, ec);
+#if (defined(HAVE_BOOST_FILESYSTEM) && BOOST_FILESYSTEM_VERSION >= 4) || defined(HAVE_CXX_FILESYSTEM)
+  Fserr::error_code ec;
+  const auto s = Fs::status(path, ec);
   if(ec){ FFS_UNLIKELY
     fs_print_error(path, "get_permissions", ec);
     return {};
   }
 
-  const std::filesystem::perms p = s.permissions();
+  const Fs::perms p = s.permissions();
 
-#if defined(__cpp_using_enum)
-  using enum std::filesystem::perms;
+  constexpr Fs::perms owner_read = Fs::perms::owner_read;
+  constexpr Fs::perms owner_write = Fs::perms::owner_write;
+  constexpr Fs::perms group_read = Fs::perms::group_read;
+  constexpr Fs::perms group_write = Fs::perms::group_write;
+  constexpr Fs::perms others_read = Fs::perms::others_read;
+  constexpr Fs::perms others_write = Fs::perms::others_write;
+
+#ifdef HAVE_BOOST_FILESYSTEM
+  constexpr Fs::perms none = Fs::perms::no_perms;
+  constexpr Fs::perms owner_exec = Fs::perms::owner_exe;
+  constexpr Fs::perms group_exec = Fs::perms::group_exe;
+  constexpr Fs::perms others_exec = Fs::perms::others_exe;
 #else
-  constexpr std::filesystem::perms none = std::filesystem::perms::none;
-  constexpr std::filesystem::perms owner_read = std::filesystem::perms::owner_read;
-  constexpr std::filesystem::perms owner_write = std::filesystem::perms::owner_write;
-  constexpr std::filesystem::perms owner_exec = std::filesystem::perms::owner_exec;
-  constexpr std::filesystem::perms group_read = std::filesystem::perms::group_read;
-  constexpr std::filesystem::perms group_write = std::filesystem::perms::group_write;
-  constexpr std::filesystem::perms group_exec = std::filesystem::perms::group_exec;
-  constexpr std::filesystem::perms others_read = std::filesystem::perms::others_read;
-  constexpr std::filesystem::perms others_write = std::filesystem::perms::others_write;
-  constexpr std::filesystem::perms others_exec = std::filesystem::perms::others_exec;
+  constexpr Fs::perms none = Fs::perms::none;
+  constexpr Fs::perms owner_exec = Fs::perms::owner_exec;
+  constexpr Fs::perms group_exec = Fs::perms::group_exec;
+  constexpr Fs::perms others_exec = Fs::perms::others_exec;
 #endif
 
   if ((p & owner_read) != none)

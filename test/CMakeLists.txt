@@ -1,6 +1,8 @@
 include(CheckIncludeFile)
 
-if(HAVE_CXX_FILESYSTEM)
+if(HAVE_BOOST_FILESYSTEM)
+  set(_regex "Ffs> <boost/filesystem.hpp>")
+elseif(HAVE_CXX_FILESYSTEM)
   set(_regex "Ffs> <filesystem>")
 else()
   set(_regex "Ffs> C")
@@ -21,7 +23,9 @@ endif()
 
 if(TARGET fs_cli)
 
-  if(HAVE_CXX_FILESYSTEM)
+  if(HAVE_BOOST_FILESYSTEM)
+    set(_regex "Backend: <boost/filesystem.hpp>")
+  elseif(HAVE_CXX_FILESYSTEM)
     set(_regex "Backend: <filesystem>")
   else()
     set(_regex "Backend: C")
@@ -43,7 +47,7 @@ if(LINUX)
   check_include_file("linux/magic.h" ffilesystem_HAVE_LINUX_MAGIC)
 endif()
 
-if(NOT WIN32 AND NOT HAVE_CXX_FILESYSTEM)
+if(NOT WIN32 AND NOT HAVE_CXX_FILESYSTEM AND NOT HAVE_BOOST_FILESYSTEM)
   check_include_file("sys/statvfs.h" ffilesystem_HAVE_SYS_STATVFS)
 endif()
 

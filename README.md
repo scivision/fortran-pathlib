@@ -10,8 +10,9 @@
 Platform independent (Linux, macOS, Windows, Cygwin, WSL, BSD, ...) Fortran filesystem "Ffilesystem" path manipulation library.
 Ffilesystem core functions are implemented in C++17 using `<string_view>`.
 If available,
-[C++ standard library filesystem](https://en.cppreference.com/w/cpp/filesystem)
+[C++ standard library <filesystem>](https://en.cppreference.com/w/cpp/filesystem)
 is used.
+Optionally, C++ Boost::filesystem may be used instead of `<filesystem>`.
 The Fortran interface is also built by default, as the main purpose of this library is to bring full filesystem functionality to Fortran.
 However, the Fortran interface itself is optional.
 Ffilesystem header
@@ -234,11 +235,10 @@ Like
 [Microsoft STL](https://github.com/microsoft/STL/issues/2256),
 our Ffilesystem is not designed for UNC paths.
 We recommend using a UNC path to a mapped drive letter.
-We have not fully tested Windows
+Windows
 [long paths](https://github.com/microsoft/STL/issues/1921)
-due to
-[limitations](https://www.boost.org/doc/libs/1_86_0/libs/filesystem/doc/reference.html#windows-path-prefixes)
-and appreciate feedback.
+generally do not work due to
+[limitations](https://www.boost.org/doc/libs/1_86_0/libs/filesystem/doc/reference.html#windows-path-prefixes).
 
 ### C++ filesystem discussion
 

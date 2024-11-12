@@ -15,7 +15,9 @@
 #include <format>
 #endif
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
 #endif
 
@@ -101,7 +103,7 @@ static void no_arg(std::string_view fun){
 static void one_arg(std::string_view fun, std::string_view a1){
 
 
-  std::error_code ec;
+  Fserr::error_code ec;
 
   if (fun == "lexically_normal")
     std::cout << fs_lexically_normal(a1) << "\n";
@@ -235,11 +237,11 @@ static void one_arg(std::string_view fun, std::string_view a1){
       std::cerr << "ERROR get_cwd() before chdir\n";
     }
   } else if (fun == "ls") {
-#ifdef HAVE_CXX_FILESYSTEM
-    for (auto const& dir_entry : std::filesystem::directory_iterator{fs_expanduser(a1)}){
-      std::filesystem::path p = dir_entry.path();
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+    for (auto const& dir_entry : Fs::directory_iterator{fs_expanduser(a1)}){
+      Fs::path p = dir_entry.path();
       std::cout << p;
-      if (const auto &s = std::filesystem::file_size(p, ec); s && !ec)
+      if (const auto &s = Fs::file_size(p, ec); s && !ec)
         std::cout << " " << s;
 
       std::cout << " " << fs_get_permissions(p.generic_string()) << "\n";

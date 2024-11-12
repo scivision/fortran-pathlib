@@ -34,13 +34,19 @@
 #include <optional>
 #include <system_error>
 
-#ifdef HAVE_CXX_FILESYSTEM
-
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+namespace Fs = boost::filesystem;
+namespace Fserr = boost::system;
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
-
-std::optional<std::filesystem::file_time_type> fs_get_modtime_fs(std::string_view);
-
+namespace Fs = std::filesystem;
+namespace Fserr = std;
+std::optional<Fs::file_time_type> fs_get_modtime_fs(std::string_view);
+#else
+namespace Fserr = std;
 #endif
+
 
 std::string fs_lexically_normal(std::string_view);
 std::string fs_make_preferred(std::string_view);

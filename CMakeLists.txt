@@ -107,6 +107,7 @@ target_include_directories(ffilesystem PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${HAVE_CXX_FILESYSTEM}>>:HAVE_CXX_FILESYSTEM>"
+"$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${HAVE_BOOST_FILESYSTEM}>>:HAVE_BOOST_FILESYSTEM>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_CLOCK_CAST}>>:HAVE_CLOCK_CAST>"
 "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<BOOL:${ffilesystem_trace}>>:FS_TRACE=1>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_DLADDR}>>:HAVE_DLADDR>"
@@ -134,6 +135,7 @@ $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 target_link_libraries(ffilesystem PUBLIC
+$<$<BOOL:${HAVE_BOOST_FILESYSTEM}>:Boost::filesystem>
 ${GNU_stdfs}
 ${CMAKE_DL_LIBS}
 "$<$<BOOL:${WIN32}>:Ole32;Shell32;uuid;Userenv;Advapi32;ws2_32>"
@@ -171,7 +173,10 @@ set_property(TARGET ffilesystem::filesystem PROPERTY IMPORTED_LINK_INTERFACE_LAN
 if(ffilesystem_cli)
   add_executable(fs_cli app/main.cpp)
   target_link_libraries(fs_cli PRIVATE ffilesystem)
-  target_compile_definitions(fs_cli PRIVATE "$<$<BOOL:${HAVE_CXX_FILESYSTEM}>:HAVE_CXX_FILESYSTEM>")
+  target_compile_definitions(fs_cli PRIVATE
+  "$<$<BOOL:${HAVE_CXX_FILESYSTEM}>:HAVE_CXX_FILESYSTEM>"
+  "$<$<BOOL:${HAVE_BOOST_FILESYSTEM}>:HAVE_BOOST_FILESYSTEM>"
+  )
   target_compile_features(fs_cli PRIVATE cxx_std_$<IF:$<IN_LIST:cxx_std_23,CMAKE_CXX_COMPILE_FEATURES>,23,${CMAKE_CXX_STANDARD}>)
   install(TARGETS fs_cli EXPORT ${PROJECT_NAME}-targets)
 
@@ -200,6 +205,7 @@ include(FeatureSummary)
 
 add_feature_info(Fortran HAVE_Fortran_FILESYSTEM "Fortran bindings")
 add_feature_info(Cpp HAVE_CXX_FILESYSTEM "C++ stdlib filesystem")
+add_feature_info(Boost HAVE_BOOST_FILESYSTEM "Boost filesystem")
 add_feature_info(shared BUILD_SHARED_LIBS "Build shared library: enables lib_path()")
 add_feature_info(path_t HAVE_F03TYPE "Fortran 2003 path_t object-oriented interface")
 

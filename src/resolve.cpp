@@ -6,7 +6,9 @@
 #include <string_view>
 #include <system_error>
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
 #endif
 
@@ -24,9 +26,9 @@ std::string fs_canonical(std::string_view path, const bool strict, const bool ex
     ? fs_expanduser(path)
     : std::string(path);
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
 
-  // handle differences in ill-defined behaviour of std::filesystem::weakly_canonical() on non-existent paths
+  // handle differences in ill-defined behaviour of weakly_canonical() on non-existent paths
   // canonical(path, false) is distinct from resolve(path, false) for non-existing paths.
   // don't just always normalize because canonical also resolve symlinks.
   if (!strict && !fs_is_absolute(ex) && !fs_exists(ex))
@@ -35,11 +37,11 @@ std::string fs_canonical(std::string_view path, const bool strict, const bool ex
   if (fs_is_mingw() && fs_is_symlink(ex))
     return fs_win32_final_path(ex);
 
-  std::error_code ec;
+  Fserr::error_code ec;
 
   const auto c = strict
-    ? std::filesystem::canonical(ex, ec)
-    : std::filesystem::weakly_canonical(ex, ec);
+    ? Fs::canonical(ex, ec)
+    : Fs::weakly_canonical(ex, ec);
 
   if(!ec) FFS_LIKELY
     return c.generic_string();

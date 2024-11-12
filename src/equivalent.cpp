@@ -8,7 +8,9 @@
 #include <system_error>
 #include <iostream>  // IWYU pragma: keep
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
 #else
 #include <sys/types.h>
@@ -24,18 +26,18 @@ bool fs_equivalent(std::string_view path1, std::string_view path2)
 {
   // non-existent paths are not equivalent
 
-  std::error_code ec;
+  Fserr::error_code ec;
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
 
-  std::filesystem::path p1(path1);
-  std::filesystem::path p2(path2);
+  Fs::path p1(path1);
+  Fs::path p2(path2);
   if(fs_is_mingw()){
     p1 = p1.lexically_normal();
     p2 = p2.lexically_normal();
   }
 
-  bool e = std::filesystem::equivalent(p1, p2, ec);
+  bool e = Fs::equivalent(p1, p2, ec);
   if(!ec)
     return e;
 

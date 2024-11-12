@@ -3,10 +3,13 @@
 #include <string>
 #include <string_view>
 
-#ifdef HAVE_CXX_FILESYSTEM
-#include <filesystem>
 #include <algorithm> // std::unique
 #include <iostream> // IWYU pragma: keep
+
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
+#include <filesystem>
 #else
 #include <vector>
 #endif
@@ -20,9 +23,9 @@ std::string fs_parent(std::string_view path)
     return ".";
 
   std::string p;
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
   // have to drop_slash on input to get expected parent path -- necessary for AppleClang
-  p = std::filesystem::path(fs_drop_slash(path)).parent_path().generic_string();
+  p = Fs::path(fs_drop_slash(path)).parent_path().generic_string();
 
   // remove repeated path seperators from p string
   p.erase(std::unique(p.begin(), p.end(), [](char a, char b){ return a == '/' && b == '/'; }), p.end());

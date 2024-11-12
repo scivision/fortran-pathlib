@@ -21,25 +21,27 @@
 #include <cstring> // std::strerror
 #include <string_view>
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
-#else
-#if defined(_WIN32)
-#include <sys/utime.h> // _utime
-#else
-#include <sys/time.h> // utimes
-#endif
 #endif
 
 #if defined(__linux__) && defined(USE_STATX)
 #include <fcntl.h>   // AT_* constants for statx()
 #endif
 
+#if defined(_WIN32)
+#include <sys/utime.h> // _utime
+#else
+#include <sys/time.h> // utimes
+#endif
+
 
 std::time_t fs_get_modtime(const char* path)
 {
 
-#if defined(HAVE_CLOCK_CAST) && defined(HAVE_CXX_FILESYSTEM)
+#if defined(HAVE_CLOCK_CAST) && (defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM))
   if(const auto &t_fs = fs_get_modtime_fs(path); t_fs){
     const auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs.value());
     return std::chrono::system_clock::to_time_t(t_sys);
@@ -60,7 +62,7 @@ std::time_t fs_get_modtime(const char* path)
   return {};
 }
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM)
 std::optional<std::filesystem::file_time_type> fs_get_modtime_fs(std::string_view path)
 {
   std::error_code ec;
@@ -76,7 +78,7 @@ std::optional<std::filesystem::file_time_type> fs_get_modtime_fs(std::string_vie
 
 bool fs_set_modtime(std::string_view path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM)
 
   std::error_code ec;
 

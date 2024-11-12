@@ -1,24 +1,27 @@
 #include <string>
 #include <string_view>
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
-#include <system_error>
 #endif
+
+
+#include <system_error>
 
 #include "ffilesystem.h"
 
 
 std::string fs_absolute(std::string_view path, const bool expand_tilde)
 {
-  // wraps std::filesystem::absolute(path).
   // path need not exist
   // Inspired by Python pathlib.Path.absolute()
   // https://docs.python.org/3/library/pathlib.html#pathlib.Path.absolute
 
-#ifdef HAVE_CXX_FILESYSTEM
-  const std::filesystem::path ex = expand_tilde
-    ? std::filesystem::path(fs_expanduser(path))
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  const Fs::path ex = expand_tilde
+    ? Fs::path(fs_expanduser(path))
     : path;
 
   if (ex.is_absolute())
@@ -36,10 +39,10 @@ std::string fs_absolute(std::string_view path, const bool expand_tilde)
   if(ex.empty())
     return fs_get_cwd();
 
-#ifdef HAVE_CXX_FILESYSTEM
-  std::error_code ec;
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  Fserr::error_code ec;
 
-  const auto a = std::filesystem::absolute(ex, ec);
+  const auto a = Fs::absolute(ex, ec);
 
   if(!ec) FFS_LIKELY
     return a.generic_string();
@@ -63,9 +66,9 @@ std::string fs_absolute(std::string_view path, std::string_view base, const bool
 {
   // rebase path on base.
 
-#ifdef HAVE_CXX_FILESYSTEM
-  const std::filesystem::path ex = expand_tilde
-    ? std::filesystem::path(fs_expanduser(path))
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  const Fs::path ex = expand_tilde
+    ? Fs::path(fs_expanduser(path))
     : path;
 
   if (ex.is_absolute())
@@ -88,7 +91,7 @@ std::string fs_absolute(std::string_view path, std::string_view base, const bool
 
   // don't need join(). Keeps it like Python pathlib.Path.absolute()
   b +=
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
     ex.generic_string();
 #else
     ex;

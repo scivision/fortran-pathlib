@@ -6,7 +6,9 @@
 #include <string_view>
 
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
 #else
 #include <string>
@@ -24,10 +26,10 @@
 std::uintmax_t fs_space_available(std::string_view path)
 {
   // filesystem space available for device holding path
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
 
-  std::error_code ec;
-  if(auto s = std::filesystem::space(path, ec); !ec)  FFS_LIKELY
+  Fserr::error_code ec;
+  if(auto s = Fs::space(path, ec); !ec)  FFS_LIKELY
     return s.available;
 
   fs_print_error(path, "space_available", ec);

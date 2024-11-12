@@ -4,7 +4,9 @@
 #include <cstring>
 #include <iostream>
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
 #else
 #include <cctype> // std::isalpha
@@ -18,7 +20,9 @@ long fs_lang(){ return __cplusplus; }
 
 
 std::string fs_backend(){
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+  return "<boost/filesystem.hpp> " + std::to_string(BOOST_FILESYSTEM_VERSION);
+#elif defined(HAVE_CXX_FILESYSTEM)
   return "<filesystem>";
 #else
   return "C";
@@ -81,8 +85,8 @@ bool fs_is_absolute(std::string_view path)
   if(path.empty())
     return false;
 
-#ifdef HAVE_CXX_FILESYSTEM
-  return std::filesystem::path(path).is_absolute();
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  return Fs::path(path).is_absolute();
 #else
   if(fs_is_windows())
     return path.length() > 2 && !(fs_root_name(path).empty()) && (path[2] == '/' || (fs_is_windows() && path[2] == '\\'));
@@ -94,8 +98,8 @@ bool fs_is_absolute(std::string_view path)
 
 std::string fs_file_name(std::string_view path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
-  return std::filesystem::path(path).filename().generic_string();
+#if defined(HAVE_CXX_FILESYSTEM) || (defined(HAVE_BOOST_FILESYSTEM) && BOOST_FILESYSTEM_VERSION >= 4)
+  return Fs::path(path).filename().generic_string();
 #else
 
   const auto i = path.find_last_of(fs_is_windows() ? "/\\" : "/");
@@ -111,8 +115,8 @@ std::string fs_root(std::string_view path)
 {
   // root_path = root_name / root_directory
 
-#ifdef HAVE_CXX_FILESYSTEM
-  return std::filesystem::path(path).root_path().generic_string();
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  return Fs::path(path).root_path().generic_string();
 #else
   if(path.empty())
     return {};
@@ -128,8 +132,8 @@ std::string fs_root(std::string_view path)
 
 std::string fs_root_name(std::string_view path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
-  return std::filesystem::path(path).root_name().string();
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  return Fs::path(path).root_name().string();
 #else
   if(fs_is_windows() && path.length() > 1 && std::isalpha(path.front()) && path[1] == ':')
     return std::string(path.substr(0, 2));
@@ -141,8 +145,8 @@ std::string fs_root_name(std::string_view path)
 
 std::string fs_stem(std::string_view path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
-  return std::filesystem::path(path).filename().stem().generic_string();
+#if defined(HAVE_CXX_FILESYSTEM) || (defined(HAVE_BOOST_FILESYSTEM) && BOOST_FILESYSTEM_VERSION >= 4)
+  return Fs::path(path).filename().stem().generic_string();
 #else
   std::string r = fs_file_name(path);
   if(r.empty())
@@ -164,8 +168,8 @@ std::string fs_stem(std::string_view path)
 
 std::string fs_suffix(std::string_view path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
-  return std::filesystem::path(path).filename().extension().generic_string();
+#if defined(HAVE_CXX_FILESYSTEM) || (defined(HAVE_BOOST_FILESYSTEM) && BOOST_FILESYSTEM_VERSION >= 4)
+  return Fs::path(path).filename().extension().generic_string();
 #else
   const std::string p = fs_file_name(path);
   if(p.empty())
@@ -182,8 +186,8 @@ std::string fs_suffix(std::string_view path)
 
 
 std::string fs_join(std::string_view path, std::string_view other){
-#ifdef HAVE_CXX_FILESYSTEM
-  return fs_drop_slash((std::filesystem::path(path) / other).lexically_normal().generic_string());
+#if defined(HAVE_CXX_FILESYSTEM) || (defined(HAVE_BOOST_FILESYSTEM) && BOOST_FILESYSTEM_VERSION >= 4)
+  return fs_drop_slash((Fs::path(path) / other).lexically_normal().generic_string());
 #else
   if(path.empty() && other.empty())
     return {};
@@ -204,8 +208,8 @@ std::string fs_join(std::string_view path, std::string_view other){
 
 std::string fs_with_suffix(std::string_view path, std::string_view new_suffix)
 {
-#ifdef HAVE_CXX_FILESYSTEM
-  return std::filesystem::path(path).replace_extension(new_suffix).generic_string();
+#if defined(HAVE_CXX_FILESYSTEM) || (defined(HAVE_BOOST_FILESYSTEM) && BOOST_FILESYSTEM_VERSION >= 4)
+  return Fs::path(path).replace_extension(new_suffix).generic_string();
 #else
 
   const std::string parent = fs_parent(path);
@@ -224,8 +228,8 @@ std::string fs_with_suffix(std::string_view path, std::string_view new_suffix)
 
 
 std::string fs_lexically_normal(std::string_view path){
-#ifdef HAVE_CXX_FILESYSTEM
-  return std::filesystem::path(path).lexically_normal().generic_string();
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  return Fs::path(path).lexically_normal().generic_string();
 #else
   std::cerr << "ERROR:fs_lexically_normal(" << path << "): C++ <filesystem> not available\n";
   return {};
@@ -234,8 +238,8 @@ std::string fs_lexically_normal(std::string_view path){
 
 
 std::string fs_make_preferred(std::string_view path){
-#ifdef HAVE_CXX_FILESYSTEM
-  return std::filesystem::path(path).make_preferred().generic_string();
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  return Fs::path(path).make_preferred().generic_string();
 #else
   std::cerr << "ERROR:fs_make_preferred(" << path << "): C++ <filesystem> not available\n";
   return {};

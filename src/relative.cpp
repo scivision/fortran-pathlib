@@ -3,19 +3,21 @@
 #include <string>
 #include <string_view>
 
-#ifdef HAVE_CXX_FILESYSTEM
-#include <filesystem>
-#else
 #include <vector>
 #include <iostream>
+
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
+#include <filesystem>
 #endif
 
 
 std::string fs_relative_to(std::string_view base, std::string_view other)
 {
   // find lexical relative path from base to other
-#ifdef HAVE_CXX_FILESYSTEM
-  return std::filesystem::path(other).lexically_relative(base).lexically_normal().generic_string();
+#if (defined(HAVE_BOOST_FILESYSTEM) && BOOST_FILESYSTEM_VERSION >= 4) || defined(HAVE_CXX_FILESYSTEM) && !defined(HAVE_BOOST_FILESYSTEM)
+  return Fs::path(other).lexically_relative(base).lexically_normal().generic_string();
 #else
 
   if(base.empty() && other.empty())
@@ -65,8 +67,8 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
 std::string fs_proximate_to(std::string_view base, std::string_view other)
 {
 // proximate_to is LEXICAL operation
-#ifdef HAVE_CXX_FILESYSTEM
-  return std::filesystem::path(other).lexically_proximate(base).lexically_normal().generic_string();
+#if (defined(HAVE_BOOST_FILESYSTEM) && BOOST_FILESYSTEM_VERSION >= 4) || defined(HAVE_CXX_FILESYSTEM) && !defined(HAVE_BOOST_FILESYSTEM)
+  return Fs::path(other).lexically_proximate(base).lexically_normal().generic_string();
 #else
   const std::string r = fs_relative_to(base, other);
   return (r.empty()) ? std::string(other) : r;

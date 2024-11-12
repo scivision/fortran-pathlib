@@ -4,7 +4,9 @@
 
 #include "ffilesystem.h"
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
 #endif
 
@@ -25,10 +27,10 @@
 
 std::string fs_get_tempdir()
 {
-  std::error_code ec;
+  Fserr::error_code ec;
 
-#ifdef HAVE_CXX_FILESYSTEM
-  if(auto p = std::filesystem::temp_directory_path(ec); !ec) FFS_LIKELY
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  if(auto p = Fs::temp_directory_path(ec); !ec) FFS_LIKELY
     return p.generic_string();
 #else
 
@@ -58,10 +60,10 @@ std::string fs_get_tempdir()
 bool fs_set_cwd(std::string_view path)
 {
 
-  std::error_code ec;
+  Fserr::error_code ec;
 
-#ifdef HAVE_CXX_FILESYSTEM
-  std::filesystem::current_path(path, ec);
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  Fs::current_path(path, ec);
   if(!ec) FFS_LIKELY
     return true;
 #elif _WIN32
@@ -82,10 +84,10 @@ bool fs_set_cwd(std::string_view path)
 std::string fs_get_cwd()
 {
 
-  std::error_code ec;
+  Fserr::error_code ec;
 
-#ifdef HAVE_CXX_FILESYSTEM
-  if(auto s = std::filesystem::current_path(ec); !ec) FFS_LIKELY
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  if(auto s = Fs::current_path(ec); !ec) FFS_LIKELY
     return s.generic_string();
 #elif defined(_WIN32)
 // windows.h https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcurrentdirectory

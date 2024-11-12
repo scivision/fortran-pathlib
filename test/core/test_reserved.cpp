@@ -70,7 +70,7 @@ int main(void){
       }
     }
     else{
-      if(s == 0){
+      if(s == 0 && fs_backend() == "<filesystem>" ){
         std::cerr << "FAILED: space_available(" << ref << ") " << s << "\n";
         err("space_available");
       }

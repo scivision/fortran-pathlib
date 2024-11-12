@@ -9,7 +9,9 @@
 
 #include <cstdint>  // uintmax_t
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_BOOST_FILESYSTEM)
+#include <boost/filesystem.hpp>
+#elif defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
 #else
 #include <set>
@@ -34,9 +36,9 @@
 
 std::uintmax_t fs_file_size(std::string_view path)
 {
-  std::error_code ec;
-#ifdef HAVE_CXX_FILESYSTEM
-  if(auto s = std::filesystem::file_size(path, ec); !ec)  FFS_LIKELY
+  Fserr::error_code ec;
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  if(auto s = Fs::file_size(path, ec); !ec)  FFS_LIKELY
     return s;
 #elif defined(STATX_SIZE) && defined(USE_STATX)
 // https://www.man7.org/linux/man-pages/man2/statx.2.html
@@ -59,10 +61,10 @@ bool fs_is_empty(std::string_view path)
 {
   // directory or file empty
   // returns false if path doesn't exist
-#ifdef HAVE_CXX_FILESYSTEM
-  std::error_code ec;
+#if defined(HAVE_CXX_FILESYSTEM) || defined(HAVE_BOOST_FILESYSTEM)
+  Fserr::error_code ec;
 
-  return std::filesystem::is_empty(path, ec) && !ec;
+  return Fs::is_empty(path, ec) && !ec;
 
 #else
 
