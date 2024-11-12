@@ -135,6 +135,10 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << fs_is_reserved(a1) << "\n";
   else if (fun == "is_safe")
     std::cout << fs_is_safe_name(a1) << "\n";
+  else if (fun == "long")
+    std::cout << fs_longname(a1) << "\n";
+  else if (fun == "short")
+    std::cout << fs_shortname(a1) << "\n";
   else if (fun == "touch")
     std::cout << "touch " << a1 << " " << fs_touch(a1) << "\n";
   else if (fun == "getenv")
