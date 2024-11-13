@@ -34,7 +34,7 @@ static struct passwd* fs_getpwuid()
     return pw;
 
   fs_print_error(
-#ifdef __cpp_lib_format
+#ifdef __cpp_lib_format  // C++20
     std::format("uid: {}", eff_uid)
 #else
     ""

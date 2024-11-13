@@ -81,9 +81,9 @@ bool fs_is_subdir(std::string_view subdir, std::string_view dir)
   const std::string r = fs_relative_to(dir, subdir);
 
   return !r.empty() && r != "." &&
-#ifdef __cpp_lib_starts_ends_with
+#ifdef __cpp_lib_starts_ends_with // C++20
     !r.starts_with("..");
-#else
+#else // C++98
     r.substr(0,2) != "..";
 #endif
 

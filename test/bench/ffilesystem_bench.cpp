@@ -78,7 +78,7 @@ else
     return t;
   }
 
-#if __cpp_lib_starts_ends_with
+#if __cpp_lib_starts_ends_with  // C++20
 if (!fname.starts_with("is") && h.empty()){
   std::cerr << "Error:Cpp: " << fname << " " << path << " failed on warmup\n";
   return t;

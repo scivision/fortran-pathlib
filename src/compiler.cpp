@@ -23,7 +23,7 @@ std::string fs_compiler()
   std::string v = {};
 #if defined(__INTEL_LLVM_COMPILER)
 
-#ifdef __cpp_lib_format
+#ifdef __cpp_lib_format // C++20
   v = std::format("{} {}", __VERSION__, __INTEL_LLVM_COMPILER);
 #else
   v = std::string(__VERSION__) + " " + std::to_string(__INTEL_LLVM_COMPILER);

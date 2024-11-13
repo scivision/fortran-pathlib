@@ -30,7 +30,7 @@ bool fs_is_reserved(std::string_view path)
     "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
     "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
 
-#ifdef _cpp_lib_ranges_contains  // C++23
+#ifdef __cpp_lib_ranges_contains  // C++23
   if (std::ranges::contains(r, s))
 #elif __cpp_lib_ranges // C++20
   if (std::ranges::find(r, s) != r.end())

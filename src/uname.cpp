@@ -26,7 +26,7 @@ int fs_is_wsl()
 
   if(s != "Linux")
     return 0;
-#ifdef __cpp_lib_starts_ends_with
+#ifdef __cpp_lib_starts_ends_with // C++20
   if (r.ends_with("microsoft-standard-WSL2"))
     return 2;
   if (r.ends_with("-Microsoft"))

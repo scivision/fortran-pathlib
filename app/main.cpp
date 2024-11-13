@@ -204,7 +204,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
   else if (fun == "is_empty")
     std::cout << fs_is_empty(a1) << "\n";
   else if (fun == "modtime"){
-#if defined(HAVE_CXX_FILESYSTEM) && defined(__cpp_lib_format)
+#if defined(HAVE_CXX_FILESYSTEM) && defined(__cpp_lib_format) // C++20
     const auto t = fs_get_modtime_fs(a1);
     if(t)
       std::cout << std::format("{}\n", t.value());
