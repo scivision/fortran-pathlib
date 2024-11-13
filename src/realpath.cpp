@@ -23,7 +23,7 @@ std::string fs_realpath(std::string_view path)
   return fs_exists(path) ? fs_win32_final_path(path) : fs_win32_full_name(path);
 #else
   std::string r(fs_get_max_path(), '\0');
-  const char* t = realpath(path.data(), r.data());
+  const char* t = realpath(&path[0], &r[0]);
   if(!t && fs_exists(path))  FFS_UNLIKELY
     fs_print_error(path, "realpath");
 

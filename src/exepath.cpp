@@ -53,7 +53,7 @@ std::string fs_exe_path()
   // https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/dyld.3.html
   uint32_t mp = static_cast<uint32_t>(path.size());
 
-  if(_NSGetExecutablePath(path.data(), &mp) == 0)  FFS_LIKELY
+  if(_NSGetExecutablePath(&path[0], &mp) == 0)  FFS_LIKELY
     return fs_trim(path);
   // "mp" doesn't have the string length of the path
 #elif defined(BSD)

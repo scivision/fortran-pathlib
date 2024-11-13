@@ -73,7 +73,7 @@ if(FS_TRACE) std::cout << "TRACE:mkdtemp_mersenne: prefix: " << prefix << "\n";
   // https://www.man7.org/linux/man-pages/man3/mkdtemp.3.html
   // https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/mkdtemp.3.html
 
-  tmp = mkdtemp(tmpl.data());
+  tmp = mkdtemp(&tmpl[0]);
   if(tmp)
     return tmp;
 #endif

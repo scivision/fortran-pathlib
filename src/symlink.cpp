@@ -90,7 +90,7 @@ std::string fs_read_symlink(std::string_view path)
   // https://www.man7.org/linux/man-pages/man2/readlink.2.html
   std::string r(fs_get_max_path(), '\0');
 
-  const ssize_t Lr = readlink(path.data(), r.data(), r.size());
+  const ssize_t Lr = readlink(&path[0], &r[0], r.size());
   if (Lr > 0){
     // readlink() does not null-terminate the result
     r.resize(Lr);

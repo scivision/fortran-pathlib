@@ -24,7 +24,7 @@ std::string fs_hostname()
   }
 
 #else
-  ret = gethostname(name.data(), name.size());
+  ret = gethostname(&name[0], name.size());
 #endif
 
   if (ret == 0)

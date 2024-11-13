@@ -103,7 +103,7 @@ std::string fs_get_cwd()
 #else
 // unistd.h https://www.man7.org/linux/man-pages/man3/getcwd.3.html
   if(std::string buf(fs_get_max_path(), '\0');
-      getcwd(buf.data(), buf.size()))  FFS_LIKELY
+      getcwd(&buf[0], buf.size()))  FFS_LIKELY
     return fs_trim(buf);
 #endif
 
