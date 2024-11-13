@@ -45,6 +45,8 @@ if(FS_TRACE) std::cout << "TRACE:mkdtemp_mersenne: prefix: " << prefix << "\n";
   {
     do {
       const std::string rname = fs_generate_random_alphanumeric_string(Lname);
+      if(rname.empty()) FFS_UNLIKELY
+        return {};
       t = (temp / (prefix.data() + rname));
       if(FS_TRACE) std::cout << "TRACE:mkdtemp: randomName: " << rname << "\n";
       if(FS_TRACE) std::cout << "TRACE:mkdtemp: fullTemppath: " << t << "\n";

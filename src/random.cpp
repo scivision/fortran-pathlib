@@ -14,6 +14,7 @@
 // https://stackoverflow.com/a/444614
 // https://en.cppreference.com/w/cpp/language/class_template_argument_deduction
 
+#ifdef __cpp_deduction_guides
 template <typename T = std::mt19937>
 
 static auto fs_random_generator() -> T {
@@ -25,10 +26,11 @@ static auto fs_random_generator() -> T {
   auto seed_seq = std::seed_seq(std::begin(seed), std::end(seed));
   return T{seed_seq};
 }
-
+#endif
 
 std::string fs_generate_random_alphanumeric_string(const std::string::size_type len)
 {
+#ifdef __cpp_deduction_guides
   constexpr std::string_view chars =
       "0123456789"
       "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -38,4 +40,8 @@ std::string fs_generate_random_alphanumeric_string(const std::string::size_type 
   auto result = std::string(len, '\0');
   std::generate_n(std::begin(result), len, [&]() { return chars[dist(rng)]; });
   return result;
+#else
+  fs_print_error("" , "generate_random_alphanumeric_string needs C++17 or newer");
+  return {};
+#endif
 }
