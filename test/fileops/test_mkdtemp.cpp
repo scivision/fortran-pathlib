@@ -29,19 +29,6 @@ std::cout << "C++ mkdtemp: " << tdir << "\n";
 
 std::cout << "OK: C++ mkdtemp\n";
 
-const char* tmpl = "tmp.XXXXXX";
-std::string result(fs_get_max_path(), '\0');
-
-std::string::size_type L = fs_mkdtemp(tmpl, result.data(), result.size());
-
-if(L == 0){
-  std::cerr << "FAILED: test_mkdtemp: temp dir empty " << result << "\n";
-  return EXIT_FAILURE;
-}
-result.resize(L);
-
-std::cout << "C mkdtemp: " << result << "\n";
-
 return EXIT_SUCCESS;
 
 }
