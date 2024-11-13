@@ -34,7 +34,7 @@ bool fs_is_reserved(std::string_view path)
   if (std::ranges::contains(r, s))
 #elif __cpp_lib_ranges // C++20
   if (std::ranges::find(r, s) != r.end())
-#else // C++17
+#else // C++98
   if (std::find(r.begin(), r.end(), s) != r.end())
 #endif
     return true;
@@ -53,7 +53,7 @@ static bool fs_is_safe_char(const char c)
   return std::isalnum(c) ||
 #ifdef __cpp_lib_ranges // C++20
     std::ranges::find(safe, c)
-#else // C++17
+#else // C++98
     std::find(safe.begin(), safe.end(), c)
 #endif
     != safe.end();
