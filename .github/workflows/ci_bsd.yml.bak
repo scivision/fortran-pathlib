@@ -1,8 +1,5 @@
 name: bsd
 
-env:
-  CTEST_NO_TESTS_ACTION: error
-
 on:
   push:
     paths:

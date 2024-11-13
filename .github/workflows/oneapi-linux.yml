@@ -5,9 +5,7 @@ env:
   CXX: icpx
   FC: ifx
 # https://github.com/oneapi-src/oneapi-ci/blob/master/.github/workflows/build_all.yml
-  CTEST_NO_TESTS_ACTION: error
   CMAKE_BUILD_PARALLEL_LEVEL: 4
-  CTEST_PARALLEL_LEVEL: 0
   CMAKE_BUILD_TYPE: Release
   # debug triggers asan build errors in general with oneAPI Linux
   CMAKE_INSTALL_PREFIX: ~/libs

@@ -44,6 +44,11 @@ if(GNU_stdfs)
   message(STATUS "adding C++ library flags ${GNU_stdfs}")
 endif()
 
+message(VERBOSE "CMAKE_CXX_COMPILER_LINKER_ID: ${CMAKE_CXX_COMPILER_LINKER_ID}
+CMAKE_CXX_COMPILER_LINKER_ID: ${CMAKE_CXX_COMPILER_LINKER_ID}
+CMAKE_Fortran_COMPILER_LINKER_ID: ${CMAKE_Fortran_COMPILER_LINKER_ID}
+")
+
 # --- compiler standard setting -- need if(NOT) in case CMAKE_CXX_STANDARD is set but blank.
 if(NOT CMAKE_CXX_STANDARD OR CMAKE_CXX_STANDARD LESS 17)
   set(CMAKE_CXX_STANDARD 17)

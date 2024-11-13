@@ -12,7 +12,6 @@ env:
   CC: icx
   CXX: icx
   FC: ifx
-  CTEST_NO_TESTS_ACTION: error
   CMAKE_BUILD_TYPE: Release
   # Release is necessary to avoid ITERATOR_DEBUG_LEVEL mismatch with libstdc++
 
