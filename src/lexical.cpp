@@ -14,10 +14,33 @@
 
 bool fs_is_reserved(std::string_view path)
 {
+  // defined as https://docs.python.org/3.13/library/os.path.html#os.path.isreserved
   if(!fs_is_windows())
     return false;
 
-  std::string s = fs_stem(path);
+  const std::string filename = fs_file_name(path);
+
+  if(filename.empty())
+    return false;
+
+  if(filename.back() == '.' || filename.back() == ' ')
+    return true;
+
+  // return true if filename contains any of :*?"<>| or ends with a space or period
+  // https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file
+
+  if(filename.find_first_of(R"(<>:"/\|?*)") != std::string::npos)
+    return true;
+
+  // return true if filename contains ASCII control characters
+#ifdef __cpp_lib_ranges // C++20
+  if(std::ranges::any_of(filename, [](const char c) { return c < 32; }))
+#else // C++11
+  if(std::any_of(filename.begin(), filename.end(), [](const char c) { return c < 32; }))
+#endif
+    return true;
+
+  std::string s = fs_stem(filename);
   auto L = s.length();
   if(L < 3 || L > 4)
     return false;
@@ -27,8 +50,8 @@ bool fs_is_reserved(std::string_view path)
 
 // check if the stem is a reserved device name
   const std::vector<std::string_view> r = {"CON", "PRN", "AUX", "NUL",
-    "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
-    "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
+    "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "COM¹", "COM²", "COM³",
+    "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9", "LPT¹", "LPT²", "LPT³"};
 
 #ifdef __cpp_lib_ranges_contains  // C++23
   if (std::ranges::contains(r, s))
@@ -69,7 +92,7 @@ bool fs_is_safe_name(std::string_view filename)
   // https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file
   // we do not consider whitespaces, quotes, or ticks safe, as they can be confusing in shell scripts and command line usage
 
-  if(fs_is_windows() && !filename.empty() && filename.back() == '.') FFS_UNLIKELY
+  if(fs_is_reserved(filename))
     return false;
 
 #ifdef __cpp_lib_ranges // C++20
