@@ -145,7 +145,7 @@ bool fs_is_exe(std::string_view path)
   if(fs_is_mingw())
     return fs_is_readable(path);
 
-#if defined(__cpp_using_enum)
+#if defined(__cpp_using_enum)  // C++20
   using enum std::filesystem::perms;
 #else
   constexpr std::filesystem::perms none = std::filesystem::perms::none;
@@ -181,7 +181,7 @@ bool fs_is_readable(std::string_view path)
   if(ec || !std::filesystem::exists(s))
     return false;
 
-#if defined(__cpp_using_enum)
+#if defined(__cpp_using_enum)  // C++20
   using enum std::filesystem::perms;
 #else
   constexpr std::filesystem::perms none = std::filesystem::perms::none;
@@ -210,7 +210,7 @@ bool fs_is_writable(std::string_view path)
   if(ec || !std::filesystem::exists(s))
     return false;
 
-#if defined(__cpp_using_enum)
+#if defined(__cpp_using_enum)  // C++20
   using enum std::filesystem::perms;
 #else
   constexpr std::filesystem::perms owner_write = std::filesystem::perms::owner_write;

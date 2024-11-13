@@ -14,7 +14,7 @@
 // https://stackoverflow.com/a/444614
 // https://en.cppreference.com/w/cpp/language/class_template_argument_deduction
 
-#ifdef __cpp_deduction_guides
+#ifdef __cpp_deduction_guides  // C++17
 template <typename T = std::mt19937>
 
 static auto fs_random_generator() -> T {

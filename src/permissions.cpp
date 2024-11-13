@@ -24,7 +24,7 @@ bool fs_set_permissions(std::string_view path, int readable, int writable, int e
 #ifdef HAVE_CXX_FILESYSTEM
   std::filesystem::path pth(path);
 
-#if defined(__cpp_using_enum)
+#if defined(__cpp_using_enum)  // C++20
   using enum std::filesystem::perms;
 #else
   constexpr std::filesystem::perms owner_read = std::filesystem::perms::owner_read;
@@ -112,7 +112,7 @@ std::string fs_get_permissions(std::string_view path)
 
   const std::filesystem::perms p = s.permissions();
 
-#if defined(__cpp_using_enum)
+#if defined(__cpp_using_enum)  // C++20
   using enum std::filesystem::perms;
 #else
   constexpr std::filesystem::perms none = std::filesystem::perms::none;
