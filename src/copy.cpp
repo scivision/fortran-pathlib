@@ -27,7 +27,7 @@
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#elif defined(FFS_MACOS)
+#elif defined(__APPLE__) && defined(__MACH__)
 #include <copyfile.h>
 #elif defined(__linux__) || defined(BSD)
 #include <sys/types.h>
@@ -65,7 +65,7 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
       fs_print_error(source, "copy_file:CopyFile");
       return false;
     }
-#elif defined(FFS_MACOS)
+#elif defined(__APPLE__) && defined(__MACH__)
   /* copy-on-write file
   * based on kwSys:SystemTools:CloneFileContent
   * https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/copyfile.3.html

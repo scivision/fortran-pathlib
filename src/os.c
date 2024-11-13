@@ -18,7 +18,6 @@ bool fs_is_macos(){
 // we don't use TargetConditionals.h because on macOS SDK updates sometimes including this header
 // breaks compile until Homebrew / GCC updates.
 #if defined(__APPLE__) && defined(__MACH__)
-#define FFS_MACOS
   return true;
 #else
   return false;
