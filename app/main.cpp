@@ -49,6 +49,8 @@ static void no_arg(std::string_view fun){
 
   if (fun == "backend")
     std::cout << fs_backend() << "\n";
+  else if (fun == "random")
+    std::cout << fs_generate_random_alphanumeric_string(16) << "\n";
   else if (fun == "is_wsl")
     std::cout << fs_is_wsl() << "\n";
   else if (fun == "pid")
