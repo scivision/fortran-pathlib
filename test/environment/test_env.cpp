@@ -4,10 +4,6 @@
 
 #include "ffilesystem.h"
 
-#if __has_include(<format>)
-#include <format>
-#endif
-
 #ifdef _MSC_VER
 #include <crtdbg.h>
 #endif
@@ -48,20 +44,31 @@ if (std::string s = fs_normal(cpath); fpath != s)
 
 std::cout << "PASS: C++ current working directory\n";
 
-// --- profile dir
 std::string pdir = fs_get_profile_dir();
+if(pdir.empty())
+  err("failed to get_profile_dir()");
 std::cout << "Profile directory " << pdir << "\n";
 
-// --- homedir
+std::string cdir = fs_user_config_dir();
+if(cdir.empty())
+  err("failed to get_user_config_dir()");
+std::cout << "User config directory " << cdir << "\n";
+
+
+std::string user = fs_get_username();
+if(user.empty())
+  err("failed to get_username()");
+std::cout << "Username " << user << "\n";
+
 std::string p = fs_get_homedir();
+if(p.empty())
+  err("failed to get_homedir()");
 std::cout << "Home directory " << p << "\n";
+if(!fs_is_dir(p))
+  err("Fortran: home dir " + p + " does not exist");
 
 if (p.length() != pdir.length())
-#ifdef __cpp_lib_format
-  std::cerr << std::format("ERROR: length of profile dir {} != home dir {}\n", pdir.length(), p.length());
-#else
   std::cerr << "length of profile dir " << pdir.length() << " != home dir " << p.length() << "\n";
-#endif
 
 if (p != pdir)
   err("profile dir " + pdir + " != home dir " + p);

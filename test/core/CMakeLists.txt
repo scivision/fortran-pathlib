@@ -89,6 +89,7 @@ normal
 parent permissions
 realpath relative reserved root
 safe system
+wide
 )
 
 foreach(t IN LISTS cpp_tests)
@@ -102,6 +103,10 @@ foreach(t IN LISTS cpp_tests)
   SKIP_RETURN_CODE 77
   )
 endforeach()
+
+# the MSVC compiler requires this option or it triples the size of the non-English L"" strings and fails the test
+# Windows oneAPI is fine without this flag
+target_compile_options(test_cpp_wide PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/utf-8>)
 
 if(NOT WIN32 AND NOT HAVE_CXX_FILESYSTEM)
   set_tests_properties(Cpp_filesize PROPERTIES DISABLED $<NOT:$<BOOL:${ffilesystem_HAVE_SYS_STATVFS}>>)

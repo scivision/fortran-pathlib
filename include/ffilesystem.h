@@ -5,9 +5,6 @@
 #define FS_TRACE 0
 #endif
 
-#include <sys/types.h> // mode_t
-
-
 #ifdef __cplusplus
 
 #if !defined(__has_cpp_attribute)
@@ -44,6 +41,8 @@ std::optional<std::filesystem::file_time_type> fs_get_modtime_fs(std::string_vie
 
 std::string fs_lexically_normal(std::string_view);
 std::string fs_make_preferred(std::string_view);
+
+std::string fs_to_narrow(std::wstring_view);
 
 bool fs_is_case_sensitive(std::string_view);
 std::string fs_generate_random_alphanumeric_string(const std::string::size_type);

@@ -9,7 +9,7 @@
 
 #ifdef _WIN32
 #include <algorithm> // std::replace
-#include <Objbase.h> // IWYU pragma: keep
+#include <objbase.h> // IWYU pragma: keep
 // CoTaskMemFree
 #include <KnownFolders.h> // FOLDERID_LocalAppData
 #include <Shlobj.h> // SHGetKnownFolderPath
@@ -65,16 +65,17 @@ std::string fs_user_config_dir()
 {
 #ifdef _WIN32
   PWSTR s;
-  if (SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &s) != S_OK) {
-    CoTaskMemFree(s);
-    return {};
-  }
+  std::string r;
+  if(SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &s) == S_OK)
+    r = fs_as_posix(fs_to_narrow(s));
 
-  std::wstring w(s);
   CoTaskMemFree(s);
+  if (!r.empty())
+    return r;
 
-  std::replace( w.begin(), w.end(), '\\', '/');
-  return std::string(w.begin(), w.end());
+  fs_print_error("", "user_config_dir:SHGetKnownFolderPath");
+  return {};
+
 #else
   std::string xdg = fs_getenv("XDG_CONFIG_HOME");
   if(!xdg.empty())

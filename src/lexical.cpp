@@ -5,11 +5,22 @@
 #include <ranges>  // IWYU pragma: keep
 #endif
 
-#include <algorithm> // std::transform, std::ranges::contains, std::find
+#include <algorithm> // std::transform, std::ranges::contains, std::find, std::replace
 #include <cctype> // std::isalnum, toupper
 #include <vector>
 
 #include "ffilesystem.h"
+
+
+std::string fs_as_posix(std::string_view path)
+{
+  std::string s(path);
+
+  if(fs_is_windows())
+    std::replace(s.begin(), s.end(), '\\', '/');
+
+  return s;
+}
 
 
 bool fs_is_reserved(std::string_view path)
