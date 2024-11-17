@@ -223,20 +223,24 @@ jobs:
 
     strategy:
       matrix:
-        compiler: [ {cpp: clang++, c: clang} ]
+        compiler: [ {cpp: clang++, c: clang, fc: flang-new } ]
         shared: [true, false]
         cpp: [true, false]
         include:
-        - compiler: {cpp: g++-14, c: gcc-14}
+        - compiler: {cpp: g++-14, c: gcc-14, fc: gfortran-14 }
           shared: true
           cpp: true
 
     env:
       CC: ${{ matrix.compiler.c }}
       CXX: ${{ matrix.compiler.cpp }}
-      FC: gfortran-14
+      FC: ${{ matrix.compiler.fc }}
 
     steps:
+    - name: install Flang
+      if: ${{ matrix.compiler.fc == 'flang-new' }}
+      run: brew install flang
+
     - uses: actions/checkout@v4
     - uses: ./.github/workflows/composite-action
 
