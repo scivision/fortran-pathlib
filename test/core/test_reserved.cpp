@@ -62,19 +62,8 @@ int main(void){
     }
     std::cout << "OK: file_size() " << s << "\n";
 
-    s = fs_space_available(ref);
-    if(fs_is_windows()){
-      if(s != 0){
-        std::cerr << "FAILED: space_available(" << ref << ") " << s << "\n";
-        err("space_available");
-      }
-    }
-    else{
-      if(s == 0){
-        std::cerr << "FAILED: space_available(" << ref << ") " << s << "\n";
-        err("space_available");
-      }
-    }
+    // omitted fs_space_available() since some systems don't handle NUL /dev/null well
+    // e.g. Windows, macOS GCC, etc.
 
 
 if(!fs_is_windows()){

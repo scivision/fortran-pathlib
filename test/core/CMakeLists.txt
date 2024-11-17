@@ -84,7 +84,6 @@ filename filesize
 hard_link
 is_absolute
 join
-locale
 normal
 parent permissions
 realpath relative reserved root
@@ -103,6 +102,16 @@ foreach(t IN LISTS cpp_tests)
   SKIP_RETURN_CODE 77
   )
 endforeach()
+
+add_executable(test_cpp_locale test_locale.cpp)
+target_link_libraries(test_cpp_locale PRIVATE ffilesystem)
+target_include_directories(test_cpp_locale PRIVATE ..)
+
+add_test(NAME Cpp_locale COMMAND ${CMAKE_COMMAND} -E env $<TARGET_FILE:test_cpp_locale>)
+set_tests_properties(Cpp_locale PROPERTIES
+SKIP_REGULAR_EXPRESSION "locale\:\:facet\:\:\_S\_create\_c\_locale name not valid"
+LABELS Cpp
+)
 
 # the MSVC compiler requires this option or it triples the size of the non-English L"" strings and fails the test
 # Windows oneAPI is fine without this flag
