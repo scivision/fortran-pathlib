@@ -331,13 +331,18 @@ std::cout << "Compiler: " << fs_compiler() << "\n";
 std::cout << "Optimized: " << fs_is_optimized() << " Trace: " << FS_TRACE << "\n";
 std::cout << "CPU arch: " << fs_cpu_arch() << "\n";
 std::cout << "C++ " << fs_lang() << "\n";
-std::cout << "Locale: " << fs_get_locale_name() << "\n";
 std::cout << "Username: " << fs_get_username() << "\n";
 std::cout << "Hostname: " << fs_hostname() << "\n";
 std::cout << "Shell: " << fs_get_shell() << "\n";
 std::cout << "Terminal: " << fs_get_terminal() << "\n";
 std::cout << "Homedir: " << fs_get_homedir() << "\n";
-std::cout << "CWD filesystem Type: " << fs_filesystem_type(cwd) << "\n";
+
+// doesn't work usefully on Cygwin
+if(!fs_is_cygwin())
+  std::cout << "CWD filesystem Type: " << fs_filesystem_type(cwd) << "\n";
+
+// commented out  because some systems (Cygwin) silently exit with error code 0 on std::locale("") call
+//std::cout << "Locale: " << fs_get_locale_name() << "\n";
 
 if(fs_is_admin())
   std::cerr << "WARNING: running as admin / sudo" << std::endl;
