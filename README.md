@@ -108,6 +108,15 @@ cmake --build build
 ctest --test-dir build
 ```
 
+The default library with CMake is static; to build shared library:
+
+```sh
+cmake -B build -DBUILD_SHARED_LIBS=on
+...
+```
+
+---
+
 Meson:
 
 ```sh
@@ -116,6 +125,15 @@ meson compile -C build
 # optional
 meson test -C build
 ```
+
+The default library with Meson is shared; to build static library:
+
+```sh
+meson setup -Ddefault_library=static build
+...
+```
+
+---
 
 Fortran Package Manager (FPM):
 
@@ -216,29 +234,27 @@ a
 [MUSL feature macro](https://wiki.musl-libc.org/faq.html).
 
 
-### non-ASCII characters
-
-Due to compiler limitations, currently Ffilesystem only officially supports ASCII characters.
+### UTF strings
 
 The UCS
 [selected_char_kind('ISO_10646')](https://gcc.gnu.org/onlinedocs/gfortran/SELECTED_005fCHAR_005fKIND.html),
 is an *optional* feature of Fortran 2003 standard.
 Intel oneAPI does not support `selected_char_kind('ISO_10646')` as of this writing.
 
-filesystem currently uses the default Fortran `character` kind, which is ASCII.
-This typically allows pass-through of UTF-8 characters, but this is not guaranteed.
+Ffilesystem currently uses the default Fortran `character` kind, which is ASCII.
+Ffilesystem C++ backend uses std::wstring in certain limited cases, and std::string generally.
+This typically allows pass-through of UTF-8 and UTF-16 using code points e.g. 3 bytes per character for non-Latin languages typically.
 
 ### Windows long paths
 
 Like
 [Microsoft STL](https://github.com/microsoft/STL/issues/2256),
-our Ffilesystem is not designed for UNC paths.
+Ffilesystem is not designed for UNC paths.
 We recommend using a UNC path to a mapped drive letter.
-We have not fully tested Windows
+Windows
 [long paths](https://github.com/microsoft/STL/issues/1921)
-due to
-[limitations](https://www.boost.org/doc/libs/1_86_0/libs/filesystem/doc/reference.html#windows-path-prefixes)
-and appreciate feedback.
+are not implemented due to
+[limitations](https://www.boost.org/doc/libs/1_86_0/libs/filesystem/doc/reference.html#windows-path-prefixes).
 
 ### C++ filesystem discussion
 
