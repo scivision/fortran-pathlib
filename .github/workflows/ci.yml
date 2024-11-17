@@ -226,12 +226,15 @@ jobs:
         compiler: [ {cpp: clang++, c: clang} ]
         shared: [true, false]
         cpp: [true, false]
-    # {cpp: g++-13, c: gcc-13}, unstable on CI (good on real mac)
+        include:
+        - compiler: {cpp: g++-14, c: gcc-14}
+          shared: true
+          cpp: true
 
     env:
       CC: ${{ matrix.compiler.c }}
       CXX: ${{ matrix.compiler.cpp }}
-      FC: gfortran-13
+      FC: gfortran-14
 
     steps:
     - uses: actions/checkout@v4
