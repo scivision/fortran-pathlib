@@ -10,7 +10,7 @@
 #include <sys/syslimits.h>
 #endif
 
-#include <cstddef> // size_t
+#include <cstddef> // IWYU pragma: keep
 #include <string>
 #include <string_view>
 #include <iostream> // IWYU pragma: keep

@@ -32,5 +32,7 @@ s = "hi there";
 if(fs_is_safe_name(s))
   err(s);
 
+std::cout << "OK: safe_name\n";
+
 return EXIT_SUCCESS;
 }

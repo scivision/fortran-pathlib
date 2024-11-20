@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <string_view>
 
 #ifdef _MSC_VER
 #include <crtdbg.h>

@@ -24,16 +24,16 @@
 #include <cstdint>
 #include <cstdlib>
 #include <vector>
-#include <algorithm> // std::min
 #include <string>
 #include <string_view>
-#include <ctime> // time_t
-#include <optional>
+#include <ctime> // for time_t
 #include <system_error>
 
 #ifdef HAVE_CXX_FILESYSTEM
 
 #include <filesystem>
+
+#include <optional>
 
 std::optional<std::filesystem::file_time_type> fs_get_modtime_fs(std::string_view);
 

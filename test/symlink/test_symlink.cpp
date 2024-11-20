@@ -1,7 +1,7 @@
 #include <iostream>
 #include "ffilesystem.h"
 #include <cstdlib>
-
+#include <string>
 
 
 int main([[maybe_unused]] int argc, char* argv[]) {

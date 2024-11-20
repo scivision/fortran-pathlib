@@ -1,3 +1,7 @@
+// IWYU pragma: no_include <bits/statx-generic.h>
+// IWYU pragma: no_include <linux/stat.h>
+// IWYU pragma: no_include <bits/chrono.h>
+
 #if defined(__linux__) && !defined(_DEFAULT_SOURCE)
 #define _DEFAULT_SOURCE
 #endif
@@ -15,10 +19,9 @@
 #include <ctime>                // for time_t
 
 // preferred import order for stat() -- always include to avoid dev confusion
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <sys/types.h> // IWYU pragma: keep
+#include <sys/stat.h> // IWYU pragma: keep
 
-#include <cstring> // std::strerror
 #include <string_view>
 
 #ifdef HAVE_CXX_FILESYSTEM

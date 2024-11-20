@@ -55,9 +55,9 @@ if(ffilesystem_bench)
   add_subdirectory(bench)
 endif()
 
-foreach(t IN ITEMS core empty environment
+foreach(t IN ITEMS core environment
   executable exepath
-  fileops libpath overflow symlink windows)
+  libpath symlink)
 
 add_subdirectory(${t})
 

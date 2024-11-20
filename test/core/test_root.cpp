@@ -2,6 +2,7 @@
 #include <vector>
 #include <tuple>
 #include <string>
+#include <string_view>
 #include <cstdlib>
 
 #include "ffilesystem.h"

@@ -12,7 +12,7 @@
 // needed to std::format() std::filesystem::file_time_type
 
 #if __has_include(<format>)
-#include <format>
+#include <format> // IWYU pragma: keep
 #endif
 
 #ifdef HAVE_CXX_FILESYSTEM

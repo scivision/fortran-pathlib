@@ -1,10 +1,13 @@
 // print compile-time and runtime standard C library version
 
 #include <iostream>
+#include <string>
 
-#if defined(__UCLIBC__)
+#if defined(__UCLIBC__) || defined(__GLIBC__)
 #include <features.h>
-#elif defined(__GLIBC__)
+#endif
+
+#if defined(__GLIBC__)
 #include <gnu/libc-version.h>
 #endif
 

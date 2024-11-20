@@ -17,7 +17,7 @@
 #include <tlhelp32.h> // for CreateToolhelp32Snapshot
 #include <psapi.h>  // for EnumProcessModules
 #else
-#include <sys/types.h>
+#include <sys/types.h>  // IWYU pragma: keep
 #include <pwd.h>      // for getpwuid, passwd
 #include <unistd.h> // for mac too
 #endif

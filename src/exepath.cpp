@@ -6,8 +6,6 @@
 
 #include <string>
 
-#include <cstddef> // size_t
-
 #if defined(__unix__)
 // https://github.com/cpredef/predef/blob/master/OperatingSystems.md#bsd-environment
 #include <sys/param.h> // IWYU pragma: keep
@@ -16,15 +14,17 @@
 #if defined(_WIN32) || defined(__CYGWIN__)
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h> // GetModuleFileNameA
+#include <cstddef> // for size_t
 #endif
 
 #ifdef __APPLE__
-#include <cstdint> // uint32_t
+#include <cstdint> // for uint32_t
 #include <mach-o/dyld.h> // _NSGetExecutablePath
 #elif defined(__linux__) || defined(__CYGWIN__)
-#include <unistd.h> // readlink
+#include <unistd.h> // for readlink, size_t
 #elif defined(BSD)
 #include <sys/sysctl.h> // sysctl
+#include <cstddef> // for size_t
 #endif
 
 

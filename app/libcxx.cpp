@@ -2,10 +2,10 @@
 // https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_macros.html
 // https://en.cppreference.com/w/cpp/header/ciso646
 
-#include <cstddef>
+#include <cstddef>  // IWYU pragma: keep
 
 #if __has_include(<version>)
-#include <version>
+#include <version>  // IWYU pragma: keep
 #elif __has_include(<ciso644>)
 // < C++20 standard
 #include <ciso646>

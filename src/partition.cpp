@@ -5,11 +5,12 @@
 
 #if defined(__unix__)
 // https://github.com/cpredef/predef/blob/master/OperatingSystems.md#bsd-environment
-#include <sys/param.h>
+#include <sys/param.h>  // IWYU pragma: keep
 #endif
 
 #if defined(__linux__) && __has_include(<linux/magic.h>)
-#include <sys/vfs.h>
+// IWYU pragma: no_include <sys/statfs.h>
+#include <sys/vfs.h> // IWYU pragma: keep
 #include <linux/magic.h>
 // https://github.com/torvalds/linux/blob/master/include/uapi/linux/magic.h
 #elif defined(__APPLE__) || defined(BSD)
