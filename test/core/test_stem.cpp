@@ -68,6 +68,14 @@ int main() {
       err("stem(" + p + ") windows path: " + s + " != ball");
   }
 
+  s = fs_stem("日本語.日本語");
+  if (s != "日本語")
+    err("stem utf8: " + s);
+
+  s = fs_stem("some space.txt");
+  if (s != "some space")
+    err("stem space: " + s);
+
   std::cout << "OK: stem\n";
   return EXIT_SUCCESS;
 }
