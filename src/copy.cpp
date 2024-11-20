@@ -40,6 +40,10 @@
 
 bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite)
 {
+  // copy a single file
+
+  std::error_code ec;
+
 #ifdef HAVE_CXX_FILESYSTEM
   auto opt = std::filesystem::copy_options::none;
   if (overwrite)
@@ -49,22 +53,17 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
   if(overwrite && fs_is_file(dest) && !fs_remove(dest)) FFS_UNLIKELY
     fs_print_error(dest, "copy_file:remove");
 
-  std::error_code ec;
   if(std::filesystem::copy_file(source, dest, opt, ec) && !ec) FFS_LIKELY
     return true;
 
-  fs_print_error(source, "copy_file", ec);
-  return false;
 #else
 
   if(overwrite && fs_is_file(dest) && !fs_remove(dest))
     fs_print_error(dest, "copy_file:remove");
 
 #if defined(_WIN32)
-    if(!CopyFileA(source.data(), dest.data(), true)){
-      fs_print_error(source, "copy_file:CopyFile");
-      return false;
-    }
+    if(CopyFileA(source.data(), dest.data(), true))
+      return true;
 #elif defined(__APPLE__) && defined(__MACH__)
   /* copy-on-write file
   * based on kwSys:SystemTools:CloneFileContent
@@ -75,11 +74,11 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
   * should result in a file.
   * https://gitlab.kitware.com/utils/kwsys/-/commit/ee3223d7ae9a5b52b0a30efb932436def80c0d92
   */
-  if(copyfile(source.data(), dest.data(), nullptr,
-      COPYFILE_METADATA | COPYFILE_EXCL | COPYFILE_STAT | COPYFILE_XATTR | COPYFILE_DATA) < 0){
-    fs_print_error(source, "copy_file:copyfile");
-    return false;
-  }
+  const int r = copyfile(source.data(), dest.data(), nullptr,
+                         COPYFILE_METADATA | COPYFILE_EXCL |
+                         COPYFILE_STAT | COPYFILE_XATTR | COPYFILE_DATA);
+  if(r == 0)
+    return true;
 #elif defined(HAVE_COPY_FILE_RANGE)
     // use copy_file_range
     // https://man.freebsd.org/cgi/man.cgi?copy_file_range(2)
@@ -115,19 +114,17 @@ if (FS_TRACE) std::cout << "TRACE::ffilesystem:copy_file: using copy_file_range\
 
   do {
     ret = copy_file_range(rid, nullptr, wid, nullptr, len, 0);
-    if (ret == -1) {
-        fs_print_error(dest, "copy_file:copy_file_range");
-        close(rid);
-        close(wid);
-        return false;
-    }
+    if (ret == -1)
+      break;
 
     len -= ret;
   } while (len > 0 && ret > 0);
 
-  close(rid);
-  close(wid);
+  const int rc = close(rid);
+  const int wc = close(wid);
 
+  if(ret >= 0 && rc == 0 && wc == 0)
+    return true;
 #else
     // https://stackoverflow.com/a/29082484
 
@@ -154,10 +151,16 @@ if (FS_TRACE) std::cout << "TRACE::ffilesystem:copy_file: using fallback fread/f
       fwrite(buf.data(), 1, bytes, wid);
   }
 
-  fclose(rid);
-  fclose(wid);
+  const int rc = fclose(rid);
+  const int wc = fclose(wid);
+
+  if(rc == 0 && wc == 0)
+    return true;
 #endif
 
-  return fs_is_file(dest);
 #endif
+
+  fs_print_error(source, "copy_file");
+  return false;
+
 }
