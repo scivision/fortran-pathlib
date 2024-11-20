@@ -11,7 +11,11 @@ constexpr int CCP_POSIX_TO_WIN_A = 0;
 #include "ffilesystem.h"
 
 
-static std::string fs_convert_path(std::string_view path, [[maybe_unused]] const int what)
+static std::string fs_convert_path(std::string_view path,
+#if __has_cpp_attribute(maybe_unused)
+[[maybe_unused]]
+#endif
+const int what)
 {
 #ifdef __CYGWIN__
   const ssize_t L = cygwin_conv_path(what, path.data(), nullptr, 0);

@@ -201,7 +201,7 @@ if(FS_TRACE) std::cout << "TRACE: get_shell: " << name << " PID: " << pid << " P
       return pw->pw_shell;
 #endif
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) && __has_cpp_attribute(maybe_unused)
 [[maybe_unused]]
 #endif
 err:

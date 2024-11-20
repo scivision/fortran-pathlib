@@ -35,6 +35,7 @@ cpp_core = [
 'is_absolute',
 'join',
 'locale',
+'owner',
 'normal',
 'parent', 'permissions',
 'realpath', 'relative', 'reserved', 'root',

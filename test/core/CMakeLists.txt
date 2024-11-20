@@ -89,6 +89,7 @@ hard_link
 is_absolute
 join
 mkdtemp
+owner
 normal
 parent permissions
 realpath relative reserved root

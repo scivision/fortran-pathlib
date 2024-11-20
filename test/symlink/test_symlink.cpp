@@ -5,7 +5,11 @@
 #include <string>
 
 
-int main([[maybe_unused]] int argc, char* argv[]) {
+int main(
+#if __has_cpp_attribute(maybe_unused)
+[[maybe_unused]]
+#endif
+int argc, char* argv[]) {
 
   const std::string tgt_dir = fs_parent(argv[0]);
   const std::string tgt = tgt_dir + "/test.txt";

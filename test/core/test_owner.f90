@@ -27,10 +27,5 @@ if(user == name) stop "OK: User and owner match"
 
 end block valgrind
 
-write(stderr, '(a)') "User and owner didn't match"
-
-if(getenv("CI") == "true") then
-  write(stderr, '(a)') "mismatched username and owner can happen on CI systems"
-end if
 
 end program
