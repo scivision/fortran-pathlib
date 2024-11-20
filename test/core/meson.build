@@ -29,7 +29,9 @@ endif
 
 cpp_core = [
 'absolute',
-'canonical', 'core', 'expanduser',
+'canonical', 'core',
+'copyfile',
+'expanduser',
 'filename', 'filesize',
 'hard_link',
 'is_absolute',

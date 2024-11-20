@@ -83,7 +83,9 @@ endif()
 
 set(cpp_tests
 absolute
-canonical expanduser core
+canonical
+copyfile
+expanduser core
 filename filesize
 hard_link
 is_absolute
