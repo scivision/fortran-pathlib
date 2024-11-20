@@ -137,12 +137,20 @@ set_property(TEST Cpp_empty PROPERTY
 SKIP_REGULAR_EXPRESSION "not implemented;SIGABRT;[aA]bort;[sS]egmentation fault;segfault"
 )
 
+set_tests_properties(Cpp_mkdir PROPERTIES
+FIXTURES_SETUP mkdir
+FIXTURES_REQUIRED root
+)
+
 set_tests_properties(Cpp_mkdtemp PROPERTIES
 FIXTURES_REQUIRED "mkdir"
 FIXTURES_SETUP "mkdtemp"
 )
 
+set_tests_properties(Cpp_copyfile PROPERTIES FIXTURES_REQUIRED filesize)
+
 set_tests_properties(Cpp_stem PROPERTIES FIXTURES_SETUP stem)
+
 
 if(HAVE_Fortran_FILESYSTEM)
 
@@ -150,13 +158,7 @@ set_tests_properties(Fortran_with_suffix PROPERTIES FIXTURES_REQUIRED stem)
 
 set_property(TEST Fortran_is_empty PROPERTY FIXTURES_REQUIRED "touch;filesize;mkdir")
 
-set_tests_properties(Cpp_mkdir PROPERTIES
-FIXTURES_SETUP mkdir
-FIXTURES_REQUIRED root
-)
-
 set_tests_properties(Fortran_touch PROPERTIES FIXTURES_SETUP touch)
-set_tests_properties(Cpp_copyfile PROPERTIES FIXTURES_REQUIRED filesize)
 
 set_property(TEST Fortran_same PROPERTY FIXTURES_REQUIRED mkdir)
 

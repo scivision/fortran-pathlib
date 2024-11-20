@@ -7,9 +7,13 @@
 #include "ffilesystem_test.h"
 
 int main() {
-    std::string s1 = "dummy.txt";
-    std::string s2 = "日本語.txt";
-    std::string t1 = "及せゃ市人購ゅトてへ投際ト点吉で速流つ今日";
+    // use full path for clarity of user messages
+
+    const std::string cwd = fs_get_cwd();
+
+    const std::string s1 = cwd + "/dummy.txt";
+    const std::string s2 = cwd + "/日本語.txt";
+    const std::string t1 = "及せゃ市人購ゅトてへ投際ト点吉で速流つ今日";
     std::string t2;
 
     // Write to the first file
