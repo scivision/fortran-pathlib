@@ -1,7 +1,6 @@
 name: ci
 
 env:
-  HOMEBREW_NO_INSTALL_CLEANUP: 1
   CMAKE_INSTALL_PREFIX: ~/libs
   CMAKE_PREFIX_PATH: ~/libs
 
@@ -232,9 +231,12 @@ jobs:
           cpp: true
 
     env:
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
       CC: ${{ matrix.compiler.c }}
       CXX: ${{ matrix.compiler.cpp }}
       FC: ${{ matrix.compiler.fc }}
+      LIBRARY_PATH: /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib
+# for flang-new https://github.com/Homebrew/homebrew-core/issues/198106
 
     steps:
     - name: install Flang
