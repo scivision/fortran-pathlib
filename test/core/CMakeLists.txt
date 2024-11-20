@@ -53,10 +53,6 @@ DISABLED $<AND:$<BOOL:${LINUX}>,$<NOT:$<BOOL:${ffilesystem_HAVE_LINUX_MAGIC}>>>
 set_tests_properties(Fortran_relative PROPERTIES FIXTURES_SETUP relative)
 set_tests_properties(Fortran_is_subdir PROPERTIES FIXTURES_REQUIRED relative)
 
-
-set_tests_properties(Fortran_stem PROPERTIES FIXTURES_SETUP stem)
-set_tests_properties(Fortran_with_suffix PROPERTIES FIXTURES_REQUIRED stem)
-
 set_tests_properties(Fortran_join PROPERTIES FIXTURES_SETUP join)
 set_tests_properties(Fortran_is_absolute PROPERTIES FIXTURES_SETUP is_absolute)
 set_tests_properties(Fortran_absolute PROPERTIES
@@ -94,7 +90,7 @@ mkdtemp
 normal
 parent permissions
 realpath relative reserved root
-safe system
+safe stem system
 windows
 )
 
@@ -137,7 +133,11 @@ SKIP_REGULAR_EXPRESSION "not implemented;SIGABRT;[aA]bort;[sS]egmentation fault;
 
 set_tests_properties(Cpp_mkdtemp PROPERTIES FIXTURES_REQUIRED "mkdir")
 
+set_tests_properties(Cpp_stem PROPERTIES FIXTURES_SETUP stem)
+
 if(HAVE_Fortran_FILESYSTEM)
+
+set_tests_properties(Fortran_with_suffix PROPERTIES FIXTURES_REQUIRED stem)
 
 set_tests_properties(Fortran_mkdtemp PROPERTIES FIXTURES_SETUP "mkdir")
 
