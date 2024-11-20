@@ -23,19 +23,25 @@ int main() {
     ofs << t1;
     ofs.close();
 
+    auto iref = fs_file_size(s1);
+    if(iref == 0)
+      err("input file size is zero " + s1);
+
     // Copy the file
     bool ok = fs_copy_file(s1, s2, true);
-    if (!fs_exists(s2))
+    if (!fs_is_file(s2))
         err("did not detect file after copy " + s2);
-
     if (!ok)
       err("copy_file ok logical is false despite success of copy ");
 
-    // Check file sizes
-    auto iref = fs_file_size(s1);
     auto i64 = fs_file_size(s2);
+    if(i64 == 0)
+      err("file size is zero after copy " + s2);
+
+    std::cout << "file sizes (bytes) original, copy: " << iref << " " << i64 << "\n";
+
     if (i64 != iref)
-      err("file size mismatch after copy " + s1 + " " + s2 + " " + std::to_string(iref) + " " + std::to_string(i64));
+      err("file size mismatch after copy " + s1 + " " + s2);
 
     // Read from the copied file
     std::ifstream ifs(s2);
@@ -47,7 +53,8 @@ int main() {
 
     // Check file contents
 
-    std::cout << "File text contents:\n" << t1 << "\nCopy contents:\n" << t2 << "\n" << "file lengths " << t1.length() << " " << t2.length() << "\n";
+    std::cout << "text lengths (bytes) original, copy: " << t1.length() << " " << t2.length() << "\n";
+    std::cout << "File text contents:\n" << t1 << "\nCopy contents:\n" << t2 << "\n";
 
     if (t1 != t2) {
         std::cerr << "file content mismatch after copy:\n" << s1 << " => " << s2 << "\n";
