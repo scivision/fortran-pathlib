@@ -18,7 +18,7 @@ int argc, char *argv[]) {
   const std::string name = fs_get_owner_name(exe);
   std::cout << "Owner name: " << name << "\n";;
   if (name.empty())
-    err("error: No owner information");
+    err("No owner information");
 
   const std::string group = fs_get_owner_group(exe);
   std::cout << "Owner group: " << group << std::endl;

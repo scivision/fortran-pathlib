@@ -37,6 +37,7 @@ cpp_core = [
 'is_absolute',
 'join',
 'locale',
+'mkdir',
 'owner',
 'normal',
 'parent', 'permissions',

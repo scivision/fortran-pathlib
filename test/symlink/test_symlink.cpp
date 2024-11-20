@@ -20,19 +20,19 @@ int argc, char* argv[]) {
   }
 
   if(!fs_touch(tgt))
-    err("ERROR: touch(" + tgt + ") failed");
+    err("touch(" + tgt + ") failed");
 
   std::cout << "created target file " << tgt << "\n";
 
   if (!fs_is_file(tgt))
-    err("ERROR: is_file(" + tgt + ") should be true for existing regular file target");
+    err("is_file(" + tgt + ") should be true for existing regular file target");
 
   const std::string link = tgt_dir + "/test.link";
   const std::string linko = tgt_dir + "/test_oo.link";
   const std::string link_dir = tgt_dir + "/my_link.dir";
 
   if(fs_create_symlink(tgt, ""))
-    err("ERROR: create_symlink() should fail with empty link");
+    err("create_symlink() should fail with empty link");
 
   std::cout << "PASSED: create_symlink: empty link\n";
 
@@ -40,7 +40,7 @@ int argc, char* argv[]) {
     err("is_symlink() should be false for non-symlink file: " + tgt);
 
   if(fs_create_symlink("", link))
-    err("ERROR: create_symlink() should fail with empty target");
+    err("create_symlink() should fail with empty target");
 
   std::cout << "PASSED: create_symlink: empty target\n";
 
@@ -49,7 +49,7 @@ int argc, char* argv[]) {
     fs_remove(link);
 
   if(!fs_create_symlink(tgt, link))
-    err("ERROR: create_symlink() failed");
+    err("create_symlink() failed");
 
   std::cout << "PASSED: create_symlink " << link << "\n";
 
@@ -62,7 +62,7 @@ int argc, char* argv[]) {
 
   std::string ctgt = fs_canonical(link, true, false);
   if(ctgt.empty())
-    err("ERROR: canonical() is empty");
+    err("canonical() is empty");
 
   // Cygwin will have /cygdrive/c and /home/ as roots
   if (!fs_is_cygwin() && ctgt != tgt)
@@ -82,7 +82,7 @@ int argc, char* argv[]) {
     fs_remove(linko);
 
   if(!fs_create_symlink(tgt, linko))
-    err("ERROR: create_symlink() failed");
+    err("create_symlink() failed");
 
   std::cout << "PASSED: created symlink " << linko << "\n";
 
@@ -94,22 +94,22 @@ int argc, char* argv[]) {
     fs_remove(link_dir);
   }
   if(!fs_create_symlink(tgt_dir, link_dir))
-    err("ERROR: create_symlink() failed");
+    err("create_symlink() failed");
 
   if (fs_is_symlink(tgt))
-    err("ERROR: is_symlink(" + tgt + ") should be false for non-symlink target");
+    err("is_symlink(" + tgt + ") should be false for non-symlink target");
 
   if (!fs_is_symlink(link))
-    err("ERROR: is_symlink(" + link + ") should be true");
+    err("is_symlink(" + link + ") should be true");
 
   if (!fs_is_file(link))
-    err("ERROR: is_file(" + link + ") should be true for existing regular file target " + tgt);
+    err("is_file(" + link + ") should be true for existing regular file target " + tgt);
 
   if (!fs_is_dir(link_dir))
-    err("ERROR: is_dir(" + link_dir + ") should be true for existing regular dir");
+    err("is_dir(" + link_dir + ") should be true for existing regular dir");
 
   if (!fs_is_symlink(link_dir))
-    err("ERROR: is_symlink() should be true for symlink dir: " + link_dir);
+    err("is_symlink() should be true for symlink dir: " + link_dir);
 
   std::cout << "PASSED: test_symlink: file / directory\n";
 
@@ -119,10 +119,10 @@ int argc, char* argv[]) {
     fs_remove(link_japanese);
 
   if (!fs_create_symlink(tgt, link_japanese))
-    err("ERROR: create_symlink() failed with non-ASCII link");
+    err("create_symlink() failed with non-ASCII link");
 
   if(!fs_is_symlink(link_japanese))
-    err("ERROR: is_symlink() should be true for non-ASCII link");
+    err("is_symlink() should be true for non-ASCII link");
 
   std::cout << "OK: filesystem symbolic links\n";
 
