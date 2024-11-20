@@ -53,6 +53,11 @@ int main() {
 
     std::cout << "PASS: mkdir non-ASCII " << p1 << "\n";
 
+    if(!fs_set_cwd(p1) || fs_get_cwd() != p1)
+      err("test_mkdir: set_cwd " + p1);
+
+    std::cout << "PASS: set_cwd " << p1 << "\n";
+
     std::cout << "OK: mkdir\n";
 
     return 0;
