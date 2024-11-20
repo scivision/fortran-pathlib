@@ -9,10 +9,6 @@
     "CMAKE_COMPILE_WARNING_AS_ERROR": true,
     "CMAKE_LINK_WARNING_AS_ERROR": true,
     "ffilesystem_fallback": false
-  },
-  "environment": {
-    "CTEST_NO_TESTS_ACTION": "error",
-    "CTEST_PARALLEL_LEVEL": "0"
   }
 },
 {
@@ -101,7 +97,8 @@
     "noTestsAction": "error",
     "scheduleRandom": true,
     "stopOnFailure": false,
-    "timeout": 60
+    "timeout": 60,
+    "jobs": 0
   }
 },
 {
