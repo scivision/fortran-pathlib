@@ -81,7 +81,9 @@ FIXTURES_SETUP "canonical"
 endif()
 
 
-set(cpp_tests canonical expanduser core
+set(cpp_tests
+absolute
+canonical expanduser core
 filename filesize
 hard_link
 is_absolute

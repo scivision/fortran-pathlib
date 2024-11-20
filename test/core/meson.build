@@ -27,7 +27,9 @@ endforeach
 endif
 
 
-cpp_core = ['canonical', 'core', 'expanduser',
+cpp_core = [
+'absolute',
+'canonical', 'core', 'expanduser',
 'filename', 'filesize',
 'hard_link',
 'is_absolute',
