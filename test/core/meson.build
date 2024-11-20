@@ -36,8 +36,8 @@ cpp_core = ['canonical', 'core', 'expanduser',
 'normal',
 'parent', 'permissions',
 'realpath', 'relative', 'reserved', 'root',
-'safe', 'system',
-'wide']
+'safe',
+'system']
 
 foreach t : cpp_core
 

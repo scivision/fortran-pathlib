@@ -10,26 +10,26 @@
 Platform independent (Linux, macOS, Windows, Cygwin, WSL, BSD, ...) Fortran filesystem "Ffilesystem" path manipulation library.
 Ffilesystem core functions are implemented in C++17 using `<string_view>`.
 If available,
-[C++ standard library filesystem](https://en.cppreference.com/w/cpp/filesystem)
+[C++ standard library `<filesystem>`](https://en.cppreference.com/w/cpp/filesystem)
 is used.
-The Fortran interface is also built by default, as the main purpose of this library is to bring full filesystem functionality to Fortran.
-However, the Fortran interface itself is optional.
+Otherwise, plain C++ code is used with the
+[C standard library](https://en.wikipedia.org/wiki/C_standard_library)
+to access filesystem and system parameters.
+Ffilesystem uses C++ `std::string` and (optional) Fortran `character`.
+[UTF-8 encoding](https://utf8everywhere.org/)
+allows for multibyte characters in paths.
 Ffilesystem header
 [ffilesystem.h](./include/ffilesystem.h)
 can be used from C and C++ project code--see
 [example](./example).
 
-The language standards required are at least:
+The optional Fortran interface is built by default.
+Ffilesystem brings full filesystem functionality to Fortran.
+
+The language standards must be at least:
 
 * C++17 standard library [STL](./Readme_libstdc++.md)
-* Fortran interface (optional): 2003
-
-Ffilesystem uses
-[C++ stdlib filesystem](https://en.cppreference.com/w/cpp/filesystem)
-(or fallback code)
-and the
-[C standard library](https://en.wikipedia.org/wiki/C_standard_library)
-to access filesystem and system parameters.
+* (optional) Fortran 2003
 
 Ffilesystem works with popular C standard library implementations including:
 [glibc](https://sourceware.org/glibc/),
@@ -53,7 +53,7 @@ Advanced / conceptual development takes place in [ffilesystem-concepts](https://
 
 Ffilesystem supports compilers including:
 
-* GCC &ge; 7 (gcc/g++, gfortran) (GCC &ge; 8 needed for `<filesystem>` backend)
+* GCC &ge; 7 (gcc/g++, gfortran)
 * LLVM Clang &ge; 9 (clang/clang++, flang or gfortran)
 * Intel oneAPI &ge; 2023.1 (icx, icpx, ifx)
 * Intel Classic &ge; 2021.9 (icpc, ifort)
@@ -62,7 +62,6 @@ Ffilesystem supports compilers including:
 * Visual Studio (C/C++)
 * Cray: using Cray compilers alone (cc, CC, ftn) or using GCC or Intel backend
 
-The optional default C++ interface requires the compiler and C++ stdlib to support `<filesystem>`.
 To help debug with older compilers, disable C++ `<filesystem>`:
 
 ```sh
@@ -97,7 +96,7 @@ Ffilesystem can be built with CMake or Fortran Package Manager (FPM).
 
 Please see the [API docs](./API.md) for extensive list of functions/subroutines.
 
-Use any one of these methods to build Ffilesystem (CMake is recommended):
+Use any one of these methods to build Ffilesystem:
 
 CMake:
 
@@ -141,6 +140,8 @@ Fortran Package Manager (FPM):
 
 fpm build
 ```
+
+---
 
 GNU Make:
 
@@ -232,18 +233,6 @@ There is no "is_musl()" function due to MUSL designers
 [not providing](https://stackoverflow.com/questions/58177815/how-to-actually-detect-musl-libc)
 a
 [MUSL feature macro](https://wiki.musl-libc.org/faq.html).
-
-
-### UTF strings
-
-The UCS
-[selected_char_kind('ISO_10646')](https://gcc.gnu.org/onlinedocs/gfortran/SELECTED_005fCHAR_005fKIND.html),
-is an *optional* feature of Fortran 2003 standard.
-Intel oneAPI does not support `selected_char_kind('ISO_10646')` as of this writing.
-
-Ffilesystem currently uses the default Fortran `character` kind, which is ASCII.
-Ffilesystem C++ backend uses std::wstring in certain limited cases, and std::string generally.
-This typically allows pass-through of UTF-8 and UTF-16 using code points e.g. 3 bytes per character for non-Latin languages typically.
 
 ### Windows long paths
 
