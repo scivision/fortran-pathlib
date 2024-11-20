@@ -15,6 +15,8 @@ add_test(NAME Cpp_is_symlink COMMAND test_is_symlink_cpp ${test_symlink_file} ${
 set_tests_properties(Cpp_is_symlink PROPERTIES FIXTURES_SETUP is_symlink)
 
 add_executable(test_symlink_cpp test_symlink.cpp)
+target_include_directories(test_symlink_cpp PRIVATE ..)
+
 add_test(NAME Cpp_symlink COMMAND test_symlink_cpp)
 set_tests_properties(Cpp_symlink PROPERTIES
 FIXTURES_SETUP symlink

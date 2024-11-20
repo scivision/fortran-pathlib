@@ -21,12 +21,12 @@ int main() {
     if (out != ref)
         err("Mismatch: absolute(" + in + ", " + base + ") " + out + " != " + ref);
 
-    ref = fs_get_cwd() + "/rel";
+    ref = fs_get_cwd() + "/" + in;
     out = fs_absolute(in, false);
     if (out.empty())
-        err("absolute(" + in + ", '') has empty output");
+        err("absolute(" + in + ") has empty output");
     if (out != ref)
-        err("absolute(" + in + ", '') = " + out + " != " + ref);
+        err("absolute(" + in + ") = " + out + " != " + ref);
 
     ref = fs_get_cwd();
     out = fs_absolute("", false);
@@ -35,12 +35,28 @@ int main() {
     if (out != ref)
         err("absolute('', ''): " + out + " != " + ref);
 
-    ref = fs_get_cwd() + "/rel";
+    ref = fs_get_cwd() + "/" + in;
     out = fs_absolute("", in, false);
     if (out.empty())
         err("absolute('', path) has empty output");
     if (out != ref)
         err("absolute('', "  + in + "): " + out + " != " + ref);
+
+    in = "日本語";
+    ref = fs_get_cwd() + "/" + in;
+    out = fs_absolute(in, false);
+    if (out.empty())
+        err("absolute(" + in + ") has empty output");
+    if (out != ref)
+        err("absolute(" + in + "): " + out + " != " + ref);
+
+    in = "some space here";
+    ref = fs_get_cwd() + "/" + in;
+    out = fs_absolute(in, false);
+    if (out.empty())
+        err("absolute(" + in + ") has empty output");
+    if (out != ref)
+        err("absolute(" + in + "): " + out + " != " + ref);
 
     std::cout << "OK: absolute C++\n";
 
