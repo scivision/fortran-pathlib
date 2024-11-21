@@ -21,6 +21,7 @@ add_test(NAME Cpp_symlink COMMAND test_symlink_cpp)
 set_tests_properties(Cpp_symlink PROPERTIES
 FIXTURES_SETUP symlink
 FIXTURES_REQUIRED is_symlink
+WORKING_DIRECTORY $<TARGET_FILE_DIR:test_symlink_cpp>
 )
 
 foreach(t IN ITEMS is_symlink_cpp symlink_cpp)

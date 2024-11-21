@@ -3,26 +3,25 @@
 #include "ffilesystem_test.h"
 #include <cstdlib>
 #include <string>
+#include <string_view>
 
-
-int main(
+int
+main(
 #if __has_cpp_attribute(maybe_unused)
 [[maybe_unused]]
 #endif
-int argc, char* argv[]) {
+int argc, char* argv[])
+{
 
-  const std::string tgt_dir = fs_parent(argv[0]);
-  const std::string tgt = tgt_dir + "/test.txt";
+  std::string_view in = argv[0];
 
-  if (fs_exists(tgt)) {
-    std::cout << "deleting old target " << tgt << "\n";
-    fs_remove(tgt);
-  }
+  const std::string tgt_dir = fs_parent(in);
+  const std::string tgt = tgt_dir + "/test_symlink.txt";
 
   if(!fs_touch(tgt))
     err("touch(" + tgt + ") failed");
 
-  std::cout << "created target file " << tgt << "\n";
+  std::cout << "target file " << tgt << "\n";
 
   if (!fs_is_file(tgt))
     err("is_file(" + tgt + ") should be true for existing regular file target");
@@ -113,16 +112,24 @@ int argc, char* argv[]) {
 
   std::cout << "PASSED: test_symlink: file / directory\n";
 
-  std::string link_japanese = "日本語";
+  const std::string cwd = fs_get_cwd();
+  const std::string j = cwd + "/日本語_create_symlink.lnk";
 
-  if (fs_is_symlink(link_japanese))
-    fs_remove(link_japanese);
+  if (fs_is_file(j) && fs_is_symlink(j)){
+    std::cout << "deleting old symlink " << j << "\n";
+    fs_remove(j);
+  } else
+    std::cout << "did not detect any existing symlink " << j << "\n";
 
-  if (!fs_create_symlink(tgt, link_japanese))
+  if (!fs_create_symlink(tgt, j))
     err("create_symlink() failed with non-ASCII link");
 
-  if(!fs_is_symlink(link_japanese))
+  std::cout << "created symlink " << j << "\n";
+
+  if(!fs_is_symlink(j))
     err("is_symlink() should be true for non-ASCII link");
+
+  std::cout << "PASSED: create_symlink() with non-ASCII link " << j << "\n";
 
   std::cout << "OK: filesystem symbolic links\n";
 

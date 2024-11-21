@@ -185,7 +185,7 @@ if(HAVE_Fortran_FILESYSTEM)
 endif()
 
 # --- fs_remove
-set(to_remove "${CMAKE_CURRENT_BINARY_DIR}/日本語.txt")
+set(to_remove "${CMAKE_CURRENT_BINARY_DIR}/日本語_remove.txt")
 add_test(NAME RemoveTouch COMMAND ${CMAKE_COMMAND} -E touch ${to_remove})
 set_tests_properties(RemoveTouch PROPERTIES FIXTURES_SETUP "remove_touch")
 
