@@ -41,7 +41,8 @@ cpp_core = [
 'owner',
 'normal',
 'parent', 'permissions',
-'realpath', 'relative', 'reserved', 'root',
+'realpath', 'relative',
+'reserved', 'root',
 'safe', 'stem',
 'system']
 

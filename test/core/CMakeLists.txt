@@ -94,8 +94,10 @@ mkdir
 mkdtemp
 owner
 normal
-parent permissions
-realpath relative reserved root
+parent
+permissions
+realpath relative
+reserved root
 safe stem system
 windows
 )
@@ -182,6 +184,26 @@ if(HAVE_Fortran_FILESYSTEM)
   set_property(TEST Fortran_cygwin PROPERTY DISABLED $<NOT:$<BOOL:${CYGWIN}>>)
 endif()
 
+# --- fs_remove
+set(to_remove "${CMAKE_CURRENT_BINARY_DIR}/日本語.txt")
+add_test(NAME RemoveTouch COMMAND ${CMAKE_COMMAND} -E touch ${to_remove})
+set_tests_properties(RemoveTouch PROPERTIES FIXTURES_SETUP "remove_touch")
+
+set(t remove)
+add_executable(test_${t}_cpp test_${t}.cpp)
+target_link_libraries(test_${t}_cpp PRIVATE ffilesystem)
+target_include_directories(test_${t}_cpp PRIVATE ..)
+target_link_options(test_${t}_cpp PRIVATE $<$<BOOL:${MINGW}>:-municode>)
+
+add_test(NAME Cpp_${t} COMMAND test_${t}_cpp ${to_remove})
+set_tests_properties(Cpp_${t} PROPERTIES
+LABELS "Cpp"
+FIXTURES_REQUIRED "remove_touch"
+SKIP_RETURN_CODE 77
+)
+# --- fs_remove
+
+# C
 
 foreach(t IN ITEMS overflow)
 
