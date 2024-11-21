@@ -21,6 +21,7 @@ int main() {
     if (out != ref)
         err("Mismatch: absolute(" + in + ", " + base + ") " + out + " != " + ref);
 
+// relative path in
     ref = fs_get_cwd() + "/" + in;
     out = fs_absolute(in, false);
     if (out.empty())
@@ -28,13 +29,33 @@ int main() {
     if (out != ref)
         err("absolute(" + in + ") = " + out + " != " + ref);
 
+    out = fs_absolute(in, "", false);
+    if (out.empty())
+        err("absolute(" + in + ", '') has empty output");
+    if (out != ref)
+        err("absolute(" + in + ", ''): " + out + " != " + ref);
+
+    out = fs_absolute("", in, false);
+    if (out.empty())
+        err("absolute() has empty output");
+    if (out != ref)
+        err("Mismatch: absolute('', " + in + ") " + out + " != " + in);
+
+// empty in
     ref = fs_get_cwd();
     out = fs_absolute("", false);
+    if (out.empty())
+        err("absolute('') has empty output");
+    if (out != ref)
+        err("absolute(''): " + out + " != " + ref);
+
+    out = fs_absolute("", "", false);
     if (out.empty())
         err("absolute('', '') has empty output");
     if (out != ref)
         err("absolute('', ''): " + out + " != " + ref);
 
+// base only
     ref = fs_get_cwd() + "/" + in;
     out = fs_absolute("", in, false);
     if (out.empty())
@@ -42,6 +63,7 @@ int main() {
     if (out != ref)
         err("absolute('', "  + in + "): " + out + " != " + ref);
 
+// non-ASCII
     in = "日本語";
     ref = fs_get_cwd() + "/" + in;
     out = fs_absolute(in, false);
@@ -50,6 +72,7 @@ int main() {
     if (out != ref)
         err("absolute(" + in + "): " + out + " != " + ref);
 
+// space
     in = "some space here";
     ref = fs_get_cwd() + "/" + in;
     out = fs_absolute(in, false);
