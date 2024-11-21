@@ -21,7 +21,10 @@ void fs_print_error(std::string_view path, std::string_view fname)
 #if defined(_WIN32) || defined(__CYGWIN__)
   const DWORD error = GetLastError();
 
-  std::cerr << std::system_category().message(error) << "\n";
+  if(error)
+    std::cerr << std::system_category().message(error);
+
+  std::cerr << "\n";
 
   if(error == ERROR_PRIVILEGE_NOT_HELD)
     std::cerr << "Enable Windows developer mode to use symbolic links: https://learn.microsoft.com/en-us/windows/apps/get-started/developer-mode-features-and-debugging \n";
