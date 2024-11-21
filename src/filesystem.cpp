@@ -15,21 +15,52 @@
 #include "ffilesystem.h"
 
 
-bool fs_remove(std::string_view path)
+#if defined(_WIN32) && !defined(HAVE_CXX_FILESYSTEM)
+
+static bool
+fs_win32_remove(std::string_view path)
+{
+
+  // https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-removedirectorya
+  // https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilea
+
+  if(fs_is_dir(path)){
+    if(RemoveDirectoryA(path.data()))
+      return true;
+    fs_print_error(path, "remove: directory faileed");
+    return false;
+  } else if(fs_is_file(path)){
+    if(DeleteFileA(path.data()))
+      return true;
+    fs_print_error(path, "remove: file failed");
+    return false;
+  } else {
+    fs_print_error(path, "remove: is not a file or directory");
+    return false;
+  }
+
+  fs_print_error(path, "remove");
+  return false;
+}
+
+#endif
+
+
+bool
+fs_remove(std::string_view path)
 {
 
   std::error_code ec;
 
 #ifdef HAVE_CXX_FILESYSTEM
+
   if(std::filesystem::remove(path, ec) && !ec) FFS_LIKELY
     return true;
+
 #else
 
 #ifdef _WIN32
-// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-removedirectorya
-// https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilea
-  if(fs_is_dir(path) ? RemoveDirectoryA(path.data()) : DeleteFileA(path.data()))
-    return true;
+  return fs_win32_remove(path);
 #else
   if(remove(path.data()) == 0)
     return true;
