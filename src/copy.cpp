@@ -58,12 +58,11 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
 
 #else
 
-  if(overwrite && fs_is_file(dest) && !fs_remove(dest))
-    fs_print_error(dest, "copy_file:remove");
-
 #if defined(_WIN32)
-    if(CopyFileA(source.data(), dest.data(), true))
-      return true;
+  // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilea
+  if(CopyFileA(source.data(), dest.data(), !overwrite) != 0)
+    return true;
+
 #elif defined(__APPLE__) && defined(__MACH__)
   /* copy-on-write file
   * based on kwSys:SystemTools:CloneFileContent
@@ -74,9 +73,11 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
   * should result in a file.
   * https://gitlab.kitware.com/utils/kwsys/-/commit/ee3223d7ae9a5b52b0a30efb932436def80c0d92
   */
-  const int r = copyfile(source.data(), dest.data(), nullptr,
-                         COPYFILE_METADATA | COPYFILE_EXCL |
-                         COPYFILE_STAT | COPYFILE_XATTR | COPYFILE_DATA);
+  auto opt = COPYFILE_METADATA | COPYFILE_STAT | COPYFILE_XATTR | COPYFILE_DATA;
+  if (!overwrite)
+    opt |= COPYFILE_EXCL;
+
+  const int r = copyfile(source.data(), dest.data(), nullptr, opt);
   if(r == 0)
     return true;
 #elif defined(HAVE_COPY_FILE_RANGE)
@@ -86,6 +87,12 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
     // https://linux.die.net/man/3/open
 
 if (FS_TRACE) std::cout << "TRACE::ffilesystem:copy_file: using copy_file_range\n";
+
+  if(!overwrite && fs_exists(dest)){
+    fs_print_error(dest, "copy_file:file exists");
+    return false;
+  }
+
 
   const int rid = open(source.data(), O_RDONLY);
   if (rid == -1) {
@@ -129,6 +136,12 @@ if (FS_TRACE) std::cout << "TRACE::ffilesystem:copy_file: using copy_file_range\
     // https://stackoverflow.com/a/29082484
 
 if (FS_TRACE) std::cout << "TRACE::ffilesystem:copy_file: using fallback fread/fwrite\n";
+
+  if(!overwrite && fs_exists(dest)){
+    fs_print_error(dest, "copy_file:file exists");
+    return false;
+  }
+
   const int bufferSize = 4096;
   std::string buf(bufferSize, '\0');
 

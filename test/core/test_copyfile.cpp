@@ -12,7 +12,14 @@ int main() {
     const std::string cwd = fs_get_cwd();
 
     const std::string s1 = cwd + "/dummy.txt";
-    const std::string s2 = cwd + "/日本語.txt";
+
+    std::string s2 = cwd;
+    if(fs_is_mingw() && fs_backend() == "<filesystem>")
+    // bug in MinGW and CopyFileA with non-ASCII
+      s2 += "/copy.txt";
+    else
+      s2 += "/日本語.txt";
+
     const std::string t1 = "及せゃ市人購ゅトてへ投際ト点吉で速流つ今日";
     std::string t2;
 
