@@ -68,6 +68,21 @@ int main() {
         return EXIT_FAILURE;
     }
 
+    // copy empty file
+    const std::string s3 = cwd + "/empty.txt";
+    const std::string s4 = cwd + "/empty_copy.txt";
+
+    fs_touch(s3);
+    ok = fs_copy_file(s3, s4, true);
+    if (!fs_is_file(s4))
+      err("did not detect file after copy " + s4);
+    if (!ok)
+      err("copy_file ok logical is false despite success of copy ");
+
+    i64 = fs_file_size(s4);
+    if(i64 != 0)
+      err("empty file size is not zero after copy " + s4);
+
     std::cout << "OK: C++ copyfile\n";
 
     return EXIT_SUCCESS;
