@@ -1,5 +1,6 @@
 #include <string>
 #include <string_view>
+#include <iostream>
 
 #if __has_include(<ranges>)
 #include <ranges>  // IWYU pragma: keep
@@ -23,7 +24,8 @@ std::string fs_as_posix(std::string_view path)
 }
 
 
-bool fs_is_reserved(std::string_view path)
+bool
+fs_is_reserved(std::string_view path)
 {
   // defined as https://docs.python.org/3.13/library/os.path.html#os.path.isreserved
   if(!fs_is_windows())
@@ -43,13 +45,9 @@ bool fs_is_reserved(std::string_view path)
   if(filename.find_first_of(R"(<>:"/\|?*)") != std::string::npos)
     return true;
 
-  // return true if filename contains ASCII control characters
-#ifdef __cpp_lib_ranges // C++20
-  if(std::ranges::any_of(filename, [](const char c) { return c < 32; }))
-#else // C++11
-  if(std::any_of(filename.begin(), filename.end(), [](const char c) { return c < 32; }))
-#endif
-    return true;
+  // don't detect ASCII control characters as reserved, since multi-byte characters may falsely trip that check
+
+  if(FS_TRACE) std::cout << "TRACE: fs_is_reserved: check stem" << filename << "\n";
 
   std::string s = fs_stem(filename);
   auto L = s.length();
@@ -77,7 +75,8 @@ return false;
 }
 
 
-static bool fs_is_safe_char(const char c)
+static bool
+fs_is_safe_char(const char c)
 {
   // unordered_set<char>  8us
   // set<char, std::less<>>  6us
@@ -94,7 +93,8 @@ static bool fs_is_safe_char(const char c)
 }
 
 
-bool fs_is_safe_name(std::string_view filename)
+bool
+fs_is_safe_name(std::string_view filename)
 {
   // check that only shell-safe characters are in filename
   // hasn't been fully tested yet across operating systems and file systems--let us know if character(s) should be unsafe
@@ -111,4 +111,18 @@ bool fs_is_safe_name(std::string_view filename)
 #else // C++11
   return std::all_of(filename.begin(), filename.end(), fs_is_safe_char);
 #endif
+}
+
+
+bool
+fs_non_ascii(std::string_view name)
+{
+  // check if name contains non-ASCII characters
+
+#ifdef __cpp_lib_ranges // C++20
+  return !std::ranges::all_of(name, [](int c) { return std::isprint(c); });
+#else // C++11
+  return !std::all_of(name.begin(), name.end(), [](int c) { return std::isprint(c); });
+#endif
+
 }

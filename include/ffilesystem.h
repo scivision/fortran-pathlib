@@ -93,6 +93,7 @@ std::string fs_which(std::string_view);
 
 bool fs_is_reserved(std::string_view);
 bool fs_is_safe_name(std::string_view);
+bool fs_non_ascii(std::string_view);
 
 std::string fs_longname(std::string_view);
 std::string fs_shortname(std::string_view);
