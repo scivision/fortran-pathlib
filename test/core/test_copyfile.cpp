@@ -14,8 +14,8 @@ int main() {
     const std::string s1 = cwd + "/dummy.txt";
 
     std::string s2 = cwd;
-    if(fs_is_mingw() && fs_backend() == "<filesystem>")
-    // bug in MinGW and CopyFileA with non-ASCII
+    if(fs_is_windows() && fs_backend() == "<filesystem>")
+    // bug in MinGW, oneAPI, MSVC, and <filesystem> with non-Ascii
       s2 += "/copy.txt";
     else
       s2 += "/日本語.txt";
