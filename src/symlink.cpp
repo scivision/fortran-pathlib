@@ -41,9 +41,11 @@ bool fs_is_symlink(std::string_view path)
   std::error_code ec;
 
 #if defined(__MINGW32__) || (defined(_WIN32) && !defined(HAVE_CXX_FILESYSTEM))
-  if (const DWORD a = GetFileAttributesA(path.data());
-        a != INVALID_FILE_ATTRIBUTES)  FFS_LIKELY
-    return a & FILE_ATTRIBUTE_REPARSE_POINT;
+  const DWORD a = GetFileAttributesA(path.data());
+  if(a == INVALID_FILE_ATTRIBUTES)
+    return false;
+
+  return a & FILE_ATTRIBUTE_REPARSE_POINT;
 #elif defined(HAVE_CXX_FILESYSTEM)
 // std::filesystem::symlink_status doesn't detect symlinks on MinGW
   const auto s = std::filesystem::symlink_status(path, ec);
