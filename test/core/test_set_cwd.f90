@@ -1,4 +1,4 @@
-program test_fileop
+program test
 
 use, intrinsic:: iso_fortran_env, only : stderr=>error_unit
 

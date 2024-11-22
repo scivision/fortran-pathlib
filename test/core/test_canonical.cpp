@@ -37,6 +37,8 @@ if(homep.empty())
 if(auto h = fs_canonical("~/..", true, true); homep != h)
   err("fs_canonical(~/..) != parent(get_homedir()) " + h + " != " + homep);
 
+std::cout << "PASSED: canonical relative dir\n";
+
 // -- relative file
 if(fs_is_cygwin())
   // Cygwin can't handle non-existing canonical paths
@@ -48,6 +50,21 @@ if(h.empty())
 
 if (h.length() <= 13)
   err("fs_canonical(\"~/../not-exist.txt\") didn't expand ~  " + h);
+
+std::string r = "日本語";
+
+h = fs_canonical(r, false, true);
+if(h.empty())
+  err("fs_canonical(" + r + ") failed weakly canonical");
+
+#ifdef __cpp_lib_string_contains
+if(!h.contains(r))
+#else
+if(h.find(r) == std::string::npos)
+#endif
+  err("fs_canonical(" + r +") " + h + " != " + r);
+
+std::cout << "PASSED: canonical non-ASCII file\n";
 
 return EXIT_SUCCESS;
 }

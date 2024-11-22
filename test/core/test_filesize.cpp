@@ -1,4 +1,3 @@
-// no need to duplicate this in test/cpp
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -11,7 +10,11 @@
 #include "ffilesystem_test.h"
 
 
-int main(int argc, char *argv[]){
+int main(
+#if __has_cpp_attribute(maybe_unused)
+[[maybe_unused]]
+#endif
+int argc,char *argv[]){
 
 #ifdef _MSC_VER
   _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
@@ -22,22 +25,17 @@ int main(int argc, char *argv[]){
   _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-  if(argc != 1){
-    std::cerr << "Usage: " << argv[0] << "\n";
-    return EXIT_FAILURE;
-  }
+  std::string d(argv[0]);
 
-  std::string drive(argv[0]);
-
-  if(!fs_file_size(drive))
+  if(!fs_file_size(d))
     err("failed to get own file size");
 
-  auto avail = fs_space_available(drive);
+  auto avail = fs_space_available(d);
   if(!avail)
-    err("failed to get space available of own drive " + drive);
+    err("failed to get space available of own drive " + d);
 
   float avail_GB = (float) avail / 1073741824;
-  std::cout << "OK space available on drive of " << drive <<  " (GB) " <<  avail_GB << "\n";
+  std::cout << "OK space available on drive of " << d <<  " (GB) " <<  avail_GB << "\n";
 
   return EXIT_SUCCESS;
 }

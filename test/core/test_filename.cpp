@@ -21,7 +21,8 @@ int main() {
   std::vector<std::tuple<std::string_view, std::string_view>> test_cases = {
     {"", ""}, {"/", ""}, {".", "."}, {"./", ""}, {"..", ".."}, {"../", ""},
     {"a", "a"}, {"a/", ""}, {"a/.", "."}, {"a/..", ".."}, {"a/b", "b"}, {"a/b/", ""}, {"a/b/c", "c"},
-    {"ab/.parent", ".parent"}, {"ab/.parent.txt", ".parent.txt"}, {"a/b/../.parent.txt", ".parent.txt"}, {"./fil", "fil"}
+    {"ab/.parent", ".parent"}, {"ab/.parent.txt", ".parent.txt"}, {"a/b/../.parent.txt", ".parent.txt"}, {"./fil", "fil"},
+    {"./日本語", "日本語"}
   };
 
   if(fs_is_windows()){

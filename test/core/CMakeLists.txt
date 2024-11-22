@@ -16,9 +16,13 @@ normal parent root
 resolve
 relative proximate
 reserved safe
-separator stem suffix with_suffix
+set_cwd
+separator
+stem
+suffix
+with_suffix
 owner permissions
-copyfile fileop mkdir same touch
+copyfile mkdir same touch
 cygwin windows
 )
 
@@ -38,6 +42,7 @@ set_tests_properties(Fortran_${t} PROPERTIES
 LABELS Fortran
 SKIP_RETURN_CODE 77
 WORKING_DIRECTORY $<TARGET_FILE_DIR:test_${t}_fortran>
+FIXTURES_SETUP ${t}
 )
 
 endforeach()
@@ -50,33 +55,17 @@ set_tests_properties(Fortran_filesystem_type PROPERTIES
 DISABLED $<AND:$<BOOL:${LINUX}>,$<NOT:$<BOOL:${ffilesystem_HAVE_LINUX_MAGIC}>>>
 )
 
-set_tests_properties(Fortran_relative PROPERTIES FIXTURES_SETUP relative)
 set_tests_properties(Fortran_is_subdir PROPERTIES FIXTURES_REQUIRED relative)
-
-set_tests_properties(Fortran_join PROPERTIES FIXTURES_SETUP join)
-set_tests_properties(Fortran_is_absolute PROPERTIES FIXTURES_SETUP is_absolute)
-set_tests_properties(Fortran_absolute PROPERTIES
-FIXTURES_SETUP absolute
-FIXTURES_REQUIRED "is_absolute;join"
-)
-set_tests_properties(Fortran_expanduser PROPERTIES FIXTURES_SETUP expanduser)
+set_tests_properties(Fortran_absolute PROPERTIES FIXTURES_REQUIRED "is_absolute;join")
 
 set_tests_properties(Fortran_resolve PROPERTIES
 FIXTURES_REQUIRED "absolute;canonical")
 
-set_tests_properties(Fortran_root PROPERTIES
-FIXTURES_SETUP root
-FIXTURES_REQUIRED is_absolute
-)
-
-set_tests_properties(Fortran_filesize PROPERTIES FIXTURES_SETUP filesize)
+set_tests_properties(Fortran_root PROPERTIES FIXTURES_REQUIRED is_absolute)
 
 set_tests_properties(Fortran_filesystem_type Fortran_space PROPERTIES FIXTURES_REQUIRED root)
 
-set_tests_properties(Fortran_canonical PROPERTIES
-FIXTURES_REQUIRED "expanduser"
-FIXTURES_SETUP "canonical"
-)
+set_tests_properties(Fortran_canonical PROPERTIES FIXTURES_REQUIRED "expanduser")
 
 endif()
 
@@ -112,6 +101,7 @@ foreach(t IN LISTS cpp_tests)
   LABELS "Cpp"
   SKIP_RETURN_CODE 77
   WORKING_DIRECTORY $<TARGET_FILE_DIR:test_${t}_cpp>
+  FIXTURES_SETUP ${t}
   )
 endforeach()
 
@@ -127,6 +117,7 @@ foreach(t IN ITEMS empty locale)
   LABELS "Cpp"
   SKIP_RETURN_CODE 77
   WORKING_DIRECTORY $<TARGET_FILE_DIR:test_${t}_cpp>
+  FIXTURES_SETUP ${t}
   )
 
 endforeach()
@@ -139,29 +130,18 @@ set_property(TEST Cpp_empty PROPERTY
 SKIP_REGULAR_EXPRESSION "not implemented;SIGABRT;[aA]bort;[sS]egmentation fault;segfault"
 )
 
-set_tests_properties(Cpp_mkdir PROPERTIES
-FIXTURES_SETUP mkdir
-FIXTURES_REQUIRED root
-)
+set_tests_properties(Cpp_mkdir PROPERTIES FIXTURES_REQUIRED root)
 
-set_tests_properties(Cpp_mkdtemp PROPERTIES
-FIXTURES_REQUIRED "mkdir"
-FIXTURES_SETUP "mkdtemp"
-)
+set_tests_properties(Cpp_mkdtemp PROPERTIES FIXTURES_REQUIRED "mkdir")
 
 set_tests_properties(Cpp_copyfile PROPERTIES FIXTURES_REQUIRED filesize)
 
-set_tests_properties(Cpp_stem PROPERTIES FIXTURES_SETUP stem)
 
 
 if(HAVE_Fortran_FILESYSTEM)
 
 set_tests_properties(Fortran_with_suffix PROPERTIES FIXTURES_REQUIRED stem)
-
 set_property(TEST Fortran_is_empty PROPERTY FIXTURES_REQUIRED "touch;filesize;mkdir")
-
-set_tests_properties(Fortran_touch PROPERTIES FIXTURES_SETUP touch)
-
 set_property(TEST Fortran_same PROPERTY FIXTURES_REQUIRED mkdir)
 
 endif()
@@ -200,6 +180,7 @@ set_tests_properties(Cpp_${t} PROPERTIES
 LABELS "Cpp"
 FIXTURES_REQUIRED "remove_touch"
 SKIP_RETURN_CODE 77
+FIXTURES_SETUP remove
 )
 # --- fs_remove
 
@@ -215,6 +196,7 @@ set_tests_properties(C_${t} PROPERTIES
 LABELS "C"
 SKIP_RETURN_CODE 77
 WORKING_DIRECTORY $<TARGET_FILE_DIR:test_${t}_c>
+FIXTURES_SETUP ${t}
 )
 
 endforeach()

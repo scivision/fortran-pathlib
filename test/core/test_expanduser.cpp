@@ -50,6 +50,11 @@ int main(void){
   if (r != h)
     err("expanduser('~//') != homedir");
 
+  std::string j = "日本語";
+  r = fs_expanduser(j);
+  if (r != j)
+    err("expanduser(" + j + ") != " + j);
+
   std::cout << "OK: Cpp expanduser\n";
 
   return EXIT_SUCCESS;
