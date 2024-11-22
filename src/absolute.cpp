@@ -49,6 +49,8 @@ std::string fs_absolute(std::string_view path, const bool expand_tilde)
     a.push_back('/');
 
   a.append(ex);
+
+  // NOT normalized to be consistent with <filesystem>
   return a;
 #endif
 }
