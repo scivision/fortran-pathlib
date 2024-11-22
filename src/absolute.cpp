@@ -43,7 +43,7 @@ std::string fs_absolute(std::string_view path, const bool expand_tilde)
     return {};
 
   if(cwd.back() != '/')
-    cwd += '/';
+    cwd.push_back('/');
 
   return cwd + ex;
 #endif
@@ -67,8 +67,9 @@ std::string fs_absolute(std::string_view path, std::string_view base, const bool
     return {};
 
   if(!ex.empty() && b.back() != '/')
-    b += '/';
+    b.push_back('/');
 
   // don't need join(). Keeps it like Python pathlib.Path.absolute()
-  return b + ex;
+  b.append(ex);
+  return b;
 }

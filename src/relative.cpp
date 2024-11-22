@@ -50,10 +50,10 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
 
   std::string r;
   for (std::string::size_type j = i; j < Lb; j++)
-    r += "../";
+    r.append("../");
 
   for (std::string::size_type j = i; j < Lo; j++)
-    r += o[j] + "/";
+    r.append(o[j]).push_back('/');
 
   return fs_drop_slash(r);
 

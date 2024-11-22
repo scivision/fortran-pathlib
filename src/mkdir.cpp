@@ -50,11 +50,11 @@ bool fs_mkdir(std::string_view path)
 
   // if first part is root
   if(fs_slash_first(path))
-    buf = "/";
+    buf.push_back('/');
 
   // iterate over parts
   for(const auto& p : parts){
-    buf += p + "/";
+    buf.append(p).push_back('/');
     if(FS_TRACE) std::cout << "TRACE:mkdir " << buf << "\n";
     // create directory
 #ifdef _WIN32

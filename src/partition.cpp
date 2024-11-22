@@ -84,7 +84,7 @@ std::string fs_filesystem_type(std::string_view path)
       return {};
 
     // GetVolumeInformationA requires a trailing backslash
-    r += '\\';
+    r.push_back('\\');
   }
 
   if(FS_TRACE) std::cout << "TRACE:filesystem_type(" << path << ") root: " << r << "\n";

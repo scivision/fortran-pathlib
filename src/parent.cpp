@@ -52,11 +52,11 @@ std::string fs_parent(std::string_view path)
   // rebuild path
   // preserve leading slash
   if (path.front() == '/')
-    p = "/";
+    p.push_back('/');
 
   for (const auto& part : parts){
     if(!part.empty())
-      p += part + "/";
+      p.append(part).push_back('/');
   }
 
   if(p.length() > 1 && p.back() == '/')
@@ -74,7 +74,7 @@ std::string fs_parent(std::string_view path)
 
   // need this for <filesystem> and our method to make x: x:/
   if (fs_is_windows() && p.length() == 2 && !fs_root_name(p).empty())
-    p += "/";
+    p.push_back('/');
 
   return p;
 }
