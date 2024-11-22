@@ -16,13 +16,16 @@ std::string fs_absolute(std::string_view path, const bool expand_tilde)
   // Inspired by Python pathlib.Path.absolute()
   // https://docs.python.org/3/library/pathlib.html#pathlib.Path.absolute
 
+  // Linux, MinGW can't handle empty paths
+  if(path.empty())
+    return fs_get_cwd();
+
   const std::string ex = expand_tilde
     ? fs_expanduser(path)
     : std::string(path);
 
-  // Linux, MinGW can't handle empty paths
-  if(ex.empty())
-    return fs_get_cwd();
+  if (ex.empty()) FFS_UNLIKELY
+    return {};
 
   if (fs_is_absolute(ex))
     return ex;
@@ -38,14 +41,15 @@ std::string fs_absolute(std::string_view path, const bool expand_tilde)
   fs_print_error(path, "absolute", ec);
   return {};
 #else
-  std::string cwd = fs_get_cwd();
-  if(cwd.empty())
+  std::string a = fs_get_cwd();
+  if(a.empty())
     return {};
 
-  if(cwd.back() != '/')
-    cwd.push_back('/');
+  if(a.back() != '/')
+    a.push_back('/');
 
-  return cwd + ex;
+  a.append(ex);
+  return a;
 #endif
 }
 
@@ -59,17 +63,23 @@ std::string fs_absolute(std::string_view path, std::string_view base, const bool
     ? fs_expanduser(path)
     : std::string(path);
 
+  if (ex.empty() && !path.empty()) FFS_UNLIKELY
+    return {};
+
   if(fs_is_absolute(ex))
     return ex;
 
   std::string b = fs_absolute(base, expand_tilde);
-  if(b.empty())
+  if(b.empty())  FFS_UNLIKELY
     return {};
 
-  if(!ex.empty() && b.back() != '/')
-    b.push_back('/');
+  if(!ex.empty()){
+    if(b.back() != '/')
+      b.push_back('/');
 
-  // don't need join(). Keeps it like Python pathlib.Path.absolute()
-  b.append(ex);
+    // don't need join(). Keeps it like Python pathlib.Path.absolute()
+    b.append(ex);
+  }
+
   return b;
 }
