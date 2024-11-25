@@ -215,7 +215,8 @@ std::string fs_with_suffix(std::string_view path, std::string_view new_suffix)
   if(stem.empty())
     return fs_join(path, new_suffix);
 
-  const std::string r = (parent == ".") ? stem : fs_join(parent, stem);
+
+  const std::string r = (parent == ".") ? stem : parent + "/" + stem;
 
   return r + std::string(new_suffix);
 
