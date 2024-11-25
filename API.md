@@ -891,6 +891,7 @@ is_windows()
 is_macos()
 is_cygwin()
 is_mingw()
+is_msvc()
 ```
 
 ---

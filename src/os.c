@@ -71,3 +71,11 @@ bool fs_is_mingw(){
   return false;
 #endif
 }
+
+bool fs_is_msvc(){
+#ifdef _MSC_VER
+  return true;
+#else
+  return false;
+#endif
+}

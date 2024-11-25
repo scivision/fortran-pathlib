@@ -27,7 +27,7 @@ touch, get_modtime, set_modtime, &
 remove, get_tempdir, &
 set_permissions, get_permissions, &
 backend, fs_lang, fs_is_optimized, pathsep, is_safe_name, &
-is_admin, is_bsd, is_macos, is_rosetta, is_windows, is_cygwin, is_wsl, is_mingw, is_linux, is_unix, &
+is_admin, is_bsd, is_macos, is_rosetta, is_windows, is_cygwin, is_wsl, is_mingw, is_msvc, is_linux, is_unix, &
 max_path, max_component, &
 exe_path, lib_path, compiler, compiler_c, get_shell, get_terminal, &
 longname, shortname, getenv, setenv, getarg, &
@@ -103,6 +103,12 @@ logical(C_BOOL) function is_mingw() bind(C, name="fs_is_mingw")
 !! operating system platform is MinGW
 import C_BOOL
 end function
+
+logical(C_BOOL) function is_msvc() bind(C, name="fs_is_msvc")
+!! compiler is MSVC-like (including oneAPI on Windows with MSVC frontend)
+import C_BOOL
+end function
+
 
 logical(C_BOOL) function is_linux() bind(C, name="fs_is_linux")
 !! operating system is Linux
