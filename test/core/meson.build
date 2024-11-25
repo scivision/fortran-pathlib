@@ -46,7 +46,9 @@ cpp_core = [
 'realpath', 'relative',
 'reserved', 'root',
 'safe', 'stem',
-'system']
+'system',
+'with_suffix'
+]
 
 foreach t : cpp_core
 

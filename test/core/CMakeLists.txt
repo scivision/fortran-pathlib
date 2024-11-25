@@ -88,6 +88,7 @@ permissions
 realpath relative
 reserved root
 safe stem system
+with_suffix
 windows
 )
 
