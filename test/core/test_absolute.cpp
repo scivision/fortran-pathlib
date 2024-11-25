@@ -40,6 +40,9 @@ int main() {
     }
 
     ref = cwd + "/./" + in;
+    if (fs_is_windows() && fs_backend() == "<filesystem>")
+      ref = fs_normal(ref);
+
     out = fs_absolute("./" + in, false);
     if (out.empty()) {
         std::cerr << "test 3: absolute(./" << in << ") has empty output\n";
@@ -51,6 +54,9 @@ int main() {
     }
 
     ref = cwd + "/../" + in;
+    if(fs_is_windows() && fs_backend() == "<filesystem>")
+      ref = fs_normal(ref);
+
     out = fs_absolute("../" + in, false);
     if (out.empty()) {
         std::cerr << "test 4: absolute(../" << in << ") has empty output\n";
@@ -75,6 +81,9 @@ int main() {
 
     // relative path, '.' base
     ref = cwd + "/./" + in;
+    if(fs_is_windows() && fs_backend() == "<filesystem>")
+      ref = fs_normal(ref);
+
     out = fs_absolute(in, ".", false);
     if (out.empty()) {
         std::cerr << "test 6: absolute(" << in << ", '.') has empty output\n";
@@ -87,6 +96,9 @@ int main() {
 
     // relative path, '..' base
     ref = cwd + "/../" + in;
+    if(fs_is_windows() && fs_backend() == "<filesystem>")
+      ref = fs_normal(ref);
+
     out = fs_absolute(in, "..", false);
     if (out.empty()) {
         std::cerr << "test 7: absolute(" << in << ", '..') has empty output\n";
