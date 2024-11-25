@@ -13,8 +13,9 @@ bool fs_is_case_sensitive(std::string_view path)
     return false;
 
   const std::string rname = fs_generate_random_alphanumeric_string(16);
+  std::string p(path);
   // create a temporary file with a unique name that has CamelCase
-  const std::string CamelCase = fs_join(path, ".FfilesystemCaseSensitiveCheck_" + rname);
+  const std::string CamelCase = p + "/.FfilesystemCaseSensitiveCheck_" + rname;
 
   if(!fs_touch(CamelCase))
     return false;
