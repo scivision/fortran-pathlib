@@ -221,6 +221,7 @@ jobs:
     timeout-minutes: 10
 
     strategy:
+      fail-fast: false
       matrix:
         compiler: [ {cpp: clang++, c: clang, fc: flang-new } ]
         shared: [true, false]
