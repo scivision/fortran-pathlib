@@ -107,6 +107,8 @@ foreach(t IN LISTS cpp_tests)
   )
 endforeach()
 
+target_compile_definitions(test_touch_cpp PRIVATE $<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>)
+
 
 foreach(t IN ITEMS empty locale)
 
