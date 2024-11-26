@@ -78,6 +78,8 @@ expanduser core
 filename filesize
 hard_link
 is_absolute
+is_dir
+is_file
 join
 mkdir
 mkdtemp
