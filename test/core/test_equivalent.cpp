@@ -85,6 +85,18 @@ char* argv[])
     return EXIT_FAILURE;
   }
 
+  // non-ASCII
+  s1 = "日本語_equivalent";
+  if(!fs_mkdir(s1)){
+    std::cerr << "ERROR: mkdir(" << s1 << ")\n";
+    return EXIT_FAILURE;
+  }
+
+  if(!fs_equivalent("./" + s1, s1)){
+    std::cerr << "ERROR: equivalent(./" << s1 << ", " << s1 << ")\n";
+    return EXIT_FAILURE;
+  }
+
   std::cout << "OK: equivalent\n";
   return EXIT_SUCCESS;
 }

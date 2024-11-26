@@ -23,7 +23,7 @@ foreach t : core_tests
 
 tec = executable(t + '_fortran', 'test_' + t + '.f90', link_with: filesystem, include_directories: inc)
 
-test(t + '_fortran', tec, suite: 'fortran')
+test(t + '_fortran', tec, suite: 'fortran', workdir: meson.current_build_dir())
 
 endforeach
 
@@ -61,6 +61,6 @@ foreach t : cpp_core
     t_cpp = executable(t + '_cpp', 'test_' + t + '.cpp', link_with: filesystem,
       include_directories: [inc, '..'])
 
-    test(t + '_cpp', t_cpp, suite: 'cpp')
+    test(t + '_cpp', t_cpp, suite: 'cpp', workdir: meson.current_build_dir())
 
 endforeach
