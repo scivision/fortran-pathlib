@@ -34,9 +34,6 @@ if(set_cwd("")) error stop "chdir should fail on empty string"
 cwd = get_cwd()
 print '(a)', 'New working directory: '// cwd
 
-ok = set_cwd(old_cwd)
-!! avoid messing up subsequent test location
-
 if (.not. same_file(cwd, s2)) error stop "chdir failed: " // s2 // " /= " // cwd
 
 end block valgrind

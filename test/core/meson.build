@@ -50,7 +50,9 @@ cpp_core = [
 'proximate',
 'realpath', 'relative',
 'reserved', 'root',
-'safe', 'stem',
+'safe',
+'set_cwd',
+'stem',
 'system',
 'touch',
 'with_suffix'

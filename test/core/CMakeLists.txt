@@ -92,7 +92,9 @@ permissions
 proximate
 realpath relative
 reserved root
-safe stem system
+safe
+set_cwd
+stem system
 touch
 with_suffix
 windows
