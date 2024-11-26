@@ -39,7 +39,7 @@
 #endif
 
 
-std::time_t fs_get_modtime(const char* path)
+std::time_t fs_get_modtime(std::string_view path)
 {
 
 #if defined(HAVE_CLOCK_CAST) && defined(HAVE_CXX_FILESYSTEM)
@@ -52,16 +52,17 @@ std::time_t fs_get_modtime(const char* path)
   if (FS_TRACE) std::cout << "TRACE: statx() get_modtime " << path << "\n";
   struct statx s;
 
-  if( statx(AT_FDCWD, path, AT_NO_AUTOMOUNT, STATX_MTIME, &s) == 0 ) FFS_LIKELY
+  if( statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT, STATX_MTIME, &s) == 0 ) FFS_LIKELY
     return s.stx_mtime.tv_sec;
 #else
-  if (struct stat s; !stat(path, &s))
+  if (struct stat s; !stat(path.data(), &s))
     return s.st_mtime;
 #endif
 
   fs_print_error(path, "fs_get_modtime");
   return {};
 }
+
 
 #ifdef HAVE_CXX_FILESYSTEM
 std::optional<std::filesystem::file_time_type> fs_get_modtime_fs(std::string_view path)

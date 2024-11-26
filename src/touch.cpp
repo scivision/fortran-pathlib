@@ -9,8 +9,7 @@ bool fs_touch(std::string_view path)
   if(fs_exists(path))
     return fs_set_modtime(path);
 
-  std::ofstream f(path.data(), std::ios::out);
-  if(f){ FFS_LIKELY
+  if(std::ofstream f(path.data()); f){
     f.close();
     return true;
   }

@@ -43,6 +43,7 @@ std::string fs_lexically_normal(std::string_view);
 std::string fs_make_preferred(std::string_view);
 
 std::string fs_to_narrow(std::wstring_view);
+std::wstring fs_to_wide(std::string_view);
 
 bool fs_is_case_sensitive(std::string_view);
 std::string fs_generate_random_alphanumeric_string(const std::string::size_type);
@@ -87,7 +88,7 @@ std::string fs_mkdtemp(std::string_view);
 bool fs_mkdir(std::string_view);
 
 bool fs_set_modtime(std::string_view);
-time_t fs_get_modtime(std::string_view);
+std::time_t fs_get_modtime(std::string_view);
 
 std::string fs_which(std::string_view);
 

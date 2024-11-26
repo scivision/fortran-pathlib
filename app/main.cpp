@@ -211,7 +211,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
     if(t)
       std::cout << std::format("{}\n", t.value());
 #else
-    const auto t = fs_get_modtime(a1.data());
+    const std::time_t t = fs_get_modtime(a1);
     #if defined(_MSC_VER)
       std::string buf(26, '\0');
       ctime_s(buf.data(), buf.size(), &t);
@@ -221,7 +221,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
     #endif
 #endif
   } else if (fun == "fs_modtime")
-    std::cout << fs_get_modtime(a1.data()) << "\n";
+    std::cout << fs_get_modtime(a1) << "\n";
   else if (fun == "chdir" || fun == "set_cwd") {
     auto cwd = fs_get_cwd();
     if(!cwd.empty()){

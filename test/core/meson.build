@@ -47,6 +47,7 @@ cpp_core = [
 'reserved', 'root',
 'safe', 'stem',
 'system',
+'touch',
 'with_suffix'
 ]
 

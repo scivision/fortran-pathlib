@@ -8,9 +8,9 @@
 int main()
 {
 
-constexpr std::string smiley = "😀";
-constexpr std::string wink = "😉";
-constexpr std::string hello = "你好";
+const std::string smiley = "😀";
+const std::string wink = "😉";
+const std::string hello = "你好";
 
 auto u1 = fs_canonical(".", true, false);
 if(u1.empty())
