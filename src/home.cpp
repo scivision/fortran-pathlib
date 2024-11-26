@@ -48,10 +48,10 @@ static struct passwd* fs_getpwuid()
 
 std::string fs_get_homedir()
 {
-
+  // has no trailing slash
   if(std::string home = fs_getenv(fs_is_windows() ? "USERPROFILE" : "HOME");
       !home.empty())  FFS_LIKELY
-    return fs_as_posix(home);
+    return fs_drop_slash(fs_as_posix(home));
 
   return fs_get_profile_dir();
 }
@@ -59,6 +59,7 @@ std::string fs_get_homedir()
 
 std::string fs_get_profile_dir()
 {
+  // has no trailing slash
   #ifdef _WIN32
   // https://learn.microsoft.com/en-us/windows/win32/api/userenv/nf-userenv-getuserprofiledirectorya
   std::string path(fs_get_max_path(), '\0');
@@ -73,12 +74,12 @@ std::string fs_get_profile_dir()
 
   if (ok){
     path.resize(N-1);
-    return fs_as_posix(path);
+    return fs_drop_slash(fs_as_posix(path));
   }
 #else
   const struct passwd *pw = fs_getpwuid();
   if (pw)
-    return pw->pw_dir;
+    return fs_drop_slash(pw->pw_dir);
 #endif
 
   fs_print_error("", "get_profile_dir");
@@ -109,9 +110,6 @@ std::string fs_expanduser(std::string_view path)
   std::string home = fs_get_homedir();
   if(home.empty()) FFS_UNLIKELY
     return {};
-
-  if (home.back() == '/')
-    home.pop_back();
 
   if (path.length() < 3)
     return home;

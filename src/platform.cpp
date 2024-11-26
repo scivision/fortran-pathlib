@@ -81,7 +81,7 @@ bool fs_set_cwd(std::string_view path)
 
 std::string fs_get_cwd()
 {
-
+  // does not have trailing slash
   std::error_code ec;
 
 #ifdef HAVE_CXX_FILESYSTEM

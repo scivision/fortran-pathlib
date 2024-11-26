@@ -45,9 +45,7 @@ std::string fs_absolute(std::string_view path, const bool expand_tilde)
   if(a.empty())
     return {};
 
-  if(a.back() != '/')
-    a.push_back('/');
-
+  a.push_back('/');
   a.append(ex);
 
   // NOT normalized to be consistent with <filesystem>
