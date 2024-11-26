@@ -72,6 +72,14 @@ bool fs_is_mingw(){
 #endif
 }
 
+bool fs_is_appleclang(){
+#if defined(__clang__) && defined(__apple_build_version__)
+  return true;
+#else
+  return false;
+#endif
+}
+
 bool fs_is_msvc(){
 #ifdef _MSC_VER
   return true;

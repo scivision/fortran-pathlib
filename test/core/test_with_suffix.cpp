@@ -29,15 +29,7 @@ int main() {
   if (r != ".h5.h5")
       err("with_suffix(.h5,.h5) " + r);
 
-  if(fs_backend() == "<filesystem>" &&
-    (fs_is_msvc() ||
-    (fs_is_macos() &&
-#if __cpp_lib_starts_ends_with  // C++20
-    fs_compiler().starts_with("Apple")
-#else
-    fs_compiler().substr(0, 5) == "Apple"
-#endif
-    )))
+  if(fs_backend() == "<filesystem>" && (fs_is_msvc() || fs_is_appleclang()))
     ref = "a//b///c//.h5";
   else
     ref = "a/b/c/.h5";
