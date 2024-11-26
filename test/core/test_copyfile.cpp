@@ -14,10 +14,10 @@ int main() {
     const std::string s1 = cwd + "/dummy.txt";
 
     std::string s2 = cwd;
-    if(fs_is_windows() && fs_backend() == "<filesystem>")
-    // bug in MinGW, oneAPI, MSVC, and <filesystem> with non-Ascii
+    if(fs_is_windows() && fs_backend() == "<filesystem>"){
+      std::cerr << "bug in MinGW, oneAPI, MSVC, and <filesystem> with non-Ascii\n";
       s2 += "/copy.txt";
-    else
+    } else
       s2 += "/日本語.txt";
 
     const std::string t1 = "及せゃ市人購ゅトてへ投際ト点吉で速流つ今日";
