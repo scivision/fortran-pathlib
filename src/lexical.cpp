@@ -50,8 +50,9 @@ fs_is_reserved(std::string_view path)
   if(FS_TRACE) std::cout << "TRACE: fs_is_reserved: check stem" << filename << "\n";
 
   std::string s = fs_stem(filename);
-  auto L = s.length();
-  if(L < 3 || L > 4)
+
+  if(size_t L = s.length();
+      L < 3 || L > 4)
     return false;
 
   // convert to upper case

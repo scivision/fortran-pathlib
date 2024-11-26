@@ -1,14 +1,14 @@
 #include <string>
 #include <string_view>
 
+#include "ffilesystem.h"
+
 #ifdef __CYGWIN__
 #include <sys/cygwin.h>
 #else
 constexpr int CCP_WIN_A_TO_POSIX = 0;
 constexpr int CCP_POSIX_TO_WIN_A = 0;
 #endif
-
-#include "ffilesystem.h"
 
 
 static std::string fs_convert_path(std::string_view path,

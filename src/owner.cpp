@@ -39,8 +39,8 @@ std::string fs_get_owner_name(std::string_view path)
   SID_NAME_USE eUse = SidTypeUnknown;
 
   // https://learn.microsoft.com/en-us/windows/win32/api/aclapi/nf-aclapi-getnamedsecurityinfoa
-  DWORD dwResult = GetNamedSecurityInfoA(path.data(), SE_FILE_OBJECT, OWNER_SECURITY_INFORMATION, &pOwnerSid, nullptr, nullptr, nullptr, &pSD);
-  if (dwResult != ERROR_SUCCESS) {
+  if (DWORD r = GetNamedSecurityInfoA(path.data(), SE_FILE_OBJECT, OWNER_SECURITY_INFORMATION, &pOwnerSid, nullptr, nullptr, nullptr, &pSD);
+        r != ERROR_SUCCESS) {
     fs_print_error(path, "owner:GetNamedSecurityInfo: failed to get security info");
     return {};
   }
@@ -95,8 +95,8 @@ std::string fs_get_owner_group(std::string_view path)
   SID_NAME_USE eUse = SidTypeUnknown;
 
   // https://learn.microsoft.com/en-us/windows/win32/api/aclapi/nf-aclapi-getnamedsecurityinfoa
-  DWORD dwResult = GetNamedSecurityInfoA(path.data(), SE_FILE_OBJECT, GROUP_SECURITY_INFORMATION, nullptr, &pGroupSid, nullptr, nullptr, &pSD);
-  if (dwResult != ERROR_SUCCESS) {
+  if (DWORD r = GetNamedSecurityInfoA(path.data(), SE_FILE_OBJECT, GROUP_SECURITY_INFORMATION, nullptr, &pGroupSid, nullptr, nullptr, &pSD);
+        r != ERROR_SUCCESS) {
     fs_print_error(path, "get_owner_group:GetNamedSecurityInfo: failed to get security info");
     return {};
   }

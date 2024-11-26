@@ -12,7 +12,7 @@
 #include <objbase.h> // IWYU pragma: keep
 // CoTaskMemFree
 #include <KnownFolders.h> // FOLDERID_LocalAppData
-#include <Shlobj.h> // SHGetKnownFolderPath
+#include <shlobj.h> // SHGetKnownFolderPath
 #endif
 
 #include "ffilesystem.h"
