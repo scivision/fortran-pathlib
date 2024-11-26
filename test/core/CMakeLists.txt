@@ -87,6 +87,7 @@ owner
 normal
 parent
 permissions
+proximate
 realpath relative
 reserved root
 safe stem system
