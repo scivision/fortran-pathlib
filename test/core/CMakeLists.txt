@@ -4,6 +4,7 @@ if(HAVE_Fortran_FILESYSTEM)
 
 set(tests is_absolute absolute
 canonical realpath
+equivalent
 expanduser
 filename
 filesize space
@@ -22,7 +23,7 @@ stem
 suffix
 with_suffix
 owner permissions
-copyfile mkdir same touch
+copyfile mkdir touch
 cygwin windows
 )
 
@@ -74,6 +75,7 @@ set(cpp_tests
 absolute
 canonical
 copyfile
+equivalent
 expanduser core
 filename filesize
 hard_link
@@ -149,7 +151,7 @@ if(HAVE_Fortran_FILESYSTEM)
 
 set_tests_properties(Fortran_with_suffix PROPERTIES FIXTURES_REQUIRED stem)
 set_property(TEST Fortran_is_empty PROPERTY FIXTURES_REQUIRED "touch;filesize;mkdir")
-set_property(TEST Fortran_same PROPERTY FIXTURES_REQUIRED mkdir)
+set_property(TEST Fortran_equivalent PROPERTY FIXTURES_REQUIRED mkdir)
 
 endif()
 

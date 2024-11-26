@@ -2,6 +2,7 @@ if fortran
 
 core_tests = ['is_absolute', 'absolute',
 'canonical', 'realpath',
+'equivalent',
 'expanduser',
 'filesystem_type',
 'filesize', 'space',
@@ -33,6 +34,7 @@ cpp_core = [
 'absolute',
 'canonical', 'core',
 'copyfile',
+'equivalent',
 'expanduser',
 'filename', 'filesize',
 'hard_link',
