@@ -7,6 +7,8 @@ int main() {
     std::string base, ref, out;
     const std::string cwd = fs_get_cwd();
 
+    const bool needs_normal = fs_is_windows() && fs_backend() == "<filesystem>" && fs_compiler().substr(0, 5) != "Clang";
+
     int err = 0;
 
     if (fs_is_windows()) {
@@ -40,7 +42,7 @@ int main() {
     }
 
     ref = cwd + "/./" + in;
-    if (fs_is_windows() && fs_backend() == "<filesystem>")
+    if (needs_normal)
       ref = fs_normal(ref);
 
     out = fs_absolute("./" + in, false);
@@ -54,7 +56,7 @@ int main() {
     }
 
     ref = cwd + "/../" + in;
-    if(fs_is_windows() && fs_backend() == "<filesystem>")
+    if(needs_normal)
       ref = fs_normal(ref);
 
     out = fs_absolute("../" + in, false);
@@ -81,7 +83,7 @@ int main() {
 
     // relative path, '.' base
     ref = cwd + "/./" + in;
-    if(fs_is_windows() && fs_backend() == "<filesystem>")
+    if(needs_normal)
       ref = fs_normal(ref);
 
     out = fs_absolute(in, ".", false);
@@ -96,7 +98,7 @@ int main() {
 
     // relative path, '..' base
     ref = cwd + "/../" + in;
-    if(fs_is_windows() && fs_backend() == "<filesystem>")
+    if(needs_normal)
       ref = fs_normal(ref);
 
     out = fs_absolute(in, "..", false);

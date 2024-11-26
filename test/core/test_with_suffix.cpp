@@ -29,7 +29,10 @@ int main() {
   if (r != ".h5.h5")
       err("with_suffix(.h5,.h5) " + r);
 
-  if(fs_backend() == "<filesystem>" && (fs_is_msvc() || fs_is_appleclang()))
+  if(fs_backend() == "<filesystem>" &&
+    (fs_is_msvc() ||
+    fs_is_appleclang() ||
+    (fs_is_windows() && fs_compiler().substr(0, 5) == "Clang")))
     ref = "a//b///c//.h5";
   else
     ref = "a/b/c/.h5";

@@ -32,54 +32,56 @@ bool fs_mkdir(std::string_view path)
     return false;
   }
 
+  std::error_code ec;
+
 #ifdef HAVE_CXX_FILESYSTEM
 
-  std::error_code ec;
-  // old MacOS return false even if directory was created
   if (std::filesystem::create_directories(path, ec) || (!ec && fs_is_dir(path))) FFS_LIKELY
     return true;
-
-  fs_print_error(path, "mkdir", ec);
-  return false;
 
 #else
 
   std::string buf;
+  std::string p(path);
 
-  const std::vector<std::string> parts = fs_split(path);
+  // ERROR_PATH_NOT_FOUND if relative directory
+  if(fs_is_windows() && !fs_is_absolute(p))
+    p = fs_absolute(p, false);
+
+  const std::vector<std::string> parts = fs_split(p);
 
   // if first part is root
-  if(fs_slash_first(path))
+  if(fs_slash_first(p))
     buf.push_back('/');
 
   // iterate over parts
+  bool ok = false;
+
   for(const auto& p : parts){
     buf.append(p).push_back('/');
     if(FS_TRACE) std::cout << "TRACE:mkdir " << buf << "\n";
     // create directory
 #ifdef _WIN32
     // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createdirectorya
-    if (CreateDirectoryA(buf.data(), nullptr) == 0){
+    ok = CreateDirectoryA(buf.data(), nullptr) == 0;
+    if(!ok){
       const auto err = GetLastError();
-      if (!(err == ERROR_ALREADY_EXISTS || err == ERROR_ACCESS_DENIED)){ FFS_UNLIKELY
-        fs_print_error(buf, "mkdir:CreateDirectory");
-        return false;
-      }
+      // ERROR_PATH_NOT_FOUND if relative directory
+      ok = err == ERROR_ALREADY_EXISTS || err == ERROR_ACCESS_DENIED;
     }
 #else
   // https://www.man7.org/linux/man-pages/man2/mkdir.2.html
-    if (mkdir(buf.data(), S_IRWXU) && !(errno == EEXIST || errno == EACCES)){  FFS_UNLIKELY
-      fs_print_error(buf, "mkdir");
-      return false;
-    }
+   ok = mkdir(buf.data(), S_IRWXU) == 0 || errno == EEXIST || errno == EACCES;
 #endif
+  if(!ok)  FFS_UNLIKELY
+    break;
   }
 
-  if(fs_is_dir(path))  FFS_LIKELY
+  if(ok)  FFS_LIKELY
     return true;
 
-  fs_print_error(path, "mkdir: not created");
-  return false;
-
 #endif
+
+  fs_print_error(path, "mkdir", ec);
+  return false;
 }
