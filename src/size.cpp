@@ -85,6 +85,7 @@ bool fs_is_empty(std::string_view path)
       if(FS_TRACE) std::cout << "TRACE: is_empty: do " << ffd.cFileName << "\n";
 
       if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+        // std::set is much slower than a simple if
         if (std::string_view n(ffd.cFileName); n == "." || n == "..")
           continue;
 
@@ -117,7 +118,7 @@ bool fs_is_empty(std::string_view path)
     if (fs_is_dir(std::string(path) + "/" + entry->d_name))
 #endif
     {
-
+      // std::set is much slower than a simple if
       if (std::string_view n(entry->d_name); n == "." || n == "..")
         continue;
       // directory that is not . or ..

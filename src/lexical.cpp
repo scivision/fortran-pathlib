@@ -8,7 +8,7 @@
 
 #include <algorithm> // std::transform, std::ranges::contains, std::find, std::replace
 #include <cctype> // std::isalnum, toupper
-#include <vector>
+#include <array>
 
 #include "ffilesystem.h"
 
@@ -59,7 +59,7 @@ fs_is_reserved(std::string_view path)
   std::transform(s.begin(), s.end(), s.begin(), ::toupper);
 
 // check if the stem is a reserved device name
-  const std::vector<std::string_view> r = {"CON", "PRN", "AUX", "NUL",
+  constexpr std::array<std::string_view, 28> r = {"CON", "PRN", "AUX", "NUL",
     "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "COM¹", "COM²", "COM³",
     "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9", "LPT¹", "LPT²", "LPT³"};
 
@@ -82,15 +82,10 @@ fs_is_safe_char(const char c)
   // unordered_set<char>  8us
   // set<char, std::less<>>  6us
   // vector<char> 0.3us so much faster!
-  const std::vector<char> safe {'_', '-', '.', '~', '@', '#', '$', '%', '^', '&', '(', ')', '[', ']', '{', '}', '+', '=', ',', '!'};
+  // safe.find_first_of is same speed as vector<char> but more readable
+  std::string_view safe = "_-.~@#$%^&()[]{}+=,!";
 
-  return std::isalnum(c) ||
-#ifdef __cpp_lib_ranges // C++20
-    std::ranges::find(safe, c)
-#else // C++98
-    std::find(safe.begin(), safe.end(), c)
-#endif
-    != safe.end();
+  return std::isalnum(c) || safe.find_first_of(c) != std::string::npos;
 }
 
 
