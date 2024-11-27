@@ -3,9 +3,13 @@
 #include <algorithm>
 #include <iostream>
 #include <functional>
-#include <set>
 #include <cstdlib>
 #include <vector>
+#include <array>
+
+#if __has_include(<ranges>)
+#include <ranges>  // IWYU pragma: keep
+#endif
 
 #include "ffilesystem.h"
 
@@ -154,7 +158,7 @@ std::string_view path;
 
 std::cout << fs_compiler() << "\n";
 
-std::set<std::string_view, std::less<>> funcs;
+std::vector<std::string_view> funcs;
 if(argc > 3)
   funcs = {argv[3]};
 else
@@ -162,15 +166,17 @@ else
 
 for (std::string_view func : funcs)
   {
-  const std::set <std::string_view, std::less<>> tildef = {"canonical", "resolve", "normal", "expanduser", "parent", "file_name"};
+  constexpr std::array<std::string_view, 6> tf = {"canonical", "resolve", "normal", "expanduser", "parent", "file_name"};
 
   if (argc > 2)
     path = argv[2];
   else {
-#if __cplusplus >= 202002L
-    if (tildef.contains(func))
-#else
-    if (tildef.find(func) != tildef.end())
+#ifdef __cpp_lib_ranges_contains  // C++23
+  if (std::ranges::contains(tf, func))
+#elif __cpp_lib_ranges // C++20
+  if (std::ranges::find(tf, func) != tf.end())
+#else // C++98
+  if (std::find(tf.begin(), tf.end(), func) != tf.end())
 #endif
       path = "~/..";
     else if (func == "which")
