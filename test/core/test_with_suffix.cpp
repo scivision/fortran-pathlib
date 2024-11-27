@@ -5,9 +5,14 @@
 #include "ffilesystem_test.h"
 
 
-int main() {
+int main()
+{
   std::string r;
   std::string ref;
+
+  const bool needs_normal = fs_backend() == "<filesystem>" && (fs_is_msvc() ||
+    fs_is_appleclang() ||
+    (fs_is_windows() && fs_compiler().substr(0, 5) == "Clang"));
 
   r = fs_with_suffix("", ".h5");
   if (r != ".h5")
@@ -30,15 +35,10 @@ int main() {
   if (r != ".h5.h5")
       err("with_suffix(.h5,.h5) " + r);
 
-  if(fs_backend() == "<filesystem>" &&
-    (fs_is_msvc() ||
-    fs_is_appleclang() ||
-    (fs_is_windows() && fs_compiler().substr(0, 5) == "Clang")))
-    ref = "a//b///c//.h5";
-  else
-    ref = "a/b/c/.h5";
-
+  ref = "a/b/c/.h5";
   r = fs_with_suffix("a//b///c//", ".h5");
+  if(needs_normal)
+    r = fs_normal(r);
   if(r != ref)
       err("with_suffix: " + r + " != " + ref);
 
