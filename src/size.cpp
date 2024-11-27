@@ -12,7 +12,6 @@
 #ifdef HAVE_CXX_FILESYSTEM
 #include <filesystem>
 #else
-#include <set>
 #include <iostream>
 
 #include <sys/types.h>
@@ -71,8 +70,6 @@ bool fs_is_empty(std::string_view path)
   if (!fs_is_dir(path))
     return fs_file_size(path) == 0;
 
-  const std::set<std::string_view> dots = {".", ".."};
-
   // directory empty
 #ifdef _MSC_VER
   // https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilea
@@ -86,19 +83,14 @@ bool fs_is_empty(std::string_view path)
   do
   {
       if(FS_TRACE) std::cout << "TRACE: is_empty: do " << ffd.cFileName << "\n";
-      if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-          if (
-#if __cplusplus >= 202002L
-          dots.contains(ffd.cFileName)
-#else
-          dots.find(ffd.cFileName) != dots.end()
-#endif
-          )
-            continue;
+
+      if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+        if (std::string_view n(ffd.cFileName); n == "." || n == "..")
+          continue;
+
       // directory that is not . or ..
-      {
-          FindClose(hFind);
-          return false;
+        FindClose(hFind);
+        return false;
       }
       // any non-directory
       FindClose(hFind);
@@ -125,11 +117,8 @@ bool fs_is_empty(std::string_view path)
     if (fs_is_dir(std::string(path) + "/" + entry->d_name))
 #endif
     {
-#if __cplusplus >= 202002L
-      if (dots.contains(entry->d_name))
-#else
-      if (dots.find(entry->d_name) != dots.end())
-#endif
+
+      if (std::string_view n(entry->d_name); n == "." || n == "..")
         continue;
       // directory that is not . or ..
       closedir(d);

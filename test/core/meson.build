@@ -40,6 +40,7 @@ cpp_core = [
 'hard_link',
 'is_absolute',
 'is_dir',
+'is_empty',
 'is_file',
 'join',
 'locale',
