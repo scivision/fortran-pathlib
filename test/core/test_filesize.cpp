@@ -70,5 +70,7 @@ int argc,char *argv[]){
       err("failed to get space available of file " + fn);
   }
 
+  ok_msg("file_size, space_available C++");
+
   return EXIT_SUCCESS;
 }

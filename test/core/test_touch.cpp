@@ -1,12 +1,13 @@
 #include <iostream>
 #include <string>
 #include <string_view>
-
-#include "ffilesystem.h"
-#include "ffilesystem_test.h"
+#include <cstdlib>
 
 #include <chrono>
 #include <thread>
+
+#include "ffilesystem.h"
+#include "ffilesystem_test.h"
 
 
 void check_touch(std::string_view in)
@@ -63,5 +64,7 @@ char* argv[])
   else
     check_touch(dir + "/日本語.txt");
 
-  return 0;
+  ok_msg("touch C++");
+
+  return EXIT_SUCCESS;
 }

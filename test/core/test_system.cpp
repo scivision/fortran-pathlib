@@ -1,8 +1,10 @@
-#include "ffilesystem.h"
-
 #include <cstdlib>
 #include <string>
 #include <iostream>
+
+#include "ffilesystem.h"
+#include "ffilesystem_test.h"
+
 
 int main(){
 
@@ -97,6 +99,8 @@ int main(){
     return EXIT_FAILURE;
   if(skip)
     return 77;
+
+  ok_msg("system C++");
 
   return EXIT_SUCCESS;
 }

@@ -9,7 +9,8 @@
 #include "ffilesystem.h"
 #include "ffilesystem_test.h"
 
-int main(void){
+
+int main(){
 
 #ifdef _MSC_VER
   _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
@@ -55,7 +56,7 @@ int main(void){
   if (r != j)
     err("expanduser(" + j + ") != " + j);
 
-  std::cout << "OK: Cpp expanduser\n";
+  ok_msg("expanduser C++");
 
   return EXIT_SUCCESS;
 }

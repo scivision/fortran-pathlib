@@ -6,6 +6,7 @@
 #include <cstdlib>
 
 #include "ffilesystem.h"
+#include "ffilesystem_test.h"
 
 #ifdef _MSC_VER
 #include <crtdbg.h>
@@ -94,6 +95,7 @@ if(fs_is_windows()){
         return EXIT_FAILURE;
     }
 
-    std::cout << "OK: normal\n";
+    ok_msg("normal C++");
+
     return EXIT_SUCCESS;
 }

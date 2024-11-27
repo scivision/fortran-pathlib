@@ -4,6 +4,8 @@
 #include <cstdlib>
 
 #include "ffilesystem.h"
+#include "ffilesystem_test.h"
+
 
 int main(
 #if __has_cpp_attribute(maybe_unused)
@@ -97,6 +99,7 @@ char* argv[])
     return EXIT_FAILURE;
   }
 
-  std::cout << "OK: equivalent\n";
+  ok_msg("equivalent C++");
+
   return EXIT_SUCCESS;
 }

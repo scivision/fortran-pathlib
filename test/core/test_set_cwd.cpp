@@ -36,7 +36,7 @@ std::cout << "New working directory: " << cwd << "\n";
 if (!fs_equivalent(cwd, s2))
   err("chdir failed: " + s2 + " /= " + cwd);
 
-std::cout << "OK: chdir\n";
+ok_msg("set_cwd C++");
 
 return EXIT_SUCCESS;
 }

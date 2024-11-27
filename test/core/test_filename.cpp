@@ -6,6 +6,8 @@
 #include <cstdlib>
 
 #include "ffilesystem.h"
+#include "ffilesystem_test.h"
+
 
 int check(std::string_view in, std::string_view ref){
   std::string r = fs_file_name(in);
@@ -41,6 +43,7 @@ int main() {
     return EXIT_FAILURE;
   }
 
-  std::cout << "PASS: filename()\n";
+  ok_msg("file_name C++");
+
   return EXIT_SUCCESS;
 }

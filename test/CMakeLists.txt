@@ -56,7 +56,7 @@ if(ffilesystem_bench)
 endif()
 
 foreach(t IN ITEMS core environment
-  executable exepath
+  executable
   libpath symlink)
 
 add_subdirectory(${t})

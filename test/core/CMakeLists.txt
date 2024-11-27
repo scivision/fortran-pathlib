@@ -5,6 +5,7 @@ if(HAVE_Fortran_FILESYSTEM)
 set(tests is_absolute absolute
 canonical realpath
 equivalent
+exepath
 expanduser
 filename
 filesize space
@@ -68,6 +69,10 @@ set_tests_properties(Fortran_filesystem_type Fortran_space PROPERTIES FIXTURES_R
 
 set_tests_properties(Fortran_canonical PROPERTIES FIXTURES_REQUIRED "expanduser")
 
+# TARGET_FILE_NAME to allow for macOS possible non-canonical result
+# and symlinked / special filesystems like WSL
+set_tests_properties(Fortran_exepath PROPERTIES PASS_REGULAR_EXPRESSION $<TARGET_FILE_NAME:test_exepath_fortran>)
+
 endif()
 
 
@@ -76,7 +81,9 @@ absolute
 canonical
 copyfile
 equivalent
-expanduser core
+expanduser
+exepath
+core
 filename filesize
 hard_link
 is_absolute
@@ -147,7 +154,9 @@ set_tests_properties(Cpp_mkdtemp PROPERTIES FIXTURES_REQUIRED "mkdir")
 
 set_tests_properties(Cpp_copyfile PROPERTIES FIXTURES_REQUIRED filesize)
 
-
+# TARGET_FILE_NAME to allow for macOS possible non-canonical result
+# and symlinked / special filesystems like WSL
+set_tests_properties(Cpp_exepath PROPERTIES PASS_REGULAR_EXPRESSION $<TARGET_FILE_NAME:test_exepath_cpp>)
 
 if(HAVE_Fortran_FILESYSTEM)
 

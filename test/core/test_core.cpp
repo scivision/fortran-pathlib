@@ -29,54 +29,6 @@ void test_as_posix(){
   std::cout << "OK: as_posix\n";
 }
 
-void test_filename()
-{
-
-if(fs_file_name("") != "")
-  err("filename empty: " + fs_file_name(""));
-
-std::cout << "PASS:filename:empty\n";
-
-if (fs_file_name("a/b/c") != "c")
-  err("file_name failed: " + fs_file_name("a/b/c"));
-
-if (fs_file_name("a") != "a")
-  err("file_name idempotent failed: " + fs_file_name("a"));
-
-if(fs_file_name("file_name") != "file_name")
-  err("file_name plain filename: " + fs_file_name("file_name"));
-
-auto cwd = fs_get_cwd();
-if(cwd.empty())
-  err("file_name cwd");
-if(std::string nr = fs_file_name(fs_root(cwd)); !nr.empty())
-  err("file_name root: " + nr);
-
-if(fs_file_name(".file_name") != ".file_name")
-  err("file_name leading dot filename: " + fs_file_name(".file_name"));
-
-if(fs_file_name("./file_name") != "file_name")
-  err("file_name leading dot filename cwd: " + fs_file_name("./file_name"));
-
-if(fs_file_name("file_name.txt") != "file_name.txt")
-  err("file_name leading dot filename w/ext");
-
-if(fs_file_name("./file_name.txt") != "file_name.txt")
-  err("file_name leading dot filename w/ext and cwd");
-
-if(fs_file_name("../file_name.txt") != "file_name.txt")
-  err("file_name leading dot filename w/ext up " + fs_file_name("../file_name.txt"));
-
-if(fs_is_windows() && fs_file_name("c:\\my\\path") != "path")
-  err("file_name windows: " + fs_file_name("c:\\my\\path"));
-
-if(fs_is_windows() && fs_pathsep() != ';')
-  err("pathsep windows");
-if(!fs_is_windows() && fs_pathsep() != ':')
-  err("pathsep unix");
-
-}
-
 
 int main() {
 
@@ -90,7 +42,11 @@ int main() {
 #endif
 
   test_as_posix();
-  test_filename();
+
+  if(fs_is_windows() && fs_pathsep() != ';')
+    err("pathsep windows");
+  if(!fs_is_windows() && fs_pathsep() != ':')
+    err("pathsep unix");
 
   return EXIT_SUCCESS;
 }

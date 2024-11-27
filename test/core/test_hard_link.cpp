@@ -1,22 +1,20 @@
-#include "ffilesystem.h"
-
 #include <iostream>
 
 #include <cstdlib>
 #include <cstdint>
 
+#include "ffilesystem.h"
+#include "ffilesystem_test.h"
+
+
 int main() {
 
-  uintmax_t c = fs_hard_link_count(".");
+  std::uintmax_t c = fs_hard_link_count(".");
 
-  if(c < 1){
-    std::cerr << "ERROR: hard_link_count: " << c << "\n";
-    return EXIT_FAILURE;
-  }
+  if(c < 1)
+    err("hard_link_count: " + std::to_string(c));
 
-
-
-  std::cout << "OK: hard_link_count(.) " << c << "\n";
+  ok_msg("hard_link_count C++");
 
   return EXIT_SUCCESS;
 }

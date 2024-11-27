@@ -1,6 +1,10 @@
 #include <iostream>
-#include "ffilesystem.h"
 #include <cstdlib>
+
+
+#include "ffilesystem.h"
+#include "ffilesystem_test.h"
+
 
 int main() {
 
@@ -10,28 +14,24 @@ if (fs_is_absolute("")) {
 }
 
 if(fs_is_windows()){
-    if (!fs_is_absolute("J:/")) {
-        std::cerr << "is_absolute(J:/) on Windows should be true\n";
-        return EXIT_FAILURE;
-    }
-    if (!fs_is_absolute("j:/")) {
-        std::cerr << "is_absolute(j:/) on Windows should be true\n";
-        return EXIT_FAILURE;
-    }
-    if (fs_is_absolute("/")) {
-        std::cerr << "is_absolute(/) on Windows should be false\n";
-        return EXIT_FAILURE;
-    }
+  if (!fs_is_absolute("J:/"))
+    err("is_absolute(J:/) on Windows should be true");
+
+  if (!fs_is_absolute("j:/"))
+    err("is_absolute(j:/) on Windows should be true");
+
+  if (fs_is_absolute("/"))
+    err("is_absolute(/) on Windows should be false");
+
 } else {
-    if (!fs_is_absolute("/")) {
-        std::cerr << "is_absolute(/) on Unix should be true\n";
-        return EXIT_FAILURE;
-    }
-    if (fs_is_absolute("j:/")) {
-        std::cerr << "is_absolute(j:/) on Unix should be false\n";
-        return EXIT_FAILURE;
-    }
+  if (!fs_is_absolute("/"))
+    err("is_absolute(/) on Unix should be true");
+
+  if (fs_is_absolute("j:/"))
+    err("is_absolute(j:/) on Unix should be false");
 }
 
-    return EXIT_SUCCESS;
+  ok_msg("is_absolute C++");
+
+  return EXIT_SUCCESS;
 }

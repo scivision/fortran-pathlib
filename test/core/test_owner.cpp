@@ -1,7 +1,9 @@
 #include <iostream>
+#include <cstdlib>
+
 #include "ffilesystem.h"
 #include "ffilesystem_test.h"
-#include <cstdlib>
+
 
 int main(
 #if __has_cpp_attribute(maybe_unused)
@@ -34,6 +36,8 @@ int argc, char *argv[]) {
 
   if (fs_getenv("CI") == "true")
     std::cerr << "mismatched username and owner can happen on CI systems\n";
+
+  ok_msg("get_owner C++");
 
   return EXIT_SUCCESS;
 }

@@ -32,7 +32,7 @@ int main(){
   if(fs_is_file("."))
     err("fs_is_file .");
 
-  std::cout << "OK: is_file: backend " << fs_backend() << "\n";
+  ok_msg("is_file C++");
 
   return EXIT_SUCCESS;
 }

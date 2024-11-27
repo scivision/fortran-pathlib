@@ -6,6 +6,8 @@
 #include <cstdlib>
 
 #include "ffilesystem.h"
+#include "ffilesystem_test.h"
+
 
 int check(std::string_view in, std::string_view ref){
   std::string r = fs_parent(in);
@@ -42,6 +44,7 @@ test_cases = {
     return EXIT_FAILURE;
   }
 
-  std::cout << "PASS: parent()\n";
+  ok_msg("parent C++");
+
   return EXIT_SUCCESS;
 }

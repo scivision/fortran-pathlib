@@ -11,6 +11,7 @@ endif()
 
 add_executable(test_libpath_cpp test_libpath.cpp)
 target_link_libraries(test_libpath_cpp PRIVATE ffilesystem)
+target_include_directories(test_libpath_cpp PRIVATE ..)
 
 add_test(NAME Cpp_libpath COMMAND test_libpath_cpp)
 

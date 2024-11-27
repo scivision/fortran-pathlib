@@ -54,7 +54,7 @@ char* argv[])
   if (!fs_is_dir(fn))
     err("fs_is_dir " + fn);
 
-  std::cout << "OK: is_dir: backend " << fs_backend() << "\n";
+  ok_msg("is_dir C++");
 
   return EXIT_SUCCESS;
 }

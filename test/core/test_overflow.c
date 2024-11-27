@@ -98,5 +98,6 @@ int main(void){
   if(i > 0)
     return EXIT_FAILURE;
 
+  printf("OK: mkdtemp\n");
   return EXIT_SUCCESS;
 }

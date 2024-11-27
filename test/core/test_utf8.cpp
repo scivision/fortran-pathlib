@@ -5,6 +5,7 @@
 #include "ffilesystem.h"
 #include "ffilesystem_test.h"
 
+
 int main()
 {
 
@@ -30,6 +31,8 @@ for ( const auto &u : {smiley, wink, hello} ) {
   if (u1 != u)
     err("canonical UTF8: "  + u1 + " != " + u);
 }
+
+ok_msg("UTF8");
 
 return EXIT_SUCCESS;
 }

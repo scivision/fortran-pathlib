@@ -3,10 +3,12 @@
 #include <string>
 
 #include "ffilesystem.h"
+#include "ffilesystem_test.h"
 
 #ifdef _MSC_VER
 #include <crtdbg.h>
 #endif
+
 
 int main()
 {
@@ -28,7 +30,7 @@ if(!fs_is_dir(tdir)){
 
 std::cout << "C++ mkdtemp: " << tdir << "\n";
 
-std::cout << "OK: C++ mkdtemp\n";
+ok_msg("mkdtemp C++");
 
 return EXIT_SUCCESS;
 

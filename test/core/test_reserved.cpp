@@ -8,10 +8,10 @@
 #endif
 
 #include "ffilesystem.h"
-
 #include "ffilesystem_test.h"
 
-int main(void){
+
+int main(){
 
 #ifdef _MSC_VER
   _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
@@ -112,7 +112,7 @@ if(!fs_is_windows()){
       err("is_symlink");
     std::cout << "OK: is_symlink() " << r << "\n";
 
-    std::cout << "PASS: test_reserved.cpp\n";
+    ok_msg("reserved C++");
 
     return EXIT_SUCCESS;
 }

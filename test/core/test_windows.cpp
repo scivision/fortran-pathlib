@@ -9,7 +9,9 @@
 #include "ffilesystem.h"
 #include "ffilesystem_test.h"
 
-int main(int argc, char** argv){
+
+int main(int argc, char** argv)
+{
 
 #ifdef _MSC_VER
 _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
@@ -39,6 +41,8 @@ if(long_path2.empty())
 
 if (long_path != long_path2)
   err("long_path != long_path2");
+
+ok_msg("shortname and longname C++");
 
 return EXIT_SUCCESS;
 }

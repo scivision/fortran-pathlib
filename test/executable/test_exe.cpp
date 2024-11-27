@@ -3,12 +3,11 @@
 #include <string>
 #include <string_view>
 
-#include "ffilesystem.h"
-
 #ifdef _MSC_VER
 #include <crtdbg.h>
 #endif
 
+#include "ffilesystem.h"
 #include "ffilesystem_test.h"
 
 
@@ -38,16 +37,16 @@ std::string noexe = "test_noexe";
 
 // Empty string
 if(fs_is_exe(""))
-    err("test_exe: is_exe('') should be false");
+  err("test_exe: is_exe('') should be false");
 
 // Non-existent file
 if (fs_is_file("not-exist"))
-    err("test_exe: not-exist-file should not exist.");
+  err("test_exe: not-exist-file should not exist.");
 if (fs_is_exe("not-exist"))
-    err("test_exe: not-exist-file cannot be executable");
+  err("test_exe: not-exist-file cannot be executable");
 auto p = fs_get_permissions("not-exist");
 if(!p.empty())
-    err("test_exe: get_permissions('not-exist') should fail");
+  err("test_exe: get_permissions('not-exist') should fail");
 
 fs_touch(exe);
 fs_touch(noexe);
@@ -56,7 +55,7 @@ fs_set_permissions(exe, 0, 0, 1);
 fs_set_permissions(noexe, 0, 0, -1);
 
 if(fs_is_exe(fs_parent(exe)))
-    err("test_exe: is_exe() should not detect directory " + fs_parent(exe));
+  err("test_exe: is_exe() should not detect directory " + fs_parent(exe));
 
 p = fs_get_permissions(exe);
 if(p.empty())
@@ -89,7 +88,7 @@ fs_remove(noexe);
 // chmod(true)
 fs_touch(exe);
 if (!fs_is_file(exe))
-    err("test_exe: " + exe + " is not a file.");
+  err("test_exe: " + exe + " is not a file.");
 
 p = fs_get_permissions(exe);
 if(p.empty())
@@ -120,7 +119,7 @@ if (!fs_is_windows() && p[2] != 'x'){
 // chmod(false)
 fs_touch(noexe);
 if (!fs_is_file(noexe))
-    err("test_exe: " + noexe + " is not a file.");
+  err("test_exe: " + noexe + " is not a file.");
 
 p = fs_get_permissions(noexe);
 if(p.empty())
@@ -164,7 +163,7 @@ std::cout << "which(" << exe << ") " << r << "\n";
 fs_remove(exe);
 fs_remove(noexe);
 
-std::cout << "OK: c++ test_exe\n";
+ok_msg("is_exe C++");
 
 return EXIT_SUCCESS;
 }

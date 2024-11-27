@@ -1,8 +1,9 @@
+#include <cstdlib>
+#include <iostream>
+
 #include "ffilesystem.h"
 #include "ffilesystem_test.h"
 
-#include <cstdlib>
-#include <iostream>
 
 int main() {
   std::string r;
@@ -67,7 +68,7 @@ int main() {
   if(r != "dir.h5/.hdf5")
       err("with_suffix: " + r);
 
-  std::cout << "OK: with_suffix\n";
+  ok_msg("with_suffix C++");
 
   return EXIT_SUCCESS;
 }

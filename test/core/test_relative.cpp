@@ -6,6 +6,7 @@
 #include <tuple>
 
 #include "ffilesystem.h"
+#include "ffilesystem_test.h"
 
 
 int main() {
@@ -59,6 +60,7 @@ if(fail){
     return EXIT_FAILURE;
 }
 
-  std::cout << "OK: relative\n";
+  ok_msg("relative_to C++");
+
   return EXIT_SUCCESS;
 }

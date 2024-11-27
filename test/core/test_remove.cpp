@@ -40,7 +40,7 @@ main(int argc, char* argv[])
     err("remove(" + j + ") failed");
   }
 
-  std::cout << "OK: filesystem remove non-ascii.  Backend " << fs_backend() << "\n";
+  ok_msg("remove(" + j + ") C++");
 
   return EXIT_SUCCESS;
 }

@@ -25,6 +25,7 @@ WORKING_DIRECTORY $<TARGET_FILE_DIR:test_symlink_cpp>
 )
 
 foreach(t IN ITEMS is_symlink_cpp symlink_cpp)
+  target_include_directories(test_${t} PRIVATE ..)
   target_link_libraries(test_${t} PRIVATE ffilesystem)
 endforeach()
 

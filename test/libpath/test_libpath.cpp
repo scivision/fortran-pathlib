@@ -7,6 +7,7 @@
 #endif
 
 #include "ffilesystem.h"
+#include "ffilesystem_test.h"
 
 
 int main()
@@ -22,26 +23,21 @@ int main()
 
   std::string path = fs_lib_path();
 
-  if(path.empty()){
-    std::cerr << "test_binpath: lib_path is empty: " << path << "\n";
-    return EXIT_FAILURE;
-  }
+  if(path.empty())
+    err("test_binpath: lib_path is empty: " + path);
 
-  if(!fs_exists(path)){
-    std::cerr << "test_binpath: lib_path should exist: " << path << "\n";
-    return EXIT_FAILURE;
-  }
+  if(!fs_exists(path))
+    err("test_binpath: lib_path should exist: " + path);
 
-  if(fs_is_dir(path)){
-    std::cerr << "test_binpath: lib_path should not be a directory: " << path << "\n";
-    return EXIT_FAILURE;
-  }
+  if(fs_is_dir(path))
+    err("test_binpath: lib_path should not be a directory: " + path);
 
   if(fs_is_file(path)){
-    std::cout << path << "\n";
+    ok_msg("libpath: " + path);
     return EXIT_SUCCESS;
   }
 
-  std::cerr << "test_binpath: lib_path should be a regular file: " << path << "\n";
+  err("test_binpath: lib_path should be a regular file: " + path);
+
   return EXIT_FAILURE;
 }

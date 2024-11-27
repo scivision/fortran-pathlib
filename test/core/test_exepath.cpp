@@ -7,6 +7,7 @@
 #endif
 
 #include "ffilesystem.h"
+#include "ffilesystem_test.h"
 
 
 int main()
@@ -27,6 +28,8 @@ int main()
   }
 
   std::cout << path << "\n";
+
+  ok_msg("exe_path C++");
 
   return EXIT_SUCCESS;
 }

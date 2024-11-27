@@ -6,6 +6,7 @@
 #include <cstdlib>
 
 #include "ffilesystem.h"
+#include "ffilesystem_test.h"
 
 
 int main() {
@@ -70,6 +71,7 @@ if(fail){
   return EXIT_FAILURE;
 }
 
-  std::cout << "OK: root(), root_name(): C++\n";
+  ok_msg("root, root_name C++");
+
   return EXIT_SUCCESS;
 }

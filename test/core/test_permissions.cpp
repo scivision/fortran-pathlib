@@ -2,12 +2,11 @@
 #include <cstdlib>
 #include <string>
 
-#include "ffilesystem.h"
-
 #ifdef _MSC_VER
 #include <crtdbg.h>
 #endif
 
+#include "ffilesystem.h"
 #include "ffilesystem_test.h"
 
 
@@ -92,10 +91,12 @@ std::cerr << "SKIP: due to not having C++23 string contains support\n";
 #endif
 
 if(!fs_exists(nowrite))
-    err(nowrite + " should exist");
+  err(nowrite + " should exist");
 
 if(!fs_is_file(nowrite))
-    err(nowrite + " should be a file");
+  err(nowrite + " should be a file");
+
+ok_msg("permissions C++");
 
 return EXIT_SUCCESS;
 }

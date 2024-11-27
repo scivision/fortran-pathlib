@@ -66,5 +66,7 @@ if(h.find(r) == std::string::npos)
 
 std::cout << "PASSED: canonical non-ASCII file\n";
 
+ok_msg("canonical C++");
+
 return EXIT_SUCCESS;
 }

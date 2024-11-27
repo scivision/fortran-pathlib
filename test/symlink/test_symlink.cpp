@@ -1,9 +1,11 @@
 #include <iostream>
-#include "ffilesystem.h"
-#include "ffilesystem_test.h"
 #include <cstdlib>
 #include <string>
 #include <string_view>
+
+#include "ffilesystem.h"
+#include "ffilesystem_test.h"
+
 
 int
 main(
@@ -135,7 +137,7 @@ int argc, char* argv[])
     std::cout << "PASSED: create_symlink() with non-ASCII link " << j << "\n";
   }
 
-  std::cout << "OK: filesystem symbolic links\n";
+  ok_msg("create_symlink C++");
 
   return 0;
 }

@@ -6,33 +6,35 @@
 #include <tuple>
 
 #include "ffilesystem.h"
+#include "ffilesystem_test.h"
 
 
 int main() {
 
-    const std::vector<std::tuple<std::string_view, std::string_view, std::string_view>> tests = {
-        {"", "", ""},
-        {"a", "", "a"},
-        {"", "b", "b"},
-        {"a/b/", "c/", "a/b/c"},
-        {"/", "", "/"},
-        {"", "/", "/"},
-        {"a", "b//", "a/b"},
-        {"a//", "b//", "a/b"},
-        {"a/b/../", "c/d/../", "a/c"},
-        {"a/b", "..", "a"},
-        {"a/b", "c/d", "a/b/c/d"},
-        {"ab/cd", "/ef", "/ef"}
-    };
+  const std::vector<std::tuple<std::string_view, std::string_view, std::string_view>> tests = {
+    {"", "", ""},
+    {"a", "", "a"},
+    {"", "b", "b"},
+    {"a/b/", "c/", "a/b/c"},
+    {"/", "", "/"},
+    {"", "/", "/"},
+    {"a", "b//", "a/b"},
+    {"a//", "b//", "a/b"},
+    {"a/b/../", "c/d/../", "a/c"},
+    {"a/b", "..", "a"},
+    {"a/b", "c/d", "a/b/c/d"},
+    {"ab/cd", "/ef", "/ef"}
+  };
 
-    for (const auto& [a, b, expected] : tests) {
-        std::string result = fs_join(a, b);
-        if (result != expected) {
-            std::cerr << "FAILED: join(" << a << ", " << b << ") -> "  << result  << " (expected: "  << expected << ")\n";
-            return EXIT_FAILURE;
-        }
+  for (const auto& [a, b, expected] : tests) {
+    std::string result = fs_join(a, b);
+    if (result != expected) {
+      std::cerr << "FAILED: join(" << a << ", " << b << ") -> "  << result  << " (expected: "  << expected << ")\n";
+      return EXIT_FAILURE;
     }
+  }
 
-  std::cout << "OK: join\n";
+  ok_msg("join C++");
+
   return EXIT_SUCCESS;
 }

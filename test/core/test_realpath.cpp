@@ -1,8 +1,8 @@
-#include "ffilesystem.h"
 #include <iostream>
 #include <cstdlib>
 #include <string>
 
+#include "ffilesystem.h"
 #include "ffilesystem_test.h"
 
 
@@ -52,7 +52,7 @@ if (p.length() >= r.length()){
 if(e)
   err("fs_realpath failed");
 
-std::cout << "OK: C++ realpath\n";
+ok_msg("fs_realpath C++");
 
 return EXIT_SUCCESS;
 

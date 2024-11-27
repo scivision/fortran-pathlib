@@ -2,12 +2,11 @@
 #include <cstdlib>
 #include <string>
 
-#include "ffilesystem.h"
-
 #ifdef _MSC_VER
 #include <crtdbg.h>
 #endif
 
+#include "ffilesystem.h"
 #include "ffilesystem_test.h"
 
 
@@ -97,7 +96,7 @@ fs_setenv(k, v);
 if (std::string e = fs_getenv(k); e != v)
   err("Fortran: getenv " + k + "=" + e + " != " + v);
 
-std::cout << "OK: C++ environment\n";
+ok_msg("getenv tempdir setenv C++");
 
 return EXIT_SUCCESS;
 }

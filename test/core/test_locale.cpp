@@ -3,6 +3,7 @@
 #include <string>
 
 #include "ffilesystem.h"
+#include "ffilesystem_test.h"
 
 
 int main(){
@@ -10,6 +11,8 @@ int main(){
 
   std::cout << "locale: " << loc << "\n";
   // macOS and MSVC have empty locale. Don't fail
+
+  ok_msg("locale C++");
 
   return EXIT_SUCCESS;
 }

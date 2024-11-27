@@ -76,6 +76,7 @@ int main() {
   if (s != "some space")
     err("stem space: " + s);
 
-  std::cout << "OK: stem\n";
+  ok_msg("stem C++");
+
   return EXIT_SUCCESS;
 }
