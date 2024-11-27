@@ -131,7 +131,7 @@ std::string fs_root_name(std::string_view path)
 #ifdef HAVE_CXX_FILESYSTEM
   return std::filesystem::path(path).root_name().string();
 #else
-  if(fs_is_windows() && path.length() > 1 && std::isalpha(path.front()) && path[1] == ':')
+  if(fs_is_windows() && path.length() > 1 && path[1] == ':' && std::isalpha(path.front()))
     return std::string(path.substr(0, 2));
 
   return {};
