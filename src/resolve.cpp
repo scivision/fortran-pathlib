@@ -42,7 +42,7 @@ std::string fs_canonical(std::string_view path, const bool strict, const bool ex
     : std::filesystem::weakly_canonical(ex, ec);
 
   if(!ec) FFS_LIKELY
-    return c.generic_string();
+    return fs_drop_slash(c.generic_string());
 
   fs_print_error(path, "canonical", ec);
   return {};
