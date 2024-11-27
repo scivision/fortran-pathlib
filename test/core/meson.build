@@ -37,6 +37,7 @@ cpp_core = [
 'equivalent',
 'expanduser',
 'filename', 'filesize',
+'filesystem_type',
 'hard_link',
 'is_absolute',
 'is_dir',
