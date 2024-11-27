@@ -1,11 +1,24 @@
 #include <iostream>
 #include <cstdlib>
 
+#ifdef _MSC_VER
+#include <crtdbg.h>
+#endif
+
 #include "ffilesystem.h"
 #include "ffilesystem_test.h"
 
 
 int main() {
+#ifdef _MSC_VER
+_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
+_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
+_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
+_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
+#endif
+
 std::string in = "rel";
 std::string base, ref, out;
 const std::string cwd = fs_get_cwd();
@@ -159,6 +172,7 @@ if (out != ref) {
   std::cerr << "absolute('', " << in << "): " << out << " != " << ref << "\n";
   err++;
 }
+std::cout << "PASSED: absolute('', " << in << ")\n";
 
 // non-ASCII
 in = "日本語";
