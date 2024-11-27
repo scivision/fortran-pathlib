@@ -7,14 +7,9 @@ use filesystem
 implicit none
 
 
-call test_resolve()
-print '(a)', "OK: resolve full"
+valgrind : block
 
-contains
-
-subroutine test_resolve()
-
-character(:), allocatable :: p1, p2
+character(:), allocatable :: p1, p2, cwd
 character(*), parameter :: dummy = "nobody.txt"
 
 integer :: L1, L2, L3
@@ -27,8 +22,10 @@ if (L1 < 1) then
   error stop
 end if
 
-if (p1 /= get_cwd()) then
-  write(stderr,*) "ERROR: resolve('.') " // p1 // " /= get_cwd: " // get_cwd()
+cwd = get_cwd()
+
+if (p1 /= cwd) then
+  write(stderr,*) "ERROR: resolve('.') " // p1 // " /= " // cwd
   error stop
 end if
 
@@ -81,14 +78,28 @@ end if
 end if
 
 !> empty
-if(resolve("") /= get_cwd()) then
-  write(stderr,*) "resolve('') " // resolve("") // " /= " // get_cwd()
+if(resolve("") /= cwd) then
+  write(stderr,*) "resolve('') " // resolve("") // " /= " // cwd
   error stop
 end if
 
+!> not strict, not exist
+p1 = resolve("not-exist/dir/../")
+
+if (p1 /= cwd // "/not-exist") then
+  write(stderr,*) 'ERROR: relative dir did not resolve: ' // p1
+  error stop
+end if
+
+!> strict, not exist
+p1 = resolve("not-exist/dir/../", strict=.true.)
+if (len_trim(p1) /= 0) then
+  write(stderr,*) 'ERROR: strict not-exist should return empty string: ' // p1
+  error stop
+end if
+
+end block valgrind
+
 print '(a)', 'OK: resolve'
-
-end subroutine
-
 
 end program
