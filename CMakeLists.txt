@@ -171,11 +171,18 @@ set_property(TARGET ffilesystem::filesystem PROPERTY IMPORTED_LINK_INTERFACE_LAN
 # --- CLI
 
 if(ffilesystem_cli)
+  add_executable(ffilesystem_bench app/benchmark.cpp)
+  target_link_libraries(ffilesystem_bench PRIVATE ffilesystem)
+
   add_executable(fs_cli app/main.cpp)
   target_link_libraries(fs_cli PRIVATE ffilesystem)
   target_compile_definitions(fs_cli PRIVATE "$<$<BOOL:${HAVE_CXX_FILESYSTEM}>:HAVE_CXX_FILESYSTEM>")
-  target_compile_features(fs_cli PRIVATE cxx_std_$<IF:$<IN_LIST:cxx_std_23,CMAKE_CXX_COMPILE_FEATURES>,23,${CMAKE_CXX_STANDARD}>)
   install(TARGETS fs_cli EXPORT ${PROJECT_NAME}-targets)
+
+  if(CMAKE_CXX_STANDARD LESS 20)
+    target_compile_features(fs_cli PRIVATE cxx_std_$<IF:$<IN_LIST:cxx_std_20,CMAKE_CXX_COMPILE_FEATURES>,20,${CMAKE_CXX_STANDARD}>)
+    target_compile_features(ffilesystem_bench PRIVATE cxx_std_$<IF:$<IN_LIST:cxx_std_20,CMAKE_CXX_COMPILE_FEATURES>,20,${CMAKE_CXX_STANDARD}>)
+  endif()
 
   add_executable(libc_version app/libc.cpp)
   add_executable(libcpp_version app/libcxx.cpp)

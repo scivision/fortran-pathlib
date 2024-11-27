@@ -224,5 +224,5 @@ if not meson.is_subproject()
     subdir('test/' + d)
   endforeach
 
-  executable('ffilesystem_bench', 'test/bench/ffilesystem_bench.cpp', link_with: filesystem, include_directories: inc, install: true)
+  executable('ffilesystem_bench', 'app/benchmark.cpp', link_with: filesystem, include_directories: inc, install: true)
 endif
