@@ -116,7 +116,6 @@ endif
 
 fs_check = '''
 #include <filesystem>
-static_assert(__cpp_lib_filesystem, "No C++ filesystem support");
 int main () {
 std::filesystem::path tgt(".");
 auto h = tgt.has_filename();

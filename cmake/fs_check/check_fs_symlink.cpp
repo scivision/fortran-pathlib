@@ -5,10 +5,12 @@
 
 #include <filesystem>
 
-static_assert(__cpp_lib_filesystem, "No C++ filesystem support");
 
-
-int main(int argc, char **argv){
+int main(
+#if __has_cpp_attribute(maybe_unused)
+[[maybe_unused]]
+#endif
+int argc, char **argv){
 
 std::string_view exe = argv[0];
 

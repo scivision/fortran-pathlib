@@ -22,14 +22,9 @@ check_source_compiles(CXX
 #include <cstdlib>
 #include <filesystem>
 
-static_assert(__cpp_lib_filesystem, "No C++ filesystem support");
-
-namespace fs = std::filesystem;
-
-
 int main () {
-fs::path tgt(".");
-auto h = tgt.has_filename();
+std::filesystem::path tgt(".");
+bool h = tgt.has_filename();
 return EXIT_SUCCESS;
 }
 ]=]
