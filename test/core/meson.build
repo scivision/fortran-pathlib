@@ -54,6 +54,7 @@ cpp_core = [
 'reserved', 'root',
 'safe',
 'set_cwd',
+'space',
 'stem',
 'system',
 'touch',
