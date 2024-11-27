@@ -51,13 +51,9 @@ int main() {
   if(fs_exists(p1))
     fs_remove(p1);
 
-  if(!fs_mkdir(p1)){
-    if(fs_is_windows() && fs_backend() == "C"){
-      std::cerr << "mkdir non-ASCII fails on Windows C backend due to CreateDirectoryA\n";
-      return EXIT_SUCCESS;
-    } else
-      err("test_mkdir: non-ASCII mkdir(" + p1 + ")");
-  }
+  if(!fs_mkdir(p1))
+    err("test_mkdir: non-ASCII mkdir(" + p1 + ")");
+
   if(!fs_is_dir(p1))
     err("test_mkdir: non-ASCII is_dir(" + p1 + ")");
 

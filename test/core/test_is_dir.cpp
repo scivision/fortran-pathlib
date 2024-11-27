@@ -40,13 +40,8 @@ char* argv[])
 
   std::string fn = "日本語_is_dir";
 
-  if (!fs_mkdir(fn)){
-    if(fs_is_windows() && fs_backend() == "C"){
-      std::cerr << "mkdir non-ASCII failed on Windows C backend due to CreateDirectoryA\n";
-      return EXIT_SUCCESS;
-    } else
-      err("fs_mkdir " + fn);
-  }
+  if (!fs_mkdir(fn))
+    err("fs_mkdir " + fn);
 
   if (!fs_exists(fn))
     err("fs_exists " + fn);
