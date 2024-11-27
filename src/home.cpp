@@ -1,8 +1,6 @@
 #include <string>
 #include <string_view>
 
-#include <set>
-
 #if __has_include(<format>) && defined(_WIN32)
 #include <format>  // IWYU pragma: keep
 #endif
@@ -95,16 +93,8 @@ std::string fs_expanduser(std::string_view path)
   if(path.front() != '~')
     return std::string(path);
 
-  const std::set <char> filesep = {'/', fs_is_windows() ? '\\' : '/'};
-
-  if(path.length() > 1 &&
-     // second character is not a file separator
-#if __cplusplus >= 202002L
-  !filesep.contains(path[1])
-#else
-  filesep.find(path[1]) == filesep.end()
-#endif
-  )
+  // second character is not a file separator
+  if(path.length() > 1 && !(path[1] == '/' || (fs_is_windows() && path[1] == '\\')))
     return std::string(path);
 
   std::string home = fs_get_homedir();
@@ -116,13 +106,7 @@ std::string fs_expanduser(std::string_view path)
 
 // handle initial duplicated file separators. NOT .lexical_normal to handle "~/.."
   std::string::size_type i = 2;
-  while(i < path.length() &&
-#if __cplusplus >= 202002L
-  filesep.contains(path[i])
-#else
-  filesep.find(path[i]) != filesep.end()
-#endif
-  )
+  while(i < path.length() && (path[i] == '/' || (fs_is_windows() && path[i] == '\\')))
     i++;
 
   std::string e = home + "/" + std::string(path).substr(i);
