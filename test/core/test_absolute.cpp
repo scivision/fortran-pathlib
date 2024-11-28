@@ -23,7 +23,7 @@ std::string in = "rel";
 std::string base, ref, out;
 const std::string cwd = fs_get_cwd();
 
-const bool needs_normal = fs_is_windows() && fs_backend() == "<filesystem>" && fs_compiler().substr(0, 5) != "Clang";
+const bool needs_normal = fs_is_windows() && fs_backend() == "<filesystem>";
 
 int err = 0;
 

@@ -55,7 +55,7 @@ jobs:
     - name: example test
       run: ctest --test-dir example/build -C Release -V
 
-  windows-gcc:
+  msys2:
     runs-on: windows-latest
     timeout-minutes: 10
 

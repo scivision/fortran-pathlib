@@ -1,16 +1,16 @@
 include(CheckIncludeFile)
 
 if(HAVE_CXX_FILESYSTEM)
-  set(_regex "Ffs> <filesystem>")
+  set(_regex "Backend: <filesystem>")
 else()
-  set(_regex "Ffs> C")
+  set(_regex "Backend: C")
 endif()
+
 
 if(TARGET filesystem_cli)
 
 add_test(NAME Fortran_CLI
-COMMAND ${CMAKE_COMMAND} -Dexe=$<TARGET_FILE:filesystem_cli>
--P ${CMAKE_CURRENT_SOURCE_DIR}/stdin.cmake
+COMMAND ${CMAKE_COMMAND} -Dexe=$<TARGET_FILE:filesystem_cli> -P ${CMAKE_CURRENT_SOURCE_DIR}/stdin_nul.cmake
 )
 set_tests_properties(Fortran_CLI PROPERTIES
 LABELS "Fortran"
@@ -19,22 +19,17 @@ PASS_REGULAR_EXPRESSION ${_regex}
 
 endif()
 
+
 if(TARGET fs_cli)
 
-  if(HAVE_CXX_FILESYSTEM)
-    set(_regex "Backend: <filesystem>")
-  else()
-    set(_regex "Backend: C")
-  endif()
+add_test(NAME Cpp_CLI
+COMMAND ${CMAKE_COMMAND} -Dexe=$<TARGET_FILE:fs_cli> -P ${CMAKE_CURRENT_SOURCE_DIR}/stdin_nul.cmake
+)
 
-  add_test(NAME Cpp_CLI
-  COMMAND ${CMAKE_COMMAND} -Dexe=$<TARGET_FILE:fs_cli> -P ${CMAKE_CURRENT_SOURCE_DIR}/stdin_nul.cmake
-  )
-
-  set_tests_properties(Cpp_CLI PROPERTIES
-  LABELS "Cpp"
-  PASS_REGULAR_EXPRESSION ${_regex}
-  )
+set_tests_properties(Cpp_CLI PROPERTIES
+LABELS "Cpp"
+PASS_REGULAR_EXPRESSION ${_regex}
+)
 
 endif()
 

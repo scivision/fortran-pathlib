@@ -20,6 +20,8 @@ character, parameter :: delim = " "
 
 if(is_admin()) write(stderr, '(a)') "WARNING: running as admin / sudo"
 
+print '(a)', "Backend: " // backend()
+
 main : do
   write(stdout, "(a)", advance="no") "Ffs> "
 
