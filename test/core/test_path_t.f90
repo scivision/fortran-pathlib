@@ -46,12 +46,14 @@ logical :: b
 if(is_windows()) then
   p1 = path_t("C:\a")
   p1 = p1%as_posix()
-  if(p1%path() /= "C:/a") error stop "as_posix"
+  s1 = "C:/a"
+
 else
   p1 = path_t("/a")
   p1 = p1%as_posix()
-  if(p1%path() /= "/a") error stop "as_posix"
+  s1 = "/a"
 end if
+if(p1%path() /= s1) error stop "as_posix: expected " // s1 // " but got " // p1%path()
 
 !> absolute
 if(is_windows()) then
