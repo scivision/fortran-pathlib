@@ -63,7 +63,14 @@ jobs:
       fail-fast: false
       matrix:
         cpp: [false, true]
+        compiler: [ { ccname: "gcc", cc: "gcc", cxx: "g++", fcname: "gcc-fortran", fc: "gfortran" },
+                    { ccname: "clang", cc: "clang", cxx: "clang++", fcname: "flang", fc: "flang" } ]
+
       # github actions generally broken for shared lib, even when exe in cwd
+    env:
+      CC: ${{ matrix.compiler.cc }}
+      CXX: ${{ matrix.compiler.cxx }}
+      FC: ${{ matrix.compiler.fc }}
 
     steps:
     - uses: msys2/setup-msys2@v2
@@ -71,7 +78,8 @@ jobs:
         update: true
         install: >-
           mingw-w64-ucrt-x86_64-ninja
-          mingw-w64-ucrt-x86_64-gcc-fortran
+          mingw-w64-ucrt-x86_64-${{ matrix.compiler.ccname }}
+          mingw-w64-ucrt-x86_64-${{ matrix.compiler.fcname }}
 
     - name: Put MSYS2_MinGW64 on PATH
       run: echo "${{ runner.temp }}/msys64/ucrt64/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
