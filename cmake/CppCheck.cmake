@@ -1,4 +1,6 @@
 # Check compiler C++ capabilities
+include(CheckSourceRuns)
+
 
 function(cpp_check)
 
@@ -17,22 +19,22 @@ endif()
 set(CMAKE_TRY_COMPILE_TARGET_TYPE EXECUTABLE)
 
 # some compilers claim to have filesystem, but their libstdc++ doesn't have it.
-check_source_compiles(CXX
+check_source_runs(CXX
 [=[
-#include <cstdlib>
 #include <filesystem>
 
 int main () {
-std::filesystem::path tgt(".");
-bool h = tgt.has_filename();
-return EXIT_SUCCESS;
+std::filesystem::path tgt("a/b");
+
+return !tgt.has_filename();
 }
 ]=]
 HAVE_CXX_FILESYSTEM
 )
 
 if(NOT HAVE_CXX_FILESYSTEM)
-  message(WARNING "C++ stdlib filesystem is broken in libstdc++ ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
+  message(WARNING "C++ stdlib filesystem is broken in libstdc++ ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}
+${HAVE_CXX_FILESYSTEM}")
   return()
 endif()
 

@@ -23,7 +23,7 @@ target_include_directories(ffilesystem_test PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ffilesystem_test PUBLIC ${GNU_stdfs})
 target_compile_features(ffilesystem_test PUBLIC cxx_std_17)
 
-add_executable(c_fs main_fs.c)
+add_executable(c_fs main.c)
 target_link_libraries(c_fs PRIVATE ffilesystem_test)
 add_test(NAME C_fs COMMAND c_fs)
 
