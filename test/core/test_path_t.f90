@@ -44,23 +44,26 @@ logical :: b
 
 !> as_posix
 if(is_windows()) then
-  p1 = path_t("C:\a")
+  s2 = "C:" // char(92) // "a" // char(92) // "b"
+  p1 = path_t(s2)
   p1 = p1%as_posix()
-  s1 = "C:/a"
-
+  s1 = "C:/a/b"
 else
-  p1 = path_t("/a")
+  s2 = "/a/b"
+  p1 = path_t(s2)
   p1 = p1%as_posix()
-  s1 = "/a"
+  s1 = s2
 end if
-if(p1%path() /= s1) error stop "as_posix: expected " // s1 // " but got " // p1%path()
+if(p1%path() /= s1) then
+  write(stderr, '(a,i0,a,i0)') "as_posix(" // s2 // "): expected " // s1 // " length: ", len(s1), &
+    " but got " // p1%path() // " length:", p1%length()
+  error stop
+endif
+
+print '(a)', "PASS: %as_posix(" // s2 // ") = " // p1%path()
 
 !> absolute
-if(is_windows()) then
-  p1 = path_t("C:/a")
-else
-  p1 = path_t("/a")
-end if
+p1 = path_t(s2)
 p2 = path_t("a/b")
 if(.not. p1%is_absolute()) error stop "is_absolute(abs)"
 if(p2%is_absolute()) error stop "is_absolute(rel)"

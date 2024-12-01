@@ -9,7 +9,7 @@ integer :: c = 0
 
 valgrind : block
 
-character(:), allocatable :: b
+character(:), allocatable :: b, s1
 character :: sep
 
 sep = pathsep()
@@ -36,9 +36,10 @@ print '(a)', "PASSED: as_posix('')"
 
 if(is_windows()) then
 
-b = as_posix("a" // char(92) // "b")
+s1 = "a" // char(92) // "b"
+b = as_posix(s1)
 if (b /= "a/b") then
-  write(stderr,*) "ERROR: as_posix(a" // char(92) // "b): " // b
+  write(stderr,*) "ERROR: as_posix(" // s1 // "): " // b
   c = c+1
 end if
 
