@@ -4,6 +4,7 @@ if(HAVE_Fortran_FILESYSTEM)
 
 set(tests is_absolute absolute
 canonical realpath
+env
 equivalent
 exepath
 expanduser
@@ -80,6 +81,7 @@ set(cpp_tests
 absolute
 canonical
 copyfile
+env
 equivalent
 expanduser
 exepath
@@ -142,6 +144,21 @@ foreach(t IN ITEMS empty locale)
   )
 
 endforeach()
+
+if(TARGET test_env_fortran)
+  add_test(NAME Fortran_NoEnv COMMAND test_env_fortran)
+  set(_noenv Fortran_NoEnv)
+else()
+  set(_noenv)
+endif()
+add_test(NAME Cpp_NoEnv COMMAND test_env_cpp)
+
+if(CMAKE_VERSION VERSION_LESS 3.22 OR "$ENV{CI}")
+  set_tests_properties(Cpp_NoEnv ${_noenv} PROPERTIES DISABLED true)
+else()
+  set_tests_properties(Cpp_NoEnv ${_noenv} PROPERTIES ENVIRONMENT_MODIFICATION "HOME=unset:;USERPROFILE=unset:;TEMP=unset:;TMPDIR=unset:")
+endif()
+
 
 set_tests_properties(Cpp_locale PROPERTIES
 SKIP_REGULAR_EXPRESSION "locale\:\:facet\:\:\_S\_create\_c\_locale name not valid"

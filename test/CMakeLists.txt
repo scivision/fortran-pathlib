@@ -46,9 +46,7 @@ set(${PROJECT_NAME}_fortran_test_flags
   "$<$<AND:$<Fortran_COMPILER_ID:GNU>,$<VERSION_LESS:$<Fortran_COMPILER_VERSION>,13>>:-Wno-maybe-uninitialized>"
 )
 
-foreach(t IN ITEMS core environment
-  executable
-  libpath symlink)
+foreach(t IN ITEMS core executable libpath symlink)
 
 add_subdirectory(${t})
 

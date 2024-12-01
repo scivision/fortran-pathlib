@@ -6,7 +6,7 @@
 #include "ffilesystem.h"
 
 int main() {
-  const std::string t = fs_filesystem_type(fs_is_windows() ? std::getenv("SYSTEMDRIVE") : "/");
+  const std::string t = fs_filesystem_type(fs_is_windows() ? fs_getenv("SYSTEMDRIVE") : "/");
 
   if (t.empty()) {
     std::cerr << "Unknown filesystem type, see type ID in stderr to update fs_get_type()\n";

@@ -1,3 +1,10 @@
+env = environment()
+env.unset('USERPROFILE')
+env.unset('HOME')
+env.unset('TMPDIR')
+env.unset('TEMP')
+
+
 if fortran
 
 core_tests = ['is_absolute', 'absolute',
@@ -10,6 +17,7 @@ core_tests = ['is_absolute', 'absolute',
 'is_subdir', 'join', 'normal', 'parent', 'root', 'separator', 'stem',
 'permissions', 'reserved',
 'safe',
+'setenv',
 'set_cwd',
 'suffix', 'with_suffix',
 'resolve',
@@ -26,6 +34,11 @@ tec = executable(t + '_fortran', 'test_' + t + '.f90', link_with: filesystem, in
 test(t + '_fortran', tec, suite: 'fortran', workdir: meson.current_build_dir())
 
 endforeach
+
+tenv = executable('env_fortran', 'test_env.f90', link_with: filesystem, include_directories: inc)
+
+test('Env_fortran', tenv, suite: 'fortran')
+test('NoEnv_fortran', tenv, suite: 'fortran', env: env)
 
 endif
 
@@ -70,3 +83,8 @@ foreach t : cpp_core
     test(t + '_cpp', t_cpp, suite: 'cpp', workdir: meson.current_build_dir())
 
 endforeach
+
+tenv = executable('env_cpp', 'test_env.cpp', link_with: filesystem, include_directories: [inc, '..'])
+
+test('Env_cpp', tenv, suite: 'cpp')
+test('NoEnv_cpp', tenv, suite: 'cpp', env: env)

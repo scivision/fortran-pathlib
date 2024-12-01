@@ -219,7 +219,7 @@ endif
 endif
 
 if not meson.is_subproject()
-  foreach d : ['core', 'environment', 'executable']
+  foreach d : ['core', 'executable']
     subdir('test/' + d)
   endforeach
 
