@@ -24,11 +24,15 @@ if(.not. is_windows() .and. .not. sep == ":") then
   c = c+1
 end if
 
+print '(a)', "PASSED: path separator"
+
 b = as_posix("")
 if (b /= "") then
   write(stderr,*) "ERROR: as_posix empty: " // b, len_trim(b)
   c = c+1
 end if
+
+print '(a)', "PASSED: as_posix('')"
 
 if(is_windows()) then
 

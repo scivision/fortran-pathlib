@@ -129,10 +129,12 @@ import
 character(kind=C_CHAR), intent(in) :: path(*)
 end function
 
-subroutine fs_as_posix(path) bind(C)
+integer (C_SIZE_T) function fs_as_posix(path, result, buffer_size) bind(C)
 import
-character(kind=C_CHAR), intent(inout) :: path(*)
-end subroutine
+character(kind=C_CHAR), intent(in) :: path(*)
+character(kind=C_CHAR), intent(out) :: result(*)
+integer(C_SIZE_T), intent(in), value :: buffer_size
+end function
 
 logical(C_BOOL) function fs_is_empty(path) bind(C)
 import
@@ -594,15 +596,9 @@ end function
 function as_posix(path) result(r)
 !! force Posix file separator "/"
 character(*), intent(in) :: path
-character(:), allocatable :: r
-
-character(kind=c_char, len=:), allocatable :: cbuf
-integer :: N
-N = len_trim(path)
-allocate(character(N+1) :: cbuf)
-cbuf = trim(path) // C_NULL_CHAR
-call fs_as_posix(cbuf)
-r = cbuf(:N)
+include "ifc0a.inc"
+N = fs_as_posix(trim(path) // C_NULL_CHAR, cbuf, N)
+include "ifc0b.inc"
 end function
 
 

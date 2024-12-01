@@ -43,19 +43,6 @@ fs_slash_first(std::string_view path)
 }
 
 
-void fs_as_posix(char* path)
-{
-// force posix file seperator on Windows
-  if(!(fs_is_windows() || fs_is_cygwin()))
-    return;
-
-  for (char* p = path; *p != '\0'; p++) {
-    if (*p == '\\')
-      *p = '/';
-  }
-}
-
-
 std::string::size_type fs_strncpy(const char* path, char* result, const std::string::size_type buffer_size)
 {
 // check size before copy

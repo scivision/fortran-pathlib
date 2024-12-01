@@ -248,7 +248,7 @@ bool fs_is_empty(const char*);
 
 bool fs_is_safe_name(const char*);
 
-void fs_as_posix(char*);
+size_t fs_as_posix(const char*, char*, const size_t);
 
 size_t fs_normal(const char*, char*, const size_t);
 

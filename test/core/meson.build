@@ -32,7 +32,7 @@ endif
 
 cpp_core = [
 'absolute',
-'canonical', 'core',
+'canonical',
 'copyfile',
 'equivalent',
 'expanduser',
@@ -53,6 +53,7 @@ cpp_core = [
 'realpath', 'relative',
 'reserved', 'root',
 'safe',
+'separator',
 'set_cwd',
 'space',
 'stem',

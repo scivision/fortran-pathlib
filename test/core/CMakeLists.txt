@@ -83,7 +83,6 @@ copyfile
 equivalent
 expanduser
 exepath
-core
 filename filesize
 filesystem_type
 hard_link
@@ -102,6 +101,7 @@ proximate
 realpath relative
 reserved root
 safe
+separator
 set_cwd
 space
 stem system
