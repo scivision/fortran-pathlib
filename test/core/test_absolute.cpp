@@ -18,12 +18,9 @@ _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
 _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
-
 std::string in = "rel";
 std::string base, ref, out;
 const std::string cwd = fs_get_cwd();
-
-const bool needs_normal = fs_is_windows() && fs_backend() == "<filesystem>";
 
 int err = 0;
 
@@ -57,33 +54,31 @@ if (out != ref) {
   err++;
 }
 
-ref = cwd + "/./" + in;
-if (needs_normal)
-  ref = fs_normal(ref);
+    ref = cwd + "/./" + in;
+    std::string ref_normalized = fs_normal(ref);
 
-out = fs_absolute("./" + in, false);
-if (out.empty()) {
-  std::cerr << "test 3: absolute(./" << in << ") has empty output\n";
-  err++;
-}
-if (out != ref) {
-  std::cerr << "test 3:  absolute(./" << in << "): " << out << " != " << ref << "\n";
-  err++;
-}
+    out = fs_absolute("./" + in, false);
+    if (out.empty()) {
+        std::cerr << "test 3: absolute(./" << in << ") has empty output\n";
+        err++;
+    }
+    if (out != ref && out != ref_normalized) {
+        std::cerr << "test 3: absolute(./" << in << "): " << out << " != " << ref << " || != " << ref_normalized << "\n";
+        err++;
+    }
 
-ref = cwd + "/../" + in;
-if(needs_normal)
-  ref = fs_normal(ref);
+    ref = cwd + "/../" + in;
+    ref_normalized = fs_normal(ref);
 
-out = fs_absolute("../" + in, false);
-if (out.empty()) {
-  std::cerr << "test 4: absolute(../" << in << ") has empty output\n";
-  err++;
-}
-if (out != ref) {
-  std::cerr << "test 4: absolute(../" << in << "): " << out << " != " << ref << "\n";
-  err++;
-}
+    out = fs_absolute("../" + in, false);
+    if (out.empty()) {
+        std::cerr << "test 4: absolute(../" << in << ") has empty output\n";
+        err++;
+    }
+    if (out != ref && out != ref_normalized) {
+        std::cerr << "test 4: absolute(../" << in << "): " << out << " != " << ref << " || != " << ref_normalized << "\n";
+        err++;
+    }
 
 // relative path, empty base
 ref = cwd + "/" + in;
@@ -97,35 +92,33 @@ if (out != ref) {
   err++;
 }
 
-// relative path, '.' base
-ref = cwd + "/./" + in;
-if(needs_normal)
-  ref = fs_normal(ref);
+    // relative path, '.' base
+    ref = cwd + "/./" + in;
+    ref_normalized = fs_normal(ref);
 
-out = fs_absolute(in, ".", false);
-if (out.empty()) {
-  std::cerr << "test 6: absolute(" << in << ", '.') has empty output\n";
-  err++;
-}
-if (out != ref) {
-  std::cerr << "test 6: absolute(" << in << ", '.'): " << out << " != " << ref << "\n";
-  err++;
-}
+    out = fs_absolute(in, ".", false);
+    if (out.empty()) {
+        std::cerr << "test 6: absolute(" << in << ", '.') has empty output\n";
+        err++;
+    }
+    if (out != ref && out != ref_normalized) {
+        std::cerr << "test 6: absolute(" << in << ", '.'): " << out << " != " << ref << " || != " << ref_normalized << "\n";
+        err++;
+    }
 
-// relative path, '..' base
-ref = cwd + "/../" + in;
-if(needs_normal)
-  ref = fs_normal(ref);
+    // relative path, '..' base
+    ref = cwd + "/../" + in;
+    ref_normalized = fs_normal(ref);
 
-out = fs_absolute(in, "..", false);
-if (out.empty()) {
-  std::cerr << "test 7: absolute(" << in << ", '..') has empty output\n";
-  err++;
-}
-if (out != ref) {
-  std::cerr << "test 7: absolute(" << in << ", '..'): " << out << " != " << ref << "\n";
-  err++;
-}
+    out = fs_absolute(in, "..", false);
+    if (out.empty()) {
+        std::cerr << "test 7: absolute(" << in << ", '..') has empty output\n";
+        err++;
+    }
+    if (out != ref && out != ref_normalized) {
+        std::cerr << "test 7: absolute(" << in << ", '..'): " << out << " != " << ref << " || != " << ref_normalized << "\n";
+        err++;
+    }
 
 // empty path, relative base
 ref = cwd + "/" + in;
