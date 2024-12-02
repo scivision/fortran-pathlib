@@ -4,6 +4,8 @@
 #include <filesystem>
 #endif
 
+
+#include <algorithm> // std::unique
 #include <string>
 #include <string_view>
 
@@ -79,10 +81,13 @@ fs_normal(std::string_view path)
 std::string
 fs_drop_slash(std::string_view sv)
 {
-  // drop all trailing "/"
+  // drop all trailing "/" and duplicated internal "/"
   std::string s(sv);
   while(s.length() > 1 && (s.back() == '/' || (fs_is_windows() && s.back() == '\\')))
     s.pop_back();
+
+  s.erase(std::unique(s.begin(), s.end(), [](char a, char b){ return a == '/' && b == '/'; }), s.end());
+
   return s;
 }
 

@@ -22,7 +22,7 @@ const std::vector<std::tuple<std::string_view, std::string_view, std::string_vie
   {".foo.h5", ".txt", ".foo.txt"},
   {".h5", "", ".h5"},
   {".h5", ".h5", ".h5.h5"},
-  {"a//b///c/", ".h5", "a//b///c/.h5"},
+  {"a//b///c/", ".h5", "a/b/c/.h5"},
   {"c:/a/hi.nc", ".h5", "c:/a/hi.h5"},
   {"my/file.h5", ".hdf5", "my/file.hdf5"},
   {"a/boo", ".h5", "a/boo.h5"},

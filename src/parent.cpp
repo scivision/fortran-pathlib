@@ -5,7 +5,6 @@
 
 #ifdef HAVE_CXX_FILESYSTEM
 #include <filesystem>
-#include <algorithm> // std::unique
 #include <iostream> // IWYU pragma: keep
 #else
 #include <vector>
@@ -19,13 +18,10 @@ std::string fs_parent(std::string_view path)
   if(path.empty())
     return ".";
 
-  std::string p;
+  std::string p = fs_drop_slash(path);
 #ifdef HAVE_CXX_FILESYSTEM
   // have to drop_slash on input to get expected parent path -- necessary for AppleClang
-  p = std::filesystem::path(fs_drop_slash(path)).parent_path().generic_string();
-
-  // remove repeated path seperators from p string
-  p.erase(std::unique(p.begin(), p.end(), [](char a, char b){ return a == '/' && b == '/'; }), p.end());
+  p = std::filesystem::path(p).parent_path().generic_string();
 
   if(FS_TRACE) std::cout << "TRACE:parent(" << path << ") => " << p << "\n";
 
@@ -37,8 +33,9 @@ std::string fs_parent(std::string_view path)
 
 #else
 
-  // we don't fully normalize, but we do drop repeated slashes
-  std::vector<std::string> parts = fs_split(fs_drop_slash(path));
+  // don't fully normalize to preserve possible symlinks above parent
+  std::vector<std::string> parts = fs_split(p);
+  p.clear();
 
   if(parts.empty())
     return ".";
