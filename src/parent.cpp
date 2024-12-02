@@ -38,7 +38,7 @@ std::string fs_parent(std::string_view path)
 #else
 
   // we don't fully normalize, but we do drop repeated slashes
-  std::vector<std::string> parts = fs_split(path);
+  std::vector<std::string> parts = fs_split(fs_drop_slash(path));
 
   if(parts.empty())
     return ".";

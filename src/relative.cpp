@@ -15,7 +15,7 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
 {
   // find lexical relative path from base to other
 #ifdef HAVE_CXX_FILESYSTEM
-  return std::filesystem::path(other).lexically_relative(base).lexically_normal().generic_string();
+  return std::filesystem::path(other).lexically_relative(base).generic_string();
 #else
 
   if(base.empty() && other.empty())
@@ -24,8 +24,8 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
   if(base.empty() || other.empty())
     return {};
 
-  const std::vector<std::string> b = fs_normal_vector(base);
-  const std::vector<std::string> o = fs_normal_vector(other);
+  const std::vector<std::string> b = fs_split(fs_drop_slash(base));
+  const std::vector<std::string> o = fs_split(other);
 
   if(b == o)
     return ".";
@@ -55,7 +55,15 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
   for (std::string::size_type j = i; j < Lo; j++)
     r.append(o[j]).push_back('/');
 
-  return fs_drop_slash(r);
+  r = fs_drop_slash(r);
+
+  if(r == "/" || r.empty())
+    r = ".";
+
+  if (other.back() == '/' && r.back() != '/' && r != ".")
+    r.push_back('/');
+
+  return r;
 
 #endif
 }
@@ -66,7 +74,7 @@ std::string fs_proximate_to(std::string_view base, std::string_view other)
 {
 // proximate_to is LEXICAL operation
 #ifdef HAVE_CXX_FILESYSTEM
-  return std::filesystem::path(other).lexically_proximate(base).lexically_normal().generic_string();
+  return std::filesystem::path(other).lexically_proximate(base).generic_string();
 #else
   const std::string r = fs_relative_to(base, other);
   return (r.empty()) ? std::string(other) : r;

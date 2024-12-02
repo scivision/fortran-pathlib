@@ -26,7 +26,10 @@ tests = {
     {"c:/a/b", "c:/a/b", "."},
     {"c:/a/b", "c:/a", ".."},
     {"c:/a/b/c/d", "c:/a/b", "../.."},
-    {"c:/path", "d:/path", "d:/path"}
+    {"c:/path", "d:/path", "d:/path"},
+    {"c:/path", "d:/path/hi/", "d:/path/hi/"},
+    {"c:/path", "d:/path/hi/.", "hi/."},
+    {"c:/path", "d:/path/hi/..", "hi/.."}
 };
 } else {
 tests = {
@@ -40,11 +43,16 @@ tests = {
     {"/a/b", "c", "c"},
     {"c", "/a/b", "/a/b"},
     {"/a/b", "/a/b", "."},
+    {"/a/b", "/a/b/", "."},
+    {"/a/b/", "/a/b", "."},
     {"/a/b", "/a", ".."},
+    {"/a/b", "/a/", "../"},
     {"/a/b/c/d", "/a/b", "../.."},
     {"./this/one", "./this/two", "../two"},
     {"/this/one", "/this/two", "../two"},
-    {"/path/same", "/path/same/hi/..", "."}
+    {"/path/same", "/path/same/hi/", "hi/"},
+    {"/path/same", "/path/same/hi/.", "hi/."},
+    {"/path/same", "/path/same/hi/..", "hi/.."}
 };
 }
 
@@ -57,7 +65,7 @@ for (const auto& [a, b, expected] : tests) {
 }
 
 if(fail){
-    std::cerr << "FAIL: proximate " << fail << " tests failed\n";
+    std::cerr << "FAIL: proximate " << fail << " tests failed.  backend: " << fs_backend() << "\n";
     return EXIT_FAILURE;
 }
 

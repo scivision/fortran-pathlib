@@ -109,10 +109,6 @@ fs_split(std::string_view path)
   std::vector<std::string> parts;
   std::string p = fs_as_posix(path);
 
-  // no empty trailing part for trailing slash
-  if (p.back() == '/')
-    p.pop_back();
-
   // split path, including last component
   std::string::size_type start = 0;
   std::string::size_type end;

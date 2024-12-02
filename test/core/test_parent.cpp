@@ -12,7 +12,7 @@
 int check(std::string_view in, std::string_view ref){
   std::string r = fs_parent(in);
   if (r != ref) {
-    std::cerr << "FAIL: parent(" << in << ") " << r << "\n";
+    std::cerr << "FAIL: parent(" << in << ") " << r << "  expected: " << ref << "\n";
     return 1;
   }
   return 0;
@@ -40,7 +40,7 @@ test_cases = {
   }
 
   if (i != 0) {
-    std::cerr << "FAIL: parent()\n";
+    std::cerr << "FAIL: parent()  backend: " << fs_backend() << "\n";
     return EXIT_FAILURE;
   }
 
