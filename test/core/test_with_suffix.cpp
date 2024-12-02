@@ -1,5 +1,8 @@
 #include <cstdlib>
 #include <iostream>
+#include <vector>
+#include <string_view>
+#include <tuple>
 
 #include "ffilesystem.h"
 #include "ffilesystem_test.h"
@@ -7,66 +10,41 @@
 
 int main()
 {
-  std::string r;
-  std::string ref;
 
-  const bool needs_normal = fs_backend() == "<filesystem>" && (fs_is_msvc() ||
-    fs_is_appleclang() ||
-    (fs_is_windows() && fs_compiler().substr(0, 5) == "Clang"));
+std::string r;
+std::string ref;
 
-  r = fs_with_suffix("", ".h5");
-  if (r != ".h5")
-      err("with_suffix empty path: " + r);
+int fail = 0;
 
-  r = fs_with_suffix("foo.h5", "");
-  if(r != "foo")
-      err("with_suffix empty suffix: " + r);
+const std::vector<std::tuple<std::string_view, std::string_view, std::string_view>> tests = {
+  {"", ".h5", ".h5"},
+  {"foo.h5", "", "foo"},
+  {".foo.h5", ".txt", ".foo.txt"},
+  {".h5", "", ".h5"},
+  {".h5", ".h5", ".h5.h5"},
+  {"a//b///c/", ".h5", "a//b///c/.h5"},
+  {"c:/a/hi.nc", ".h5", "c:/a/hi.h5"},
+  {"my/file.h5", ".hdf5", "my/file.hdf5"},
+  {"a/boo", ".h5", "a/boo.h5"},
+  {"boo", ".h5", "boo.h5"},
+  {"a/b/c.d/", ".hdf5", "a/b/c.d/.hdf5"},
+  {"dir.h5/", ".hdf5", "dir.h5/.hdf5"}
+};
 
+for (const auto& [input, suffix, expected] : tests) {
+  r = fs_with_suffix(input, suffix);
 
-  r = fs_with_suffix(".foo.h5", ".txt");
-  if(r != ".foo.txt")
-      err("with_suffix: " + r);
+  if (r != expected) {
+    std::cerr << "FAIL: with_suffix(" << input << ", " << suffix << " = " + r + "   expected: " << expected << "\n";
+    fail++;
+  } else
+    std::cout << "PASS: with_suffix(" << input << ", " << suffix << " = " + r + "\n";
+}
 
-  r = fs_with_suffix(".h5", "");
-  if(r != ".h5")
-      err("with_suffix: " + r);
-
-  r = fs_with_suffix(".h5", ".h5");
-  if (r != ".h5.h5")
-      err("with_suffix(.h5,.h5) " + r);
-
-  ref = "a/b/c/.h5";
-  r = fs_with_suffix("a//b///c//", ".h5");
-  if(needs_normal)
-    r = fs_normal(r);
-  if(r != ref)
-      err("with_suffix: " + r + " != " + ref);
-
-
-  r = fs_with_suffix("c:/a/hi.nc", ".h5");
-  if (r != "c:/a/hi.h5")
-      err("with_suffix c:/a/hi.nc to .h5: " + r);
-
-  r = fs_with_suffix("my/file.h5", ".hdf5");
-  if(r != "my/file.hdf5")
-      err("with_suffix: " + r);
-
-  r = fs_with_suffix("a/boo", ".h5");
-  if(r != "a/boo.h5")
-      err("with_suffix: " + r);
-
-  r = fs_with_suffix("boo", ".h5");
-  if(r != "boo.h5")
-      err("with_suffix: " + r);
-
-  // this is an odd case that wouldn't be expected to be used
-  r = fs_with_suffix("a/b/c.d/", ".hdf5");
-  if(r != "a/b/c.d/.hdf5")
-      err("with_suffix: " + r);
-
-  r = fs_with_suffix("dir.h5/", ".hdf5");
-  if(r != "dir.h5/.hdf5")
-      err("with_suffix: " + r);
+  if(fail){
+    std::cerr << "Failed: " << fail << " tests  backend: " << fs_backend() << "\n";
+    return EXIT_FAILURE;
+  }
 
   ok_msg("with_suffix C++");
 

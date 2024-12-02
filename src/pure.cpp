@@ -168,23 +168,28 @@ std::string fs_suffix(std::string_view path)
 }
 
 
-std::string fs_join(std::string_view path, std::string_view other){
-#ifdef HAVE_CXX_FILESYSTEM
-  return fs_drop_slash((std::filesystem::path(path) / other).lexically_normal().generic_string());
-#else
+std::string fs_join(std::string_view path, std::string_view other)
+{
+  // does not normalize to preserve possible symlinks
   if(path.empty() && other.empty())
     return {};
-
   if(path.empty())
     return fs_drop_slash(other);
-
   if(other.empty())
     return fs_drop_slash(path);
 
-  if (other[0] == '/' || (fs_is_windows() && fs_is_absolute(other)))
-    return fs_drop_slash(other);
+  std::string p = fs_drop_slash(path);
+  const std::string o = fs_drop_slash(other);
 
-  return fs_normal(std::string(path) + "/" + std::string(other));
+#ifdef HAVE_CXX_FILESYSTEM
+  return (std::filesystem::path(p) / o).generic_string();
+#else
+  if (o.front() == '/' || (fs_is_windows() && fs_is_absolute(o)))
+    return o;
+
+  p.push_back('/');
+
+  return p.append(o);
 #endif
 }
 
@@ -201,7 +206,6 @@ std::string fs_with_suffix(std::string_view path, std::string_view new_suffix)
   // handle directory case: stem is empty
   if(stem.empty())
     return fs_join(path, new_suffix);
-
 
   const std::string r = (parent == ".") ? stem : parent + "/" + stem;
 

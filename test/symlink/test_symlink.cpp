@@ -18,7 +18,7 @@ int argc, char* argv[])
   std::string_view in = argv[0];
 
   const std::string tgt_dir = fs_parent(in);
-  const std::string tgt = tgt_dir + "/test_symlink.txt";
+  const std::string tgt = tgt_dir + "/test_symlink_cpp.txt";
 
   if(!fs_touch(tgt))
     err("touch(" + tgt + ") failed");

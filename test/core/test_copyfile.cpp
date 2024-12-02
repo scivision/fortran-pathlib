@@ -70,8 +70,8 @@ int main() {
   }
 
   // copy empty file
-  const std::string s3 = cwd + "/empty.txt";
-  const std::string s4 = cwd + "/empty_copy.txt";
+  const std::string s3 = cwd + "/empty_copyfile.txt";
+  const std::string s4 = cwd + "/empty_copyfile_copy.txt";
 
   fs_touch(s3);
   ok = fs_copy_file(s3, s4, true);

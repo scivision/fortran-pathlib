@@ -14,7 +14,7 @@ character(:), allocatable :: tgt, rtgt, link, linko, tgt_dir, link_dir
 tgt_dir = parent(getarg(0))
 
 !> create and verify target file
-tgt = join(tgt_dir, "test.txt")
+tgt = join(tgt_dir, "test_symlink_fortran.txt")
 
 if (is_file(tgt)) then
   print *, "deleting old target " // tgt

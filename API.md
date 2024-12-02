@@ -660,8 +660,6 @@ root_name("c:/a/b/c") !< "c:" on Windows, "" on Unix
 ```
 
 Expand user home directory.
-With C++ backend, the path is not normalized.
-With C backend, the path is normalized, to drastically simplify the code.
 
 ```fortran
 expanduser("~/my/path")   !< "/home/user/my/path" on Unix, "<root>/Users/user/my/path" on Windows
@@ -747,12 +745,6 @@ p%proximate_to("d")  !< "d"
 ```
 
 ## System
-
-Is Ffilesystem using C or C++ filesystem backend:
-
-```fortran
-logical :: as_cpp()
-```
 
 Get home directory, or empty string if not found.
 
