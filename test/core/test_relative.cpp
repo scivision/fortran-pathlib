@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <algorithm> // for std::move
 #include <string>
 #include <string_view>
 #include <vector>
@@ -13,27 +14,37 @@ int main() {
 
 int fail = 0;
 
-std::vector<std::tuple<std::string_view, std::string_view, std::string_view>> tests;
-
-if(fs_is_windows()){
-tests = {
-    {"", "", "."},
+std::vector<std::tuple<std::string_view, std::string_view, std::string_view>>
+tests = {{"", "", "."},
     {"Hello", "Hello", "."},
     {"Hello", "Hello/", "."},
-    {"c:/a/b", "c:/", "../.."},
-    {"c:\\a\\b", "c:/", "../.."},
+    {"a/b", "a/b", "."},
+    {"a///b", "a/b", "."},
+    {"a/b", "a///b", "."},
+    {"a/b", "a/b/", "."},
+    {"a/b/", "a/b", "."},
+    {"a/b", "a", ".."},
+    {"a/b", "a/", "../"},
+    {"a", "a/hi/", "hi/"},
+    {"a", "a/hi/.", "hi/."},
+    {"a", "a/hi/..", "hi/.."},
+    {"a/b/c/d", "a/b", "../.."},
+    {"a/b/c/d", "a/b/", "../../"},
+    {"./this/one", "./this/two", "../two"}
+};
+
+std::vector<std::tuple<std::string_view, std::string_view, std::string_view>> tos;
+
+if(fs_is_windows()){
+tos = {
     {"c:/", "c:/a/b", "a/b"},
     {"c:/a/b", "c:/a/b", "."},
     {"c:/a/b", "c:/a", ".."},
-    {"c:/a/b/c/d", "c:/a/b", "../.."},
-    {"c:/path", "d:/path", ""},
-    {"c:/path", "d:/path/hi/", "hi/"},
-    {"c:/path", "d:/path/hi/.", "hi/."},
-    {"c:/path", "d:/path/hi/..", "hi/.."}
+    {"c:/a", "d:/a", ""}
 };
+
 } else {
-tests = {
-    {"", "", "."},
+tos = {
     {"", "/", ""},
     {"/", "", ""},
     {"/", "/", "."},
@@ -42,25 +53,19 @@ tests = {
     {"/dev/null", "/dev/null", "."},
     {"/a/b", "c", ""},
     {"c", "/a/b", ""},
-    {"/a/b", "/a/b", "."},
-    {"/a/b", "/a/b/", "."},
-    {"/a/b/", "/a/b", "."},
-    {"/a/b", "/a", ".."},
-    {"/a/b", "/a/", "../"},
-    {"/a/b/c/d", "/a/b", "../.."},
-    {"./this/one", "./this/two", "../two"},
-    {"/this/one", "/this/two", "../two"},
-    {"/path/same", "/path/same/hi/", "hi/"},
-    {"/path/same", "/path/same/hi/.", "hi/."},
-    {"/path/same", "/path/same/hi/..", "hi/.."}
+    {"/this/one", "/this/two", "../two"}
 };
 }
+
+std::move(tos.begin(), tos.end(), std::back_inserter(tests));
 
 for (const auto& [a, b, expected] : tests) {
     std::string result = fs_relative_to(a, b);
     if (result != expected) {
         fail++;
         std::cerr << "FAIL: relative_to(" << a << ", " << b << ") -> "  << result  << " (expected: "  << expected << ")\n";
+    } else {
+        std::cout << "PASS: relative_to(" << a << ", " << b << ") -> "  << result  << "\n";
     }
 }
 
