@@ -73,9 +73,7 @@ fs_exists(std::string_view path)
 #ifdef HAVE_CXX_FILESYSTEM
   std::error_code ec;
   return std::filesystem::exists(path, ec) && !ec;
-#else
-
-#ifdef _MSC_VER
+#elif defined(_MSC_VER)
   // kwSys:SystemTools:FileExists is much more elaborate with Reparse point checks etc.
   // This way seems to work fine on Windows anyway.
   // io.h
@@ -83,8 +81,6 @@ fs_exists(std::string_view path)
 #else
   // unistd.h
   return !access(path.data(), F_OK);
-#endif
-
 #endif
 }
 

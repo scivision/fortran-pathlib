@@ -56,9 +56,7 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
   if(std::filesystem::copy_file(source, dest, opt, ec) && !ec) FFS_LIKELY
     return true;
 
-#else
-
-#if defined(_WIN32)
+#elif defined(_WIN32)
   // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilea
   if(CopyFileA(source.data(), dest.data(), !overwrite) != 0)
     return true;
@@ -169,8 +167,6 @@ if (FS_TRACE) std::cout << "TRACE::ffilesystem:copy_file: using fallback fread/f
 
   if(rc == 0 && wc == 0)
     return true;
-#endif
-
 #endif
 
   fs_print_error(source, "copy_file");

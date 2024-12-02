@@ -57,14 +57,11 @@ fs_remove(std::string_view path)
   if(std::filesystem::remove(path, ec) && !ec) FFS_LIKELY
     return true;
 
-#else
-
-#ifdef _WIN32
+#elif defined(_WIN32)
   return fs_win32_remove(path);
 #else
   if(remove(path.data()) == 0)
     return true;
-#endif
 #endif
 
   fs_print_error(path, "remove", ec);
