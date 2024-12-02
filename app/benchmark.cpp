@@ -7,6 +7,9 @@
 #include <vector>
 #include <array>
 
+#include <variant>
+#include <unordered_map>
+
 #if __has_include(<ranges>)
 #include <ranges>  // IWYU pragma: keep
 #endif
@@ -35,48 +38,42 @@ auto t = std::chrono::duration<double>::max();
 constexpr bool strict = false;
 constexpr bool expand_tilde = false;
 
+using fs_function = std::function<std::variant<std::string, bool>(std::string_view)>;
+
+std::unordered_map<std::string_view, fs_function> fs_function_map = {
+  {"canonical", [](std::string_view path) { return fs_canonical(path, strict, expand_tilde); }},
+  {"resolve", [](std::string_view path) { return fs_resolve(path, strict, expand_tilde); }},
+  {"drop_slash", [](std::string_view path) { return fs_drop_slash(path); }},
+  {"parent", [](std::string_view path) { return fs_parent(path); }},
+  {"file_name", [](std::string_view path) { return fs_file_name(path); }},
+  {"suffix", [](std::string_view path) { return fs_suffix(path); }},
+  {"normal", [](std::string_view path) { return fs_normal(path); }},
+  {"reserved", [](std::string_view path) { return fs_is_reserved(path); }},
+  {"exists", [](std::string_view path) { return fs_exists(path); }},
+  {"is_dir", [](std::string_view path) { return fs_is_dir(path); }},
+  {"is_char", [](std::string_view path) { return fs_is_char_device(path); }},
+  {"is_file", [](std::string_view path) { return fs_is_file(path); }},
+  {"is_symlink", [](std::string_view path) { return fs_is_symlink(path); }},
+  {"read_symlink", [](std::string_view path) { return fs_read_symlink(path); }},
+  {"which", [](std::string_view path) { return fs_which(path); }},
+  {"homedir", [](std::string_view) { return fs_get_homedir(); }},
+  {"expanduser", [](std::string_view path) { return fs_expanduser(path); }},
+  {"cwd", [](std::string_view) { return fs_get_cwd(); }},
+  {"is_reserved", [](std::string_view path) { return fs_is_reserved(path); }}
+};
+
 // warmup
 std::string h;
 bool b = false;
 
-if (fname == "canonical")
-  h = fs_canonical(path, strict, expand_tilde);
-else if (fname == "resolve")
-  h = fs_resolve(path, strict, expand_tilde);
-else if (fname == "parent")
-  h = fs_parent(path);
-else if (fname == "file_name")
-  h = fs_file_name(path);
-else if (fname == "suffix")
-  h = fs_suffix(path);
-else if (fname == "normal")
-  h = fs_normal(path);
-else if (fname == "reserved")
-  b = fs_is_reserved(path);
-else if (fname == "exists")
-  b = fs_exists(path);
-else if (fname == "is_dir")
-  b = fs_is_dir(path);
-else if (fname == "is_char")
-  b = fs_is_char_device(path);
-else if (fname == "is_file")
-  b = fs_is_file(path);
-else if (fname == "is_symlink")
-  b = fs_is_symlink(path);
-else if (fname == "read_symlink")
-  h = fs_read_symlink(path);
-else if (fname == "which")
-  h = fs_which(path);
-else if (fname == "homedir")
-  h = fs_get_homedir();
-else if (fname == "expanduser")
-  h = fs_expanduser(path);
-else if (fname == "cwd")
-  h = fs_get_cwd();
-else if (fname == "is_reserved")
-  b = fs_is_reserved(path);
-else
-  {
+  auto it = fs_function_map.find(fname);
+  if (it != fs_function_map.end()) {
+    auto result = it->second(path);
+    if (std::holds_alternative<std::string>(result))
+      h = std::get<std::string>(result);
+    else
+      b = std::get<bool>(result);
+  } else {
     std::cerr << "Error: unknown function " << fname << "\n";
     return t;
   }
@@ -92,47 +89,17 @@ for (int i = 0; i < n; ++i)
 {
   auto t0 = std::chrono::steady_clock::now();
 
-  if (fname == "canonical")
-    h = fs_canonical(path, strict, expand_tilde);
-  else if (fname == "resolve")
-    h = fs_resolve(path, strict, expand_tilde);
-  else if (fname == "parent")
-    h = fs_parent(path);
-  else if (fname == "file_name")
-    h = fs_file_name(path);
-  else if (fname == "suffix")
-    h = fs_suffix(path);
-  else if (fname == "normal")
-    h = fs_normal(path);
-  else if (fname == "reserved")
-    b = fs_is_reserved(path);
-  else if (fname == "exists")
-    b = fs_exists(path);
-  else if (fname == "is_dir")
-    b = fs_is_dir(path);
-  else if (fname == "is_char")
-    b = fs_is_char_device(path);
-  else if (fname == "is_file")
-    b = fs_is_file(path);
-  else if (fname == "is_symlink")
-    b = fs_is_symlink(path);
-  else if (fname == "read_symlink")
-    h = fs_read_symlink(path);
-  else if (fname == "which")
-    h = fs_which(path);
-  else if (fname == "homedir")
-    h = fs_get_homedir();
-  else if (fname == "expanduser")
-    h = fs_expanduser(path);
-  else if (fname == "cwd")
-    h = fs_get_cwd();
-  else if (fname == "is_reserved")
-    b = fs_is_reserved(path);
-  else
-    {
-      std::cerr << "Error: unknown function " << fname << "\n";
-      return t;
-    }
+  auto it = fs_function_map.find(fname);
+  if (it != fs_function_map.end()) {
+    auto result = it->second(path);
+    if (std::holds_alternative<std::string>(result))
+      h = std::get<std::string>(result);
+    else
+      b = std::get<bool>(result);
+  } else {
+    std::cerr << "Error: unknown function " << fname << "\n";
+    return t;
+  }
 
   auto t1 = std::chrono::steady_clock::now();
   t = std::min(t, std::chrono::duration_cast<std::chrono::duration<double>>(t1 - t0));
