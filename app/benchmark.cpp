@@ -41,25 +41,25 @@ constexpr bool expand_tilde = false;
 using fs_function = std::function<std::variant<std::string, bool>(std::string_view)>;
 
 std::unordered_map<std::string_view, fs_function> fs_function_map = {
-  {"canonical", [=](std::string_view path) { return fs_canonical(path, strict, expand_tilde); }},
-  {"resolve", [=](std::string_view path) { return fs_resolve(path, strict, expand_tilde); }},
-  {"drop_slash", [](std::string_view path) { return fs_drop_slash(path); }},
-  {"parent", [](std::string_view path) { return fs_parent(path); }},
-  {"file_name", [](std::string_view path) { return fs_file_name(path); }},
-  {"suffix", [](std::string_view path) { return fs_suffix(path); }},
-  {"normal", [](std::string_view path) { return fs_normal(path); }},
-  {"reserved", [](std::string_view path) { return fs_is_reserved(path); }},
-  {"exists", [](std::string_view path) { return fs_exists(path); }},
-  {"is_dir", [](std::string_view path) { return fs_is_dir(path); }},
-  {"is_char", [](std::string_view path) { return fs_is_char_device(path); }},
-  {"is_file", [](std::string_view path) { return fs_is_file(path); }},
-  {"is_symlink", [](std::string_view path) { return fs_is_symlink(path); }},
-  {"read_symlink", [](std::string_view path) { return fs_read_symlink(path); }},
-  {"which", [](std::string_view path) { return fs_which(path); }},
+  {"canonical", [=](std::string_view p) { return fs_canonical(p, strict, expand_tilde); }},
+  {"resolve", [=](std::string_view p) { return fs_resolve(p, strict, expand_tilde); }},
+  {"drop_slash", [](std::string_view p) { return fs_drop_slash(p); }},
+  {"parent", [](std::string_view p) { return fs_parent(p); }},
+  {"file_name", [](std::string_view p) { return fs_file_name(p); }},
+  {"suffix", [](std::string_view p) { return fs_suffix(p); }},
+  {"normal", [](std::string_view p) { return fs_normal(p); }},
+  {"reserved", [](std::string_view p) { return fs_is_reserved(p); }},
+  {"exists", [](std::string_view p) { return fs_exists(p); }},
+  {"is_dir", [](std::string_view p) { return fs_is_dir(p); }},
+  {"is_char", [](std::string_view p) { return fs_is_char_device(p); }},
+  {"is_file", [](std::string_view p) { return fs_is_file(p); }},
+  {"is_symlink", [](std::string_view p) { return fs_is_symlink(p); }},
+  {"read_symlink", [](std::string_view p) { return fs_read_symlink(p); }},
+  {"which", [](std::string_view p) { return fs_which(p); }},
   {"homedir", [](std::string_view) { return fs_get_homedir(); }},
-  {"expanduser", [](std::string_view path) { return fs_expanduser(path); }},
+  {"expanduser", [](std::string_view p) { return fs_expanduser(p); }},
   {"cwd", [](std::string_view) { return fs_get_cwd(); }},
-  {"is_reserved", [](std::string_view path) { return fs_is_reserved(path); }}
+  {"is_reserved", [](std::string_view p) { return fs_is_reserved(p); }}
 };
 
 // warmup

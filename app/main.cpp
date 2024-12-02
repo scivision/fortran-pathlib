@@ -9,6 +9,7 @@
 #include <system_error>
 #include <variant>
 #include <unordered_map>
+#include <type_traits>
 
 #include <chrono> // IWYU pragma: keep
 // needed to std::format() std::filesystem::file_time_type
@@ -96,7 +97,7 @@ std::unordered_map<std::string_view, fs_function> fs_function_map = {
   } else if (mbool.find(fun) != mbool.end())
     std::cout << mbool[fun]() << "\n";
   else
-    std::cerr << "Error: unknown function " << fun << "\n";
+    std::cerr << "Error: unknown function " << fun << "()\n";
 
 }
 
@@ -105,7 +106,11 @@ static void one_arg(std::string_view fun, std::string_view a1){
 
   std::error_code ec;
 
-  using fs_one_arg_function = std::function<std::string(std::string_view)>;
+  using fs_one_arg_function = std::function<std::variant<std::string, bool, size_t
+  #if uintmax_t != size_t
+  , uintmax_t
+  #endif
+  >(std::string_view)>;
 
   std::unordered_map<std::string_view, fs_one_arg_function> fs_one_arg_function_map = {
     {"lexically_normal", [](std::string_view a1) { return fs_lexically_normal(a1); }},
@@ -116,20 +121,20 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"weakly_canonical", [](std::string_view a1) { return fs_canonical(a1, false, false); }},
     {"resolve", [](std::string_view a1) { return fs_resolve(a1, true, false); }},
     {"weakly_resolve", [](std::string_view a1) { return fs_resolve(a1, false, false); }},
-    {"hard", [](std::string_view a1) { return std::to_string(fs_hard_link_count(a1)); }},
+    {"hard", [](std::string_view a1) { return fs_hard_link_count(a1); }},
     {"normal", [](std::string_view a1) { return fs_normal(a1); }},
     {"mkdtemp", [](std::string_view a1) { return fs_mkdtemp(a1); }},
     {"type", [](std::string_view a1) { return fs_filesystem_type(a1); }},
-    {"is_reserved", [](std::string_view a1) { return std::to_string(fs_is_reserved(a1)); }},
-    {"is_safe", [](std::string_view a1) { return std::to_string(fs_is_safe_name(a1)); }},
+    {"is_reserved", [](std::string_view a1) { return fs_is_reserved(a1); }},
+    {"is_safe", [](std::string_view a1) { return fs_is_safe_name(a1); }},
     {"long", [](std::string_view a1) { return fs_longname(a1); }},
     {"short", [](std::string_view a1) { return fs_shortname(a1); }},
     {"touch", [](std::string_view a1) { return "touch " + std::string(a1) + " " + std::to_string(fs_touch(a1)); }},
     {"getenv", [](std::string_view a1) { return fs_getenv(a1); }},
     {"realpath", [](std::string_view a1) { return fs_realpath(a1); }},
     {"posix", [](std::string_view a1) { return fs_as_posix(a1); }},
-    {"max_component", [](std::string_view a1) { return std::to_string(fs_max_component(a1)); }},
-    {"mkdir", [](std::string_view a1) { return std::to_string(fs_mkdir(a1)); }},
+    {"max_component", [](std::string_view a1) { return fs_max_component(a1); }},
+    {"mkdir", [](std::string_view a1) { return fs_mkdir(a1); }},
     {"which", [](std::string_view a1) { return fs_which(a1); }},
     {"owner", [](std::string_view a1) { return fs_get_owner_name(a1) + "\n" + fs_get_owner_group(a1); }},
     {"expanduser", [](std::string_view a1) { return fs_expanduser(a1); }},
@@ -137,29 +142,41 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"root", [](std::string_view a1) { return fs_root(a1); }},
     {"root_name", [](std::string_view a1) { return fs_root_name(a1); }},
     {"filename", [](std::string_view a1) { return fs_file_name(a1); }},
-    {"file_size", [](std::string_view a1) { return std::to_string(fs_file_size(a1)); }},
-    {"is_absolute", [](std::string_view a1) { return std::to_string(fs_is_absolute(a1)); }},
-    {"is_exe", [](std::string_view a1) { return std::to_string(fs_is_exe(a1)); }},
-    {"is_case_sensitive", [](std::string_view a1) { return std::to_string(fs_is_case_sensitive(a1)); }},
-    {"is_dir", [](std::string_view a1) { return std::to_string(fs_is_dir(a1)); }},
-    {"is_char", [](std::string_view a1) { return std::to_string(fs_is_char_device(a1)); }},
-    {"is_file", [](std::string_view a1) { return std::to_string(fs_is_file(a1)); }},
-    {"is_symlink", [](std::string_view a1) { return std::to_string(fs_is_symlink(a1)); }},
-    {"is_readable", [](std::string_view a1) { return std::to_string(fs_is_readable(a1)); }},
-    {"is_writable", [](std::string_view a1) { return std::to_string(fs_is_writable(a1)); }},
+    {"file_size", [](std::string_view a1) { return fs_file_size(a1); }},
+    {"is_absolute", [](std::string_view a1) { return fs_is_absolute(a1); }},
+    {"is_exe", [](std::string_view a1) { return fs_is_exe(a1); }},
+    {"is_case_sensitive", [](std::string_view a1) { return fs_is_case_sensitive(a1); }},
+    {"is_dir", [](std::string_view a1) { return fs_is_dir(a1); }},
+    {"is_char", [](std::string_view a1) { return fs_is_char_device(a1); }},
+    {"is_file", [](std::string_view a1) { return fs_is_file(a1); }},
+    {"is_symlink", [](std::string_view a1) { return fs_is_symlink(a1); }},
+    {"is_readable", [](std::string_view a1) { return fs_is_readable(a1); }},
+    {"is_writable", [](std::string_view a1) { return fs_is_writable(a1); }},
     {"perm", [](std::string_view a1) { return fs_get_permissions(a1); }},
     {"read_symlink", [](std::string_view a1) { return fs_read_symlink(a1); }},
     {"stem", [](std::string_view a1) { return fs_stem(a1); }},
-    {"exists", [](std::string_view a1) { return std::to_string(fs_exists(a1)); }},
-    {"space", [](std::string_view a1) { return std::to_string(fs_space_available(a1)); }},
+    {"exists", [](std::string_view a1) { return fs_exists(a1); }},
+    {"space", [](std::string_view a1) { return fs_space_available(a1); }},
     {"absolute", [](std::string_view a1) { return fs_absolute(a1, true); }},
     {"get_cwd", [](std::string_view) { return fs_get_cwd(); }},
-    {"is_empty", [](std::string_view a1) { return std::to_string(fs_is_empty(a1)); }},
+    {"is_empty", [](std::string_view a1) { return fs_is_empty(a1); }},
   };
 
   auto it = fs_one_arg_function_map.find(fun);
   if (it != fs_one_arg_function_map.end()) {
-    std::cout << it->second(a1) << "\n";
+    auto r = it->second(a1);
+    if (std::holds_alternative<std::string>(r))
+      std::cout << std::get<std::string>(r);
+    else if (std::holds_alternative<bool>(r))
+      std::cout << std::get<bool>(r);
+    else if (std::holds_alternative<size_t>(r))
+      std::cout << std::get<size_t>(r);
+    else if (std::holds_alternative<uintmax_t>(r))
+      std::cout << std::get<uintmax_t>(r);
+    else
+      std::cerr << "Error: unknown return type " << fun << "\n";
+
+    std::cout << "\n";
   } else if (fun == "modtime"){
 
 #if defined(HAVE_CXX_FILESYSTEM) && defined(__cpp_lib_format) // C++20
@@ -206,38 +223,39 @@ static void one_arg(std::string_view fun, std::string_view a1){
       std::cerr << "ERROR: ls requires C++17 filesystem\n";
 #endif
   } else {
-    std::cerr << fun << " requires more arguments or is unknown function\n";
+    std::cerr << fun << " requires more than 1 argument or is unknown function\n";
   }
 }
 
 
 static void two_arg(std::string_view fun, std::string_view a1, std::string_view a2)
 {
+  using fs_two_arg_function = std::function<std::variant<std::string, bool>(std::string_view, std::string_view)>;
 
-  if (fun == "same")
-    std::cout << fs_equivalent(a1, a2) << "\n";
-  else if (fun == "join")
-    std::cout << fs_join(a1, a2) << "\n";
-  else if (fun == "with_suffix")
-    std::cout << fs_with_suffix(a1, a2) << "\n";
-  else if (fun == "is_subdir")
-    std::cout << fs_is_subdir(a1, a2) << "\n";
-  else if (fun == "relative")
-    std::cout << fs_relative_to(a1, a2) << "\n";
-  else if (fun == "proximate")
-    std::cout << fs_proximate_to(a1, a2) << "\n";
-  else if (fun == "setenv"){
-    fs_setenv(a1, a2);
-    std::cout << "set env var " << a1 << " to " << a2 << " => " << fs_getenv(a1) << "\n";
-  } else if (fun == "copy")
-    fs_copy_file(a1, a2, false);
-  else if (fun == "create_symlink")
-    fs_create_symlink(a1, a2);
-  else if (fun == "absolute"){
-    std::cout << fs_absolute(a1, a2, true)<< "\n";
-  }
-  else
-    std::cerr << fun << " requires more arguments or is unknown function\n";
+  std::unordered_map<std::string_view, fs_two_arg_function> fs_two_arg_function_map = {
+    {"same", [](std::string_view a1, std::string_view a2) { return fs_equivalent(a1, a2); }},
+    {"join", [](std::string_view a1, std::string_view a2) { return fs_join(a1, a2); }},
+    {"with_suffix", [](std::string_view a1, std::string_view a2) { return fs_with_suffix(a1, a2); }},
+    {"is_subdir", [](std::string_view a1, std::string_view a2) { return fs_is_subdir(a1, a2); }},
+    {"relative", [](std::string_view a1, std::string_view a2) { return fs_relative_to(a1, a2); }},
+    {"proximate", [](std::string_view a1, std::string_view a2) { return fs_proximate_to(a1, a2); }},
+    {"setenv", [](std::string_view a1, std::string_view a2) { return fs_setenv(a1, a2); }},
+    {"copy", [](std::string_view a1, std::string_view a2) { return fs_copy_file(a1, a2, false); }},
+    {"create_symlink", [](std::string_view a1, std::string_view a2) { return fs_create_symlink(a1, a2); }},
+    {"absolute", [](std::string_view a1, std::string_view a2) { return fs_absolute(a1, a2, true); }}
+  };
+
+  auto it = fs_two_arg_function_map.find(fun);
+  if (it != fs_two_arg_function_map.end()) {
+    auto r = it->second(a1, a2);
+    if (std::holds_alternative<std::string>(r))
+      std::cout << std::get<std::string>(r);
+    else if (std::holds_alternative<bool>(r))
+      std::cout << std::get<bool>(r);
+
+    std::cout << "\n";
+  } else
+    std::cerr << fun << " requires more than 2 arguments or is unknown function\n";
 
 }
 
@@ -261,7 +279,7 @@ static void four_arg(std::string_view fun, std::string_view a1, std::string_view
       std::cout << "after chmod " << a1 << " " << p << "\n";
 
   } else {
-    std::cerr << fun << " requires more arguments or is unknown function\n";
+    std::cerr << fun << " requires more than 4 arguments or is unknown function\n";
   }
 
 }
@@ -353,6 +371,9 @@ while (true){
     break;
   case 3:
     two_arg(args.at(0), args.at(1), args.at(2));
+    break;
+  case 4:
+    std::cerr << "no 3 argument functions currently\n";
     break;
   case 5:
     four_arg(args.at(0), args.at(1), args.at(2), args.at(3), args.at(4));
