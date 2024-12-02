@@ -4,6 +4,19 @@
 #include <format> // IWYU pragma: keep
 #endif
 
+// libcxx_release
+#if __has_include(<version>)
+#include <version>
+#elif __has_include(<ciso644>)
+// < C++20 standard
+#include <ciso646>
+#endif
+
+// libc_release
+#if defined(__GLIBC__)
+#include <gnu/libc-version.h>
+#endif
+
 #include "ffilesystem.h"
 
 
@@ -11,6 +24,42 @@
 long fs_cpp_lang(){
   // C++ version compiler claims to support with given options
   return __cplusplus;
+}
+
+
+std::string fs_libc()
+{
+  std::string v;
+#if defined(__GLIBC__)
+  v = "GCC: runtime " + std::string(gnu_get_libc_version()) + ", compile-time " + std::to_string(__GLIBC__) + "." + std::to_string(__GLIBC_MINOR__);
+#elif defined(__apple_build_version__)
+  v = "Apple";
+#endif
+  return v;
+}
+
+
+std::string fs_libcxx()
+{
+  std::string v;
+#if defined(_LIBCPP_VERSION)
+  v = "LLVM " + std::to_string(_LIBCPP_VERSION);
+#elif defined(_GLIBCXX_RELEASE)
+  v = "GNU " + std::to_string(_GLIBCXX_RELEASE);
+#endif
+  return v;
+}
+
+
+unsigned long fs_libcxx_release()
+{
+#if defined(_LIBCPP_VERSION)  // LLVM libc++
+  return _LIBCPP_VERSION;
+#elif defined(_GLIBCXX_RELEASE)  // GNU libstdc++
+  return _GLIBCXX_RELEASE;
+#else
+  return 0;
+#endif
 }
 
 

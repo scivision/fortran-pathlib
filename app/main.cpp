@@ -334,6 +334,8 @@ std::cout << "Optimized: " << fs_is_optimized() << " Trace: " << FS_TRACE << "\n
 std::cout << "CPU arch: " << fs_cpu_arch() << "\n";
 std::cout << "C++ standard " << fs_cpp_lang() << "\n";
 std::cout << "C standard " << fs_c_lang() << "\n";
+std::cout << "libcpp: " << fs_libcxx() << "\n";
+std::cout << "libc: " << fs_libc() << "\n";
 std::cout << "Username: " << fs_get_username() << "\n";
 std::cout << "Hostname: " << fs_hostname() << "\n";
 std::cout << "Shell: " << fs_get_shell() << "\n";

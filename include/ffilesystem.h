@@ -187,6 +187,9 @@ std::string fs_win32_full_name(std::string_view path);
 
 std::string fs_filesystem_type(std::string_view);
 
+std::string fs_libcxx();
+std::string fs_libc();
+
 int fs_st_mode(std::string_view path);
 
 // ---------------------------------------------------------------------------
@@ -217,6 +220,8 @@ size_t fs_strncpy(const char*, char*, const size_t);
 
 long fs_cpp_lang();
 long fs_c_lang();
+
+long libcxx_release();
 
 size_t fs_get_max_path();
 size_t fs_max_component(const char*);
