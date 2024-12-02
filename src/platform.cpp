@@ -23,38 +23,6 @@
 #endif
 
 
-std::string fs_get_tempdir()
-{
-  std::error_code ec;
-
-#ifdef HAVE_CXX_FILESYSTEM
-  if(auto p = std::filesystem::temp_directory_path(ec); !ec) FFS_LIKELY
-    return p.generic_string();
-#else
-
-  std::string path(fs_get_max_path(), '\0');
-#ifdef _WIN32
-  // GetTempPath2A is not in MSYS2
-  auto L = GetTempPathA(static_cast<DWORD>(path.size()), path.data());
-  if (L > 0 && L < path.size())  FFS_LIKELY
-    path.resize(L);
-#else
-  path = fs_getenv("TMPDIR");
-#endif
-
-  if(!path.empty()) FFS_LIKELY
-    return fs_as_posix(path);
-
-  if (fs_is_dir("/tmp"))
-    return "/tmp";
-
-#endif
-
-  fs_print_error("", "get_tempdir", ec);
-  return {};
-}
-
-
 bool fs_set_cwd(std::string_view path)
 {
 
@@ -64,12 +32,12 @@ bool fs_set_cwd(std::string_view path)
   std::filesystem::current_path(path, ec);
   if(!ec) FFS_LIKELY
     return true;
-#elif _WIN32
+#elif defined(_WIN32)
   // windows.h https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setcurrentdirectory
   if(SetCurrentDirectoryA(path.data()))  FFS_LIKELY
     return true;
 #else
-  // unistd.h https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/chdir-wchdir?view=msvc-170
+  // unistd.h https://www.man7.org/linux/man-pages/man2/chdir.2.html
   if(chdir(path.data()) == 0)  FFS_LIKELY
     return true;
 #endif

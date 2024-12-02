@@ -116,10 +116,16 @@ Logical: path of filesystem detected as case sensitive. Path must be writable fo
 is_case_sensitive("/my/path")
 ```
 
-integer (long): the C `__STDC_VERSION__` or C++ level of macro `__cplusplus`
+integer (long): C++ level of macro `__cplusplus`
 
 ```fortran
-fs_lang()
+cpp_lang()
+```
+
+integer (long): C `__STDC_VERSION__` macro
+
+```fortran
+c_lang()
 ```
 
 ## subroutines

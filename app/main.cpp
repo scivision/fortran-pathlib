@@ -57,8 +57,10 @@ static void no_arg(std::string_view fun){
     std::cout << fs_getpid() << "\n";
   else if (fun == "pathsep")
     std::cout << fs_pathsep() << "\n";
-  else if (fun == "lang")
-    std::cout << fs_lang() << "\n";
+  else if (fun == "cpp_lang")
+    std::cout << fs_cpp_lang() << "\n";
+  else if (fun == "c_lang")
+    std::cout << fs_c_lang() << "\n";
   else if (fun == "locale")
     std::cout << fs_get_locale_name() << "\n";
   else if (fun == "username")
@@ -330,7 +332,8 @@ std::cout << "current working directory (CWD): " << cwd << "\n";
 std::cout << "Compiler: " << fs_compiler() << "\n";
 std::cout << "Optimized: " << fs_is_optimized() << " Trace: " << FS_TRACE << "\n";
 std::cout << "CPU arch: " << fs_cpu_arch() << "\n";
-std::cout << "C++ " << fs_lang() << "\n";
+std::cout << "C++ standard " << fs_cpp_lang() << "\n";
+std::cout << "C standard " << fs_c_lang() << "\n";
 std::cout << "Username: " << fs_get_username() << "\n";
 std::cout << "Hostname: " << fs_hostname() << "\n";
 std::cout << "Shell: " << fs_get_shell() << "\n";

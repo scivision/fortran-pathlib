@@ -93,6 +93,7 @@ src/size.cpp
 src/space.cpp
 src/sysctl.cpp
 src/symlink.cpp
+src/tempdir.cpp
 src/touch.cpp
 src/time.cpp
 src/uid.cpp

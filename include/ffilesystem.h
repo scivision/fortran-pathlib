@@ -215,7 +215,8 @@ size_t fs_strncpy(const char*, char*, const size_t);
 #  define __has_c_attribute(x)  0
 #endif
 
-long fs_lang();
+long fs_cpp_lang();
+long fs_c_lang();
 
 size_t fs_get_max_path();
 size_t fs_max_component(const char*);

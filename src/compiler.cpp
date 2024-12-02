@@ -7,6 +7,22 @@
 #include "ffilesystem.h"
 
 
+
+long fs_cpp_lang(){
+  // C++ version compiler claims to support with given options
+  return __cplusplus;
+}
+
+
+std::string fs_backend(){
+#ifdef HAVE_CXX_FILESYSTEM
+  return "<filesystem>";
+#else
+  return "C";
+#endif
+}
+
+
 bool fs_is_optimized(){
 // This is a heuristic, trusting the build system or user to set NDEBUG if optimized.
 #if defined(NDEBUG)

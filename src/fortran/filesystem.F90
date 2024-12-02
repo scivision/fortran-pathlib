@@ -26,7 +26,9 @@ assert_is_file, assert_is_dir, &
 touch, get_modtime, set_modtime, &
 remove, get_tempdir, &
 set_permissions, get_permissions, &
-backend, fs_lang, fs_is_optimized, pathsep, is_safe_name, &
+backend, cpp_lang, c_lang, &
+fs_lang, &
+fs_is_optimized, pathsep, is_safe_name, &
 is_admin, is_bsd, is_macos, is_rosetta, is_windows, is_cygwin, is_wsl, is_mingw, is_msvc, is_linux, is_unix, &
 max_path, max_component, &
 exe_path, lib_path, compiler, compiler_c, get_shell, get_terminal, &
@@ -54,8 +56,18 @@ logical(C_BOOL) function stdin_tty() bind(C)
 import C_BOOL
 end function
 
-integer(C_LONG) function fs_lang() bind(C)
-!! C `__STDC_VERSION__` or C++ level of macro `__cplusplus`
+integer(C_LONG) function fs_lang() bind(C, name="fs_cpp_lang")
+!! deprecated: use `cpp_lang` instead
+import C_LONG
+end function
+
+integer(C_LONG) function c_lang() bind(C, name="fs_c_lang")
+!! C level of macro `__STDC_VERSION__`
+import C_LONG
+end function
+
+integer(C_LONG) function cpp_lang() bind(C, name="fs_cpp_lang")
+!! C++ level of macro `__cplusplus`
 import C_LONG
 end function
 

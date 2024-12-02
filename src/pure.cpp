@@ -13,19 +13,6 @@
 #include "ffilesystem.h"
 
 
-// C++ version compiler claims to support with given options
-long fs_lang(){ return __cplusplus; }
-
-
-std::string fs_backend(){
-#ifdef HAVE_CXX_FILESYSTEM
-  return "<filesystem>";
-#else
-  return "C";
-#endif
-}
-
-
 char fs_pathsep(){
   return fs_is_windows() ? ';' : ':';
 }

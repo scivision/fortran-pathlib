@@ -64,6 +64,7 @@ comm_src = files(
 'src/space.cpp',
 'src/sysctl.cpp',
 'src/symlink.cpp',
+'src/tempdir.cpp',
 'src/time.cpp',
 'src/touch.cpp',
 'src/uid.cpp',

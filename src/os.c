@@ -6,6 +6,16 @@
 #endif
 
 
+long fs_c_lang(){
+  // C version compiler claims to support with given options
+#ifdef __STDC_VERSION__
+  return __STDC_VERSION__;
+#else  // MSVC if /std: not set
+  return 0L;
+#endif
+}
+
+
 bool fs_is_android(){
 #ifdef __ANDROID__
   return true;

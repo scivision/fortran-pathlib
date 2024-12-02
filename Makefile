@@ -78,6 +78,7 @@ COMM_SRCS = \
 	$(comdir)space.cpp \
 	$(comdir)sysctl.cpp \
 	$(comdir)symlink.cpp \
+	$(comdir)tempdir.cpp \
 	$(comdir)time.cpp \
 	$(comdir)touch.cpp \
 	$(comdir)uid.cpp \
