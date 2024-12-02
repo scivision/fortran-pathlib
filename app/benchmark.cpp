@@ -69,21 +69,18 @@ bool b = false;
   auto it = fs_function_map.find(fname);
   if (it != fs_function_map.end()) {
     auto result = it->second(path);
-    if (std::holds_alternative<std::string>(result))
+    if (std::holds_alternative<std::string>(result)){
       h = std::get<std::string>(result);
-    else
+      if(h.empty()){
+        std::cerr << "ERROR: " << fname << " " << path << " failed on warmup\n";
+        return t;
+      }
+    } else
       b = std::get<bool>(result);
   } else {
     std::cerr << "Error: unknown function " << fname << "\n";
     return t;
   }
-
-#if __cpp_lib_starts_ends_with  // C++20
-if (!fname.starts_with("is") && h.empty()){
-  std::cerr << "Error:Cpp: " << fname << " " << path << " failed on warmup\n";
-  return t;
-}
-#endif
 
 for (int i = 0; i < n; ++i)
 {
@@ -129,11 +126,11 @@ std::vector<std::string_view> funcs;
 if(argc > 3)
   funcs = {argv[3]};
 else
-  funcs = {"canonical", "resolve", "which", "expanduser", "normal", "cwd", "homedir", "parent", "file_name", "is_reserved"};
+  funcs = {"canonical", "resolve", "which", "expanduser", "normal", "cwd", "homedir", "parent", "file_name", "is_reserved", "drop_slash"};
 
 for (std::string_view func : funcs)
   {
-  constexpr std::array<std::string_view, 6> tf = {"canonical", "resolve", "normal", "expanduser", "parent", "file_name"};
+  constexpr std::array<std::string_view, 7> tf = {"canonical", "resolve", "normal", "expanduser", "parent", "file_name", "drop_slash"};
 
   if (argc > 2)
     path = argv[2];
