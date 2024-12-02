@@ -41,8 +41,8 @@ constexpr bool expand_tilde = false;
 using fs_function = std::function<std::variant<std::string, bool>(std::string_view)>;
 
 std::unordered_map<std::string_view, fs_function> fs_function_map = {
-  {"canonical", [](std::string_view path) { return fs_canonical(path, strict, expand_tilde); }},
-  {"resolve", [](std::string_view path) { return fs_resolve(path, strict, expand_tilde); }},
+  {"canonical", [=](std::string_view path) { return fs_canonical(path, strict, expand_tilde); }},
+  {"resolve", [=](std::string_view path) { return fs_resolve(path, strict, expand_tilde); }},
   {"drop_slash", [](std::string_view path) { return fs_drop_slash(path); }},
   {"parent", [](std::string_view path) { return fs_parent(path); }},
   {"file_name", [](std::string_view path) { return fs_file_name(path); }},
