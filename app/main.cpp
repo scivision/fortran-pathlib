@@ -7,6 +7,8 @@
 #include <map>
 #include <ctime>
 #include <system_error>
+#include <variant>
+#include <unordered_map>
 
 #include <chrono> // IWYU pragma: keep
 // needed to std::format() std::filesystem::file_time_type
@@ -29,8 +31,6 @@
 
 static void no_arg(std::string_view fun){
 
-  // map string to function call using std::map std::function
-
   std::map<std::string_view, std::function<bool()>> mbool =
   {
     {"optimized", fs_is_optimized},
@@ -46,59 +46,57 @@ static void no_arg(std::string_view fun){
     {"has_statx", fs_has_statx}
   };
 
+using fs_function = std::function<std::variant<std::string, bool, int, char, long, size_t>()>;
 
-  if (fun == "backend")
-    std::cout << fs_backend() << "\n";
-  else if (fun == "random")
-    std::cout << fs_generate_random_alphanumeric_string(16) << "\n";
-  else if (fun == "is_wsl")
-    std::cout << fs_is_wsl() << "\n";
-  else if (fun == "pid")
-    std::cout << fs_getpid() << "\n";
-  else if (fun == "pathsep")
-    std::cout << fs_pathsep() << "\n";
-  else if (fun == "cpp_lang")
-    std::cout << fs_cpp_lang() << "\n";
-  else if (fun == "c_lang")
-    std::cout << fs_c_lang() << "\n";
-  else if (fun == "locale")
-    std::cout << fs_get_locale_name() << "\n";
-  else if (fun == "username")
-    std::cout << fs_get_username() << "\n";
-  else if (fun == "hostname")
-    std::cout << fs_hostname() << "\n";
-  else if (fun == "shell")
-    std::cout << fs_get_shell() << "\n";
-  else if (fun == "stdin_tty")
-    std::cout << fs_stdin_tty() << "\n";
-  else if (fun == "arch")
-    std::cout << fs_cpu_arch() << "\n";
-  else if (fun == "profile")
-    std::cout << fs_get_profile_dir() << "\n";
-  else if (fun == "config")
-    std::cout << fs_user_config_dir() << "\n";
-  else if (fun == "libpath")
-    std::cout << fs_lib_path() << "\n";
-  else if (fun == "exepath")
-    std::cout << fs_exe_path() << "\n";
-  else if (fun == "compiler")
-    std::cout << fs_compiler() << "\n";
-  else if (fun == "homedir")
-    std::cout << fs_get_homedir() << "\n";
-  else if (fun == "terminal")
-    std::cout << fs_get_terminal() << "\n";
-  else if (fun == "tempdir")
-    std::cout << fs_get_tempdir() << "\n";
-  else if (fun == "max_path")
-    std::cout << fs_get_max_path() << "\n";
-#if __cplusplus >= 202002L
-  else if (mbool.contains(fun))
-#else
-  else if (mbool.find(fun) != mbool.end())
-#endif
+std::unordered_map<std::string_view, fs_function> fs_function_map = {
+  {"backend", []() { return fs_backend(); }},
+  {"is_wsl", []() { return fs_is_wsl(); }},
+  {"pid", []() { return fs_getpid(); }},
+  {"pathsep", []() { return fs_pathsep(); }},
+  {"cpp_lang", []() { return fs_cpp_lang(); }},
+  {"c_lang", []() { return fs_c_lang(); }},
+  {"locale", []() { return fs_get_locale_name(); }},
+  {"username", []() { return fs_get_username(); }},
+  {"hostname", []() { return fs_hostname(); }},
+  {"shell", []() { return fs_get_shell(); }},
+  {"stdin_tty", []() { return fs_stdin_tty(); }},
+  {"arch", []() { return fs_cpu_arch(); }},
+  {"profile", []() { return fs_get_profile_dir(); }},
+  {"config", []() { return fs_user_config_dir(); }},
+  {"libpath", []() { return fs_lib_path(); }},
+  {"exepath", []() { return fs_exe_path(); }},
+  {"compiler", []() { return fs_compiler(); }},
+  {"homedir", []() { return fs_get_homedir(); }},
+  {"terminal", []() { return fs_get_terminal(); }},
+  {"tempdir", []() { return fs_get_tempdir(); }},
+  {"max_path", []() { return fs_get_max_path(); }}
+};
+
+  //"random", [](size_t) { return fs_generate_random_alphanumeric_string(16); },
+
+  auto it = fs_function_map.find(fun);
+  if (it != fs_function_map.end()) {
+    auto result = it->second();
+    if (std::holds_alternative<std::string>(result))
+      std::cout << std::get<std::string>(result);
+    else if (std::holds_alternative<int>(result))
+      std::cout << std::get<int>(result);
+    else if (std::holds_alternative<bool>(result))
+      std::cout << std::get<bool>(result);
+    else if (std::holds_alternative<char>(result))
+      std::cout << std::get<char>(result);
+    else if (std::holds_alternative<long>(result))
+      std::cout << std::get<long>(result);
+    else if (std::holds_alternative<size_t>(result))
+      std::cout << std::get<size_t>(result);
+    else
+      std::cerr << "Error: unknown return type " << fun << "\n";
+
+    std::cout << "\n";
+  } else if (mbool.find(fun) != mbool.end())
     std::cout << mbool[fun]() << "\n";
   else
-    std::cerr << fun << " not a known function\n";
+    std::cerr << "Error: unknown function " << fun << "\n";
 
 }
 
@@ -107,107 +105,63 @@ static void one_arg(std::string_view fun, std::string_view a1){
 
   std::error_code ec;
 
-  if (fun == "lexically_normal")
-    std::cout << fs_lexically_normal(a1) << "\n";
-  else if (fun == "make_preferred")
-    std::cout << fs_make_preferred(a1) << "\n";
-  else if (fun == "parent")
-    std::cout << fs_parent(a1) << "\n";
-  else if (fun == "suffix")
-    std::cout << fs_suffix(a1) << "\n";
-  else if (fun == "canonical")
-    std::cout << fs_canonical(a1, true, false) << "\n";
-  else if (fun == "weakly_canonical")
-    std::cout << fs_canonical(a1, false, false) << "\n";
-  else if (fun == "resolve")
-    std::cout << fs_resolve(a1, true, false) << "\n";
-  else if (fun == "weakly_resolve")
-    std::cout << fs_resolve(a1, false, false) << "\n";
-  else if (fun == "hard")
-    std::cout << fs_hard_link_count(a1) << "\n";
-  else if (fun == "parts"){
-    for (const auto &p : fs_split(a1))
-      std::cout << p << "\n";
-  }
-  else if (fun == "normal")
-    std::cout << fs_normal(a1) << "\n";
-  else if (fun == "mkdtemp")
-    std::cout << fs_mkdtemp(a1) << "\n";
-  else if (fun == "type")
-    std::cout << fs_filesystem_type(a1) << "\n";
-  else if (fun == "is_reserved")
-    std::cout << fs_is_reserved(a1) << "\n";
-  else if (fun == "is_safe")
-    std::cout << fs_is_safe_name(a1) << "\n";
-  else if (fun == "long")
-    std::cout << fs_longname(a1) << "\n";
-  else if (fun == "short")
-    std::cout << fs_shortname(a1) << "\n";
-  else if (fun == "touch")
-    std::cout << "touch " << a1 << " " << fs_touch(a1) << "\n";
-  else if (fun == "getenv")
-    std::cout << fs_getenv(a1) << "\n";
-  else if (fun == "realpath")
-    std::cout << fs_realpath(a1) << "\n";
-  else if (fun == "posix")
-    std::cout << fs_as_posix(a1) << "\n";
-  else if (fun == "max_component")
-    std::cout << fs_max_component(a1) << "\n";
-  else if (fun == "mkdir")
-    std::cout << fs_mkdir(a1) << "\n";
-  else if (fun == "which")
-    std::cout << fs_which(a1) << "\n";
-  else if (fun == "owner"){
-    std::cout << fs_get_owner_name(a1) << "\n";
-    std::cout << fs_get_owner_group(a1) << "\n";
-  }
-  else if (fun == "expanduser")
-    std::cout << fs_expanduser(a1) << "\n";
-  else if (fun == "final_path")
-    std::cout << fs_win32_final_path(a1) << "\n";
-  else if (fun == "root")
-    std::cout << fs_root(a1) << "\n";
-  else if (fun == "root_name")
-    std::cout << fs_root_name(a1) << "\n";
-  else if (fun == "filename")
-    std::cout << fs_file_name(a1) << "\n";
-  else if (fun == "file_size")
-    std::cout << fs_file_size(a1) << "\n";
-  else if (fun == "is_absolute")
-    std::cout << fs_is_absolute(a1) << "\n";
-  else if (fun == "is_exe")
-    std::cout << fs_is_exe(a1) << "\n";
-  else if (fun == "is_case_sensitive")
-    std::cout << fs_is_case_sensitive(a1) << "\n";
-  else if (fun == "is_dir")
-    std::cout << fs_is_dir(a1) << "\n";
-  else if (fun == "is_char")
-    std::cout << fs_is_char_device(a1) << "\n";
-  else if (fun == "is_file")
-    std::cout << fs_is_file(a1) << "\n";
-  else if (fun == "is_symlink")
-    std::cout << fs_is_symlink(a1) << "\n";
-  else if (fun == "is_readable")
-    std::cout << fs_is_readable(a1) << "\n";
-  else if (fun == "is_writable")
-    std::cout << fs_is_writable(a1) << "\n";
-  else if (fun == "perm")
-    std::cout << fs_get_permissions(a1) << "\n";
-  else if (fun == "read_symlink")
-    std::cout << fs_read_symlink(a1) << "\n";
-  else if (fun == "stem")
-    std::cout << fs_stem(a1) << "\n";
-  else if (fun == "exists")
-    std::cout << fs_exists(a1) << "\n";
-  else if (fun == "space")
-    std::cout << fs_space_available(a1) << "\n";
-  else if (fun == "absolute")
-    std::cout << fs_absolute(a1, true)<< "\n";
-  else if (fun == "get_cwd")
-    std::cout << fs_get_cwd() << "\n";
-  else if (fun == "is_empty")
-    std::cout << fs_is_empty(a1) << "\n";
-  else if (fun == "modtime"){
+  using fs_one_arg_function = std::function<std::string(std::string_view)>;
+
+  std::unordered_map<std::string_view, fs_one_arg_function> fs_one_arg_function_map = {
+    {"lexically_normal", [](std::string_view a1) { return fs_lexically_normal(a1); }},
+    {"make_preferred", [](std::string_view a1) { return fs_make_preferred(a1); }},
+    {"parent", [](std::string_view a1) { return fs_parent(a1); }},
+    {"suffix", [](std::string_view a1) { return fs_suffix(a1); }},
+    {"canonical", [](std::string_view a1) { return fs_canonical(a1, true, false); }},
+    {"weakly_canonical", [](std::string_view a1) { return fs_canonical(a1, false, false); }},
+    {"resolve", [](std::string_view a1) { return fs_resolve(a1, true, false); }},
+    {"weakly_resolve", [](std::string_view a1) { return fs_resolve(a1, false, false); }},
+    {"hard", [](std::string_view a1) { return std::to_string(fs_hard_link_count(a1)); }},
+    {"normal", [](std::string_view a1) { return fs_normal(a1); }},
+    {"mkdtemp", [](std::string_view a1) { return fs_mkdtemp(a1); }},
+    {"type", [](std::string_view a1) { return fs_filesystem_type(a1); }},
+    {"is_reserved", [](std::string_view a1) { return std::to_string(fs_is_reserved(a1)); }},
+    {"is_safe", [](std::string_view a1) { return std::to_string(fs_is_safe_name(a1)); }},
+    {"long", [](std::string_view a1) { return fs_longname(a1); }},
+    {"short", [](std::string_view a1) { return fs_shortname(a1); }},
+    {"touch", [](std::string_view a1) { return "touch " + std::string(a1) + " " + std::to_string(fs_touch(a1)); }},
+    {"getenv", [](std::string_view a1) { return fs_getenv(a1); }},
+    {"realpath", [](std::string_view a1) { return fs_realpath(a1); }},
+    {"posix", [](std::string_view a1) { return fs_as_posix(a1); }},
+    {"max_component", [](std::string_view a1) { return std::to_string(fs_max_component(a1)); }},
+    {"mkdir", [](std::string_view a1) { return std::to_string(fs_mkdir(a1)); }},
+    {"which", [](std::string_view a1) { return fs_which(a1); }},
+    {"owner", [](std::string_view a1) { return fs_get_owner_name(a1) + "\n" + fs_get_owner_group(a1); }},
+    {"expanduser", [](std::string_view a1) { return fs_expanduser(a1); }},
+    {"final_path", [](std::string_view a1) { return fs_win32_final_path(a1); }},
+    {"root", [](std::string_view a1) { return fs_root(a1); }},
+    {"root_name", [](std::string_view a1) { return fs_root_name(a1); }},
+    {"filename", [](std::string_view a1) { return fs_file_name(a1); }},
+    {"file_size", [](std::string_view a1) { return std::to_string(fs_file_size(a1)); }},
+    {"is_absolute", [](std::string_view a1) { return std::to_string(fs_is_absolute(a1)); }},
+    {"is_exe", [](std::string_view a1) { return std::to_string(fs_is_exe(a1)); }},
+    {"is_case_sensitive", [](std::string_view a1) { return std::to_string(fs_is_case_sensitive(a1)); }},
+    {"is_dir", [](std::string_view a1) { return std::to_string(fs_is_dir(a1)); }},
+    {"is_char", [](std::string_view a1) { return std::to_string(fs_is_char_device(a1)); }},
+    {"is_file", [](std::string_view a1) { return std::to_string(fs_is_file(a1)); }},
+    {"is_symlink", [](std::string_view a1) { return std::to_string(fs_is_symlink(a1)); }},
+    {"is_readable", [](std::string_view a1) { return std::to_string(fs_is_readable(a1)); }},
+    {"is_writable", [](std::string_view a1) { return std::to_string(fs_is_writable(a1)); }},
+    {"perm", [](std::string_view a1) { return fs_get_permissions(a1); }},
+    {"read_symlink", [](std::string_view a1) { return fs_read_symlink(a1); }},
+    {"stem", [](std::string_view a1) { return fs_stem(a1); }},
+    {"exists", [](std::string_view a1) { return std::to_string(fs_exists(a1)); }},
+    {"space", [](std::string_view a1) { return std::to_string(fs_space_available(a1)); }},
+    {"absolute", [](std::string_view a1) { return fs_absolute(a1, true); }},
+    {"get_cwd", [](std::string_view) { return fs_get_cwd(); }},
+    {"is_empty", [](std::string_view a1) { return std::to_string(fs_is_empty(a1)); }},
+  };
+
+  auto it = fs_one_arg_function_map.find(fun);
+  if (it != fs_one_arg_function_map.end()) {
+    std::cout << it->second(a1) << "\n";
+  } else if (fun == "modtime"){
+
 #if defined(HAVE_CXX_FILESYSTEM) && defined(__cpp_lib_format) // C++20
     const auto t = fs_get_modtime_fs(a1);
     if(t)
