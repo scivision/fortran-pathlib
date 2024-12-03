@@ -280,7 +280,8 @@ p = p%resolve()
 p%path() == "<absolute path of current working directory>/b"
 ```
 
-Canonicalize path. This means to normalize, resolve symbolic links, and resolve relative paths when the path exists.
+Canonicalize path. This means to normalize, resolve symbolic links, resolve relative paths when the path exists.
+For case-insensitive filesystems, the path's actual case is returned.
 If the path doesn't exist and no absolute path is given, the path is resolved as far as possible with existing path components, and then ".", ".." are lexiographically resolved.
 
 * "strict" if true required the path to exist (default false).
