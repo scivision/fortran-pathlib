@@ -33,9 +33,9 @@ if(.not. is_file(tgt)) then
   error stop
 end if
 
-link = join(tgt_dir, "test.link")
-linko = join(tgt_dir, "test_oo.link")
-link_dir = join(tgt_dir, "my_link.dir")
+link = join(tgt_dir, "test_symlink_fortran.link")
+linko = join(tgt_dir, "test_oo_fortran.link")
+link_dir = join(tgt_dir, "my_link_fortran.dir")
 
 ! print *, "TRACE:test_symlink: target: " // tgt
 ! print *, "TRACE:test_symlink: link: " // link

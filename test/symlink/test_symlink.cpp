@@ -28,9 +28,9 @@ int argc, char* argv[])
   if (!fs_is_file(tgt))
     err("is_file(" + tgt + ") should be true for existing regular file target");
 
-  const std::string link = tgt_dir + "/test.link";
-  const std::string linko = tgt_dir + "/test_oo.link";
-  const std::string link_dir = tgt_dir + "/my_link.dir";
+  const std::string link = tgt_dir + "/test_symlink_cpp.link";
+  const std::string linko = tgt_dir + "/test_oo_cpp.link";
+  const std::string link_dir = tgt_dir + "/my_link_cpp.dir";
 
   if(fs_create_symlink(tgt, ""))
     err("create_symlink() should fail with empty link");

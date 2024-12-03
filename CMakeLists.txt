@@ -7,7 +7,7 @@ endif()
 
 project(ffilesystem
 LANGUAGES C CXX
-VERSION 6.0.0
+VERSION 6.0.1
 )
 
 enable_testing()
