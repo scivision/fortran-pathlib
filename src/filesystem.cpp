@@ -1,7 +1,14 @@
 #if defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
 #else
+
 #include <cstdio> // for std::remove, std::rename
+
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+
 #endif
 
 #include <string_view>
@@ -19,11 +26,25 @@ fs_remove(std::string_view path)
 #ifdef HAVE_CXX_FILESYSTEM
   // https://en.cppreference.com/w/cpp/filesystem/remove
   if(std::filesystem::remove(path, ec) && !ec) FFS_LIKELY
+    return true;
 #else
   // https://en.cppreference.com/w/cpp/io/c/remove
   if(std::remove(path.data()) == 0)
-#endif
     return true;
+
+#ifdef _WIN32
+  // https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilea
+  // may need these when deleting a symlink
+  // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createsymboliclinka#remarks
+
+  if(fs_is_file(path) && DeleteFileA(path.data()) != 0)
+    return true;
+  if(fs_is_dir(path) && RemoveDirectoryA(path.data()) != 0)
+    return true;
+
+#endif
+
+#endif
 
   fs_print_error(path, "remove", ec);
   return false;

@@ -40,7 +40,7 @@
 
 bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite)
 {
-  // copy a single file
+  // copy a single file -- symlinks are followed
 
   std::error_code ec;
 
