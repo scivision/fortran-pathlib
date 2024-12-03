@@ -53,10 +53,8 @@ fs_remove(std::string_view path)
   std::error_code ec;
 
 #ifdef HAVE_CXX_FILESYSTEM
-
   if(std::filesystem::remove(path, ec) && !ec) FFS_LIKELY
     return true;
-
 #elif defined(_WIN32)
   return fs_win32_remove(path);
 #else
@@ -66,4 +64,30 @@ fs_remove(std::string_view path)
 
   fs_print_error(path, "remove", ec);
   return false;
+}
+
+
+bool fs_rename(std::string_view from, std::string_view to)
+{
+  // rename a file or directory
+  // existing non-empty "to" is an error
+
+  std::error_code ec;
+
+  if(fs_exists(to) && !fs_is_empty(to)){
+    fs_print_error(from, to, "rename: destination is not empty", ec);
+    return false;
+  }
+
+#ifdef HAVE_CXX_FILESYSTEM
+  std::filesystem::rename(from, to, ec);
+  if(!ec) FFS_LIKELY
+#else
+  if(std::rename(from.data(), to.data()) == 0)
+#endif
+    return true;
+
+  fs_print_error(from, to, "rename", ec);
+  return false;
+
 }

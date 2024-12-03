@@ -160,6 +160,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"absolute", [](std::string_view a1) { return fs_absolute(a1, true); }},
     {"get_cwd", [](std::string_view) { return fs_get_cwd(); }},
     {"is_empty", [](std::string_view a1) { return fs_is_empty(a1); }},
+    {"remove", [](std::string_view a1) { return fs_remove(a1); }}
   };
 
   auto it = fs_one_arg_function_map.find(fun);
@@ -242,7 +243,8 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
     {"setenv", [](std::string_view a1, std::string_view a2) { return fs_setenv(a1, a2); }},
     {"copy", [](std::string_view a1, std::string_view a2) { return fs_copy_file(a1, a2, false); }},
     {"create_symlink", [](std::string_view a1, std::string_view a2) { return fs_create_symlink(a1, a2); }},
-    {"absolute", [](std::string_view a1, std::string_view a2) { return fs_absolute(a1, a2, true); }}
+    {"absolute", [](std::string_view a1, std::string_view a2) { return fs_absolute(a1, a2, true); }},
+    {"rename", [](std::string_view a1, std::string_view a2) { return fs_rename(a1, a2); }}
   };
 
   auto it = fs_two_arg_function_map.find(fun);

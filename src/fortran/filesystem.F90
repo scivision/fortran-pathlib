@@ -24,7 +24,8 @@ file_name, parent, stem, suffix, with_suffix, &
 absolute, &
 assert_is_file, assert_is_dir, &
 touch, get_modtime, set_modtime, &
-remove, get_tempdir, &
+remove, rename, &
+get_tempdir, &
 set_permissions, get_permissions, &
 backend, cpp_lang, c_lang, &
 fs_lang, &
@@ -244,6 +245,11 @@ end function
 logical(C_BOOL) function fs_remove(path) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: path(*)
+end function
+
+logical (C_BOOL) function fs_rename(oldpath, newpath) bind(C)
+import
+character(kind=C_CHAR), intent(in) :: oldpath(*), newpath(*)
 end function
 
 logical(C_BOOL) function fs_exists(path) bind(C)
@@ -1214,6 +1220,16 @@ character(*), intent(in) :: path
 logical(c_bool) :: e
 e = fs_remove(trim(path) // C_NULL_CHAR)
 if (.not. e) write(stderr, '(a)') "ERROR:ffilesystem:remove: " // trim(path) // " may not have been deleted."
+end subroutine
+
+
+subroutine rename(old, new)
+!! rename file or directory
+character(*), intent(in) :: old, new
+
+logical(c_bool) :: e
+e = fs_rename(trim(old) // C_NULL_CHAR, trim(new) // C_NULL_CHAR)
+if (.not. e) write(stderr, '(a)') "ERROR:ffilesystem:rename: " // trim(old) // " to " // trim(new) // " may not have been renamed."
 end subroutine
 
 

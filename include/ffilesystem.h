@@ -176,6 +176,7 @@ std::uintmax_t fs_file_size(std::string_view);
 std::uintmax_t fs_hard_link_count(std::string_view);
 
 bool fs_remove(std::string_view);
+bool fs_rename(std::string_view, std::string_view);
 
 bool fs_set_cwd(std::string_view);
 
@@ -298,6 +299,7 @@ bool fs_set_permissions(const char*, int, int, int);
 size_t fs_get_permissions(const char*, char*, const size_t);
 
 bool fs_remove(const char*);
+bool fs_rename(const char*, const char*);
 
 size_t fs_canonical(const char*, const bool, const bool, char*, const size_t);
 size_t fs_resolve(const char*, const bool, const bool, char*, const size_t);

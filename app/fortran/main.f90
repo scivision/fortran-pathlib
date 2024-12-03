@@ -146,6 +146,8 @@ main : do
     print '(A)', canonical(arg1, .false., .false.)
   case ("resolve")
     print '(A)', resolve(arg1, .false., .false.)
+  case ("remove")
+    call remove(arg1)
   case ("normal")
     print '(A)', normal(arg1)
   case ("parent")
@@ -239,6 +241,8 @@ main : do
 
   case ("absolute")
     print '(A)', absolute(arg1, arg2, .true.)
+  case ("rename")
+    call rename(arg1, arg2)
   case ("with_suffix")
     print '(A)', with_suffix(arg1, arg2)
   case ("is_subdir")

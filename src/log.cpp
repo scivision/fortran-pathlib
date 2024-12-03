@@ -24,9 +24,11 @@ static void fs_emit_error()
   if(error == ERROR_PRIVILEGE_NOT_HELD)
     std::cerr << "\nEnable Windows developer mode to use symbolic links: https://learn.microsoft.com/en-us/windows/apps/get-started/developer-mode-features-and-debugging";
 #else
+  if(errno){
   auto econd = std::generic_category().default_error_condition(errno);
 
   std::cerr << econd.message();
+  }
 #endif
 }
 
