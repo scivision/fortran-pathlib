@@ -104,9 +104,9 @@ if (.not. exists(nowrite)) error stop trim(nowrite)//" should exist"
 
 if (.not. is_file(nowrite)) error stop trim(nowrite)//" should be a file"
 
-call remove(reada)
-call remove(noread)
-call remove(nowrite)
+call remove(reada, ok)
+call remove(noread, ok)
+call remove(nowrite, ok)
 
 end subroutine test_get_permissions
 

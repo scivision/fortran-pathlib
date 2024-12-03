@@ -35,10 +35,20 @@ length = len_trim(self%path_str)
 end function
 
 
-subroutine m_unlink(self)
+subroutine m_unlink(self, ok)
 !! delete the file
 class(path_t), intent(in) :: self
-call remove(self%path_str)
+logical, intent(out), optional :: ok
+call remove(self%path_str, ok)
+end subroutine
+
+
+subroutine m_rename(self, to, ok)
+!! rename file "to"
+class(path_t), intent(in) :: self
+character(*), intent(in) :: to
+logical, intent(out), optional :: ok
+call fs_rename(self%path_str, to, ok)
 end subroutine
 
 

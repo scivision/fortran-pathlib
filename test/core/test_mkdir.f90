@@ -27,14 +27,14 @@ print '(a)', "PASS: mkdir full-path"
 
 call mkdir(p1, ok=ok)
 if(.not. ok) error stop "mkdir: full: ok false despite success: " // p1
-call remove(p1)
+call remove(p1, ok)
 print '(a)', "PASS: mkdir existing"
 
 p1 = "test-filesystem-dir/hello"
 call mkdir(p1, ok=ok)
 if(.not. is_dir(p1)) error stop "ERROR:test_mkdir: relative: " // p1
 if (.not. ok) error stop "ERROR:test_mkdir: relative: ok false despite success: " // p1
-call remove(p1)
+call remove(p1, ok)
 print '(a)', "PASS: mkdir relative"
 
 end block valgrind

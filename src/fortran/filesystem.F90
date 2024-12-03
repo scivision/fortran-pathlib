@@ -1117,6 +1117,7 @@ end function
 
 
 subroutine setenv(name, val, ok)
+!! set environment variable "name" to value "val"
 character(*), intent(in) :: name, val
 logical, intent(out), optional :: ok
 
@@ -1219,13 +1220,21 @@ include "ifc0b.inc"
 end function
 
 
-subroutine remove(path)
+subroutine remove(path, ok)
 !! delete the file, symbolic link, or empty directory
 character(*), intent(in) :: path
+logical, intent(out), optional :: ok
 
-logical(c_bool) :: e
-e = fs_remove(trim(path) // C_NULL_CHAR)
-if (.not. e) write(stderr, '(a)') "ERROR:Ffs:remove: " // trim(path) // " may not have been deleted."
+logical(c_bool) :: s
+
+s = fs_remove(trim(path) // C_NULL_CHAR)
+if (.not. s) write(stderr, '(a)') "ERROR:Ffs:remove: " // trim(path) // " may not have been deleted."
+
+if(present(ok)) then
+  ok = s
+elseif (.not. s) then
+  error stop
+end if
 end subroutine
 
 

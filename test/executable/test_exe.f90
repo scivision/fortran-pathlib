@@ -40,6 +40,8 @@ character(*), parameter :: noexe = "test_noexe"
 
 character(:), allocatable :: exe
 
+logical :: ok
+
 if(is_wsl() > 0 .and. filesystem_type(".") == "v9fs") then
   print '(a)', "XFAIL:test_exe: WSL with VFS does not support permissions."
   stop 77
@@ -78,7 +80,7 @@ if (is_exe(noexe)) then
 end if
 
 print '(a)', "remove(" // trim(noexe) // ")"
-call remove(noexe)
+call remove(noexe, ok)
 
 end subroutine test_is_exe
 
