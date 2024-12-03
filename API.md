@@ -206,6 +206,12 @@ call p%remove()
 call remove("my/file.txt")
 ```
 
+Rename file or directory. Target must not exist or be empty.
+
+```fortran
+fs_rename(from, to)
+```
+
 create symbolic link to file or directory:
 
 ```fortran

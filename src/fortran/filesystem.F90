@@ -24,7 +24,7 @@ file_name, parent, stem, suffix, with_suffix, &
 absolute, &
 assert_is_file, assert_is_dir, &
 touch, get_modtime, set_modtime, &
-remove, rename, &
+remove, fs_rename, &
 get_tempdir, &
 set_permissions, get_permissions, &
 backend, cpp_lang, c_lang, &
@@ -247,7 +247,7 @@ import
 character(kind=C_CHAR), intent(in) :: path(*)
 end function
 
-logical (C_BOOL) function fs_rename(oldpath, newpath) bind(C)
+logical (C_BOOL) function fs_rename_c(oldpath, newpath) bind(C, name="fs_rename")
 import
 character(kind=C_CHAR), intent(in) :: oldpath(*), newpath(*)
 end function
@@ -670,11 +670,12 @@ if(present(executable)) then
 end if
 
 s = fs_set_permissions(trim(path) // C_NULL_CHAR, r, w, e)
+if (.not. s) write(stderr, '(/,A,L1,1x,L1,1x,L1,1x,A)') "ERROR: set_permissions: failed to set permission ", &
+  readable,writable,executable, trim(path)
+
 if(present(ok)) then
   ok = s
 elseif (.not. s) then
-  write(stderr, '(/,A,L1,1x,L1,1x,L1,1x,A)') "ERROR: set_permissions: failed to set permission ", &
-    readable,writable,executable, trim(path)
   error stop
 end if
 end subroutine
@@ -702,10 +703,11 @@ logical(c_bool) :: ow, s
 ow = .false.
 if(present(overwrite)) ow = overwrite
 s = fs_copy_file(trim(src) // C_NULL_CHAR, trim(dest) // C_NULL_CHAR, ow)
+if(.not. s) write(stderr, '(a)') "ERROR:Ffilesystem:copy_file: failed to copy file: " // trim(src) // " to " // trim(dest)
+
 if (present(ok)) then
   ok = s
 elseif(.not. s) then
-  write(stderr, '(a)') "ERROR:Ffilesystem:copy_file: failed to copy file: " // trim(src) // " to " // trim(dest)
   error stop
 end if
 end subroutine
@@ -719,10 +721,11 @@ logical, intent(out), optional :: ok
 logical(C_BOOL) :: s
 
 s = fs_mkdir(trim(path) // C_NULL_CHAR)
+if(.not. s) write(stderr,'(a,i0)') "ERROR:Ffilesystem:mkdir: failed to create directory: " // trim(path)
+
 if(present(ok)) then
   ok = s
 elseif (.not. s) then
-  write(stderr,'(a,i0)') "ERROR:Ffilesystem:mkdir: failed to create directory: " // trim(path)
   error stop
 end if
 end subroutine
@@ -745,10 +748,11 @@ logical, intent(out), optional :: ok
 logical(C_BOOL) :: s
 
 s = fs_create_symlink(trim(tgt) // C_NULL_CHAR, trim(link) // C_NULL_CHAR)
+if(.not. s) write(stderr,'(a,1x,i0)') "ERROR:Ffilesystem:create_symlink: " // trim(link)
+
 if(present(ok)) then
-  ok =s
+  ok = s
 elseif (.not. s) then
-  write(stderr,'(a,1x,i0)') "ERROR:Ffilesystem:create_symlink: " // trim(link)
   error stop
 end if
 end subroutine
@@ -1025,12 +1029,13 @@ character(*), intent(in) :: path
 logical, intent(out), optional :: ok
 
 logical(C_BOOL) :: s
+
 s = fs_touch(trim(path) // C_NULL_CHAR)
+if(.not. s) write(stderr, '(a)') "ERROR:Ffilesystem: touch(" // trim(path) // ") failed."
 
 if(present(ok)) then
   ok = s
 elseif(.not. s) then
-  write(stderr, '(a)') "ERROR:Ffilesystem: touch(" // trim(path) // ") failed."
   error stop
 end if
 end subroutine
@@ -1118,10 +1123,11 @@ logical, intent(out), optional :: ok
 logical(C_BOOL) :: s
 
 s = fs_setenv(trim(name) // C_NULL_CHAR, trim(val) // C_NULL_CHAR)
+if(.not. s) write(stderr,'(a,1x,i0)') "ERROR:Ffilesystem: setenv(" // trim(name) // ") failed."
+
 if(present(ok)) then
   ok = s
 elseif (.not. s) then
-  write(stderr,'(a,1x,i0)') "ERROR:Ffilesystem: setenv(" // trim(name) // ") failed."
   error stop
 end if
 end subroutine
@@ -1219,17 +1225,26 @@ character(*), intent(in) :: path
 
 logical(c_bool) :: e
 e = fs_remove(trim(path) // C_NULL_CHAR)
-if (.not. e) write(stderr, '(a)') "ERROR:ffilesystem:remove: " // trim(path) // " may not have been deleted."
+if (.not. e) write(stderr, '(a)') "ERROR:Ffs:remove: " // trim(path) // " may not have been deleted."
 end subroutine
 
 
-subroutine rename(old, new)
+subroutine fs_rename(old, new, ok)
 !! rename file or directory
 character(*), intent(in) :: old, new
+logical, intent(out), optional :: ok
 
-logical(c_bool) :: e
-e = fs_rename(trim(old) // C_NULL_CHAR, trim(new) // C_NULL_CHAR)
-if (.not. e) write(stderr, '(a)') "ERROR:ffilesystem:rename: " // trim(old) // " to " // trim(new) // " may not have been renamed."
+logical(c_bool) :: s
+
+s = fs_rename_c(trim(old) // C_NULL_CHAR, trim(new) // C_NULL_CHAR)
+if(.not. s) write(stderr, '(a)') "ERROR:Ffs:rename: " // trim(old) // " to " // trim(new) // " may not have been renamed."
+
+if(present(ok)) then
+  ok = s
+else if (.not. s) then
+  error stop
+end if
+
 end subroutine
 
 
