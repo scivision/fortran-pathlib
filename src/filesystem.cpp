@@ -49,7 +49,7 @@ fs_win32_remove(std::string_view path)
 bool
 fs_remove(std::string_view path)
 {
-
+  // remove a file or empty directory
   std::error_code ec;
 
 #ifdef HAVE_CXX_FILESYSTEM
@@ -60,7 +60,7 @@ fs_remove(std::string_view path)
 #elif defined(_WIN32)
   return fs_win32_remove(path);
 #else
-  if(remove(path.data()) == 0)
+  if(std::remove(path.data()) == 0)
     return true;
 #endif
 
