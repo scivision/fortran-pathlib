@@ -11,6 +11,7 @@ on:
       - "**.h"
       - "**.cpp"
       - "**.f90"
+      - "**.F90"
       - "**/CMakeLists.txt"
       - "**.cmake"
       - ".github/workflows/ci.yml"
