@@ -36,7 +36,8 @@ std::uintmax_t fs_space_available(std::string_view path)
 
   // Windows MinGW and oneAPI need root() or space is zero.
   // use root for Unix too for consistency e.g. macOS
-  std::string r = fs_root(path);
+  // need root(absolute()) to be consistent with <filesystem> backend on relative paths
+  const std::string r = fs_root(fs_absolute(path, false));
   if (r.empty())
     return {};
 
