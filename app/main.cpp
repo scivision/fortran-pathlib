@@ -256,33 +256,57 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
       std::cout << std::get<bool>(r);
 
     std::cout << "\n";
-  } else
-    std::cerr << fun << " requires more than 2 arguments or is unknown function\n";
+  } else if (fun == "set_perm"){
+    int r = 0;
+    int w = 0;
+    int x = 0;
 
-}
-
-static void four_arg(std::string_view fun, std::string_view a1, std::string_view a2, std::string_view a3, std::string_view a4){
-  if (fun == "set_perm"){
-    int r = std::stoi(a2.data());
-    int w = std::stoi(a3.data());
-    int x = std::stoi(a4.data());
+#ifdef __cpp_lib_string_contains
+    if(a2.contains("+r"))
+      r = 1;
+    if(a2.contains("+w"))
+      w = 1;
+    if(a2.contains("+x"))
+      x = 1;
+    if(a2.contains("-r"))
+      r = -1;
+    if(a2.contains("-w"))
+      w = -1;
+    if(a2.contains("-x"))
+      x = -1;
+#else
+    if(a2.find("+r") != std::string::npos)
+      r = 1;
+    if(a2.find("+w") != std::string::npos)
+      w = 1;
+    if(a2.find("+x") != std::string::npos)
+      x = 1;
+    if(a2.find("-r") != std::string::npos)
+      r = -1;
+    if(a2.find("-w") != std::string::npos)
+      w = -1;
+    if(a2.find("-x") != std::string::npos)
+      x = -1;
+#endif
 
     auto p = fs_get_permissions(a1);
-    if(p.empty())
+    if(p.empty()){
       std::cerr << "ERROR get_permissions(" << a1 << ") before chmod\n";
-    else
-      std::cout << "before chmod " << a1 << " " << p << "\n";
+      return;
+    }
 
-    fs_set_permissions(a1, r, w, x);
+    std::cout << "before chmod " << a1 << " " << p << "\n";
+    std::cout << "setting r,w,x " << r << " " << w << " " << x << "\n";
+    if(!fs_set_permissions(a1, r, w, x))
+      std::cerr << "ERROR set_permissions(" << a1 << ")\n";
 
+    p = fs_get_permissions(a1);
     if(p.empty())
       std::cerr << "ERROR get_permissions(" << a1 << ") after chmod\n";
     else
       std::cout << "after chmod " << a1 << " " << p << "\n";
-
-  } else {
-    std::cerr << fun << " requires more than 4 arguments or is unknown function\n";
-  }
+  } else
+    std::cerr << fun << " is unknown function\n";
 
 }
 
@@ -373,12 +397,6 @@ while (true){
     break;
   case 3:
     two_arg(args.at(0), args.at(1), args.at(2));
-    break;
-  case 4:
-    std::cerr << "no 3 argument functions currently\n";
-    break;
-  case 5:
-    four_arg(args.at(0), args.at(1), args.at(2), args.at(3), args.at(4));
     break;
   default:
     std::cerr << "too many arguments " << argc << "\n";

@@ -58,17 +58,18 @@ if(p.empty())
 std::cout << "Permissions for " << noread << ": " << p << "\n";
 
 #ifdef __cpp_lib_string_contains
-if(!p.contains("r") && fs_is_readable(noread)){
-
+if(!p.contains("r")
+#else
+if(p.find("r") == std::string::npos
+#endif
+  && fs_is_readable(noread)){
 if(!fs_exists(noread))
     err(noread + " should exist");
 
 if(!fs_is_file(noread))
     err(noread + " should be a file");
 }
-#else
-std::cerr << "SKIP: due to not having C++23 string contains support\n";
-#endif
+
 
 // writable
 if(!fs_is_file(nowrite))
@@ -81,14 +82,15 @@ if(p.empty())
 std::cout << "Permissions for " << nowrite << " " << p << "\n";
 
 #ifdef __cpp_lib_string_contains
-if(!p.contains("w") && fs_is_writable(nowrite)){
-  std::cerr << "ERROR:  " << nowrite << " should not be writable\n";
-  if(!fs_is_windows())
-    return EXIT_FAILURE;
-}
+if(!p.contains("w")
 #else
-std::cerr << "SKIP: due to not having C++23 string contains support\n";
+if(p.find("w") == std::string::npos
 #endif
+  && fs_is_writable(nowrite)){
+    std::cerr << "ERROR:  " << nowrite << " should not be writable\n";
+    if(!fs_is_windows())
+      return EXIT_FAILURE;
+}
 
 if(!fs_exists(nowrite))
   err(nowrite + " should exist");

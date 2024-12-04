@@ -119,7 +119,7 @@ fs_split(std::string_view path)
   std::string::size_type end;
 
   do {
-    end = p.find_first_of('/', start);
+    end = p.find('/', start);
     if(fs_trace) std::cout << "TRACE: split " << start << " " << end << " " << path << " " << p.substr(start, end-start) << "\n";
     // do not add empty parts
     if (end != start)
