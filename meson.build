@@ -85,19 +85,7 @@ dl = []
 if not is_windows and get_option('default_library') == 'shared'
   dl = cpp.find_library('dl', required: false)
 
-  have_dladdr = cpp.links('''#define _GNU_SOURCE
-  #include <dlfcn.h>
-  static void dl_dummy_func() {}
-
-  int main(){
-
-  Dl_info info;
-  if(!dladdr( reinterpret_cast<void*>(&dl_dummy_func), &info))
-    return 1;
-  return 0;
-  }
-  ''', dependencies: dl, name: 'dladdr')
-  if have_dladdr
+  if cpp.has_function('dladdr', args: '-D_GNU_SOURCE', dependencies: dl, prefix: '#include <dlfcn.h>')
     dladdr_def = '-DHAVE_DLADDR'
   endif
 endif
@@ -128,20 +116,21 @@ if not cpp.links(fs_check, dependencies: fs_lib, name: 'C++ filesystem')
 endif
 
 # -- chrono check
+if cpp_std.version_compare('>=20')
+  chrono_src = '''
+  #include <chrono>
+  #include <filesystem>
 
-chrono_src = '''
-#include <chrono>
-#include <filesystem>
+  int main(){
 
-int main(){
-
-std::filesystem::file_time_type t_fs;
-auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs);
-return 0;
-}
-'''
-if cpp.links(chrono_src, dependencies: fs_lib, name: 'C++20 chrono')
-  chrono_def = '-DHAVE_CLOCK_CAST'
+  std::filesystem::file_time_type t_fs;
+  auto t_sys = std::chrono::clock_cast<std::chrono::system_clock>(t_fs);
+  return 0;
+  }
+  '''
+  if cpp.links(chrono_src, dependencies: fs_lib, name: 'C++20 chrono')
+    chrono_def = '-DHAVE_CLOCK_CAST'
+  endif
 endif
 
 else
