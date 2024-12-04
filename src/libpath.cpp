@@ -31,8 +31,7 @@ std::string fs_lib_path()
     return fs_as_posix(path);
   }
 #elif defined(HAVE_DLADDR)
-  if(Dl_info info;
-      dladdr( (void*)&dl_dummy_func, &info))  FFS_LIKELY
+  if(Dl_info info; dladdr(reinterpret_cast<void*>(&dl_dummy_func), &info))  FFS_LIKELY
     return info.dli_fname;
 #endif
 

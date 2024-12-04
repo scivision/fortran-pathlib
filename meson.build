@@ -92,7 +92,7 @@ if not is_windows and get_option('default_library') == 'shared'
   int main(){
 
   Dl_info info;
-  if(!dladdr( (void*)&dl_dummy_func, &info))
+  if(!dladdr( reinterpret_cast<void*>(&dl_dummy_func), &info))
     return 1;
   return 0;
   }

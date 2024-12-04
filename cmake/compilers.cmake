@@ -118,6 +118,8 @@ elseif(CMAKE_C_COMPILER_ID MATCHES "MSVC")
   add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:/W3;/wd4996>")
 endif()
 
+add_compile_options("$<$<COMPILE_LANG_AND_ID:CXX,AppleClang,Clang,GNU>:-Wold-style-cast>")
+
 if(CMAKE_C_COMPILER_ID STREQUAL "IntelLLVM")
   add_compile_options("$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<CONFIG:Debug>>:-Rno-debug-disables-optimization>")
 endif()
