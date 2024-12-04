@@ -670,8 +670,7 @@ if(present(executable)) then
 end if
 
 s = fs_set_permissions(trim(path) // C_NULL_CHAR, r, w, e)
-if (.not. s) write(stderr, '(/,A,L1,1x,L1,1x,L1,1x,A)') "ERROR: set_permissions: failed to set permission ", &
-  readable,writable,executable, trim(path)
+if (.not. s) write(stderr, '(/,A,1x,L1,1x,L1,1x,L1)') "ERROR: set_permissions(" // path // ")", r, w, e
 
 if(present(ok)) then
   ok = s
