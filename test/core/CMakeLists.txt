@@ -83,9 +83,10 @@ canonical
 copyfile
 env
 equivalent
-expanduser
 exepath
-filename filesize
+expanduser
+filename
+filesize
 filesystem_type
 hard_link
 is_absolute
@@ -100,14 +101,17 @@ normal
 parent
 permissions
 proximate
-realpath relative
+realpath
+relative
 rename
 reserved root
 safe
 separator
 set_cwd
 space
-stem system
+stem
+suffix
+system
 touch
 with_suffix
 windows

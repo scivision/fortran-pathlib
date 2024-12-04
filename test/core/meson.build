@@ -77,6 +77,7 @@ cpp_core = [
 'set_cwd',
 'space',
 'stem',
+'suffix',
 'system',
 'touch',
 'with_suffix'
