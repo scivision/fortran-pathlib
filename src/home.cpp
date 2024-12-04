@@ -172,7 +172,7 @@ std::string fs_get_shell()
               break;
           }
           CloseHandle( hProcess );
-if(FS_TRACE) std::cout << "TRACE: get_shell: " << name << " PID: " << pid << " PPID: " << pe.th32ParentProcessID << "\n";
+if(fs_trace) std::cout << "TRACE: get_shell: " << name << " PID: " << pid << " PPID: " << pe.th32ParentProcessID << "\n";
         }
       } while( Process32Next(h, &pe));
     }

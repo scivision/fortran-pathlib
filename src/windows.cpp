@@ -50,7 +50,7 @@ std::string fs_win32_final_path(std::string_view path)
   // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfinalpathnamebyhandlea
 
 #if defined(_WIN32)
-  if(FS_TRACE) std::cout << "TRACE: win32_final_path(" << path << ")\n";
+  if(fs_trace) std::cout << "TRACE: win32_final_path(" << path << ")\n";
   // dwDesiredAccess=0 to allow getting parameters even without read permission
   // FILE_FLAG_BACKUP_SEMANTICS required to open a directory
   HANDLE h = CreateFileA(path.data(), 0, 0, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);

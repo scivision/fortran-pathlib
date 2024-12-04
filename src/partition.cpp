@@ -87,7 +87,7 @@ std::string fs_filesystem_type(std::string_view path)
     r.push_back('\\');
   }
 
-  if(FS_TRACE) std::cout << "TRACE:filesystem_type(" << path << ") root: " << r << "\n";
+  if(fs_trace) std::cout << "TRACE:filesystem_type(" << path << ") root: " << r << "\n";
 
   // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getvolumeinformationa
   if(std::string name(MAX_PATH+1, '\0');

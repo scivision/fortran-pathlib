@@ -84,7 +84,7 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
     // https://man7.org/linux/man-pages/man2/copy_file_range.2.html
     // https://linux.die.net/man/3/open
 
-if (FS_TRACE) std::cout << "TRACE::ffilesystem:copy_file: using copy_file_range\n";
+if (fs_trace) std::cout << "TRACE::ffilesystem:copy_file: using copy_file_range\n";
 
   if(!overwrite && fs_exists(dest)){
     fs_print_error(dest, "copy_file:file exists");
@@ -133,7 +133,7 @@ if (FS_TRACE) std::cout << "TRACE::ffilesystem:copy_file: using copy_file_range\
 #else
     // https://stackoverflow.com/a/29082484
 
-if (FS_TRACE) std::cout << "TRACE::ffilesystem:copy_file: using fallback fread/fwrite\n";
+if (fs_trace) std::cout << "TRACE::ffilesystem:copy_file: using fallback fread/fwrite\n";
 
   if(!overwrite && fs_exists(dest)){
     fs_print_error(dest, "copy_file:file exists");

@@ -22,7 +22,7 @@ std::string fs_which(std::string_view name)
     return {};
   }
 
-  if(FS_TRACE) std::cout << "TRACE:which: PATH: " << path << "\n";
+  if(fs_trace) std::cout << "TRACE:which: PATH: " << path << "\n";
 
   std::string n(name);
   std::string r;
@@ -36,7 +36,7 @@ std::string fs_which(std::string_view name)
 
     r = p + "/" + n;
 
-    if (FS_TRACE) std::cout << "TRACE:which: is_file(" << r << ") " << fs_is_file(r) << " is_exe(" << r << ") " << fs_is_exe(r) << "\n";
+    if (fs_trace) std::cout << "TRACE:which: is_file(" << r << ") " << fs_is_file(r) << " is_exe(" << r << ") " << fs_is_exe(r) << "\n";
 
     if (fs_is_exe(r))
       return fs_as_posix(r);

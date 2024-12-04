@@ -23,7 +23,7 @@ std::string fs_parent(std::string_view path)
   // have to drop_slash on input to get expected parent path -- necessary for AppleClang
   p = std::filesystem::path(p).parent_path().generic_string();
 
-  if(FS_TRACE) std::cout << "TRACE:parent(" << path << ") => " << p << "\n";
+  if(fs_trace) std::cout << "TRACE:parent(" << path << ") => " << p << "\n";
 
 // 30.10.7.1 [fs.path.generic] dot-dot in the root-directory refers to the root-directory itself.
 // On Windows, a drive specifier such as "C:" or "z:" is treated as a root-name.

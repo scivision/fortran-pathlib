@@ -39,7 +39,7 @@ std::uintmax_t fs_file_size(std::string_view path)
     return s;
 #elif defined(STATX_SIZE) && defined(USE_STATX)
 // https://www.man7.org/linux/man-pages/man2/statx.2.html
-  if (FS_TRACE) std::cout << "TRACE: statx() file_size " << path << "\n";
+  if (fs_trace) std::cout << "TRACE: statx() file_size " << path << "\n";
   struct statx s;
   if(statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT, STATX_SIZE, &s) == 0) FFS_LIKELY
     return s.stx_size;
@@ -82,7 +82,7 @@ bool fs_is_empty(std::string_view path)
 
   do
   {
-      if(FS_TRACE) std::cout << "TRACE: is_empty: do " << ffd.cFileName << "\n";
+      if(fs_trace) std::cout << "TRACE: is_empty: do " << ffd.cFileName << "\n";
 
       if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
         // std::set is much slower than a simple if

@@ -56,7 +56,7 @@ bool fs_is_symlink(std::string_view path)
 // Linux Glibc only
 // https://www.gnu.org/software/gnulib/manual/html_node/statx.html
 // https://www.man7.org/linux/man-pages/man2/statx.2.html
-  if (FS_TRACE) std::cout << "TRACE: statx() is_symlink " << path << "\n";
+  if (fs_trace) std::cout << "TRACE: statx() is_symlink " << path << "\n";
   struct statx s;
   if(statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT | AT_SYMLINK_NOFOLLOW, STATX_MODE, &s) == 0) FFS_LIKELY
     return S_ISLNK(s.stx_mode);

@@ -1,11 +1,14 @@
 #ifndef FFILESYSTEM_H
 #define FFILESYSTEM_H
 
-#ifndef FS_TRACE
-#define FS_TRACE 0
-#endif
-
 #ifdef __cplusplus
+
+constexpr bool fs_trace =
+#ifdef FS_TRACE
+  true;
+#else
+  false;
+#endif
 
 #if !defined(__has_cpp_attribute)
 // this is a C++20 feature, but available in many older compilers

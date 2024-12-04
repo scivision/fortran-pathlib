@@ -41,7 +41,7 @@ bool fs_equivalent(std::string_view path1, std::string_view path2)
 
 #elif defined(STATX_BASIC_STATS) && defined(USE_STATX)
 // https://www.man7.org/linux/man-pages/man2/statx.2.html
-  if (FS_TRACE) std::cout << "TRACE: statx() equivalent " << path1 << " " << path2 << "\n";
+  if (fs_trace) std::cout << "TRACE: statx() equivalent " << path1 << " " << path2 << "\n";
   struct statx s1;
   struct statx s2;
 

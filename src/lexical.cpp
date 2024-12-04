@@ -47,7 +47,7 @@ fs_is_reserved(std::string_view path)
 
   // don't detect ASCII control characters as reserved, since multi-byte characters may falsely trip that check
 
-  if(FS_TRACE) std::cout << "TRACE: fs_is_reserved: check stem" << filename << "\n";
+  if(fs_trace) std::cout << "TRACE: fs_is_reserved: check stem" << filename << "\n";
 
   std::string s = fs_stem(filename);
 

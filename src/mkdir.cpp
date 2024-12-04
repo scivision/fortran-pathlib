@@ -59,7 +59,7 @@ bool fs_mkdir(std::string_view path)
 
   for(const auto& p : parts){
     buf.append(p).push_back('/');
-    if(FS_TRACE) std::cout << "TRACE:mkdir " << buf << "\n";
+    if(fs_trace) std::cout << "TRACE:mkdir " << buf << "\n";
     // create directory
 #ifdef _WIN32
     // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createdirectorya

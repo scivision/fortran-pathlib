@@ -304,7 +304,7 @@ std::cout << "maximum path length: " << fs_get_max_path() << "\n";
 std::cout << "maximum path component length: " << fs_max_component(cwd) << "\n";
 std::cout << "current working directory (CWD): " << cwd << "\n";
 std::cout << "Compiler: " << fs_compiler() << "\n";
-std::cout << "Optimized: " << fs_is_optimized() << " Trace: " << FS_TRACE << "\n";
+std::cout << "Optimized: " << fs_is_optimized() << " Trace: " << fs_trace << "\n";
 std::cout << "CPU arch: " << fs_cpu_arch() << "\n";
 std::cout << "C++ standard " << fs_cpp_lang() << "\n";
 std::cout << "C standard " << fs_c_lang() << "\n";

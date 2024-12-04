@@ -34,10 +34,10 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
   const std::string::size_type Lo = o.size();
 
   // find common prefix, returning empty if no common prefix
-  if(FS_TRACE) std::cout << "TRACE:relative_to: normal_vector lengths " << Lb << " " << Lo << "\n";
+  if(fs_trace) std::cout << "TRACE:relative_to: normal_vector lengths " << Lb << " " << Lo << "\n";
   std::string::size_type i = 0;
   for (; i < Lb && i < Lo; i++){
-    if(FS_TRACE) std::cout << "TRACE:relative_to: " << b[i] << " " << o[i] << "\n";
+    if(fs_trace) std::cout << "TRACE:relative_to: " << b[i] << " " << o[i] << "\n";
     if (b[i] != o[i])
       break;
   }

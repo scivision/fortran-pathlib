@@ -28,7 +28,7 @@ std::string fs_mkdtemp(std::string_view prefix)
 {
   // make unique temporary directory starting with prefix
 
-if(FS_TRACE) std::cout << "TRACE:mkdtemp_mersenne: prefix: " << prefix << "\n";
+if(fs_trace) std::cout << "TRACE:mkdtemp_mersenne: prefix: " << prefix << "\n";
 
   std::error_code ec;
 
@@ -39,7 +39,7 @@ if(FS_TRACE) std::cout << "TRACE:mkdtemp_mersenne: prefix: " << prefix << "\n";
   constexpr std::string::size_type Lname = 16;  // arbitrary length for random string
   const std::filesystem::path temp = std::filesystem::temp_directory_path(ec);
 
-  if(FS_TRACE) std::cout << "TRACE:mkdtemp: tempdir: " << temp << "\n";
+  if(fs_trace) std::cout << "TRACE:mkdtemp: tempdir: " << temp << "\n";
 
   if(!ec) FFS_LIKELY
   {
@@ -48,8 +48,8 @@ if(FS_TRACE) std::cout << "TRACE:mkdtemp_mersenne: prefix: " << prefix << "\n";
       if(rname.empty()) FFS_UNLIKELY
         return {};
       t = (temp / (prefix.data() + rname));
-      if(FS_TRACE) std::cout << "TRACE:mkdtemp: randomName: " << rname << "\n";
-      if(FS_TRACE) std::cout << "TRACE:mkdtemp: fullTemppath: " << t << "\n";
+      if(fs_trace) std::cout << "TRACE:mkdtemp: randomName: " << rname << "\n";
+      if(fs_trace) std::cout << "TRACE:mkdtemp: fullTemppath: " << t << "\n";
     } while (std::filesystem::is_directory(t, ec) && !ec);
 
     if (std::filesystem::create_directory(t, ec) && !ec) FFS_LIKELY

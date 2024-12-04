@@ -7,7 +7,7 @@ use_cpp = get_option('cpp')
 # mean to use C++17 <filesystem> library
 
 trace = get_option('trace')
-trace_def = trace ? '-DFS_TRACE=1' : []
+trace_def = trace ? '-DFS_TRACE' : []
 
 have_filesystem = use_cpp ? '-DHAVE_CXX_FILESYSTEM' : []
 
