@@ -21,11 +21,10 @@ core_tests = ['is_absolute', 'absolute',
 'set_cwd',
 'suffix', 'with_suffix',
 'resolve',
-'relative', 'proximate']
+'relative', 'proximate',
+'path_t'
+]
 
-if have_f03type
-core_tests += 'path_t'
-endif
 
 foreach t : core_tests
 
@@ -47,9 +46,12 @@ cpp_core = [
 'absolute',
 'canonical',
 'copyfile',
+'env',
 'equivalent',
+'exepath',
 'expanduser',
-'filename', 'filesize',
+'filename',
+'filesize',
 'filesystem_type',
 'hard_link',
 'is_absolute',
@@ -59,13 +61,17 @@ cpp_core = [
 'join',
 'locale',
 'mkdir',
+'mkdtemp',
 'owner',
 'normal',
-'parent', 'permissions',
+'parent',
+'permissions',
 'proximate',
-'realpath', 'relative',
+'realpath',
+'relative',
 'rename',
-'reserved', 'root',
+'reserved',
+'root',
 'safe',
 'separator',
 'set_cwd',
@@ -76,6 +82,10 @@ cpp_core = [
 'with_suffix'
 ]
 
+if is_windows
+  cpp_core += 'windows'
+endif
+
 foreach t : cpp_core
 
     t_cpp = executable(t + '_cpp', 'test_' + t + '.cpp', link_with: filesystem,
@@ -85,7 +95,6 @@ foreach t : cpp_core
 
 endforeach
 
-tenv = executable('env_cpp', 'test_env.cpp', link_with: filesystem, include_directories: [inc, '..'])
+tenv = executable('noenv_cpp', 'test_env.cpp', link_with: filesystem, include_directories: [inc, '..'])
 
-test('Env_cpp', tenv, suite: 'cpp')
 test('NoEnv_cpp', tenv, suite: 'cpp', env: env)

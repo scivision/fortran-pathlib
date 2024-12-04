@@ -4,10 +4,9 @@ default_options: ['c_std=c99', 'cpp_std=c++23,c++20,c++17', 'buildtype=release',
 meson_version : '>=1.4.0')
 
 use_cpp = get_option('cpp')
-# mean to use C++17 <filesystem> library
+# use C++17 <filesystem> library
 
-trace = get_option('trace')
-trace_def = trace ? '-DFS_TRACE' : []
+trace_def = get_option('trace') ? '-DFS_TRACE' : []
 
 have_filesystem = use_cpp ? '-DHAVE_CXX_FILESYSTEM' : []
 
@@ -145,28 +144,6 @@ endif
 
 endif # use_cpp
 
-# -- Fortran feature checks
-f03type_def = []
-
-if fortran
-
-fc = meson.get_compiler('fortran')
-
-f03type_src = '''
-program main
-type :: path_t
-character(:), allocatable :: s
-end type
-end program
-'''
-
-have_f03type = fc.compiles(f03type_src, name: 'Fortran 2003 derived type')
-if not have_f03type
-  f03type_def = '-DNO_F03TYPE'
-endif
-
-endif
-
 # Windows-specific
 libwin = []
 
@@ -186,7 +163,6 @@ include_directories: [inc],
 install: true,
 c_args: [],
 cpp_args: [have_filesystem, chrono_def, dladdr_def, def_copy_file, def_statx, trace_def],
-fortran_args: f03type_def,
 dependencies: [libwin, fs_lib, dl],
 )
 
