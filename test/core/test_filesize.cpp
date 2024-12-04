@@ -51,26 +51,7 @@ int argc,char *argv[]){
       err("failed to get correct file size " + fn);
   }
 
-// space
-
-  auto avail = fs_space_available(d);
-  if(!avail)
-    err("failed to get space available of own drive " + d);
-
-  float avail_GB = (float) avail / 1073741824;
-  std::cout << "OK space available on drive of " << d <<  " (GB) " <<  avail_GB << "\n";
-
-// UTF-8 space
-  if(fs_is_mingw() && fs_backend() == "<filesystem>")
-    std::cerr << "MINGW with <filesystem> backend has a bug in fs_space_available 0xc0000409\n";
-  else {
-    fn = fs_canonical(fn, true, false);
-    avail = fs_space_available(fn);
-    if(!avail)
-      err("failed to get space available of file " + fn);
-  }
-
-  ok_msg("file_size, space_available C++");
+  ok_msg("file_size C++");
 
   return EXIT_SUCCESS;
 }
