@@ -24,114 +24,100 @@
 #include <string>
 #include <string_view>
 
-
 #include "ffilesystem.h"
 
-std::string fs_get_owner_name(std::string_view path)
+
+#ifdef _WIN32
+static std::string fs_win32_get_owner(PSID pSid)
+{
+  DWORD L1 = 0;
+  DWORD L2 = 0;
+  SID_NAME_USE eUse = SidTypeUnknown;
+
+  if(!LookupAccountSidA(nullptr, pSid, nullptr, &L1, nullptr, &L2, &eUse) && GetLastError() != ERROR_INSUFFICIENT_BUFFER)
+    return {};
+
+  std::string s(L1, '\0');
+  if (!LookupAccountSidA(nullptr, pSid, s.data(), &L1, nullptr, &L2, &eUse))
+    return {};
+
+  s.resize(L1);
+  return s;
+}
+#endif
+
+
+std::string
+fs_get_owner_name(std::string_view path)
 {
 #ifdef _WIN32
 // https://learn.microsoft.com/en-us/windows/win32/secauthz/finding-the-owner-of-a-file-object-in-c--
 
-  DWORD Lowner = 0;
-  DWORD Ldomain = 0;
   PSECURITY_DESCRIPTOR pSD = nullptr;
-  PSID pOwnerSid = nullptr;
-  SID_NAME_USE eUse = SidTypeUnknown;
+  PSID pSid = nullptr;
+  std::string s;
 
   // https://learn.microsoft.com/en-us/windows/win32/api/aclapi/nf-aclapi-getnamedsecurityinfoa
-  if (DWORD r = GetNamedSecurityInfoA(path.data(), SE_FILE_OBJECT, OWNER_SECURITY_INFORMATION, &pOwnerSid, nullptr, nullptr, nullptr, &pSD);
-        r != ERROR_SUCCESS) {
-    fs_print_error(path, "owner:GetNamedSecurityInfo: failed to get security info");
-    return {};
-  }
+  if(GetNamedSecurityInfoA(path.data(), SE_FILE_OBJECT, OWNER_SECURITY_INFORMATION, &pSid, nullptr, nullptr, nullptr, &pSD) == ERROR_SUCCESS)
+    s = fs_win32_get_owner(pSid);
 
-// get buffer size
-
-  // segfaults if you do not use dwDomainName and eUse
-  if (!LookupAccountSidA(nullptr, pOwnerSid, nullptr, &Lowner, nullptr, &Ldomain, &eUse) && GetLastError() != ERROR_INSUFFICIENT_BUFFER) {
-    fs_print_error(path, "owner:LookupAccountSid: get buffer size failed");
-    return {};
-  }
-
-  std::string owner(Lowner, '\0');
-  const auto r = LookupAccountSidA(nullptr, pOwnerSid, owner.data(), &Lowner, nullptr, &Ldomain, &eUse);
   LocalFree(pSD);
-  if (r){
-    owner.resize(Lowner);
-    return owner;
-  }
+  if(!s.empty())
+    return s;
 
-#else
-
-#if defined(STATX_UID) && defined(USE_STATX)
+#elif defined(STATX_UID) && defined(USE_STATX)
 // https://www.man7.org/linux/man-pages/man2/statx.2.html
-  if (FS_TRACE) std::cout << "TRACE: statx() owner_name " << path << "\n";
+  if (fs_trace) std::cout << "TRACE: statx() owner_name " << path << "\n";
   struct statx s;
   if(statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT, STATX_UID, &s) == 0){
     auto pw = getpwuid(s.stx_uid);
+    return pw->pw_name;
+  }
 #else
   struct stat s;
   if(!stat(path.data(), &s)){
     auto pw = getpwuid(s.st_uid);
-#endif
     return pw->pw_name;
   }
 #endif
 
-  fs_print_error(path, "get_owner:getpwuid");
+  fs_print_error(path, "get_owner_name");
   return {};
 }
 
 
-std::string fs_get_owner_group(std::string_view path)
+std::string
+fs_get_owner_group(std::string_view path)
 {
 #ifdef _WIN32
   // use GetNamedSecurityInfoA to get group name
 
-  DWORD Lgroup = 0;
-  DWORD Ldomain = 0;
   PSECURITY_DESCRIPTOR pSD = nullptr;
-  PSID pGroupSid = nullptr;
-  SID_NAME_USE eUse = SidTypeUnknown;
+  PSID pSid = nullptr;
+  std::string s;
 
   // https://learn.microsoft.com/en-us/windows/win32/api/aclapi/nf-aclapi-getnamedsecurityinfoa
-  if (DWORD r = GetNamedSecurityInfoA(path.data(), SE_FILE_OBJECT, GROUP_SECURITY_INFORMATION, nullptr, &pGroupSid, nullptr, nullptr, &pSD);
-        r != ERROR_SUCCESS) {
-    fs_print_error(path, "get_owner_group:GetNamedSecurityInfo: failed to get security info");
-    return {};
-  }
+  if(GetNamedSecurityInfoA(path.data(), SE_FILE_OBJECT, GROUP_SECURITY_INFORMATION, nullptr, &pSid, nullptr, nullptr, &pSD) == ERROR_SUCCESS)
+    s = fs_win32_get_owner(pSid);
 
-  // get buffer size
-  if (!LookupAccountSidA(nullptr, pGroupSid, nullptr, &Lgroup, nullptr, &Ldomain, &eUse) && GetLastError() != ERROR_INSUFFICIENT_BUFFER) {
-    fs_print_error(path, "get_owner_group:LookupAccountSid: get buffer size failed");
-    return {};
-  }
-
-
-  std::string group(Lgroup, '\0');
-  const auto r = LookupAccountSidA(nullptr, pGroupSid, group.data(), &Lgroup, nullptr, &Ldomain, &eUse);
   LocalFree(pSD);
-  if (r){
-    group.resize(Lgroup);
-    return group;
-  }
+  if(!s.empty())
+    return s;
 
-#else
-
-#if defined(STATX_GID) && defined(USE_STATX)
+#elif defined(STATX_GID) && defined(USE_STATX)
 // https://www.man7.org/linux/man-pages/man2/statx.2.html
-  if (FS_TRACE) std::cout << "TRACE: statx() owner_name " << path << "\n";
+  if (fs_trace) std::cout << "TRACE: statx() owner_group " << path << "\n";
   struct statx s;
   if(statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT, STATX_GID, &s) == 0){
     auto gr = getgrgid(s.stx_gid);
+    return gr->gr_name;
+  }
 #else
   struct stat s;
   if(!stat(path.data(), &s)){
     auto gr = getgrgid(s.st_gid);
-#endif
     return gr->gr_name;
   }
-
 #endif
 
   fs_print_error(path, "get_owner_group");

@@ -61,7 +61,7 @@ std::string fs_win32_final_path(std::string_view path)
 
   std::string r(fs_get_max_path(), '\0');
 
-  DWORD L = GetFinalPathNameByHandleA(h, r.data(), static_cast<DWORD>(r.size()), FILE_NAME_NORMALIZED);
+  const DWORD L = GetFinalPathNameByHandleA(h, r.data(), static_cast<DWORD>(r.size()), FILE_NAME_NORMALIZED);
   CloseHandle(h);
 
   switch (L) {

@@ -18,7 +18,7 @@ static std::string fs_convert_path(std::string_view path,
 const int what)
 {
 #ifdef __CYGWIN__
-  const ssize_t L = cygwin_conv_path(what, path.data(), nullptr, 0);
+  const auto L = cygwin_conv_path(what, path.data(), nullptr, 0);
   if(L > 0){
     if (std::string r(L, '\0'); !cygwin_conv_path(what, path.data(), r.data(), L))
       return r;

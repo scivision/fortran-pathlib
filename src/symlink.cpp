@@ -92,7 +92,7 @@ std::string fs_read_symlink(std::string_view path)
   // https://www.man7.org/linux/man-pages/man2/readlink.2.html
   std::string r(fs_get_max_path(), '\0');
 
-  const ssize_t Lr = readlink(path.data(), r.data(), r.size());
+  const auto Lr = readlink(path.data(), r.data(), r.size());
   if (Lr > 0){
     // readlink() does not null-terminate the result
     r.resize(Lr);
@@ -107,7 +107,7 @@ std::string fs_read_symlink(std::string_view path)
 
 bool fs_create_symlink(std::string_view target, std::string_view link)
 {
-
+  // create symlink to file or directory
   if(target.empty()) FFS_UNLIKELY
   {
     std::cerr << "ERROR: create_symlink: target path must not be empty\n";
