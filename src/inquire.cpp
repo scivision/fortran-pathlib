@@ -104,13 +104,7 @@ fs_is_file(std::string_view path)
 {
 #ifdef HAVE_CXX_FILESYSTEM
   std::error_code ec;
-  // disqualify reserved names
-  const bool ok = std::filesystem::is_regular_file(path, ec) && !ec;
-  const bool reserved = fs_is_reserved(path);
-
-  if(FS_TRACE) std::cout << "TRACE:fs_is_file, reserved: " << path << " " << ok << " " << reserved << "\n";
-
-  return ok && !reserved;
+  return std::filesystem::is_regular_file(path, ec) && !ec;
 #else
     return fs_st_mode(path) & S_IFREG;
   // S_ISREG not available with MSVC
