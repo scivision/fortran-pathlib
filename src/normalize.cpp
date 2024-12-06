@@ -79,14 +79,23 @@ fs_normal(std::string_view path)
 
 
 std::string
-fs_drop_slash(std::string_view sv)
+fs_drop_slash(std::string_view path)
 {
   // drop all trailing "/" and duplicated internal "/"
-  std::string s(sv);
-  while(s.length() > 1 && (s.back() == '/' || (fs_is_windows() && s.back() == '\\')))
-    s.pop_back();
+  const std::string p = fs_as_posix(path);
+  if(p.empty())
+    return {};
+
+  std::string s(p);
 
   s.erase(std::unique(s.begin(), s.end(), [](char a, char b){ return a == '/' && b == '/'; }), s.end());
+
+  if(s.empty() || s == "/")
+    return s;
+
+  // don't return invalid path c:, but rather c:/
+  if(s.back() == '/' && (!fs_is_windows() || (s.length() != 3 || s != fs_root(p))))
+    s.pop_back();
 
   return s;
 }

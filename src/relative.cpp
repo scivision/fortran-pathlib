@@ -49,8 +49,10 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
   // build relative path
 
   std::string r;
-  for (std::string::size_type j = i; j < Lb; j++)
-    r.append("../");
+  if(base != fs_root(base)){
+    for (std::string::size_type j = i; j < Lb; j++)
+      r.append("../");
+  }
 
   for (std::string::size_type j = i; j < Lo; j++)
     r.append(o[j]).push_back('/');
@@ -60,7 +62,7 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
   if(r == "/" || r.empty())
     r = ".";
 
-  if (other.back() == '/' && r.back() != '/' && r != ".")
+  if (other.back() == '/' && other != fs_root(other) && r.back() != '/' && r != ".")
     r.push_back('/');
 
   return r;
