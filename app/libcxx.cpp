@@ -34,14 +34,13 @@ unsigned long libcxx_release()
 
 int main()
 {
-  std::cout << "C++ library compile-time version: " << libcxx_release() << "\n";
-  std::cout << "C++ library vendor "
+  std::cout
 #ifdef _LIBCPP_VERSION
-  << " LLVM"
+  << "LLVM libc++"
 #elif defined(_GLIBCXX_RELEASE)
-  << " GNU GCC"
+  << "GNU GCC libstdc++"
 #endif
-  << "\n";
+  << " " << libcxx_release() << "\n";
 
   return EXIT_SUCCESS;
 }

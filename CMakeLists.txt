@@ -29,9 +29,20 @@ endif()
 include(cmake/compilers.cmake)
 
 message(STATUS "${PROJECT_NAME} ${PROJECT_VERSION} C++${CMAKE_CXX_STANDARD} CMake ${CMAKE_VERSION} ${CMAKE_SYSTEM_NAME} Toolchain ${CMAKE_TOOLCHAIN_FILE}")
-message(VERBOSE "CMAKE_AR ${CMAKE_AR}
+message(VERBOSE
+"CMAKE_AR ${CMAKE_AR}
 CMAKE_RANLIB ${CMAKE_RANLIB}
-CMAKE_STRIP ${CMAKE_STRIP}")
+CMAKE_STRIP ${CMAKE_STRIP}"
+)
+message(VERBOSE
+"CMAKE_CXX_COMPILER_ID: ${CMAKE_CXX_COMPILER_ID}
+CMAKE_CXX_COMPILER_LINKER_ID: ${CMAKE_CXX_COMPILER_LINKER_ID}
+CMAKE_CXX_COMPILER_LINKER_ID: ${CMAKE_CXX_COMPILER_LINKER_ID}
+CMAKE_Fortran_COMPILER_LINKER_ID: ${CMAKE_Fortran_COMPILER_LINKER_ID}"
+)
+if(ffilesystem_stdcpp_version)
+  message(STATUS "C++ standard library: ${ffilesystem_stdcpp_version}")
+endif()
 
 # CPPcheck
 if(ffilesystem_cppcheck)

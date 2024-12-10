@@ -43,9 +43,9 @@ std::string fs_libcxx()
 {
   std::string v;
 #if defined(_LIBCPP_VERSION)
-  v = "LLVM " + std::to_string(_LIBCPP_VERSION);
+  v = "LLVM libc++ " + std::to_string(_LIBCPP_VERSION);
 #elif defined(_GLIBCXX_RELEASE)
-  v = "GNU " + std::to_string(_GLIBCXX_RELEASE);
+  v = "GNU libstdc++ " + std::to_string(_GLIBCXX_RELEASE);
 #endif
   return v;
 }
