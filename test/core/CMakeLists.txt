@@ -58,7 +58,6 @@ set_tests_properties(Fortran_filesystem_type PROPERTIES
 DISABLED $<AND:$<BOOL:${LINUX}>,$<NOT:$<BOOL:${ffilesystem_HAVE_LINUX_MAGIC}>>>
 )
 
-set_tests_properties(Fortran_is_subdir PROPERTIES FIXTURES_REQUIRED relative)
 set_tests_properties(Fortran_absolute PROPERTIES FIXTURES_REQUIRED "is_absolute;join")
 
 set_tests_properties(Fortran_resolve PROPERTIES
@@ -93,6 +92,7 @@ is_absolute
 is_dir
 is_empty
 is_file
+is_subdir
 join
 mkdir
 mkdtemp
