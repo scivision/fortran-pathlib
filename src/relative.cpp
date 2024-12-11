@@ -84,15 +84,24 @@ std::string fs_proximate_to(std::string_view base, std::string_view other)
 
 bool fs_is_subdir(std::string_view subdir, std::string_view dir)
 {
-  // is subdir a subdirectory of dir
+  // is subdir a subdirectory of dir. Does not normalize, canonicalize,
+  // or walk up the directory tree. A lexical operation only.
 
-  const std::string r = fs_relative_to(dir, subdir);
+  if(subdir.empty() || dir.empty())
+    return false;
 
-  return !r.empty() && r != "." &&
-#ifdef __cpp_lib_starts_ends_with // C++20
-    !r.starts_with("..");
-#else // C++98
-    r.substr(0,2) != "..";
-#endif
+  const std::string s = fs_drop_slash(subdir);
+  const std::string d = fs_drop_slash(dir);
+
+  if(s == d)
+    return false;
+
+  if(s.size() < d.size())
+    return false;
+
+  if(s.substr(0, d.size()) != d)
+    return false;
+
+  return true;
 
 }

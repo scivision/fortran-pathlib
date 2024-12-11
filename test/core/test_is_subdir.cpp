@@ -3,6 +3,7 @@
 #include <vector>
 #include <string_view>
 #include <string>
+#include <tuple>
 
 #include "ffilesystem.h"
 #include "ffilesystem_test.h"
@@ -14,7 +15,8 @@ int main()
 std::vector<std::tuple<std::string_view, std::string_view, bool>> test_cases = {
     {"a/b/c", "a/b", true}, {"a/b/c", "a/b/", true}, {"a/b/c", "a", true},
     {"a/b", "a/b", false}, {"a/b", "a/b/", false},
-    {"a/b", "c", false}, {"b", "a/b", false}
+    {"a/b", "c", false}, {"b", "a/b", false},
+    {"c:/a", "c:/", true}
 
 };
 
