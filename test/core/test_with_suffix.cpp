@@ -28,7 +28,8 @@ const std::vector<std::tuple<std::string_view, std::string_view, std::string_vie
   {"a/boo", ".h5", "a/boo.h5"},
   {"boo", ".h5", "boo.h5"},
   {"a/b/c.d/", ".hdf5", "a/b/c.d/.hdf5"},
-  {"dir.h5/", ".hdf5", "dir.h5/.hdf5"}
+  {"dir.h5/", ".hdf5", "dir.h5/.hdf5"},
+  {"a/b/.h5", ".nc", "a/b/.h5.nc"}
 };
 
 for (const auto& [input, suffix, expected] : tests) {

@@ -191,11 +191,9 @@ std::string fs_with_suffix(std::string_view path, std::string_view new_suffix)
 #ifdef HAVE_CXX_FILESYSTEM
   return std::filesystem::path(path).replace_extension(new_suffix).generic_string();
 #else
-  const std::string p = fs_drop_slash(path);
+  const std::string p = fs_parent(path);
 
-  const std::string parent = fs_parent(p);
-
-  const std::string r = (parent == ".") ? stem : parent + "/" + stem;
+  const std::string r = (p == ".") ? stem : p + "/" + stem;
 
   return r + std::string(new_suffix);
 
