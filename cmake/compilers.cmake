@@ -14,6 +14,11 @@ if(CMAKE_VERSION VERSION_LESS 3.25 AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
   set(LINUX true)
 endif()
 
+# --- compiler standard setting -- need if(NOT) in case CMAKE_CXX_STANDARD is set but blank.
+if(NOT CMAKE_CXX_STANDARD OR CMAKE_CXX_STANDARD LESS 17)
+  set(CMAKE_CXX_STANDARD 17)
+endif()
+
 if(NOT MSVC AND NOT DEFINED ffilesystem_stdcpp_version)
 
 message(CHECK_START "Checking C++ standard library version")
@@ -46,15 +51,14 @@ if(ffilesystem_stdcpp_run EQUAL 0)
   endif()
 endif()
 
-
 if(GNU_stdfs)
   set(CMAKE_REQUIRED_LIBRARIES ${GNU_stdfs})
   message(STATUS "adding C++ library flags ${GNU_stdfs}")
 endif()
 
-# --- compiler standard setting -- need if(NOT) in case CMAKE_CXX_STANDARD is set but blank.
-if(NOT CMAKE_CXX_STANDARD OR CMAKE_CXX_STANDARD LESS 17)
-  set(CMAKE_CXX_STANDARD 17)
+# libc++ hardening
+if(ffilesystem_stdcpp_version MATCHES "^LLVM")
+  add_compile_definitions(_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_FAST)
 endif()
 
 if(ffilesystem_cpp)

@@ -9,6 +9,12 @@ Computing platforms provide STL in distinct ways:
 * macOS AppleClang: STL is provided by [Xcode](https://developer.apple.com/forums/thread/715385) and is not a specific file.
 * macOS [Homebrew](https://brew.sh): STL is by default the system STL, but can be specified to be Homebrew [LLVM libc++](https://formulae.brew.sh/formula/llvm) or [GNU libstdc++](https://formulae.brew.sh/formula/gcc).
 
+Where allowed by the complier/linker/libc++, one can specify the libc++ library like:
+
+```sh
+cmake -B build -DCMAKE_CXX_FLAGS="-stdlib=libc++"
+```
+
 
 On Linux systems, STL is provided by default by the GNU libstdc++ library for many (almost all popular) distributions.
 Other Linux distributions such as
