@@ -73,8 +73,6 @@ std::unordered_map<std::string_view, fs_function> fs_function_map = {
   {"max_path", []() { return fs_get_max_path(); }}
 };
 
-  //"random", [](size_t) { return fs_generate_random_alphanumeric_string(16); },
-
   auto it = fs_function_map.find(fun);
   if (it != fs_function_map.end()) {
     auto result = it->second();
@@ -195,6 +193,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
 #endif
   } else if (fun == "fs_modtime")
     std::cout << fs_get_modtime(a1) << "\n";
+  else if (fun == "random")
+    std::cout << fs_generate_random_alphanumeric_string(std::strtoul(a1.data(), nullptr, 10)) << "\n";
   else if (fun == "chdir" || fun == "set_cwd") {
     auto cwd = fs_get_cwd();
     if(!cwd.empty()){
