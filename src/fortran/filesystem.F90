@@ -9,7 +9,7 @@ private
 public :: get_homedir, get_profile_dir, user_config_dir, get_username, hostname, &
  get_owner_name, get_owner_group, &
  canonical, resolve, realpath, fs_getpid, &
- get_cwd, set_cwd, make_tempdir, which
+ get_cwd, set_cwd, which
 public :: normal, expanduser, as_posix, &
 is_absolute, is_char_device, is_case_sensitive, is_dir, is_file, is_exe, is_subdir, is_readable, is_writable, is_reserved, &
 is_empty, &
@@ -499,13 +499,6 @@ end function
 integer(C_SIZE_T) function fs_with_suffix(path, new_suffix, result, buffer_size) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: path(*), new_suffix
-character(kind=C_CHAR), intent(out) :: result(*)
-integer(C_SIZE_T), intent(in), value :: buffer_size
-end function
-
-integer(C_SIZE_T) function fs_mkdtemp(tmpl, result, buffer_size) bind(C)
-import
-character(kind=C_CHAR), intent(in) :: tmpl(*)
 character(kind=C_CHAR), intent(out) :: result(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
@@ -1102,15 +1095,6 @@ character(*), intent(in) :: path
 
 include "ifc0a.inc"
 N = fs_to_winpath(trim(path) // C_NULL_CHAR, cbuf, N)
-include "ifc0b.inc"
-end function
-
-
-function make_tempdir() result (r)
-!! make unique temporary directory
-
-include "ifc0a.inc"
-N = fs_mkdtemp("tmp.XXXXXX" // C_NULL_CHAR, cbuf, N)
 include "ifc0b.inc"
 end function
 

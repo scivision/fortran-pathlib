@@ -182,8 +182,6 @@ main : do
     print '(L1)', is_writable(arg1)
   case ("perm")
     print '(A)', get_permissions(arg1)
-  case ("mkdtemp")
-    print '(A)', make_tempdir()
   case ("is_symlink")
     print '(L1)', is_symlink(arg1)
   case ('realpath')

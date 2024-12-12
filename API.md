@@ -862,13 +862,6 @@ Get system or user temporary directory:
 character(:), allocatable :: get_tempdir()
 ```
 
-Create a (probably) unique temporary directory.
-This directory is not deleted automatically, or secure.
-
-```fortran
-character(:), allocatable :: make_tempdir()
-```
-
 Make a path absolute if relative:
 
 ```fortran

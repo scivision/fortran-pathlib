@@ -123,7 +123,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"weakly_resolve", [](std::string_view a1) { return fs_resolve(a1, false, false); }},
     {"hard", [](std::string_view a1) { return fs_hard_link_count(a1); }},
     {"normal", [](std::string_view a1) { return fs_normal(a1); }},
-    {"mkdtemp", [](std::string_view a1) { return fs_mkdtemp(a1); }},
     {"type", [](std::string_view a1) { return fs_filesystem_type(a1); }},
     {"is_reserved", [](std::string_view a1) { return fs_is_reserved(a1); }},
     {"is_safe", [](std::string_view a1) { return fs_is_safe_name(a1); }},

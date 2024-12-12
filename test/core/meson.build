@@ -62,7 +62,6 @@ cpp_core = [
 'join',
 'locale',
 'mkdir',
-'mkdtemp',
 'owner',
 'normal',
 'parent',

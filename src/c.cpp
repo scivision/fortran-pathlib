@@ -40,10 +40,6 @@ std::string::size_type fs_suffix(const char* path,
   return fs_str2char(fs_suffix(path), result, buffer_size);
 }
 
-std::string::size_type fs_mkdtemp(const char* tmpl, char* result, const std::string::size_type buffer_size){
-  return fs_str2char(fs_mkdtemp(tmpl), result, buffer_size);
-}
-
 std::string::size_type fs_join(const char* path, const char* other,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(fs_join(path, other), result, buffer_size);

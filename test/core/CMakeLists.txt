@@ -14,7 +14,6 @@ filesystem_type
 is_dir
 is_empty
 is_subdir join
-mkdtemp
 normal parent root
 resolve
 relative proximate
@@ -95,7 +94,6 @@ is_file
 is_subdir
 join
 mkdir
-mkdtemp
 owner
 normal
 parent
@@ -174,8 +172,6 @@ SKIP_REGULAR_EXPRESSION "not implemented;SIGABRT;[aA]bort;[sS]egmentation fault;
 )
 
 set_tests_properties(Cpp_mkdir PROPERTIES FIXTURES_REQUIRED root)
-
-set_tests_properties(Cpp_mkdtemp PROPERTIES FIXTURES_REQUIRED "mkdir")
 
 set_tests_properties(Cpp_copyfile PROPERTIES FIXTURES_REQUIRED filesize)
 

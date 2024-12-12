@@ -45,7 +45,6 @@ comm_src = files(
 'src/limits.cpp',
 'src/locale.cpp',
 'src/log.cpp',
-'src/mkdtemp.cpp',
 'src/mkdir.cpp',
 'src/normalize.cpp',
 'src/owner.cpp',
@@ -91,7 +90,6 @@ endif
 
 # -- C++ Feature checks
 chrono_def = []
-mkdtemp_def = []
 
 fs_lib = []
 def_copy_file = []

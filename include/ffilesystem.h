@@ -85,9 +85,6 @@ void fs_print_error(std::string_view, std::string_view, std::string_view, const 
 std::string fs_absolute(std::string_view, const bool);
 std::string fs_absolute(std::string_view, std::string_view, const bool);
 
-std::string fs_mkdtemp(std::string_view);
-
-
 bool fs_mkdir(std::string_view);
 
 bool fs_set_modtime(std::string_view);
@@ -345,8 +342,6 @@ size_t fs_lib_path(char*, const size_t);
 size_t fs_compiler(char*, const size_t);
 size_t fs_get_shell(char*, const size_t);
 size_t fs_get_terminal(char*, const size_t);
-
-size_t fs_mkdtemp(const char*, char*, const size_t);
 
 size_t fs_hostname(char*, const size_t);
 

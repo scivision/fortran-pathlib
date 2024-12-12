@@ -62,7 +62,6 @@ COMM_SRCS = \
 	$(comdir)locale.cpp \
 	$(comdir)log.cpp \
 	$(comdir)mkdir.cpp \
-	$(comdir)mkdtemp.cpp \
 	$(comdir)normalize.cpp \
 	$(comdir)owner.cpp \
 	$(comdir)os.c \

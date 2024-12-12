@@ -98,6 +98,7 @@ int main(void){
   if(i > 0)
     return EXIT_FAILURE;
 
-  printf("OK: mkdtemp\n");
+  printf("OK: check overflow behavior\n");
+
   return EXIT_SUCCESS;
 }
