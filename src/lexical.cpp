@@ -122,3 +122,36 @@ fs_non_ascii(std::string_view name)
 #endif
 
 }
+
+
+bool
+fs_is_subdir(std::string_view subdir, std::string_view dir)
+{
+  // is subdir a subdirectory of dir. Does not normalize, canonicalize,
+  // or walk up the directory tree.
+
+  if(subdir.empty() || dir.empty())
+    return false;
+
+#ifdef __cpp_lib_string_contains
+  if(subdir.contains("..") || dir.contains(".."))
+#else
+  if(subdir.find("..") == std::string::npos || dir.find("..") == std::string::npos)
+#endif
+    std::cerr << "is_subdir(" << subdir << ", " << dir << ") has ambiguous input with '..'  consider using fs_canonical() first\n";
+
+  const std::string s = fs_drop_slash(subdir);
+  const std::string d = fs_drop_slash(dir);
+
+  if(s == d)
+    return false;
+
+  if(s.size() < d.size())
+    return false;
+
+  if(s.substr(0, d.size()) != d)
+    return false;
+
+  return true;
+
+}

@@ -32,6 +32,9 @@ if(fs_is_windows()){
   if (!fs_is_absolute("j:/"))
     err("is_absolute(j:/) on Windows should be true");
 
+  if (fs_is_absolute("j:"))
+    err("is_absolute(j:) on Windows should be false");
+
   if (fs_is_absolute("/"))
     err("is_absolute(/) on Windows should be false");
 

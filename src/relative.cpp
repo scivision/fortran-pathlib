@@ -3,11 +3,16 @@
 #include <string>
 #include <string_view>
 
+#if __has_include(<ranges>)
+#include <ranges>
+#endif
+
 #ifdef HAVE_CXX_FILESYSTEM
 #include <filesystem>
 #else
-#include <vector>
 #include <iostream>
+#include <vector>
+#include <algorithm> // std::find
 #endif
 
 
@@ -30,6 +35,15 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
   if(b == o)
     return ".";
 
+#ifdef __cpp_lib_ranges_contains  // C++23
+  if (std::ranges::contains(b, ".."))
+#elif __cpp_lib_ranges // C++20
+  if (std::ranges::find(b, "..") != b.end())
+#else // C++98
+  if (std::find(b.begin(), b.end(), "..") != b.end())
+#endif
+    std::cerr << "relative_to(" << base << ", " << other << ") has ambiguous base with '..'  consider using fs_canonical() first\n";
+
   const std::string::size_type Lb = b.size();
   const std::string::size_type Lo = o.size();
 
@@ -44,7 +58,6 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
 
   if (i == 0 && b[0] != o[0])
     return {};
-
 
   // build relative path
 
@@ -79,29 +92,4 @@ std::string fs_proximate_to(std::string_view base, std::string_view other)
   const std::string r = fs_relative_to(base, other);
   return (r.empty()) ? std::string(other) : r;
 #endif
-}
-
-
-bool fs_is_subdir(std::string_view subdir, std::string_view dir)
-{
-  // is subdir a subdirectory of dir. Does not normalize, canonicalize,
-  // or walk up the directory tree. A lexical operation only.
-
-  if(subdir.empty() || dir.empty())
-    return false;
-
-  const std::string s = fs_drop_slash(subdir);
-  const std::string d = fs_drop_slash(dir);
-
-  if(s == d)
-    return false;
-
-  if(s.size() < d.size())
-    return false;
-
-  if(s.substr(0, d.size()) != d)
-    return false;
-
-  return true;
-
 }
