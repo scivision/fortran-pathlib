@@ -114,7 +114,7 @@ endif()
 # --- END COMPILER CHECKS
 
 
-# --- C compile flags
+# --- C / C++ compile flags
 if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU|^Intel")
   add_compile_options(
   "$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<CONFIG:Debug>>:-Wextra>"
@@ -127,8 +127,16 @@ endif()
 
 add_compile_options("$<$<COMPILE_LANG_AND_ID:CXX,AppleClang,Clang,GNU>:-Wold-style-cast>")
 
-# have to leave disabled due to known false positives with argv and like c.cpp where C arrays must be used.
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 19.14)
+  # MSVC has __cpluscplus = 199711L by default, which is C++98!
+  # MSVC 15.7 (19.14) added /Zc:__cplusplus to set __cplusplus to the true value.
+  # oneAPI since 2023.1 sets __cplusplus to the true value with MSVC by auto-setting this flag.
+  add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:/Zc:__cplusplus>")
+endif()
+
+# too many false positives esp. regarding argv[1] and higher
 # add_compile_options("$<$<COMPILE_LANG_AND_ID:CXX,AppleClang,Clang,IntelLLVM>:-Wunsafe-buffer-usage>")
+
 
 if(CMAKE_C_COMPILER_ID STREQUAL "IntelLLVM")
   add_compile_options("$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<CONFIG:Debug>>:-Rno-debug-disables-optimization>")
