@@ -127,6 +127,9 @@ endif()
 
 add_compile_options("$<$<COMPILE_LANG_AND_ID:CXX,AppleClang,Clang,GNU>:-Wold-style-cast>")
 
+# have to leave disabled due to known false positives with argv and like c.cpp where C arrays must be used.
+# add_compile_options("$<$<COMPILE_LANG_AND_ID:CXX,AppleClang,Clang,IntelLLVM>:-Wunsafe-buffer-usage>")
+
 if(CMAKE_C_COMPILER_ID STREQUAL "IntelLLVM")
   add_compile_options("$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<CONFIG:Debug>>:-Rno-debug-disables-optimization>")
 endif()

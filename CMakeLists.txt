@@ -125,7 +125,7 @@ target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_statx}>>:USE_STATX>"
 )
 
-set_property(SOURCE src/locale.cpp PROPERTY COMPILE_OPTIONS $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-declarations>)
+set_property(SOURCE src/locale.cpp PROPERTY COMPILE_OPTIONS $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wno-deprecated-declarations>)
 
 target_compile_features(ffilesystem PRIVATE cxx_std_${CMAKE_CXX_STANDARD} c_std_99)
 
