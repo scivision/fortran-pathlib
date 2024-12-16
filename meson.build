@@ -3,12 +3,12 @@ version: '6.0.1',
 default_options: ['c_std=c99', 'cpp_std=c++23,c++20,c++17', 'buildtype=release', 'b_ndebug=if-release'],
 meson_version : '>=1.4.0')
 
-use_cpp = get_option('cpp')
+backend_filesystem = get_option('cpp')
 # use C++17 <filesystem> library
 
 trace_def = get_option('trace') ? '-DFS_TRACE' : []
 
-have_filesystem = use_cpp ? '-DHAVE_CXX_FILESYSTEM' : []
+have_filesystem = backend_filesystem ? '-DHAVE_CXX_FILESYSTEM' : []
 
 fortran = get_option('fortran')
 if fortran
@@ -94,10 +94,19 @@ chrono_def = []
 fs_lib = []
 def_copy_file = []
 
-if use_cpp
+if backend_filesystem
 
-if cpp.get_id() == 'gcc' and cpp.version().version_compare('<9.1.0')
-  fs_lib = [cpp.find_library('stdc++fs'), cpp.find_library('stdc++')]
+if cpp.get_id() != 'msvc'
+  r = cpp.run(files('cmake/libstdcpp_version.cpp'))
+  if r.returncode() == 0
+    stdcpp_version = r.stdout().strip()
+    message('C++ STL: ' + stdcpp_version)
+    if stdcpp_version.startswith('GNU') and stdcpp_version.split()[1].version_compare('<9')
+      fs_lib = [cpp.find_library('stdc++fs'), cpp.find_library('stdc++')]
+    endif
+  else
+    warning('Failed to determine C++ STL version')
+  endif
 endif
 
 fs_check = '''
@@ -131,6 +140,7 @@ if cpp_std.version_compare('>=20')
 endif
 
 else
+# use libc instead of <filesystem>
 
 # -- copy_file_range()
 
@@ -140,7 +150,7 @@ if not is_windows
   endif
 endif
 
-endif # use_cpp
+endif
 
 # Windows-specific
 libwin = []
