@@ -25,7 +25,6 @@ compiler
 getenv HOME
 owner .
 shell
-terminal
 homedir
 username
 backend

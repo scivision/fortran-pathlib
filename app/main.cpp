@@ -357,7 +357,7 @@ if(!fs_is_cygwin())
 //std::cout << "Locale: " << fs_get_locale_name() << "\n";
 
 if(fs_is_admin())
-  std::cerr << "WARNING: running as admin / sudo" << std::endl;
+  std::cout << "NOTE: running as admin / sudo\n";
 
 std::cout << std::endl;  // flush for CI etc.
 
