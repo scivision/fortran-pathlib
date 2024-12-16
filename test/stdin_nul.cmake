@@ -12,9 +12,5 @@ endif()
 
 execute_process(COMMAND ${exe}
 ${devnull}
-RESULT_VARIABLE res
+COMMAND_ERROR_IS_FATAL ANY
 )
-
-if(NOT res EQUAL 0)
-  message(FATAL_ERROR "Error running ${exe}")
-endif()

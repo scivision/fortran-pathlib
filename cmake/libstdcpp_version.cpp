@@ -14,6 +14,8 @@ unsigned long libcxx_release()
   return _LIBCPP_VERSION;
 #elif defined(_GLIBCXX_RELEASE)  // GNU libstdc++
   return _GLIBCXX_RELEASE;
+#elif defined(__MSVC_STL_UPDATE)  // Microsoft STL
+  return _MSVC_STL_UPDATE;
 #else
   return 0;
 #endif
@@ -26,6 +28,8 @@ int main(){
   std::cout << "LLVM ";
 #elif defined(_GLIBCXX_RELEASE)
   std::cout << "GNU ";
+#elif defined(_MSVC_STL_UPDATE)
+  std::cout << "Microsoft ";
 #endif
 
   std::cout << libcxx_release() << "\n";

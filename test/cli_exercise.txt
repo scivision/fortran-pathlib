@@ -1,0 +1,33 @@
+random 8
+with_suffix a.b .c
+parent a/b
+suffix a.txt
+join a b
+canonical .
+resolve .
+same . .
+relative a/b a
+proximate a/b c
+is_prefix a/b a
+is_subdir a/b a
+split a/b/c
+normal_vector a/b/../c
+normal a/b/../c
+drop_slash a/b//c
+absolute /
+modtime .
+which cmake
+is_reserved NUL
+is_safe asdf
+hostname
+arch
+compiler
+getenv HOME
+owner .
+shell
+terminal
+homedir
+username
+backend
+expanduser ~
+filename a/b.c

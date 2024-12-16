@@ -21,6 +21,8 @@ v = "uClibc: " + std::string(__UCLIBC__);
 v = "GCC: runtime " + std::string(gnu_get_libc_version()) + ", compile-time " + std::to_string(__GLIBC__) + "." + std::to_string(__GLIBC_MINOR__);
 #elif defined(__apple_build_version__)
 v = "Apple";
+#elif defined(_MSC_VER)
+v = "Microsoft " + std::to_string(_MSC_VER);
 #endif
 
 return v;

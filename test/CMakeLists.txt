@@ -31,6 +31,12 @@ LABELS "Cpp"
 PASS_REGULAR_EXPRESSION ${_regex}
 )
 
+add_test(NAME CppCLInoLeak
+COMMAND ${CMAKE_COMMAND} -Dexe=$<TARGET_FILE:fs_cli> -P ${CMAKE_CURRENT_SOURCE_DIR}/stdin.cmake
+LABELS "Cpp"
+)
+
+
 endif()
 
 

@@ -34,18 +34,8 @@ std::string fs_libc()
   v = "GCC: runtime " + std::string(gnu_get_libc_version()) + ", compile-time " + std::to_string(__GLIBC__) + "." + std::to_string(__GLIBC_MINOR__);
 #elif defined(__apple_build_version__)
   v = "Apple";
-#endif
-  return v;
-}
-
-
-std::string fs_libcxx()
-{
-  std::string v;
-#if defined(_LIBCPP_VERSION)
-  v = "LLVM libc++ " + std::to_string(_LIBCPP_VERSION);
-#elif defined(_GLIBCXX_RELEASE)
-  v = "GNU libstdc++ " + std::to_string(_GLIBCXX_RELEASE);
+#elif defined(_MSC_VER)
+  v = "Microsoft " + std::to_string(_MSC_VER);
 #endif
   return v;
 }
@@ -57,9 +47,28 @@ unsigned long fs_libcxx_release()
   return _LIBCPP_VERSION;
 #elif defined(_GLIBCXX_RELEASE)  // GNU libstdc++
   return _GLIBCXX_RELEASE;
+#elif defined(_MSVC_STL_UPDATE)  // Microsoft STL
+  return _MSVC_STL_UPDATE;
 #else
   return 0;
 #endif
+}
+
+
+std::string fs_libcxx()
+{
+  std::string v =
+#if defined(_LIBCPP_VERSION)
+  "LLVM libc++ " +
+#elif defined(_GLIBCXX_RELEASE)
+  "GNU libstdc++ " +
+#elif defined(_MSVC_STL_UPDATE)
+  "Microsoft STL " +
+#endif
+  std::to_string(fs_libcxx_release());
+
+  return v;
+  // https://github.com/microsoft/STL/wiki/Macro-_MSVC_STL_UPDATE
 }
 
 

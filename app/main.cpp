@@ -137,6 +137,7 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"expanduser", [](std::string_view a1) { return fs_expanduser(a1); }},
     {"final_path", [](std::string_view a1) { return fs_win32_final_path(a1); }},
     {"root", [](std::string_view a1) { return fs_root(a1); }},
+    {"drop_slash", [](std::string_view a1) { return fs_drop_slash(a1); }},
     {"root_name", [](std::string_view a1) { return fs_root_name(a1); }},
     {"filename", [](std::string_view a1) { return fs_file_name(a1); }},
     {"file_size", [](std::string_view a1) { return fs_file_size(a1); }},
@@ -195,7 +196,15 @@ static void one_arg(std::string_view fun, std::string_view a1){
     std::cout << fs_get_modtime(a1) << "\n";
   else if (fun == "random")
     std::cout << fs_generate_random_alphanumeric_string(std::strtoul(a1.data(), nullptr, 10)) << "\n";
-  else if (fun == "chdir" || fun == "set_cwd") {
+  else if (fun == "split"){
+    std::vector<std::string> v = fs_split(a1);
+    for (const auto &s : v)
+      std::cout << s << "\n";
+  } else if (fun == "normal_vector"){
+    std::vector<std::string> v = fs_normal_vector(a1);
+    for (const auto &s : v)
+      std::cout << s << "\n";
+  } else if (fun == "chdir" || fun == "set_cwd") {
     auto cwd = fs_get_cwd();
     if(!cwd.empty()){
       std::cout << "cwd: " << cwd << "\n";
