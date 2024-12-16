@@ -346,7 +346,6 @@ std::cout << "libc: " << fs_libc() << "\n";
 std::cout << "Username: " << fs_get_username() << "\n";
 std::cout << "Hostname: " << fs_hostname() << "\n";
 std::cout << "Shell: " << fs_get_shell() << "\n";
-std::cout << "Terminal: " << fs_get_terminal() << "\n";
 std::cout << "Homedir: " << fs_get_homedir() << "\n";
 
 // doesn't work usefully on Cygwin
@@ -359,7 +358,8 @@ if(!fs_is_cygwin())
 if(fs_is_admin())
   std::cout << "NOTE: running as admin / sudo\n";
 
-std::cout << std::endl;  // flush for CI etc.
+std::cout << std::endl;
+// flush for CI etc.
 
 while (true){
 
