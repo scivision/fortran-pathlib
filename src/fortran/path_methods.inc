@@ -247,6 +247,14 @@ r%path_str = join(self%path_str, other)
 end function
 
 
+logical function m_is_prefix(self, path) result(r)
+class(path_t), intent(in) :: self
+character(*), intent(in) :: path
+r = is_prefix(self%path_str, path)
+end function
+
+
+
 logical function m_is_subdir(self, dir) result(r)
 class(path_t), intent(in) :: self
 character(*), intent(in) :: dir

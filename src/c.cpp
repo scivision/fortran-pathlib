@@ -75,6 +75,10 @@ std::string::size_type fs_proximate_to(const char* base, const char* other,
   return fs_str2char(fs_proximate_to(base, other), result, buffer_size);
 }
 
+bool fs_is_prefix(const char* prefix, const char* path){
+  return fs_is_prefix(std::string_view(prefix), std::string_view(path));
+}
+
 bool fs_is_subdir(const char* subdir, const char* dir)
 {
   return fs_is_subdir(std::string_view(subdir), std::string_view(dir));

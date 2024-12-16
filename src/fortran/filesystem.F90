@@ -11,7 +11,9 @@ public :: get_homedir, get_profile_dir, user_config_dir, get_username, hostname,
  canonical, resolve, realpath, fs_getpid, &
  get_cwd, set_cwd, which
 public :: normal, expanduser, as_posix, &
-is_absolute, is_char_device, is_case_sensitive, is_dir, is_file, is_exe, is_subdir, is_readable, is_writable, is_reserved, &
+is_absolute, is_char_device, is_case_sensitive, is_dir, is_file, is_exe, &
+is_prefix, is_subdir, &
+is_readable, is_writable, is_reserved, &
 is_empty, &
 is_symlink, read_symlink, create_symlink, &
 exists, &
@@ -403,6 +405,11 @@ import
 character(kind=c_char), intent(in) :: path(*), other(*)
 character(kind=c_char), intent(out) :: result(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
+end function
+
+logical(C_BOOL) function fs_is_prefix(prefix, path) bind(C)
+import
+character(kind=C_CHAR), intent(in) :: prefix(*), path(*)
 end function
 
 logical(C_BOOL) function fs_is_subdir(subdir, dir) bind(C)
@@ -914,11 +921,19 @@ include "ifc0b.inc"
 end function
 
 
-logical function is_subdir(subdir, dir)
+logical function is_prefix(prefix, path) result (r)
+!! is prefix a prefix of path
+character(*), intent(in) :: prefix, path
+
+r = fs_is_prefix(trim(prefix) // C_NULL_CHAR, trim(path) // C_NULL_CHAR)
+end function
+
+
+logical function is_subdir(subdir, dir) result (r)
 !! is subdir a subdirectory of dir
 character(*), intent(in) :: subdir, dir
 
-is_subdir = fs_is_subdir(trim(subdir) // C_NULL_CHAR, trim(dir) // C_NULL_CHAR)
+r = fs_is_subdir(trim(subdir) // C_NULL_CHAR, trim(dir) // C_NULL_CHAR)
 end function
 
 

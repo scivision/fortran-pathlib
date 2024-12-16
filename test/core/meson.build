@@ -58,6 +58,7 @@ cpp_core = [
 'is_dir',
 'is_empty',
 'is_file',
+'is_prefix',
 'is_subdir',
 'join',
 'locale',

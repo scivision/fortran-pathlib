@@ -91,6 +91,7 @@ is_absolute
 is_dir
 is_empty
 is_file
+is_prefix
 is_subdir
 join
 mkdir

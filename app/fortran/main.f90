@@ -243,6 +243,8 @@ main : do
     call fs_rename(arg1, arg2, ok)
   case ("with_suffix")
     print '(A)', with_suffix(arg1, arg2)
+  case ("is_prefix")
+    print '(L1)', is_prefix(arg1, arg2)
   case ("is_subdir")
     print '(L1)', is_subdir(arg1, arg2)
   case ("setenv")

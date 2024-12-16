@@ -236,6 +236,7 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
     {"same", [](std::string_view a1, std::string_view a2) { return fs_equivalent(a1, a2); }},
     {"join", [](std::string_view a1, std::string_view a2) { return fs_join(a1, a2); }},
     {"with_suffix", [](std::string_view a1, std::string_view a2) { return fs_with_suffix(a1, a2); }},
+    {"is_prefix", [](std::string_view a1, std::string_view a2) { return fs_is_prefix(a1, a2); }},
     {"is_subdir", [](std::string_view a1, std::string_view a2) { return fs_is_subdir(a1, a2); }},
     {"relative", [](std::string_view a1, std::string_view a2) { return fs_relative_to(a1, a2); }},
     {"proximate", [](std::string_view a1, std::string_view a2) { return fs_proximate_to(a1, a2); }},

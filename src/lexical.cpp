@@ -125,10 +125,38 @@ fs_non_ascii(std::string_view name)
 
 
 bool
+fs_is_prefix(std::string_view prefix, std::string_view path)
+{
+  // is prefix a prefix of path. Does not normalize, canonicalize, or walk up the directory tree.
+
+  if(prefix.empty() || path.empty())
+    return false;
+
+#ifdef __cpp_lib_string_contains
+  if(prefix.contains("..") || path.contains(".."))
+#else
+  if(prefix.find("..") != std::string::npos || path.find("..") != std::string::npos)
+#endif
+    std::cerr << "is_prefix(" << prefix << ", " << path << ") has ambiguous input with '..'  consider using fs_canonical() first\n";
+
+  const std::string pr = fs_drop_slash(prefix);
+  const std::string p = fs_drop_slash(path);
+
+  if (pr == p)
+    return true;
+
+  if (pr.size() > p.size())
+    return false;
+
+  return p.substr(0, pr.size()) == pr;
+
+}
+
+
+bool
 fs_is_subdir(std::string_view subdir, std::string_view dir)
 {
-  // is subdir a subdirectory of dir. Does not normalize, canonicalize,
-  // or walk up the directory tree.
+  // is subdir a subdirectory of dir. Does not normalize, canonicalize, or walk up the directory tree.
 
   if(subdir.empty() || dir.empty())
     return false;
@@ -136,7 +164,7 @@ fs_is_subdir(std::string_view subdir, std::string_view dir)
 #ifdef __cpp_lib_string_contains
   if(subdir.contains("..") || dir.contains(".."))
 #else
-  if(subdir.find("..") == std::string::npos || dir.find("..") == std::string::npos)
+  if(subdir.find("..") != std::string::npos || dir.find("..") != std::string::npos)
 #endif
     std::cerr << "is_subdir(" << subdir << ", " << dir << ") has ambiguous input with '..'  consider using fs_canonical() first\n";
 
@@ -149,9 +177,6 @@ fs_is_subdir(std::string_view subdir, std::string_view dir)
   if(s.size() < d.size())
     return false;
 
-  if(s.substr(0, d.size()) != d)
-    return false;
-
-  return true;
+  return s.substr(0, d.size()) == d;
 
 }

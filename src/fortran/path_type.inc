@@ -24,6 +24,7 @@ procedure, public :: is_readable=>m_is_readable
 procedure, public :: is_writable=>m_is_writable
 procedure, public :: is_dir=>m_is_dir
 procedure, public :: is_safe_name=>m_is_safe_name
+procedure, public :: is_prefix=>m_is_prefix
 procedure, public :: is_subdir=>m_is_subdir
 procedure, public :: is_reserved=>m_is_reserved
 procedure, public :: is_absolute=>m_is_absolute

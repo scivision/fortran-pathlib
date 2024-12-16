@@ -393,6 +393,14 @@ Error stop if directory does not exist
 call assert_is_dir("my/dir")
 ```
 
+Is prefix of path. This is a lexical operation.
+
+```fortran
+p%is_prefix(prefix)
+
+is_prefix("my/dir", "my")
+```
+
 Is path a subdirectory under (not just equal to) of "dir". this is a lexical operation.
 
 ```fortran

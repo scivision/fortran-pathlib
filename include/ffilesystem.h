@@ -68,6 +68,8 @@ bool fs_equivalent(std::string_view, std::string_view);
 
 std::string fs_relative_to(std::string_view, std::string_view);
 std::string fs_proximate_to(std::string_view, std::string_view);
+
+bool fs_is_prefix(std::string_view, std::string_view);
 bool fs_is_subdir(std::string_view, std::string_view);
 
 std::vector<std::string> fs_split(std::string_view);
@@ -292,6 +294,8 @@ bool fs_is_exe(const char*);
 bool fs_is_readable(const char*);
 bool fs_is_writable(const char*);
 bool fs_is_reserved(const char*);
+
+bool fs_is_prefix(const char*, const char*);
 bool fs_is_subdir(const char*, const char*);
 
 bool fs_set_permissions(const char*, int, int, int);
