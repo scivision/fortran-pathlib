@@ -8,8 +8,10 @@
 #include <sys/param.h>  // IWYU pragma: keep
 #endif
 
-#if defined(__linux__) && __has_include(<linux/magic.h>)
+#if defined(__linux__) && (__has_include(<linux/magic.h>) || __has_include("linux/magic.h"))
+// GCC < 10 doesn't detect <linux/magic.h>
 // IWYU pragma: no_include <sys/statfs.h>
+#define HAVE_LINUX_MAGIC_H
 #include <sys/vfs.h> // IWYU pragma: keep
 #include <linux/magic.h>
 // https://github.com/torvalds/linux/blob/master/include/uapi/linux/magic.h
@@ -23,7 +25,7 @@
 #include "ffilesystem.h"
 
 
-#if defined(__linux__) && __has_include(<linux/magic.h>)
+#ifdef HAVE_LINUX_MAGIC_H
 static inline std::string fs_type_linux(std::string_view path)
 {
   struct statfs s;
@@ -96,11 +98,11 @@ std::string fs_filesystem_type(std::string_view path)
 
   fs_print_error(path, "filesystem_type");
 #elif defined(__linux__)
-#if __has_include(<linux/magic.h>)
+# ifdef HAVE_LINUX_MAGIC_H
   return fs_type_linux(path);
-#else
+# else
   fs_print_error(path, "filesystem_type: linux/magic.h not found");
-#endif
+# endif
 #elif defined(__APPLE__) || defined(BSD)
   struct statfs s;
   if(!statfs(path.data(), &s))
