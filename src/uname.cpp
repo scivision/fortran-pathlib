@@ -9,6 +9,7 @@
 #endif
 
 #if __has_include(<sys/utsname.h>)
+#define HAVE_UTSNAME
 #include <sys/utsname.h>
 #endif
 
@@ -16,7 +17,7 @@
 int fs_is_wsl()
 {
 
-#if __has_include(<sys/utsname.h>)
+#ifdef HAVE_UTSNAME
   struct utsname buf;
   if (uname(&buf) != 0)
     return -1;
@@ -39,7 +40,7 @@ int fs_is_wsl()
 
 std::string fs_cpu_arch()
 {
-#if __has_include(<sys/utsname.h>)
+#ifdef HAVE_UTSNAME
 
   if (struct utsname buf;
        uname(&buf) == 0)

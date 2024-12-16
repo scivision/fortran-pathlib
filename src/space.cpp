@@ -16,6 +16,7 @@
 #else
 #include <unistd.h>
 #if __has_include(<sys/statvfs.h>)
+#define HAVE_STATVFS
 #include <sys/statvfs.h>
 #endif
 #endif
@@ -47,7 +48,7 @@ std::uintmax_t fs_space_available(std::string_view path)
     return bytes_available.QuadPart;
 
   fs_print_error(path, "space_available:GetDiskSpaceEx");
-#elif __has_include(<sys/statvfs.h>)
+#elif defined(HAVE_STATVFS)
   // https://unix.stackexchange.com/a/703650
   struct statvfs stat;
   if (!statvfs(r.data(), &stat))

@@ -6,6 +6,7 @@
 #include <locale>
 
 #if __has_include(<codecvt>)
+#define HAVE_CODECVT
 #include <codecvt>
 #endif
 
@@ -37,7 +38,7 @@ std::string fs_to_narrow(std::wstring_view w)
       return buf;
     }
   }
-#elif __has_include(<codecvt>)
+#elif defined(HAVE_CODECVT)
   // deprecated in C++17, but no STL replacement
   std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
   return converter.to_bytes(w.data());
@@ -65,7 +66,7 @@ std::wstring fs_to_wide(std::string_view n)
     }
   }
 
-#elif __has_include(<codecvt>)
+#elif defined(HAVE_CODECVT)
 
   // deprecated in C++17, but no STL replacement
   std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
