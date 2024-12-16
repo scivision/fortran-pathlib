@@ -383,7 +383,7 @@ while (true){
   // last argument
   args.push_back(inp);
 
-  if(args.empty())
+  if(args.empty() || args.at(0).empty())
     continue;
 
   const std::vector<std::string>::size_type argc = args.size();
