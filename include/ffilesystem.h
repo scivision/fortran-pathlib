@@ -61,8 +61,8 @@ std::string fs_suffix(std::string_view);
 
 std::string fs_join(std::string_view, std::string_view);
 
-std::string fs_canonical(std::string_view, const bool, const bool);
-std::string fs_resolve(std::string_view, const bool, const bool);
+std::string fs_canonical(std::string_view, const bool = false, const bool = true);
+std::string fs_resolve(std::string_view, const bool = false, const bool = true);
 
 bool fs_equivalent(std::string_view, std::string_view);
 
@@ -84,8 +84,8 @@ void fs_print_error(std::string_view, std::string_view, const std::error_code&);
 void fs_print_error(std::string_view, std::string_view, std::string_view, const std::error_code&);
 
 
-std::string fs_absolute(std::string_view, const bool);
-std::string fs_absolute(std::string_view, std::string_view, const bool);
+std::string fs_absolute(std::string_view, const bool = true);
+std::string fs_absolute(std::string_view, std::string_view, const bool = true);
 
 bool fs_mkdir(std::string_view);
 
