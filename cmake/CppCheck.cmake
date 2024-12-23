@@ -1,5 +1,5 @@
 # Check compiler C++ capabilities
-include(CheckSourceRuns)
+include(CheckSourceCompiles)
 
 
 function(cpp_check)
@@ -19,7 +19,7 @@ endif()
 set(CMAKE_TRY_COMPILE_TARGET_TYPE EXECUTABLE)
 
 # some compilers claim to have filesystem, but their libstdc++ doesn't have it.
-check_source_runs(CXX
+check_source_compiles(CXX
 [=[
 #include <filesystem>
 

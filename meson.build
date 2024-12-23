@@ -112,13 +112,13 @@ endif
 fs_check = '''
 #include <filesystem>
 int main () {
-std::filesystem::path tgt(".");
-auto h = tgt.has_filename();
-return 0;
+std::filesystem::path tgt("a/b");
+return !tgt.has_filename();
 }'''
 
-if not cpp.links(fs_check, dependencies: fs_lib, name: 'C++ filesystem')
-  error('No C++ filesystem support')
+r = cpp.links(fs_check, dependencies: fs_lib, name: 'C++ filesystem')
+if not r
+  error("No C++ <filesystem> support")
 endif
 
 # -- chrono check

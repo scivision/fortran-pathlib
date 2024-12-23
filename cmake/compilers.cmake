@@ -2,7 +2,6 @@ include(CheckIncludeFile)
 include(CheckSymbolExists)
 include(CheckCXXSymbolExists)
 include(CheckSourceCompiles)
-include(CheckSourceRuns)
 
 # --- some compilers require these manual settings
 unset(CMAKE_REQUIRED_FLAGS)
