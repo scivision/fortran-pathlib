@@ -118,7 +118,7 @@ return !tgt.has_filename();
 
 r = cpp.links(fs_check, dependencies: fs_lib, name: 'C++ filesystem')
 if not r
-  error("No C++ <filesystem> support")
+  error('No C++ <filesystem> support')
 endif
 
 # -- chrono check
