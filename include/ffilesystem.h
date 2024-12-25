@@ -172,6 +172,7 @@ std::string fs_read_symlink(std::string_view);
 std::string fs_get_permissions(std::string_view);
 
 bool fs_is_char_device(std::string_view);
+bool fs_is_fifo(std::string_view);
 bool fs_is_dir(std::string_view);
 
 std::uintmax_t fs_file_size(std::string_view);
@@ -287,7 +288,10 @@ bool fs_exists(const char*);
 
 bool fs_is_absolute(const char*);
 bool fs_is_case_sensitive(const char*);
+
 bool fs_is_char_device(const char*);
+bool fs_is_fifo(const char*);
+
 bool fs_is_dir(const char*);
 bool fs_is_file(const char*);
 bool fs_is_exe(const char*);

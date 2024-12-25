@@ -283,6 +283,8 @@ bool fs_is_case_sensitive(const char* path) { return fs_is_case_sensitive(std::s
 
 bool fs_is_char_device(const char* path){ return fs_is_char_device(std::string_view(path)); }
 
+bool fs_is_fifo(const char* path){ return fs_is_fifo(std::string_view(path)); }
+
 bool fs_is_dir(const char* path){ return fs_is_dir(std::string_view(path)); }
 
 bool fs_is_exe(const char* path){ return fs_is_exe(std::string_view(path)); }

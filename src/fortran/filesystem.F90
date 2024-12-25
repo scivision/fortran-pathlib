@@ -11,7 +11,7 @@ public :: get_homedir, get_profile_dir, user_config_dir, get_username, hostname,
  canonical, resolve, realpath, fs_getpid, &
  get_cwd, set_cwd, which
 public :: normal, expanduser, as_posix, &
-is_absolute, is_char_device, is_case_sensitive, is_dir, is_file, is_exe, &
+is_absolute, is_char_device, is_fifo, is_case_sensitive, is_dir, is_file, is_exe, &
 is_prefix, is_subdir, &
 is_readable, is_writable, is_reserved, &
 is_empty, &
@@ -360,6 +360,11 @@ character(kind=C_CHAR), intent(in) :: path(*)
 end function
 
 logical(C_BOOL) function fs_is_char_device(path) bind(C)
+import
+character(kind=C_CHAR), intent(in) :: path(*)
+end function
+
+logical(C_BOOL) function fs_is_fifo(path) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: path(*)
 end function
@@ -838,6 +843,14 @@ logical function is_char_device(path)
 character(*), intent(in) :: path
 
 is_char_device = fs_is_char_device(trim(path) // C_NULL_CHAR)
+end function
+
+
+logical function is_fifo(path)
+!! is path a FIFO (named pipe)
+character(*), intent(in) :: path
+
+is_fifo = fs_is_fifo(trim(path) // C_NULL_CHAR)
 end function
 
 

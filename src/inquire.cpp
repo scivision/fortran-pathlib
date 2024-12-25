@@ -12,7 +12,7 @@
 #include <iostream>  // IWYU pragma: keep
 #include <cstdint> // uintmax_t
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
 #else
 #if defined(_MSC_VER)
@@ -70,7 +70,7 @@ fs_exists(std::string_view path)
   // fs_exists() is true even if path is non-readable
   // this is like Python pathlib.Path.exists()
   // unlike kwSys:SystemTools:FileExists which uses R_OK instead of F_OK like this project.
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM)
   std::error_code ec;
   return std::filesystem::exists(path, ec) && !ec;
 #elif defined(_MSC_VER)
@@ -102,7 +102,7 @@ fs_is_dir(std::string_view path)
 bool
 fs_is_file(std::string_view path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM)
   std::error_code ec;
   return std::filesystem::is_regular_file(path, ec) && !ec;
 #else
@@ -112,10 +112,24 @@ fs_is_file(std::string_view path)
 }
 
 
+bool
+fs_is_fifo(std::string_view path)
+{
+#if defined(HAVE_CXX_FILESYSTEM)
+  std::error_code ec;
+  return std::filesystem::is_fifo(path, ec) && !ec;
+#elif defined(_MSC_VER)
+  return false;
+#else
+  return fs_st_mode(path) & S_IFIFO;
+#endif
+}
+
+
 bool fs_is_char_device(std::string_view path)
 {
 // special character device like /dev/null
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM)
   std::error_code ec;
   return std::filesystem::is_character_file(path, ec) && !ec;
 #else
@@ -128,7 +142,7 @@ bool fs_is_char_device(std::string_view path)
 
 bool fs_is_exe(std::string_view path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM)
 
   std::error_code ec;
 
@@ -155,7 +169,7 @@ bool fs_is_exe(std::string_view path)
 #else
 
   return (fs_is_file(path) &&
-#ifdef _WIN32
+#if defined(_WIN32)
   // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/access-s-waccess-s
   // in Windows, all readable files are executable. Do not use _S_IEXEC, it is not reliable.
   fs_is_readable(path)
@@ -170,7 +184,7 @@ bool fs_is_exe(std::string_view path)
 
 bool fs_is_readable(std::string_view path)
 {
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM)
 // directory or file readable
   std::error_code ec;
   const auto s = std::filesystem::status(path, ec);
@@ -200,7 +214,7 @@ bool fs_is_readable(std::string_view path)
 bool fs_is_writable(std::string_view path)
 {
   // directory or file writable
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM)
   std::error_code ec;
   const auto s = std::filesystem::status(path, ec);
   if(ec || !std::filesystem::exists(s))
@@ -229,7 +243,7 @@ std::uintmax_t fs_hard_link_count(std::string_view path)
 {
   std::error_code ec;
 
-#ifdef HAVE_CXX_FILESYSTEM
+#if defined(HAVE_CXX_FILESYSTEM)
 
   if(auto s = std::filesystem::hard_link_count(path, ec); !ec)  FFS_LIKELY
     return s;

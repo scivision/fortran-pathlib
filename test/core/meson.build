@@ -57,6 +57,7 @@ cpp_core = [
 'is_absolute',
 'is_dir',
 'is_empty',
+'is_fifo',
 'is_file',
 'is_prefix',
 'is_subdir',
