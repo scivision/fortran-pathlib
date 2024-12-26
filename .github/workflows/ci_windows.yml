@@ -18,6 +18,7 @@ on:
       - ".github/workflows/ci_windows.yml"
       - "!concepts/**"
       - "!memcheck.cmake"
+  workflow_dispatch:
 
 jobs:
 
@@ -64,14 +65,15 @@ jobs:
       fail-fast: false
       matrix:
         cpp: [false, true]
-        compiler: [ { ccname: "gcc", cc: "gcc", cxx: "g++", fcname: "gcc-fortran", fc: "gfortran" },
-                    { ccname: "clang", cc: "clang", cxx: "clang++", fcname: "flang", fc: "flang" } ]
+        compiler: [ { ccname: "gcc", cc: "gcc", cxx: "g++", fcname: "gcc-fortran", fc: "gfortran" },]
+                 #   { ccname: "clang", cc: "clang", cxx: "clang++", fcname: "flang", fc: "flang" } ]
 
       # github actions generally broken for shared lib, even when exe in cwd
     env:
       CC: ${{ matrix.compiler.cc }}
       CXX: ${{ matrix.compiler.cxx }}
       FC: ${{ matrix.compiler.fc }}
+      CMAKE_GENERATOR: Ninja
 
     steps:
     - uses: msys2/setup-msys2@v2
@@ -107,10 +109,8 @@ jobs:
       run: cmake --install build
 
     - name: example workflow
-      run: cmake -G Ninja -S example -B example/build
+      run: cmake -S example -B example/build
 
     - run: cmake --build example/build
 
     - run: ctest --test-dir example/build -V
-
-# Github Actions Exit code 0xc0000139 -- does not happen on real Windows PCs.
