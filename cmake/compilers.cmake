@@ -29,7 +29,7 @@ try_run(ffilesystem_stdcpp_run ffilesystem_stdcpp_build_ok
 )
 
 if(NOT ffilesystem_stdcpp_run EQUAL 0)
-  message(CHECK_FAIL "Could not determine GNU libstdc++ version ${ffilesystem_stdcpp_build_ok} ${ffilesystem_stdcpp_run} ${_stdcpp_version}")
+  message(CHECK_FAIL "Could not determine C++ STL version ${ffilesystem_stdcpp_build_ok} ${ffilesystem_stdcpp_run} ${_stdcpp_version}")
 else()
   string(STRIP "${_stdcpp_version}" _stdcpp_version)
   set(ffilesystem_stdcpp_version "${_stdcpp_version}" CACHE STRING "C++ standard library version")

@@ -6,7 +6,7 @@
 #include <unistd.h>  // pathconf
 #endif
 
-#if defined (__APPLE__)
+#if defined(__APPLE__) && defined(__MACH__)
 #include <sys/syslimits.h>
 #endif
 

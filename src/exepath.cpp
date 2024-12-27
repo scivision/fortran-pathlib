@@ -15,9 +15,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h> // GetModuleFileNameA
 #include <cstddef> // for size_t
-#endif
-
-#ifdef __APPLE__
+#elif defined(__APPLE__) && defined(__MACH__)
 #include <cstdint> // for uint32_t
 #include <mach-o/dyld.h> // _NSGetExecutablePath
 #elif defined(__linux__) || defined(__CYGWIN__)
@@ -49,7 +47,7 @@ std::string fs_exe_path()
     path.resize(L);
     return path;
   }
-#elif defined(__APPLE__)
+#elif defined(__APPLE__) && defined(__MACH__)
   // https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/dyld.3.html
   uint32_t mp = static_cast<uint32_t>(path.size());
 

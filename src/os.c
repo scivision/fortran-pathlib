@@ -1,6 +1,6 @@
 #include <stdbool.h>
 
-#if defined(__unix__) || !defined(__APPLE__) && defined(__MACH__)
+#if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
 // https://web.archive.org/web/20191012035921/http://nadeausoftware.com/articles/2012/01/c_c_tip_how_use_compiler_predefined_macros_detect_operating_system
 #include <sys/param.h> // IWYU pragma: keep
 #endif
@@ -52,7 +52,7 @@ bool fs_is_unix() {
 
 bool fs_is_bsd() {
 #if defined(BSD)
-  return true;
+  return !fs_is_macos();
 #else
   return false;
 #endif
