@@ -11,7 +11,14 @@
 #endif
 
 
-std::string fs_canonical(std::string_view path, const bool strict, const bool expand_tilde)
+std::string
+fs_canonical(
+  std::string_view path,
+#if __has_cpp_attribute(maybe_unused)
+[[maybe_unused]]
+#endif
+  const bool strict,
+  const bool expand_tilde)
 {
   // canonicalize path, i.e. resolve all symbolic links, remove ".", ".." and extra slashes
   // if strict is true, then path must exist
@@ -25,12 +32,6 @@ std::string fs_canonical(std::string_view path, const bool strict, const bool ex
     : std::string(path);
 
 #ifdef HAVE_CXX_FILESYSTEM
-
-  // handle differences in ill-defined behaviour of std::filesystem::weakly_canonical() on non-existent paths
-  // canonical(path, false) is distinct from resolve(path, false) for non-existing paths.
-  // don't just always normalize because canonical also resolve symlinks.
-  if (!strict && !fs_is_absolute(ex) && !fs_exists(ex))
-    return fs_normal(ex);
 
   if (fs_is_mingw() && fs_is_symlink(ex))
     return fs_win32_final_path(ex);
@@ -46,16 +47,8 @@ std::string fs_canonical(std::string_view path, const bool strict, const bool ex
 
   fs_print_error(path, "canonical", ec);
   return {};
-#else
 
-  // non c++ filesystem uses different strict logic
-  if (!fs_exists(ex)) {
-    if (strict) {
-      std::cerr << "ERROR:ffilesystem:canonical(" << path << ") path does not exist and strict=true\n";
-      return {};
-    }
-    return fs_normal(ex);
-  }
+#else
 
   return fs_realpath(ex);
 

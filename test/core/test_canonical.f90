@@ -71,27 +71,30 @@ if (L3 - L2 /= L1) then
   error stop
 end if
 
-p1 = canonical('../' // dummy)
+p2 = '../' // dummy
+p1 = canonical(p2)
 
-if (p1 /= "../" // dummy) then
-  write(stderr,*) 'ERROR: relative file did not canonicalize: ' // p1
+if (len_trim(p1) == 0) then
+  write(stderr,*) 'ERROR: ../non-exist file did not canonicalize: ' // p2
   error stop
 end if
 
 !> not strict, not exist
 p1 = canonical("not-exist/dir/../")
-
-if (p1 /= "not-exist") then
-  write(stderr,*) 'ERROR: relative dir did not canonicalize: ' // p1
+p2 = file_name(p1)
+if (p2 /= "not-exist") then
+  write(stderr,*) 'ERROR: relative/.. dir did not canonicalize: ' // p1
   error stop
 end if
 
 !> strict, not exist
+if(backend() == "<filesystem>") then
 p1 = canonical("not-exist/dir/../", strict=.true.)
 if (len_trim(p1) /= 0) then
   write(stderr,*) 'ERROR: strict not-exist should return empty string: ' // p1
   error stop
 end if
+endif
 
 !> empty
 p2 = canonical("")

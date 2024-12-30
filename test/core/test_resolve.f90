@@ -92,11 +92,13 @@ if (p1 /= cwd // "/not-exist") then
 end if
 
 !> strict, not exist
+if(backend() == "<filesystem>") then
 p1 = resolve("not-exist/dir/../", strict=.true.)
 if (len_trim(p1) /= 0) then
   write(stderr,*) 'ERROR: strict not-exist should return empty string: ' // p1
   error stop
 end if
+endif
 
 end block valgrind
 

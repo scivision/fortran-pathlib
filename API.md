@@ -257,8 +257,7 @@ Realpath(): usually users will want resolve() or canonical() instead
 character(:), allocatable :: realpath(".././mypath")
 ```
 
-Resolve path. This means to canonicalize the path, normalizing, resolving symbolic links, and resolving relative paths when the path exists.
-This is distinct from canonical, which does not pin relative paths to a specific directory when the path does not exist.
+Resolve path. This means to absoluteize, canonicalize, resolving symbolic links.
 
 * "strict" if true required the path to exist (default false).
 * "expand_tilde" if true expands the tilde "~" (default true).
@@ -280,9 +279,10 @@ p = p%resolve()
 p%path() == "<absolute path of current working directory>/b"
 ```
 
-Canonicalize path. This means to normalize, resolve symbolic links, resolve relative paths when the path exists.
+Canonicalize path. This means to normalize, resolve symbolic links, resolve relative paths.
 For case-insensitive filesystems, the path's actual case is returned.
 If the path doesn't exist and no absolute path is given, the path is resolved as far as possible with existing path components, and then ".", ".." are lexiographically resolved.
+The non-existing path may be absolutized based on the current working directory depending on the system (macOS does this).
 
 * "strict" if true required the path to exist (default false).
 * "expand_tilde" if true expands the tilde "~" (default true).
