@@ -70,7 +70,8 @@ std::unordered_map<std::string_view, fs_function> fs_function_map = {
   {"homedir", []() { return fs_get_homedir(); }},
   {"terminal", []() { return fs_get_terminal(); }},
   {"tempdir", []() { return fs_get_tempdir(); }},
-  {"max_path", []() { return fs_get_max_path(); }}
+  {"max_path", []() { return fs_get_max_path(); }},
+  {"cwd", []() { return fs_get_cwd(); }}
 };
 
   auto it = fs_function_map.find(fun);
@@ -157,7 +158,6 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"exists", [](std::string_view a1) { return fs_exists(a1); }},
     {"space", [](std::string_view a1) { return fs_space_available(a1); }},
     {"absolute", [](std::string_view a1) { return fs_absolute(a1, true); }},
-    {"get_cwd", [](std::string_view) { return fs_get_cwd(); }},
     {"is_empty", [](std::string_view a1) { return fs_is_empty(a1); }},
     {"remove", [](std::string_view a1) { return fs_remove(a1); }}
   };
