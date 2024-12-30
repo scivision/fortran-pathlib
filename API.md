@@ -423,11 +423,16 @@ Is "path" a file or directory (or a symbolic link to existing file or directory)
 Like Python pathlib.Path.exists(), even if the path does not have read permission,
 it still may exist.
 
+NOTE: on Windows `exists("./not-exist/..")` is `true`, but on Unix `false`.
+In C/C++ `access()` or `stat()` the same behavior is observed Windows vs Unix.
+
 ```fortran
 p%exists()
 ! or
 exists("my/file.txt")
 ```
+
+---
 
 Does file exist (or a symbolic link to an existing file).
 Like Python pathlib.Path.is_file(), even if the file does not have read permission,
