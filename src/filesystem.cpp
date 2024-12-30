@@ -55,19 +55,14 @@ bool
 fs_rename(std::string_view from, std::string_view to)
 {
   // rename a file or directory
-  // existing non-empty "to" is an error
+  // existing "to" is overwritten
 
   std::error_code ec;
-
-  if(fs_exists(to) && !fs_is_empty(to)){
-    fs_print_error(from, to, "rename: destination is not empty", ec);
-    return false;
-  }
 
 #ifdef HAVE_CXX_FILESYSTEM
   // https://en.cppreference.com/w/cpp/filesystem/rename
   std::filesystem::rename(from, to, ec);
-  if(!ec) FFS_LIKELY
+  if(!ec)
 #else
   // https://en.cppreference.com/w/cpp/io/c/rename
   if(std::rename(from.data(), to.data()) == 0)

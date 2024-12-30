@@ -206,7 +206,7 @@ call p%remove()
 call remove("my/file.txt")
 ```
 
-Rename file or directory. Target must not exist or be empty.
+Rename file or directory. Target "to" will be overwritten if it exists.
 
 ```fortran
 fs_rename(from, to)
