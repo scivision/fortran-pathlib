@@ -84,18 +84,20 @@ if(resolve("") /= cwd) then
 end if
 
 !> not strict, not exist
-p1 = resolve("not-exist/dir/../")
+p1 = resolve("not-exist/dir/..")
 
 if (p1 /= cwd // "/not-exist") then
-  write(stderr,*) 'ERROR: relative dir did not resolve: ' // p1
+  !! not a trailing slash input to avoid ambiguity in various backends
+  write(stderr,*) 'failed: resolve/.. dir did not resolve: ' // p1
   error stop
 end if
 
 !> strict, not exist
 if(backend() == "<filesystem>") then
-p1 = resolve("not-exist/dir/../", strict=.true.)
+p1 = resolve("not-exist/dir/..", strict=.true.)
+!! not a trailing slash input to avoid ambiguity in various backends
 if (len_trim(p1) /= 0) then
-  write(stderr,*) 'ERROR: strict not-exist should return empty string: ' // p1
+  write(stderr,*) 'failed: resolve(strict not-exist should return empty string: ' // p1
   error stop
 end if
 endif

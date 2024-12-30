@@ -80,7 +80,8 @@ if (len_trim(p1) == 0) then
 end if
 
 !> not strict, not exist
-p1 = canonical("not-exist/dir/../")
+p1 = canonical("not-exist/dir/..")
+!! not a trailing slash input to avoid ambiguity in various backends
 p2 = file_name(p1)
 if (p2 /= "not-exist") then
   write(stderr,*) 'ERROR: relative/.. dir did not canonicalize: ' // p1
@@ -89,7 +90,8 @@ end if
 
 !> strict, not exist
 if(backend() == "<filesystem>") then
-p1 = canonical("not-exist/dir/../", strict=.true.)
+p1 = canonical("not-exist/dir/..", strict=.true.)
+!! not a trailing slash input to avoid ambiguity in various backends
 if (len_trim(p1) /= 0) then
   write(stderr,*) 'ERROR: strict not-exist should return empty string: ' // p1
   error stop
