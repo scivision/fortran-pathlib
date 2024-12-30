@@ -6,8 +6,8 @@
 
 bool fs_touch(std::string_view path)
 {
-  if(fs_exists(path))
-    return fs_set_modtime(path);
+  if(fs_set_modtime(path, true))
+    return true;
 
   if(std::ofstream f(path.data()); f){
     f.close();

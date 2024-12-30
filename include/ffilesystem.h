@@ -89,7 +89,7 @@ std::string fs_absolute(std::string_view, std::string_view, const bool = true);
 
 bool fs_mkdir(std::string_view);
 
-bool fs_set_modtime(std::string_view);
+bool fs_set_modtime(std::string_view, const bool = false);
 std::time_t fs_get_modtime(std::string_view);
 
 std::string fs_which(std::string_view);
