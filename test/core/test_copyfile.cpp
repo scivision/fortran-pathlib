@@ -12,14 +12,14 @@ int main() {
 
   const std::string cwd = fs_get_cwd();
 
-  const std::string s1 = cwd + "/dummy.txt";
+  const std::string s1 = cwd + "/dummy_cpp.txt";
 
   std::string s2 = cwd;
   if(fs_is_windows() && fs_backend() == "<filesystem>"){
     std::cerr << "bug in MinGW, oneAPI, MSVC, and <filesystem> with non-Ascii\n";
-    s2 += "/copy.txt";
+    s2 += "/dummy_cpp.txt.copy";
   } else
-    s2 += "/日本語.txt";
+    s2 += "/copy_cpp_日本語.txt";
 
   const std::string t1 = "及せゃ市人購ゅトてへ投際ト点吉で速流つ今日";
   std::string t2;

@@ -30,7 +30,7 @@
 #elif defined(__APPLE__) && defined(__MACH__)
 #include <copyfile.h>
 #elif defined(__linux__) || defined(BSD)
-#include <sys/types.h>
+#include <sys/types.h>  // off_t
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -78,19 +78,7 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
   const int r = copyfile(source.data(), dest.data(), nullptr, opt);
   if(r == 0)
     return true;
-#elif defined(HAVE_COPY_FILE_RANGE)
-    // use copy_file_range
-    // https://man.freebsd.org/cgi/man.cgi?copy_file_range(2)
-    // https://man7.org/linux/man-pages/man2/copy_file_range.2.html
-    // https://linux.die.net/man/3/open
-
-if (fs_trace) std::cout << "TRACE::ffilesystem:copy_file: using copy_file_range\n";
-
-  if(!overwrite && fs_exists(dest)){
-    fs_print_error(dest, "copy_file:file exists");
-    return false;
-  }
-
+#else
 
   const int rid = open(source.data(), O_RDONLY);
   if (rid == -1) {
@@ -108,14 +96,26 @@ if (fs_trace) std::cout << "TRACE::ffilesystem:copy_file: using copy_file_range\
 
   off_t len = stat.st_size;
 
-  const int wid = open(dest.data(), O_CREAT | O_WRONLY | O_TRUNC, 0644);
+  auto opt = O_CREAT | O_WRONLY | O_TRUNC | O_CLOEXEC;
+  if(!overwrite)
+    opt |= O_EXCL;
+
+  const int wid = open(dest.data(), opt, 0644);
   if (wid == -1) {
     fs_print_error(dest, "copy_file:open");
     close(rid);
     return false;
   }
 
-  off_t ret;
+  off_t ret = 0;
+  int rc = 0;
+  int wc = 0;
+
+#if defined(HAVE_COPY_FILE_RANGE)
+    // https://man.freebsd.org/cgi/man.cgi?copy_file_range(2)
+    // https://man7.org/linux/man-pages/man2/copy_file_range.2.html
+    // https://linux.die.net/man/3/open
+  if (fs_trace) std::cout << "TRACE::ffilesystem:copy_file: using copy_file_range\n";
 
   do {
     ret = copy_file_range(rid, nullptr, wid, nullptr, len, 0);
@@ -125,50 +125,38 @@ if (fs_trace) std::cout << "TRACE::ffilesystem:copy_file: using copy_file_range\
     len -= ret;
   } while (len > 0 && ret > 0);
 
-  const int rc = close(rid);
-  const int wc = close(wid);
+#else
+
+  if (fs_trace) std::cout << "TRACE::ffilesystem:copy_file: using plain file buffer read / write\n";
+
+  const int bufferSize = 16384;
+  std::string buf(bufferSize, '\0');
+
+  ssize_t bytes;
+  for (len; len > 0; len -= bytes) {
+    bytes = read(rid, buf.data(), len);
+    if (bytes <= 0 || write(wid, buf.data(), bytes) != bytes) {
+      // value should not be zero because we tell the file size in "len"
+      close(rid);
+      close(wid);
+      goto err;
+    }
+  }
+
+#endif
+
+  rc = close(rid);
+  wc = close(wid);
 
   if(ret >= 0 && rc == 0 && wc == 0)
     return true;
-#else
-    // https://stackoverflow.com/a/29082484
 
-if (fs_trace) std::cout << "TRACE::ffilesystem:copy_file: using fallback fread/fwrite\n";
-
-  if(!overwrite && fs_exists(dest)){
-    fs_print_error(dest, "copy_file:file exists");
-    return false;
-  }
-
-  const int bufferSize = 4096;
-  std::string buf(bufferSize, '\0');
-
-  FILE *rid = fopen(source.data(), "r");
-  if (!rid) {
-    fs_print_error(source, "copy_file:fopen");
-    return false;
-  }
-
-  FILE *wid = fopen(dest.data(), "w");
-  if (!wid) {
-    fs_print_error(dest, "copy_file:fopen");
-    fclose(rid);
-    return false;
-  }
-
-  while (!feof(rid)) {
-    size_t bytes = fread(buf.data(), 1, bufferSize, rid);
-    if (bytes)
-      fwrite(buf.data(), 1, bytes, wid);
-  }
-
-  const int rc = fclose(rid);
-  const int wc = fclose(wid);
-
-  if(rc == 0 && wc == 0)
-    return true;
 #endif
 
+#if !defined(_MSC_VER) && __has_cpp_attribute(maybe_unused)
+[[maybe_unused]]
+#endif
+err:
   fs_print_error(source, "copy_file");
   return false;
 

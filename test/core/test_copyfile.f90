@@ -10,7 +10,7 @@ integer :: i, u, L1, L2
 integer(int64) :: i64, iref
 valgrind: block
 
-character(*), parameter :: s1 = "dummy.txt", s2 = "dummy.txt.copy"
+character(*), parameter :: s1 = "dummy_fortran.txt", s2 = "dummy_fortran.txt.copy"
 character(:), allocatable :: t1, t2
 
 t1 = "lots of text today"

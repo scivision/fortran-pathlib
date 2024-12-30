@@ -175,8 +175,6 @@ SKIP_REGULAR_EXPRESSION "not implemented;SIGABRT;[aA]bort;[sS]egmentation fault;
 
 set_tests_properties(Cpp_mkdir PROPERTIES FIXTURES_REQUIRED root)
 
-set_tests_properties(Cpp_copyfile PROPERTIES FIXTURES_REQUIRED filesize)
-
 # TARGET_FILE_NAME to allow for macOS possible non-canonical result
 # and symlinked / special filesystems like WSL
 set_tests_properties(Cpp_exepath PROPERTIES PASS_REGULAR_EXPRESSION $<TARGET_FILE_NAME:test_exepath_cpp>)
