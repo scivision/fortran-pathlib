@@ -13,6 +13,7 @@
 #include <filesystem>
 #else
 #include <iostream>
+#include <cerrno>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -61,14 +62,13 @@ bool fs_is_empty(std::string_view path)
 #ifdef HAVE_CXX_FILESYSTEM
   std::error_code ec;
 
-  return std::filesystem::is_empty(path, ec) && !ec;
+  bool e = std::filesystem::is_empty(path, ec);
+  if (!ec) FFS_LIKELY
+    return e;
 #else
 
-  if(!fs_exists(path))
-    return false;
-
   if (!fs_is_dir(path))
-    return fs_file_size(path) == 0;
+    return fs_file_size(path) == 0 && fs_is_file(path);
 
   // directory empty
 #ifdef _MSC_VER
@@ -134,12 +134,11 @@ bool fs_is_empty(std::string_view path)
     return true;
   }
 
-  // not a directory
+#endif
+
+#endif
+
   fs_print_error(path, "is_empty");
   return false;
-
-#endif
-
-#endif
 
 }
