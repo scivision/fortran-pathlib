@@ -10,17 +10,21 @@
 #include <sys/syslimits.h>
 #endif
 
+#include <cerrno>
 #include <cstddef> // IWYU pragma: keep
 #include <string>
 #include <string_view>
-#include <iostream> // IWYU pragma: keep
 
 #include "ffilesystem.h"
 
 
-size_t fs_get_max_path(){
+constexpr size_t DEFAULT_MAX_PATH = 256;
 
-  size_t m = 256;
+size_t
+fs_get_max_path()
+{
+// Returns the maximum path length supported by the file system.
+  size_t m = DEFAULT_MAX_PATH;
 #if defined(PATH_MAX)
   m = PATH_MAX;
 #elif defined (_MAX_PATH)
@@ -28,15 +32,14 @@ size_t fs_get_max_path(){
 #elif defined (_POSIX_PATH_MAX)
   m = _POSIX_PATH_MAX;
 #endif
-  return (m < 4096) ? m : 4096;
   // arbitrary absolute maximum
   // Ref: https://github.com/gulrak/filesystem/blob/b1982f06c84f08a99fb90bac43c2d03712efe921/include/ghc/filesystem.hpp#L244
-
+  return (m < 4096) ? m : 4096;
 }
 
-
+// This function returns the maximum length of a single component in the given path.
 std::string::size_type fs_max_component(
-#if __has_cpp_attribute(maybe_unused)
+#if defined(__has_cpp_attribute) && __has_cpp_attribute(maybe_unused)
 [[maybe_unused]]
 #endif
 std::string_view path)
@@ -54,11 +57,19 @@ std::string_view path)
   fs_print_error(path, "max_component:GetVolumeInformationA");
   return {};
 #elif defined(_PC_NAME_MAX)
-  return pathconf(path.data(), _PC_NAME_MAX);
+  errno = 0;
+  auto const r = pathconf(path.data(), _PC_NAME_MAX);
+  if(r != -1)
+    return r;
+  if(errno == 0)
+    return DEFAULT_MAX_PATH;
+
+  fs_print_error("max_component:pathconf", path);
+  return {};
 #elif defined(NAME_MAX)
   return NAME_MAX;
 #else
-  std::cerr << "ERROR:ffilesystem:max_component(" << path << ") => function not implemented on this platform\n";
+  fs_print_error("max_component:function not implemented on this platform", path);
   return {};
 #endif
 }
