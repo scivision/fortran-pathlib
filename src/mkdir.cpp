@@ -36,7 +36,7 @@ bool fs_mkdir(std::string_view path)
 
 #ifdef HAVE_CXX_FILESYSTEM
 
-  if (std::filesystem::create_directories(path, ec) || (!ec && fs_is_dir(path))) FFS_LIKELY
+  if (std::filesystem::create_directories(path, ec) || (!ec)) FFS_LIKELY
     return true;
 
 #else
@@ -63,15 +63,16 @@ bool fs_mkdir(std::string_view path)
     // create directory
 #ifdef _WIN32
     // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createdirectorya
-    ok = CreateDirectoryA(buf.data(), nullptr) == 0;
+    ok = CreateDirectoryA(buf.data(), nullptr) != 0;
     if(!ok){
       const auto err = GetLastError();
-      // ERROR_PATH_NOT_FOUND if relative directory
-      ok = err == ERROR_ALREADY_EXISTS || err == ERROR_ACCESS_DENIED;
+      // ERROR_PATH_NOT_FOUND if relative directory, thus we absolute() before loop.
+      // ERROR_ACCESS_DENIED is OK if it's not the last part
+      ok = err == ERROR_ALREADY_EXISTS || (err == ERROR_ACCESS_DENIED && p != parts.back());
     }
 #else
   // https://www.man7.org/linux/man-pages/man2/mkdir.2.html
-   ok = mkdir(buf.data(), S_IRWXU) == 0 || errno == EEXIST || errno == EACCES;
+   ok = mkdir(buf.data(), S_IRWXU) == 0 || errno == EEXIST || (errno == EACCES && p != parts.back());
 #endif
   if(!ok)  FFS_UNLIKELY
     break;
