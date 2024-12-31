@@ -14,7 +14,6 @@ std::string::size_type fs_str2char(std::string_view s, char* result, const std::
 {
   if(s.length() >= buffer_size) FFS_UNLIKELY
   {
-    result = nullptr;
     std::cerr << "ERROR:Ffs:str2char(" << s << ") output buffer " << buffer_size << " too small for string: " << s << " length " << s.length() << "\n";
     return 0;
   }
