@@ -58,13 +58,15 @@ std::string fs_get_cwd()
 #elif defined(_WIN32)
 // windows.h https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcurrentdirectory
   const DWORD L = GetCurrentDirectoryA(0, nullptr);
-  if (L == 0){  FFS_UNLIKELY
+  if (L == 0)  FFS_UNLIKELY
+  {
     fs_print_error("", "get_cwd:GetCurrentDirectory");
     return {};
   }
 
   std::string r(L, '\0');
-  if(GetCurrentDirectoryA(L, r.data()) == L-1){  FFS_LIKELY
+  if(GetCurrentDirectoryA(L, r.data()) == L-1)  FFS_LIKELY
+  {
     r.resize(L-1);
     return fs_drop_slash(fs_as_posix(r));
   }

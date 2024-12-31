@@ -36,14 +36,16 @@ std::string fs_exe_path()
 #if defined(_WIN32) || defined(__CYGWIN__)
  // https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
   const size_t L = GetModuleFileNameA(nullptr, path.data(), static_cast<DWORD>(path.size()));
-  if(L > 0 && GetLastError() != ERROR_INSUFFICIENT_BUFFER){  FFS_LIKELY
+  if(L > 0 && GetLastError() != ERROR_INSUFFICIENT_BUFFER) FFS_LIKELY
+  {
     path.resize(L);
     return fs_as_posix(path);
   }
 #elif defined(__linux__)
   // https://man7.org/linux/man-pages/man2/readlink.2.html
   const size_t L = readlink("/proc/self/exe", path.data(), path.size());
-  if(L){  FFS_LIKELY
+  if(L)  FFS_LIKELY
+  {
     path.resize(L);
     return path;
   }
@@ -58,12 +60,13 @@ std::string fs_exe_path()
   // https://man.freebsd.org/cgi/man.cgi?sysctl(3)
   size_t L = path.size();
   const int mib[4] = {CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1};
-  if(sysctl(mib, 4, path.data(), &L, nullptr, 0) == 0){  FFS_LIKELY
+  if(sysctl(mib, 4, path.data(), &L, nullptr, 0) == 0)  FFS_LIKELY
+  {
     path.resize(L);
     return path;
   }
 #endif
 
-  fs_print_error("", "exepath");
+  fs_print_error("exepath", "");
   return {};
 }

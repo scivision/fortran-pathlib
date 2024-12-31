@@ -18,14 +18,16 @@ std::string fs_win32_full_name(std::string_view path)
 
 #ifdef _WIN32
   const DWORD L = GetFullPathNameA(path.data(), 0, nullptr, nullptr);
-  if(L == 0){  FFS_UNLIKELY
+  if(L == 0)  FFS_UNLIKELY
+  {
     fs_print_error(path, "realpath:GetFullPathName");
     return {};
   }
   // this form includes the null terminator
   std::string r(L, '\0');
   // weak detection of race condition (cwd change)
-  if(GetFullPathNameA(path.data(), L, r.data(), nullptr) == L-1){  FFS_LIKELY
+  if(GetFullPathNameA(path.data(), L, r.data(), nullptr) == L-1)  FFS_LIKELY
+  {
     r.resize(L-1);
     return fs_as_posix(r);
   }

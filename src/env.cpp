@@ -49,11 +49,11 @@ bool fs_setenv(std::string_view name, std::string_view value)
   // SetEnvironmentVariable returned OK but set blank values
   // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/putenv-wputenv
 
-  if(_putenv_s(name.data(), value.data()) == 0)
+  if(_putenv_s(name.data(), value.data()) == 0)  FFS_LIKELY
     return true;
 #else
   // https://www.man7.org/linux/man-pages/man3/setenv.3.html
-  if(setenv(name.data(), value.data(), 1) == 0)
+  if(setenv(name.data(), value.data(), 1) == 0)  FFS_LIKELY
     return true;
 #endif
 
@@ -66,13 +66,13 @@ std::string fs_user_config_dir()
 #ifdef _WIN32
   PWSTR s = nullptr;
   std::string r;
-  if(SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &s) == S_OK)
+  if(SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &s) == S_OK)  FFS_LIKELY
     r = fs_as_posix(fs_to_narrow(s));
 
   CoTaskMemFree(s);
   // https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree
 
-  if (!r.empty())
+  if (!r.empty())  FFS_LIKELY
     return r;
 
   fs_print_error("", "user_config_dir:SHGetKnownFolderPath");

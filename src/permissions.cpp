@@ -105,7 +105,8 @@ std::string fs_get_permissions(std::string_view path)
 #ifdef HAVE_CXX_FILESYSTEM
   std::error_code ec;
   const auto s = std::filesystem::status(path, ec);
-  if(ec){ FFS_UNLIKELY
+  if(ec)  FFS_UNLIKELY
+  {
     fs_print_error(path, "get_permissions", ec);
     return {};
   }

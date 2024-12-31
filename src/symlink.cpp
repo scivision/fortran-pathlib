@@ -76,7 +76,8 @@ bool fs_is_symlink(std::string_view path)
 std::string fs_read_symlink(std::string_view path)
 {
 
-  if(!fs_is_symlink(path)){ FFS_UNLIKELY
+  if(!fs_is_symlink(path))  FFS_UNLIKELY
+  {
     std::cerr << "ERROR:Ffilesystem:read_symlink(" << path << ") is not a symlink\n";
     return {};
   }

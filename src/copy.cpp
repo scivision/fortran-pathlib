@@ -151,7 +151,7 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
   rc = close(rid);
   wc = close(wid);
 
-  if(ret >= 0 && rc == 0 && wc == 0 && remaining == 0)
+  if(ret >= 0 && rc == 0 && wc == 0 && remaining == 0)  FFS_LIKELY
     return true;
 
 #endif
