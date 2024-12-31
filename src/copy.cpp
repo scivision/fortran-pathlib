@@ -86,7 +86,7 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
     return false;
   }
 
-  // leave fstat here to avoid source file race conditino
+  // leave fstat here to avoid source file race condition
   struct stat  stat;
   if (fstat(rid, &stat) == -1) {
     fs_print_error(source, "copy_file:fstat");
@@ -94,7 +94,7 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
     return false;
   }
 
-  off_t len = stat.st_size;
+  const off_t len = stat.st_size;
 
   auto opt = O_CREAT | O_WRONLY | O_TRUNC | O_CLOEXEC;
   if(!overwrite)
@@ -107,7 +107,8 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
     return false;
   }
 
-  off_t ret = 0;
+  off_t ret = len;
+  off_t remaining = len;
   int rc = 0;
   int wc = 0;
 
@@ -117,13 +118,13 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
     // https://linux.die.net/man/3/open
   if (fs_trace) std::cout << "TRACE::ffilesystem:copy_file: using copy_file_range\n";
 
-  do {
-    ret = copy_file_range(rid, nullptr, wid, nullptr, len, 0);
+  while (remaining > 0 && ret > 0) {
+    ret = copy_file_range(rid, nullptr, wid, nullptr, remaining, 0);
     if (ret == -1)
       break;
 
-    len -= ret;
-  } while (len > 0 && ret > 0);
+    remaining -= ret;
+  }
 
 #else
 
@@ -133,14 +134,16 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
   std::string buf(bufferSize, '\0');
 
   ssize_t bytes;
-  for (len; len > 0; len -= bytes) {
-    bytes = read(rid, buf.data(), len);
+  while (remaining > 0) {
+    bytes = read(rid, buf.data(), remaining);
     if (bytes <= 0 || write(wid, buf.data(), bytes) != bytes) {
       // value should not be zero because we tell the file size in "len"
       close(rid);
       close(wid);
-      goto err;
+      fs_print_error("copy_file", source, dest);
+      return false;
     }
+    remaining -= bytes;
   }
 
 #endif
@@ -148,16 +151,12 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
   rc = close(rid);
   wc = close(wid);
 
-  if(ret >= 0 && rc == 0 && wc == 0)
+  if(ret >= 0 && rc == 0 && wc == 0 && remaining == 0)
     return true;
 
 #endif
 
-#if !defined(_MSC_VER) && __has_cpp_attribute(maybe_unused)
-[[maybe_unused]]
-#endif
-err:
-  fs_print_error(source, "copy_file");
+  fs_print_error("copy_file", source, dest, ec);
   return false;
 
 }
