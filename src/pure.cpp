@@ -33,7 +33,7 @@ fs_slash_first(std::string_view path)
 std::string::size_type fs_strncpy(const char* path, char* result, const std::string::size_type buffer_size)
 {
 // check size before copy
-  size_t L = std::strlen(path);
+  std::string::size_type L = std::strlen(path);
   if(L >= buffer_size){
     std::cerr << "ERROR:Ffilesystem:strncpy: output buffer " << buffer_size << " too small for length " << L << "\n";
     return 0;
@@ -59,7 +59,7 @@ bool fs_is_absolute(std::string_view path)
   return std::filesystem::path(path).is_absolute();
 #else
   if(fs_is_windows())
-    return path.length() > 2 && !(fs_root_name(path).empty()) && (path[2] == '/' || (fs_is_windows() && path[2] == '\\'));
+    return path.length() > 2 && !(fs_root_name(path).empty()) && (path[2] == '/' || path[2] == '\\');
   else
     return path.front() == '/';
 #endif
