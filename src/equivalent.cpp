@@ -28,11 +28,13 @@ bool fs_equivalent(std::string_view path1, std::string_view path2)
 
 #ifdef HAVE_CXX_FILESYSTEM
 
-  std::filesystem::path p1(path1);
-  std::filesystem::path p2(path2);
+  std::string p1(path1);
+  std::string p2(path2);
+
   if(fs_is_mingw()){
-    p1 = p1.lexically_normal();
-    p2 = p2.lexically_normal();
+    // MinGW falsely gives mismatch if not canonicalized
+    p1 = fs_canonical(p1, true, false);
+    p2 = fs_canonical(p2, true, false);
   }
 
   bool e = std::filesystem::equivalent(p1, p2, ec);
