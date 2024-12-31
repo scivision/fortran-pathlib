@@ -19,6 +19,8 @@
 std::string fs_relative_to(std::string_view base, std::string_view other)
 {
   // find lexical relative path from base to other
+  // ".." is ambiguous and should be avoided in input
+
 #ifdef HAVE_CXX_FILESYSTEM
   return std::filesystem::path(other).lexically_relative(base).generic_string();
 #else
@@ -35,14 +37,6 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
   if(b == o)
     return ".";
 
-#ifdef __cpp_lib_ranges_contains  // C++23
-  if (std::ranges::contains(b, ".."))
-#elif __cpp_lib_ranges // C++20
-  if (std::ranges::find(b, "..") != b.end())
-#else // C++98
-  if (std::find(b.begin(), b.end(), "..") != b.end())
-#endif
-    std::cerr << "relative_to(" << base << ", " << other << ") has ambiguous base with '..'  consider using fs_canonical() first\n";
 
   const std::string::size_type Lb = b.size();
   const std::string::size_type Lo = o.size();
@@ -50,13 +44,14 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
   // find common prefix, returning empty if no common prefix
   if(fs_trace) std::cout << "TRACE:relative_to: normal_vector lengths " << Lb << " " << Lo << "\n";
   std::string::size_type i = 0;
-  for (; i < Lb && i < Lo; i++){
+  while (i < Lb && i < Lo) {
     if(fs_trace) std::cout << "TRACE:relative_to: " << b[i] << " " << o[i] << "\n";
     if (b[i] != o[i])
       break;
+    i++;
   }
 
-  if (i == 0 && b[0] != o[0])
+  if (i == 0)
     return {};
 
   // build relative path
@@ -70,7 +65,7 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
 
   r = fs_drop_slash(r);
 
-  if(r == "/" || r.empty())
+  if (r.empty() || r == "/")
     r = ".";
 
   if (other.back() == '/' && r.back() != '/' && r != ".")
@@ -85,7 +80,10 @@ std::string fs_relative_to(std::string_view base, std::string_view other)
 
 std::string fs_proximate_to(std::string_view base, std::string_view other)
 {
-// proximate_to is LEXICAL operation
+// proximate_to is a LEXICAL operation
+// A lexical operation means that the function operates purely on the string representation of the paths,
+// without accessing the filesystem. It manipulates the paths as sequences of characters,
+// ensuring that the result is a valid relative path string.
 #ifdef HAVE_CXX_FILESYSTEM
   return std::filesystem::path(other).lexically_proximate(base).generic_string();
 #else
