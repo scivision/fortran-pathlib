@@ -25,7 +25,8 @@ bool fs_is_admin(){
   const bool ok = (OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken) &&
      GetTokenInformation(hToken, TokenElevation, &elevation, sizeof(elevation), &dwSize));
 
-  CloseHandle(hToken);
+  if(hToken)  FFS_LIKELY
+    CloseHandle(hToken);
   if(ok)  FFS_LIKELY
     return elevation.TokenIsElevated;
 
