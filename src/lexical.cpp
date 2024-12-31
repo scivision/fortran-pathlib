@@ -84,7 +84,7 @@ fs_is_safe_char(const char c)
   // set<char, std::less<>>  6us
   // vector<char> 0.3us so much faster!
   // safe.find_first_of is same speed as vector<char> but more readable
-  std::string_view safe = "_-.~@#$%^&()[]{}+=,!";
+  static constexpr std::string_view safe = "_-.~@#$%^&()[]{}+=,!";
 
   return std::isalnum(c) || safe.find_first_of(c) != std::string::npos;
 }
@@ -129,16 +129,10 @@ bool
 fs_is_prefix(std::string_view prefix, std::string_view path)
 {
   // is prefix a prefix of path. Does not normalize, canonicalize, or walk up the directory tree.
+  // ".." is ambiguous and should be avoided in input
 
   if(prefix.empty() || path.empty())
     return false;
-
-#ifdef __cpp_lib_string_contains
-  if(prefix.contains("..") || path.contains(".."))
-#else
-  if(prefix.find("..") != std::string::npos || path.find("..") != std::string::npos)
-#endif
-    std::cerr << "is_prefix(" << prefix << ", " << path << ") has ambiguous input with '..'  consider using fs_canonical() first\n";
 
   const std::string pr = fs_drop_slash(prefix);
   const std::string p = fs_drop_slash(path);
@@ -158,16 +152,10 @@ bool
 fs_is_subdir(std::string_view subdir, std::string_view dir)
 {
   // is subdir a subdirectory of dir. Does not normalize, canonicalize, or walk up the directory tree.
+  // ".." is ambiguous and should be avoided in input
 
   if(subdir.empty() || dir.empty())
     return false;
-
-#ifdef __cpp_lib_string_contains
-  if(subdir.contains("..") || dir.contains(".."))
-#else
-  if(subdir.find("..") != std::string::npos || dir.find("..") != std::string::npos)
-#endif
-    std::cerr << "is_subdir(" << subdir << ", " << dir << ") has ambiguous input with '..'  consider using fs_canonical() first\n";
 
   const std::string s = fs_drop_slash(subdir);
   const std::string d = fs_drop_slash(dir);
