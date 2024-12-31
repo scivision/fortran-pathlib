@@ -22,7 +22,6 @@
 bool fs_set_permissions(std::string_view path, int readable, int writable, int executable)
 {
 #ifdef HAVE_CXX_FILESYSTEM
-  std::filesystem::path pth(path);
 
 #if defined(__cpp_using_enum)  // C++20
   using enum std::filesystem::perms;
@@ -34,21 +33,21 @@ bool fs_set_permissions(std::string_view path, int readable, int writable, int e
 
   std::error_code ec;
   // need to error if path doesn't exist and no operations are requested
-  if(!std::filesystem::exists(pth, ec))
+  if(!fs_exists(path))
     ec = std::make_error_code(std::errc::no_such_file_or_directory);
 
-  if (readable != 0)
-    std::filesystem::permissions(pth, owner_read,
+  if (!ec && readable != 0)
+    std::filesystem::permissions(path, owner_read,
       (readable > 0) ? std::filesystem::perm_options::add : std::filesystem::perm_options::remove,
       ec);
 
   if (!ec && writable != 0)
-    std::filesystem::permissions(pth, owner_write,
+    std::filesystem::permissions(path, owner_write,
       (writable > 0) ? std::filesystem::perm_options::add : std::filesystem::perm_options::remove,
       ec);
 
   if (!ec && executable != 0)
-    std::filesystem::permissions(pth, owner_exec,
+    std::filesystem::permissions(path, owner_exec,
       (executable > 0) ? std::filesystem::perm_options::add : std::filesystem::perm_options::remove,
       ec);
 
