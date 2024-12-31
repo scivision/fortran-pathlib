@@ -7,7 +7,7 @@
 // libcxx_release
 #if __has_include(<version>)
 #include <version>
-#elif __has_include(<ciso644>)
+#elif __has_include(<ciso646>)
 // < C++20 standard
 #include <ciso646>
 #endif
@@ -63,12 +63,12 @@ std::string fs_libcxx()
 #elif defined(_GLIBCXX_RELEASE)
   "GNU libstdc++ " +
 #elif defined(_MSVC_STL_UPDATE)
+  // https://github.com/microsoft/STL/wiki/Macro-_MSVC_STL_UPDATE
   "Microsoft STL " +
 #endif
   std::to_string(fs_libcxx_release());
 
   return v;
-  // https://github.com/microsoft/STL/wiki/Macro-_MSVC_STL_UPDATE
 }
 
 
@@ -83,6 +83,8 @@ std::string fs_backend(){
 
 bool fs_is_optimized(){
 // This is a heuristic, trusting the build system or user to set NDEBUG if optimized.
+// The NDEBUG macro is typically defined when optimizations are enabled to disable debugging code.
+// It is a standard way to indicate that the code should be optimized and not include debug information.
 #if defined(NDEBUG)
   return true;
 #else
@@ -94,7 +96,7 @@ bool fs_is_optimized(){
 std::string fs_compiler()
 {
 
-  std::string v = {};
+  std::string v;
 #if defined(__INTEL_LLVM_COMPILER)
 
 #ifdef __cpp_lib_format // C++20
@@ -131,7 +133,7 @@ v = std::format("GNU GCC {}.{}.{}", __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL_
 v = "GNU GCC " + std::to_string(__GNUC__) + "." + std::to_string(__GNUC_MINOR__) + "." + std::to_string(__GNUC_PATCHLEVEL__);
 # endif
 
-#elif defined(_MSC_VER)
+#elif defined(_MSC_FULL_VER)
   v = "MSVC " + std::to_string(_MSC_FULL_VER);
 #endif
 

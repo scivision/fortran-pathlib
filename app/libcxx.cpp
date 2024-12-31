@@ -6,7 +6,7 @@
 
 #if __has_include(<version>)
 #include <version>  // IWYU pragma: keep
-#elif __has_include(<ciso644>)
+#elif __has_include(<ciso646>)
 // < C++20 standard
 #include <ciso646>
 #endif
