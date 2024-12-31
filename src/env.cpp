@@ -64,12 +64,14 @@ bool fs_setenv(std::string_view name, std::string_view value)
 std::string fs_user_config_dir()
 {
 #ifdef _WIN32
-  PWSTR s;
+  PWSTR s = nullptr;
   std::string r;
   if(SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &s) == S_OK)
     r = fs_as_posix(fs_to_narrow(s));
 
   CoTaskMemFree(s);
+  // https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree
+
   if (!r.empty())
     return r;
 
