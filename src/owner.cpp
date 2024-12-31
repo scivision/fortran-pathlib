@@ -41,6 +41,7 @@ static std::string fs_win32_get_owner(PSID pSid)
   if (!LookupAccountSidA(nullptr, pSid, s.data(), &L1, nullptr, &L2, &eUse))
     return {};
 
+  // it's L1, not L1 - 1
   s.resize(L1);
   return s;
 }
@@ -62,6 +63,7 @@ fs_get_owner_name(std::string_view path)
     s = fs_win32_get_owner(pSid);
 
   LocalFree(pSD);
+  // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree
   if(!s.empty())
     return s;
 
@@ -71,13 +73,15 @@ fs_get_owner_name(std::string_view path)
   struct statx s;
   if(statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT, STATX_UID, &s) == 0){
     auto pw = getpwuid(s.stx_uid);
-    return pw->pw_name;
+    if(pw)
+      return pw->pw_name;
   }
 #else
   struct stat s;
   if(!stat(path.data(), &s)){
     auto pw = getpwuid(s.st_uid);
-    return pw->pw_name;
+    if(pw)
+      return pw->pw_name;
   }
 #endif
 
@@ -110,13 +114,15 @@ fs_get_owner_group(std::string_view path)
   struct statx s;
   if(statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT, STATX_GID, &s) == 0){
     auto gr = getgrgid(s.stx_gid);
-    return gr->gr_name;
+    if (gr)
+      return gr->gr_name;
   }
 #else
   struct stat s;
   if(!stat(path.data(), &s)){
     auto gr = getgrgid(s.st_gid);
-    return gr->gr_name;
+    if (gr)
+      return gr->gr_name;
   }
 #endif
 
