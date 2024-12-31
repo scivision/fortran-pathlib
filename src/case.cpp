@@ -20,8 +20,8 @@ bool fs_is_case_sensitive(std::string_view path)
   if(!fs_touch(CamelCase))
     return false;
 
-  std::string lower = CamelCase;
-  std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+  std::string lower;
+  std::transform(CamelCase.begin(), CamelCase.end(), std::back_inserter(lower), ::tolower);
 
   const std::string actual = fs_canonical(lower, true, true);
 
