@@ -5,6 +5,7 @@
 
 #include <algorithm> // std::transform
 #include <cctype> // std::tolower
+#include <iterator> // std::back_inserter
 
 bool fs_is_case_sensitive(std::string_view path)
 {

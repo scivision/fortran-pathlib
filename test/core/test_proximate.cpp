@@ -5,6 +5,7 @@
 #include <string_view>
 #include <vector>
 #include <tuple>
+#include <iterator> // for std::back_inserter
 
 #include "ffilesystem.h"
 #include "ffilesystem_test.h"
