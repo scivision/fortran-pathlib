@@ -19,15 +19,15 @@ static void fs_emit_error()
   const DWORD error = GetLastError();
 
   if(error)
-    std::cerr << std::system_category().message(error);
+    std::cerr << std::system_category().message(error) << "\n";
 
   if(error == ERROR_PRIVILEGE_NOT_HELD)
-    std::cerr << "\nEnable Windows developer mode to use symbolic links: https://learn.microsoft.com/en-us/windows/apps/get-started/developer-mode-features-and-debugging";
+    std::cerr << "\nEnable Windows developer mode to use symbolic links: <https://learn.microsoft.com/en-us/windows/apps/get-started/developer-mode-features-and-debugging>";
 #else
   if(errno){
   auto econd = std::generic_category().default_error_condition(errno);
 
-  std::cerr << econd.message();
+  std::cerr << econd.message() << "\n";
   }
 #endif
 }
@@ -36,7 +36,7 @@ static void fs_emit_error()
 void fs_print_error(std::string_view path, std::string_view fname)
 {
 
-  std::cerr << "ERROR:Ffilesystem:" << fname << "(" << path << ")  ";
+  std::cerr << "ERROR: Ffilesystem:" << fname << "(" << path << ")  ";
 
   fs_emit_error();
 
@@ -46,7 +46,7 @@ void fs_print_error(std::string_view path, std::string_view fname)
 
 void fs_print_error(std::string_view path, std::string_view fname, const std::error_code& ec)
 {
-  std::cerr << "ERROR:Ffilesystem:" << fname << "(" << path << ")  ";
+  std::cerr << "ERROR: Ffilesystem:" << fname << "(" << path << ")  ";
   if(ec)
     std::cerr << ec.message();
   else
@@ -57,7 +57,7 @@ void fs_print_error(std::string_view path, std::string_view fname, const std::er
 
 void fs_print_error(std::string_view path1, std::string_view path2, std::string_view fname, const std::error_code& ec)
 {
-  std::cerr << "ERROR:Ffilesystem:" << fname << "(" << path1 <<  ", " << path2 << ")  ";
+  std::cerr << "ERROR: Ffilesystem:" << fname << "(" << path1 <<  ", " << path2 << ")  ";
 
   if(ec)
     std::cerr << ec.message();
