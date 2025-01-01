@@ -10,6 +10,7 @@
 #include <variant>
 #include <unordered_map>
 #include <type_traits>
+#include <sstream>
 
 #include <chrono> // IWYU pragma: keep
 // needed to std::format() std::filesystem::file_time_type
@@ -30,7 +31,7 @@
 #include "ffilesystem.h"
 
 
-static void no_arg(std::string_view fun){
+static bool no_arg(std::string_view fun){
 
   std::map<std::string_view, std::function<bool()>> mbool =
   {
@@ -74,6 +75,8 @@ std::unordered_map<std::string_view, fs_function> fs_function_map = {
   {"cwd", []() { return fs_get_cwd(); }}
 };
 
+  bool ok = true;
+
   auto it = fs_function_map.find(fun);
   if (it != fs_function_map.end()) {
     auto result = it->second();
@@ -90,18 +93,22 @@ std::unordered_map<std::string_view, fs_function> fs_function_map = {
     else if (std::holds_alternative<size_t>(result))
       std::cout << std::get<size_t>(result);
     else
-      std::cerr << "Error: unknown return type " << fun << "\n";
+      ok = false;
 
-    std::cout << "\n";
   } else if (mbool.find(fun) != mbool.end())
-    std::cout << mbool[fun]() << "\n";
+    std::cout << mbool[fun]();
   else
-    std::cerr << "Error: unknown function " << fun << "()\n";
+    ok = false;
 
+  if(ok)
+    std::cout << "\n";
+
+  return ok;
 }
 
-static void one_arg(std::string_view fun, std::string_view a1){
 
+static bool one_arg(std::string_view fun, std::string_view a1)
+{
 
   std::error_code ec;
 
@@ -162,6 +169,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
     {"remove", [](std::string_view a1) { return fs_remove(a1); }}
   };
 
+  bool ok = true;
+
   auto it = fs_one_arg_function_map.find(fun);
   if (it != fs_one_arg_function_map.end()) {
     auto r = it->second(a1);
@@ -174,9 +183,8 @@ static void one_arg(std::string_view fun, std::string_view a1){
     else if (std::holds_alternative<uintmax_t>(r))
       std::cout << std::get<uintmax_t>(r);
     else
-      std::cerr << "Error: unknown return type " << fun << "\n";
+      ok = false;
 
-    std::cout << "\n";
   } else if (fun == "modtime"){
 
 #if defined(HAVE_CXX_FILESYSTEM) && defined(__cpp_lib_format) // C++20
@@ -188,15 +196,15 @@ static void one_arg(std::string_view fun, std::string_view a1){
     #if defined(_MSC_VER)
       std::string buf(26, '\0');
       ctime_s(buf.data(), buf.size(), &t);
-      std::cout << buf << "\n";
+      std::cout << buf;
     #else
-      std::cout << std::ctime(&t) << "\n"; // NOSONAR
+      std::cout << std::ctime(&t); // NOSONAR
     #endif
 #endif
   } else if (fun == "fs_modtime")
-    std::cout << fs_get_modtime(a1) << "\n";
+    std::cout << fs_get_modtime(a1);
   else if (fun == "random")
-    std::cout << fs_generate_random_alphanumeric_string(std::strtoul(a1.data(), nullptr, 10)) << "\n";
+    std::cout << fs_generate_random_alphanumeric_string(std::strtoul(a1.data(), nullptr, 10));
   else if (fun == "split"){
     std::vector<std::string> v = fs_split(a1);
     for (const auto &s : v)
@@ -208,11 +216,11 @@ static void one_arg(std::string_view fun, std::string_view a1){
   } else if (fun == "chdir" || fun == "set_cwd") {
     auto cwd = fs_get_cwd();
     if(!cwd.empty()){
-      std::cout << "cwd: " << cwd << "\n";
+      std::cout << "cwd: " << cwd;
       if(fs_set_cwd(a1)){
         cwd = fs_get_cwd();
         if(!cwd.empty())
-          std::cout << "new cwd: " << cwd << "\n";
+          std::cout << "new cwd: " << cwd;
         else
           std::cerr << "ERROR get_cwd() after chdir\n";
       }
@@ -227,18 +235,22 @@ static void one_arg(std::string_view fun, std::string_view a1){
       if (const auto &s = std::filesystem::file_size(p, ec); s && !ec)
         std::cout << " " << s;
 
-      std::cout << " " << fs_get_permissions(p.generic_string()) << "\n";
+      std::cout << " " << fs_get_permissions(p.generic_string());
     }
 #else
       std::cerr << "ERROR: ls requires C++17 filesystem\n";
 #endif
-  } else {
-    std::cerr << fun << " requires more than 1 argument or is unknown function\n";
-  }
+  } else
+    ok = false;
+
+  if (ok)
+    std::cout << "\n";
+
+  return ok;
 }
 
 
-static void two_arg(std::string_view fun, std::string_view a1, std::string_view a2)
+static bool two_arg(std::string_view fun, std::string_view a1, std::string_view a2)
 {
   using fs_two_arg_function = std::function<std::variant<std::string, bool>(std::string_view, std::string_view)>;
 
@@ -257,6 +269,8 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
     {"rename", [](std::string_view a1, std::string_view a2) { return fs_rename(a1, a2); }}
   };
 
+  bool ok = true;
+
   auto it = fs_two_arg_function_map.find(fun);
   if (it != fs_two_arg_function_map.end()) {
     auto r = it->second(a1, a2);
@@ -264,8 +278,9 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
       std::cout << std::get<std::string>(r);
     else if (std::holds_alternative<bool>(r))
       std::cout << std::get<bool>(r);
+    else
+      ok = false;
 
-    std::cout << "\n";
   } else if (fun == "set_perm"){
     int r = 0;
     int w = 0;
@@ -302,7 +317,7 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
     auto p = fs_get_permissions(a1);
     if(p.empty()){
       std::cerr << "ERROR get_permissions(" << a1 << ") before chmod\n";
-      return;
+      return false;
     }
 
     std::cout << "before chmod " << a1 << " " << p << "\n";
@@ -316,12 +331,17 @@ static void two_arg(std::string_view fun, std::string_view a1, std::string_view 
     else
       std::cout << "after chmod " << a1 << " " << p << "\n";
   } else
-    std::cerr << fun << " is unknown function\n";
+    ok = false;
 
+  if(ok)
+    std::cout << "\n";
+
+  return ok;
 }
 
 
-int main(){
+int main()
+{
 #ifdef _MSC_VER
   _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
   _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
@@ -382,39 +402,36 @@ while (true){
     break;
 
   // split variable inp on space-delimiters
-  constexpr char delimiter = ' ';
-  std::string::size_type pos = 0;
   std::vector<std::string> args;
-  // NOTE: loop getline() instead?
-  while ((pos = inp.find(delimiter)) != std::string::npos) {
-      args.push_back(inp.substr(0, pos));
-      inp.erase(0, pos + 1);  // + 1 as delimiter is 1 char
+  {
+    std::istringstream iss(inp);
+    std::string token;
+    while (iss >> token) {
+      args.push_back(token);
+    }
   }
-  // last argument
-  args.push_back(inp);
 
   if(args.empty() || args.at(0).empty())
     continue;
 
   const std::vector<std::string>::size_type argc = args.size();
 
-  switch (argc){
-  case 1:
-    no_arg(args.at(0));
-    break;
-  case 2:
-    one_arg(args.at(0), args.at(1));
-    break;
-  case 3:
-    two_arg(args.at(0), args.at(1), args.at(2));
-    break;
-  default:
-    std::cerr << "too many arguments " << argc << "\n";
-  }
+  if(no_arg(args.at(0)))
+    continue;
 
+  if(argc < 2)
+    args.push_back("");
+  if(one_arg(args.at(0), args.at(1)))
+    continue;
 
+  if(argc < 3)
+    args.push_back("");
+
+  if(two_arg(args.at(0), args.at(1), args.at(2)))
+    continue;
+
+  std::cerr << "Unknown command: " << inp << "\n";
 }
 
 return EXIT_SUCCESS;
-
 }
