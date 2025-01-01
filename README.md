@@ -209,6 +209,10 @@ Use statx() if available to inquire if a file is encrypted or compressed, etc.
 
 ### Other C++ filesystem libraries
 
+Ffilesystem emphasizes simplicity and reasonable performance and reliability for scientific computing, particularly on HPC systems.
+A highly performance-oriented C++ low-level no TOCTOU filesystem library is
+[LLFIO](https://github.com/ned14/llfio).
+
 Other implementations of C++ filesystem include:
 
 * [Boost.Filesystem](https://www.boost.org/doc/libs/1_86_0/libs/filesystem/doc/index.htm) what the stdlib filesystem is based on, often tries newer features. [Boost.Filesystem source code](https://github.com/boostorg/filesystem)
