@@ -65,20 +65,9 @@ std::string fs_win32_final_path(std::string_view path)
 
   const DWORD L = GetFinalPathNameByHandleA(h, r.data(), static_cast<DWORD>(r.size()), FILE_NAME_NORMALIZED);
   CloseHandle(h);
-
-  switch (L) {
-    case ERROR_PATH_NOT_FOUND:
-      std::cerr << "ERROR:win32_final_path:GetFinalPathNameByHandle: path not found\n";
-      return {};
-    case ERROR_NOT_ENOUGH_MEMORY:
-      std::cerr << "ERROR:win32_final_path:GetFinalPathNameByHandle: buffer too small\n";
-      return {};
-    case ERROR_INVALID_PARAMETER:
-      std::cerr << "ERROR:win32_final_path:GetFinalPathNameByHandle: invalid parameter\n";
-      return {};
-    case 0:
-      std::cerr << "ERROR:win32_final_path:GetFinalPathNameByHandle: unknown error\n";
-      return {};
+  if(L == 0){
+    fs_print_error("win32_final_path:GetFinalPathNameByHandle", path);
+    return {};
   }
 
   r.resize(L);
