@@ -18,7 +18,7 @@ std::string fs_which(std::string_view name)
 
   std::string path = fs_getenv("PATH");
   if(path.empty()){
-    fs_print_error(path, "which: PATH environment variable not set");
+    fs_print_error("which: PATH environment variable not set", path);
     return {};
   }
 
@@ -27,12 +27,15 @@ std::string fs_which(std::string_view name)
   std::string n(name);
   std::string r;
 
-  std::string_view::size_type start = 0;
-  std::string_view::size_type end;
+  std::string::size_type start = 0;
+  std::string::size_type end;
 
-  do {
+  while (true) {
     end = path.find(fs_pathsep(), start);
-    std::string p = path.substr(start, end - start);
+
+    std::string p = (end == std::string::npos)
+      ? path.substr(start)
+      : path.substr(start, end - start);
 
     r = p + "/" + n;
 
@@ -41,8 +44,11 @@ std::string fs_which(std::string_view name)
     if (fs_is_exe(r))
       return fs_as_posix(r);
 
+    if(end == std::string::npos)
+      break;
+
     start = end + 1;
-  } while (end != std::string::npos);
+  }
 
   return {};
 }
