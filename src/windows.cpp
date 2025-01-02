@@ -55,7 +55,8 @@ std::string fs_win32_final_path(std::string_view path)
   if(fs_trace) std::cout << "TRACE: win32_final_path(" << path << ")\n";
   // dwDesiredAccess=0 to allow getting parameters even without read permission
   // FILE_FLAG_BACKUP_SEMANTICS required to open a directory
-  HANDLE h = CreateFileA(path.data(), 0, 0, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
+  HANDLE h = CreateFileA(path.data(), GENERIC_READ, FILE_SHARE_READ, nullptr,
+              OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
   if(h == INVALID_HANDLE_VALUE){
     fs_print_error(path, "win32_final_path:CreateFile");
     return {};

@@ -16,11 +16,8 @@
 #include <filesystem>
 #elif defined(_MSC_VER)
 #define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 #include <io.h> // _access_s
-// FUTURE: would need to recognize CreateNamedPipe() for FIFO
-#if !defined(S_IFIFO)
-#define S_IFIFO 0
-#endif
 #else
 #include <unistd.h>
 #endif
@@ -121,6 +118,18 @@ fs_is_fifo(std::string_view path)
 #if defined(HAVE_CXX_FILESYSTEM)
   std::error_code ec;
   return std::filesystem::is_fifo(path, ec) && !ec;
+#elif defined(_MSC_VER)
+  HANDLE h =
+    CreateFileA(path.data(), GENERIC_READ, FILE_SHARE_READ,
+                nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
+  if (h == INVALID_HANDLE_VALUE){
+    fs_print_error(path, "is_fifo:CreateFile");
+    return false;
+  }
+
+  const DWORD type = GetFileType(h);
+  CloseHandle(h);
+  return type == FILE_TYPE_PIPE;
 #else
   return fs_st_mode(path) & S_IFIFO;
 #endif
