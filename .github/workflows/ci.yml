@@ -16,6 +16,7 @@ on:
       - "**.cmake"
       - ".github/workflows/ci.yml"
       - "!concepts/**"
+  workflow_dispatch:
 
 
 jobs:
@@ -165,7 +166,7 @@ jobs:
       if: ${{ failure() }}
       uses: actions/upload-artifact@v4
       with:
-        name: valgrind-log
+        name: valgrind-log-${{ matrix.cpp }}
         path: build-Valgrind/Testing/Temporary/MemoryChecker.*.log
 
 #------------------------------
@@ -271,7 +272,7 @@ jobs:
       run: $CMAKE --build build
 
     - name: test
-      run: $CTEST --test-dir build
+      run: $CTEST --test-dir build --output-on-failure
 
     - name: install package
       run: $CMAKE --install build
