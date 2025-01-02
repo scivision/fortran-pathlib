@@ -18,6 +18,10 @@
 #if defined(_MSC_VER)
 #define WIN32_LEAN_AND_MEAN
 #include <io.h> // _access_s
+// FUTURE: would need to recognize CreateNamedPipe() for FIFO
+# if !defined(S_IFIFO)
+#  define S_IFIFO 0
+# endif
 #else
 #include <unistd.h>
 #endif
@@ -118,8 +122,6 @@ fs_is_fifo(std::string_view path)
 #if defined(HAVE_CXX_FILESYSTEM)
   std::error_code ec;
   return std::filesystem::is_fifo(path, ec) && !ec;
-#elif defined(_MSC_VER)
-  return false;
 #else
   return fs_st_mode(path) & S_IFIFO;
 #endif
