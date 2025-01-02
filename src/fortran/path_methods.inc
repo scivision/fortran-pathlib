@@ -175,13 +175,6 @@ r = file_size(self%path_str)
 end function
 
 
-integer(int64) function m_space_available(self) result(r)
-!! returns space available in bytes
-class(path_t), intent(in) :: self
-r = space_available(self%path_str)
-end function
-
-
 logical function m_is_absolute(self) result(r)
 !! is path absolute
 !! do NOT expanduser() to be consistent with Python etc. filesystem

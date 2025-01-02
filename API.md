@@ -354,12 +354,16 @@ p%file_size()
 file_size("my/file.txt")
 ```
 
-Space available on drive containing path (bytes):
+Space available to user on drive containing path (bytes):
 
 ```fortran
-p%space_available()
-! or
-space_available("my/file.txt")
+space_available("c:/")
+```
+
+Drive capacity available to user on drive (bytes):
+
+```fortran
+space_capacity("c:/")
 ```
 
 Hard link count of file or directory:

@@ -163,7 +163,8 @@ static bool one_arg(std::string_view fun, std::string_view a1)
     {"read_symlink", [](std::string_view a1) { return fs_read_symlink(a1); }},
     {"stem", [](std::string_view a1) { return fs_stem(a1); }},
     {"exists", [](std::string_view a1) { return fs_exists(a1); }},
-    {"space", [](std::string_view a1) { return fs_space_available(a1); }},
+    {"space_available", [](std::string_view a1) { return fs_space_available(a1); }},
+    {"space_capacity", [](std::string_view a1) { return fs_space_capacity(a1); }},
     {"absolute", [](std::string_view a1) { return fs_absolute(a1, true); }},
     {"is_empty", [](std::string_view a1) { return fs_is_empty(a1); }},
     {"remove", [](std::string_view a1) { return fs_remove(a1); }}

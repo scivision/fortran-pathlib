@@ -21,6 +21,15 @@ end if
 
 print *, "space_available (GB): ", real(i64) / 1024**3
 
+i64 = space_capacity(s1)
+
+if (i64 == 0) then
+  write(stderr, '(a,i0)') "space_capacity(" // s1 // ") failed: ", i64
+  error stop
+end if
+
+print *, "space_capacity (GB): ", real(i64) / 1024**3
+
 ! if(space_available("not-exist-file") /= 0) error stop "space_available /= 0 for not existing file"
 ! if(space_available("") /= 0) error stop "space_available /= 0 for empty file"
 ! that's how windows/mingw defines it.

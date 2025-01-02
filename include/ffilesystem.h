@@ -167,6 +167,8 @@ std::string fs_root(std::string_view path);
 std::string fs_root_name(std::string_view path);
 
 std::uintmax_t fs_space_available(std::string_view);
+std::uintmax_t fs_space_capacity(std::string_view);
+
 std::string fs_read_symlink(std::string_view);
 
 std::string fs_get_permissions(std::string_view);
@@ -339,7 +341,10 @@ size_t fs_get_tempdir(char*, const size_t);
 size_t fs_expanduser(const char*, char*, const size_t);
 
 uintmax_t fs_file_size(const char*);
+
 uintmax_t fs_space_available(const char*);
+uintmax_t fs_space_capacity(const char*);
+
 uintmax_t fs_hard_link_count(const char*);
 
 size_t fs_backend(char*, const size_t);

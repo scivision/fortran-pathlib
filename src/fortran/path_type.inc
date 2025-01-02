@@ -50,7 +50,6 @@ procedure, public :: same_file=>m_same_file
 procedure, public :: remove=>m_unlink
 procedure, public :: rename=>m_rename
 procedure, public :: file_size=>m_file_size
-procedure, public :: space_available=>m_space_available
 procedure, public :: set_permissions=>m_set_permissions
 procedure, public :: get_permissions=>m_get_permissions
 procedure, public :: shortname=>m_shortname

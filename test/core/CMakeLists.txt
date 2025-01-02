@@ -64,7 +64,7 @@ FIXTURES_REQUIRED "absolute;canonical")
 
 set_tests_properties(Fortran_root PROPERTIES FIXTURES_REQUIRED is_absolute)
 
-set_tests_properties(Fortran_filesystem_type Fortran_space PROPERTIES FIXTURES_REQUIRED root)
+set_tests_properties(Fortran_filesystem_type PROPERTIES FIXTURES_REQUIRED root)
 
 set_tests_properties(Fortran_canonical PROPERTIES FIXTURES_REQUIRED "expanduser")
 

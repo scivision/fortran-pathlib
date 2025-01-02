@@ -126,14 +126,6 @@ if (p1%is_exe()) error stop "ERROR:test: is_exe(dir)"
 p1 = path_t(s2)
 if (p1%file_size() == 0) error stop "ERROR:test: file_size"
 
-!> space_available
-p1 = path_t(s2)
-i64 = p1%space_available()
-if (i64 == 0) then
-  write(stderr, '(a,i0)') "ERROR:test: space_available: " // p1%root() // ' ', i64
-  error stop
-end if
-
 !> modtime
 i64 = p1%modtime()
 if (i64 == 0) error stop "ERROR:test: modtime"

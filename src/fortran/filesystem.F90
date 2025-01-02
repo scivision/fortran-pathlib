@@ -21,7 +21,8 @@ join, &
 copy_file, mkdir, &
 relative_to, proximate_to, &
 hard_link_count, &
-root, root_name, same_file, file_size, space_available, &
+root, root_name, same_file, file_size, &
+space_available, space_capacity, &
 file_name, parent, stem, suffix, with_suffix, &
 absolute, &
 assert_is_file, assert_is_dir, &
@@ -289,6 +290,11 @@ character(kind=C_CHAR), intent(in) :: path(*)
 end function
 
 integer(C_SIZE_T) function fs_space_available(path) bind(C)
+import
+character(kind=C_CHAR), intent(in) :: path(*)
+end function
+
+integer (C_SIZE_T) function fs_space_capacity(path) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: path(*)
 end function
@@ -821,11 +827,19 @@ r = fs_hard_link_count(trim(path) // C_NULL_CHAR)
 end function
 
 
-integer(int64) function space_available(path)
+integer(int64) function space_available(path) result(r)
 !! returns space available (bytes) on filesystem containing path
 character(*), intent(in) :: path
 
-space_available = fs_space_available(trim(path) // C_NULL_CHAR)
+r = fs_space_available(trim(path) // C_NULL_CHAR)
+end function
+
+
+integer(int64) function space_capacity(path) result(r)
+!! returns space capacity (bytes) on filesystem containing path
+character(*), intent(in) :: path
+
+r = fs_space_capacity(trim(path) // C_NULL_CHAR)
 end function
 
 
