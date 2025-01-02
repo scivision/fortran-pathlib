@@ -9,20 +9,18 @@
 int main() {
 // make a test with std::filesystem::is_fifo()
 
-std::string_view p;
-
-#ifdef _WIN32
-    p = "CONIN$";
-#else
-    p = "/dev/stdin";
-#endif
-
+const std::string p = fs_is_windows() ? "CONIN$" : "/dev/stdin";
 
 if (fs_is_fifo(p))
-    std::cout << ": FIFO\n";
+  err("is_fifo(" + p + ") should be false");
 
-if (fs_is_char_device(p))
-    std::cout << ": character file\n";
+if (!fs_is_char_device(p))
+  err("is_char_device(" + p + ") should be true");
+
+if (fs_is_file(p))
+  err("is_file(" + p + ") should be false");
+
+ok_msg("is_char_device(" + p + ")");
 
 return EXIT_SUCCESS;
 

@@ -14,17 +14,15 @@
 
 #if defined(HAVE_CXX_FILESYSTEM)
 #include <filesystem>
-#else
-#if defined(_MSC_VER)
+#elif defined(_MSC_VER)
 #define WIN32_LEAN_AND_MEAN
 #include <io.h> // _access_s
 // FUTURE: would need to recognize CreateNamedPipe() for FIFO
-# if !defined(S_IFIFO)
-#  define S_IFIFO 0
-# endif
+#if !defined(S_IFIFO)
+#define S_IFIFO 0
+#endif
 #else
 #include <unistd.h>
-#endif
 #endif
 
 #include <sys/types.h>  // IWYU pragma: keep
@@ -78,10 +76,11 @@ fs_exists(std::string_view path)
   std::error_code ec;
   return std::filesystem::exists(path, ec) && !ec;
 #elif defined(_MSC_VER)
-  // kwSys:SystemTools:FileExists is much more elaborate with Reparse point checks etc.
-  // This way seems to work fine on Windows anyway.
-  // io.h
-  return !_access_s(path.data(), 0);
+  // https://gitlab.kitware.com/utils/kwsys/-/blob/master/SystemTools.cxx#L1394
+  // is more elaborate to detect "execution aliases" for Windows Store apps, which this
+  // method here does not necessarily detect.
+  // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/access-s-waccess-s
+  return _access_s(path.data(), 0) == 0;
 #else
   // unistd.h
   return !access(path.data(), F_OK);
