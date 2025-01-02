@@ -13,7 +13,6 @@
 #include <filesystem>
 #else
 #include <iostream>
-#include <cerrno>
 
 #include <sys/types.h>
 #include <sys/stat.h>
