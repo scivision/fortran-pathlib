@@ -7,7 +7,10 @@
 #include <cstdlib>
 
 int main() {
-const std::string p = fs_is_windows() ? "CONIN$" : "/dev/stdin";
+
+// /dev/stdin may not be available on CI systems
+
+const std::string p = fs_is_windows() ? "NUL" : "/dev/null";
 
 if (!fs_is_char_device(p))
   err("is_char_device(" + p + ") should be true");
