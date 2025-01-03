@@ -6,21 +6,13 @@
 #include <iostream>
 #include <cstdlib>
 
-int main() {
-// make a test with std::filesystem::is_fifo()
+int main(int argc, char* argv[])
+{
 
-const std::string p = fs_is_windows() ? "CONIN$" : "/dev/stdin";
+const std::string p = (argc > 1) ? argv[1] : argv[0];
 
 if (fs_is_fifo(p))
   err("is_fifo(" + p + ") should be false");
-
-if (!fs_is_char_device(p))
-  err("is_char_device(" + p + ") should be true");
-
-if (fs_is_file(p))
-  err("is_file(" + p + ") should be false");
-
-ok_msg("is_char_device(" + p + ")");
 
 return EXIT_SUCCESS;
 

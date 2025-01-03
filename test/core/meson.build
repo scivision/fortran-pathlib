@@ -55,6 +55,7 @@ cpp_core = [
 'filesystem_type',
 'hard_link',
 'is_absolute',
+'is_char',
 'is_dir',
 'is_empty',
 'is_fifo',
