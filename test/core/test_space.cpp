@@ -7,14 +7,10 @@
 #include "ffilesystem_test.h"
 
 
-int main(
-#if __has_cpp_attribute(maybe_unused)
-  [[maybe_unused]]
-#endif
-    int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 
-const std::string s1 = fs_parent(argv[0]);
+const std::string s1 = (argc > 1) ? argv[1] : fs_parent(argv[0]);
 
 std::uintmax_t avail = fs_space_available(s1);
 std::uintmax_t cap = fs_space_capacity(s1);

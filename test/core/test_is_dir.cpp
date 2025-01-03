@@ -5,13 +5,11 @@
 #include "ffilesystem_test.h"
 
 
-int main(
-#if __has_cpp_attribute(maybe_unused)
-[[maybe_unused]]
-#endif
-int argc,
-char* argv[])
+int main(int argc, char* argv[])
 {
+
+  std::string file = (argc > 1) ? argv[1] : argv[0];
+
   if (fs_is_dir(""))
     err("is_dir empty should be false");
 
@@ -31,7 +29,7 @@ char* argv[])
   if (!fs_exists(".") || !fs_is_dir("."))
     err("is_readable failed on '.'");
 
-  std::string_view s2(argv[0]);
+  std::string_view s2(file);
   if (fs_is_dir(s2))
     err("detected file as directory");
 

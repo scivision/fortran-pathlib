@@ -5,15 +5,12 @@
 #include "ffilesystem_test.h"
 
 
-int main(
-#if __has_cpp_attribute(maybe_unused)
-[[maybe_unused]]
-#endif
-int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 
-std::string_view s1 = argv[0];
-std::cout << "program name: " << s1 << "\n";
+std::string_view s1 = (argc > 1) ? argv[1] : argv[0];
+
+std::cout << "file name: " << s1 << "\n";
 
 std::string s2 = fs_parent(fs_parent(s1));
 std::cout << "parent(parent(' << s1 << ')) = " << s2 << "\n";

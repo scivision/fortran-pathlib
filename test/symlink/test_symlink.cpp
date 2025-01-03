@@ -8,16 +8,11 @@
 
 
 int
-main(
-#if __has_cpp_attribute(maybe_unused)
-[[maybe_unused]]
-#endif
-int argc, char* argv[])
+main(int argc, char* argv[])
 {
 
-  std::string_view in = argv[0];
+  const std::string tgt_dir = (argc > 1) ? argv[1] : fs_parent(argv[0]);
 
-  const std::string tgt_dir = fs_parent(in);
   const std::string tgt = tgt_dir + "/test_symlink_cpp.txt";
 
   if(!fs_touch(tgt))

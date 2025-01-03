@@ -143,7 +143,7 @@ bool fs_is_char_device(std::string_view path)
 {
 // character device like /dev/null or CONIN$
 #if defined(_MSC_VER)
-  // currently broken in MSVC STL
+  // currently broken in MSVC STL for <filesystem>
   HANDLE h =
     CreateFileA(path.data(), GENERIC_READ, FILE_SHARE_READ,
                 nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);

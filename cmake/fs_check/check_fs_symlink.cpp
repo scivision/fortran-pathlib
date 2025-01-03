@@ -6,13 +6,9 @@
 #include <filesystem>
 
 
-int main(
-#if __has_cpp_attribute(maybe_unused)
-[[maybe_unused]]
-#endif
-int argc, char **argv){
+int main(int argc, char **argv){
 
-std::string_view exe = argv[0];
+std::string_view exe = (argc > 1) ? argv[1] : argv[0];
 
 auto tgt = std::filesystem::path(exe);
 

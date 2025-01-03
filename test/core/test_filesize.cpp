@@ -11,11 +11,7 @@
 #include "ffilesystem_test.h"
 
 
-int main(
-#if __has_cpp_attribute(maybe_unused)
-[[maybe_unused]]
-#endif
-int argc,char *argv[]){
+int main(int argc, char *argv[]){
 
 #ifdef _MSC_VER
   _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
@@ -26,7 +22,8 @@ int argc,char *argv[]){
   _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-  std::string d(argv[0]);
+
+  std::string d = (argc > 1) ? argv[1] : argv[0];
 
 // UTF-8 filesize
   auto s = fs_file_size(d);

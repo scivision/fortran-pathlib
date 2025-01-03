@@ -48,14 +48,9 @@ void check_touch(std::string_view in)
 }
 
 
-int main(
-#if __has_cpp_attribute(maybe_unused)
-[[maybe_unused]]
-#endif
-int argc,
-char* argv[])
+int main(int argc, char* argv[])
 {
-  const std::string dir = fs_parent(argv[0]);
+  const std::string dir = (argc > 1) ? argv[1] : fs_parent(argv[0]);
 
   check_touch(dir + "/test_fileop.h5");
 

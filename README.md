@@ -46,8 +46,11 @@ is defined if needed to enable C standard library functions.
 
 Inspired by (and benchmarked against)
 [Python pathlib](https://docs.python.org/3/library/pathlib.html).
-Important Ffilesystem functions are [benchmarked](./test/bench/bench.md) to help improve performance.
-Advanced / conceptual development takes place in [ffilesystem-concepts](https://github.com/scivision/ffilesystem-concepts) repo.
+Important Ffilesystem functions are
+[benchmarked](./benchmark.md)
+to help improve performance.
+Advanced / conceptual development takes place in
+[ffilesystem-concepts](https://github.com/scivision/ffilesystem-concepts).
 
 ## Compiler support
 
@@ -181,6 +184,13 @@ cmake -Dffilesystem_statx=true -Bbuild
 
 meson setup -Dstatx=true build
 ```
+
+## Self test
+
+The optional self-tests provide reasonable coverage of the Ffilesystem library.
+Several of the tests use `argv[0]` as a test file.
+We are aware of the shortcomings of `argv[0]` to get the executable name.
+We provide the function `fs_exepath()` to get the executable path reliably.
 
 ## Usage from other projects
 

@@ -10,12 +10,7 @@
 #include "ffilesystem.h"
 #include "ffilesystem_test.h"
 
-int main(
-#if __has_cpp_attribute(maybe_unused)
-[[maybe_unused]]
-#endif
-int argc,
-char* argv[])
+int main(int argc, char* argv[])
 {
 #ifdef _MSC_VER
   _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
@@ -26,7 +21,8 @@ char* argv[])
   _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
 #endif
 
-  std::string_view c1 = argv[0];
+  std::string_view c1 = (argc > 1) ? argv[1] : argv[0];
+
   std::cout << "own command: " << c1 << "\n";
   const std::string cwd = fs_get_cwd();
   std::cout << "current directory: " << cwd << "\n";

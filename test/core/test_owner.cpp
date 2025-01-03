@@ -5,13 +5,10 @@
 #include "ffilesystem_test.h"
 
 
-int main(
-#if __has_cpp_attribute(maybe_unused)
-[[maybe_unused]]
-#endif
-int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 
-  std::string_view exe = argv[0];
+  std::string_view exe = (argc > 1) ? argv[1] : argv[0];
+
   std::cout << "Executable: " << exe << "\n";
 
   const std::string user = fs_get_username();

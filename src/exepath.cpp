@@ -67,6 +67,6 @@ std::string fs_exe_path()
   }
 #endif
 
-  fs_print_error("exepath", "");
+  fs_print_error("", "exepath");
   return {};
 }
