@@ -276,6 +276,8 @@ bool fs_remove(const char* path){ return fs_remove(std::string_view(path)); }
 
 bool fs_rename(const char* from, const char* to){ return fs_rename(std::string_view(from), std::string_view(to)); }
 
+bool fs_is_appexec_alias(const char* path){ return fs_is_appexec_alias(std::string_view(path)); }
+
 bool fs_is_case_sensitive(const char* path) { return fs_is_case_sensitive(std::string_view(path)); }
 
 bool fs_is_char_device(const char* path){ return fs_is_char_device(std::string_view(path)); }

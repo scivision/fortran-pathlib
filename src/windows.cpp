@@ -1,14 +1,123 @@
 #if defined(_WIN32) || defined(__CYGWIN__)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <winioctl.h>
 #endif
 
+#include <cstddef>  // for std::byte
 #include <iostream>  // IWYU pragma: keep
 
 #include <string>
 #include <string_view>
 
 #include "ffilesystem.h"
+
+#if defined(_WIN32)
+// create type PREPARSE_DATA_BUFFER
+// from ntifs.h, which can only be used by drivers
+// typedef is copied from https://gitlab.kitware.com/utils/kwsys/-/blob/master/SystemTools.cxx
+// that has a BSD 3-clause license
+typedef struct _REPARSE_DATA_BUFFER
+{
+  ULONG ReparseTag;
+  USHORT ReparseDataLength;
+  USHORT Reserved;
+  union
+  {
+    struct
+    {
+      USHORT SubstituteNameOffset;
+      USHORT SubstituteNameLength;
+      USHORT PrintNameOffset;
+      USHORT PrintNameLength;
+      ULONG Flags;
+      WCHAR PathBuffer[1];
+    } SymbolicLinkReparseBuffer;
+    struct
+    {
+      USHORT SubstituteNameOffset;
+      USHORT SubstituteNameLength;
+      USHORT PrintNameOffset;
+      USHORT PrintNameLength;
+      WCHAR PathBuffer[1];
+    } MountPointReparseBuffer;
+    struct
+    {
+      UCHAR DataBuffer[1];
+    } GenericReparseBuffer;
+    struct
+    {
+      ULONG Version;
+      WCHAR StringList[1];
+      // In version 3, there are 4 NUL-terminated strings:
+      // * Package ID
+      // * Entry Point
+      // * Executable Path
+      // * Application Type
+    } AppExecLinkReparseBuffer;
+  } DUMMYUNIONNAME;
+} REPARSE_DATA_BUFFER, *PREPARSE_DATA_BUFFER;
+#endif
+
+
+bool fs_is_appexec_alias(
+#if __has_cpp_attribute(maybe_unused)
+  [[maybe_unused]]
+#endif
+  std::string_view path)
+{
+// Windows App Execution Alias allow easy access to Windows Store apps
+// from the Windows Terminal. However, they don't work with _access_s()
+// or stat() like regular files. This function detects the aliases.
+// Reference:
+// https://learn.microsoft.com/en-us/windows/terminal/command-line-arguments?tabs=windows#add-windows-terminal-executable-to-your-path
+// https://learn.microsoft.com/en-us/windows/win32/fileio/reparse-points
+//
+// this function is adapted from
+// https://gitlab.kitware.com/utils/kwsys/-/blob/master/SystemTools.cxx
+// that has a BSD 3-clause license
+
+#if defined(_WIN32)
+
+  const DWORD attr = GetFileAttributesA(path.data());
+  if (attr == INVALID_FILE_ATTRIBUTES || !(attr & FILE_ATTRIBUTE_REPARSE_POINT))
+    return false;
+
+  // Using 0 instead of GENERIC_READ as it allows reading of file attributes
+  // even if we do not have permission to read the file itself
+
+  // A reparse point may be an execution alias (Windows Store app), which
+  // is similar to a symlink but it cannot be opened as a regular file.
+  // We must look at the reparse point data explicitly.
+  HANDLE h = CreateFileA(
+    path.data(), 0, 0, nullptr, OPEN_EXISTING,
+    FILE_FLAG_OPEN_REPARSE_POINT | FILE_FLAG_BACKUP_SEMANTICS, nullptr);
+
+  if (h == INVALID_HANDLE_VALUE)
+    return false;
+
+  std::byte buffer[MAXIMUM_REPARSE_DATA_BUFFER_SIZE];
+  DWORD bytesReturned = 0;
+
+  BOOL ok = DeviceIoControl(h, FSCTL_GET_REPARSE_POINT, nullptr, 0, buffer,
+                        MAXIMUM_REPARSE_DATA_BUFFER_SIZE, &bytesReturned,
+                        nullptr);
+
+  CloseHandle(h);
+  if (!ok)
+    return false;
+
+  PREPARSE_DATA_BUFFER data =
+    reinterpret_cast<PREPARSE_DATA_BUFFER>(&buffer[0]);
+
+  // https://learn.microsoft.com/en-us/windows/win32/fileio/reparse-point-tags
+  return data->ReparseTag == IO_REPARSE_TAG_APPEXECLINK;
+
+#else
+  return false;
+#endif
+
+}
 
 
 std::string fs_win32_full_name(std::string_view path)

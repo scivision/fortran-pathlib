@@ -72,13 +72,15 @@ fs_exists(std::string_view path)
   // fs_exists() is true even if path is non-readable
   // this is like Python pathlib.Path.exists()
   // unlike kwSys:SystemTools:FileExists which uses R_OK instead of F_OK like this project.
+
+  // MSVC / MinGW ::exists and _access_s don't detect App Execution Aliases
+  if(fs_is_appexec_alias(path))
+    return true;
+
 #if defined(HAVE_CXX_FILESYSTEM)
   std::error_code ec;
-  return std::filesystem::exists(path, ec) && !ec;
+  return (std::filesystem::exists(path, ec) && !ec);
 #elif defined(_MSC_VER)
-  // https://gitlab.kitware.com/utils/kwsys/-/blob/master/SystemTools.cxx#L1394
-  // is more elaborate to detect "execution aliases" for Windows Store apps, which this
-  // method here does not necessarily detect.
   // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/access-s-waccess-s
   return _access_s(path.data(), 0) == 0;
 #else
@@ -105,6 +107,12 @@ fs_is_dir(std::string_view path)
 bool
 fs_is_file(std::string_view path)
 {
+  // is path a regular file or a symlink to a regular file.
+
+  // MSVC / MinGW ::is_regular_file and stat() don't detect App Execution Aliases
+  if(fs_is_appexec_alias(path))
+    return true;
+
 #if defined(HAVE_CXX_FILESYSTEM)
   std::error_code ec;
   return std::filesystem::is_regular_file(path, ec) && !ec;
@@ -168,13 +176,14 @@ bool fs_is_char_device(std::string_view path)
 
 bool fs_is_exe(std::string_view path)
 {
+
+  if(fs_is_appexec_alias(path))
+    return fs_is_readable(path);
+
 #if defined(HAVE_CXX_FILESYSTEM)
 
-  std::error_code ec;
-
-  const auto s = std::filesystem::status(path, ec);
   // need reserved check for Windows
-  if(ec || !std::filesystem::is_regular_file(s) || fs_is_reserved(path))
+  if(!fs_is_file(path) || fs_is_reserved(path))
     return false;
 
   // Windows MinGW bug with executable bit
@@ -189,6 +198,12 @@ bool fs_is_exe(std::string_view path)
   constexpr std::filesystem::perms group_exec = std::filesystem::perms::group_exec;
   constexpr std::filesystem::perms owner_exec = std::filesystem::perms::owner_exec;
 #endif
+
+  std::error_code ec;
+
+  const auto s = std::filesystem::status(path, ec);
+  if (ec)
+    return false;
 
   return (s.permissions() & (owner_exec | group_exec | others_exec)) != none;
 
@@ -210,8 +225,17 @@ bool fs_is_exe(std::string_view path)
 
 bool fs_is_readable(std::string_view path)
 {
-#if defined(HAVE_CXX_FILESYSTEM)
-// directory or file readable
+  // is directory or file readable by the user
+
+#if defined(_WIN32)
+  // MSVC / MinGW ::perms doesn't detect App Execution Aliases readability
+  // otherwise ::filesystem works for Windows ::perms,
+  // but to be most efficient and deduplicate code, we implement like this.
+  // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/access-s-waccess-s
+  return _access_s(path.data(), 4) == 0;
+
+#elif defined(HAVE_CXX_FILESYSTEM)
+
   std::error_code ec;
   const auto s = std::filesystem::status(path, ec);
   if(ec || !std::filesystem::exists(s))
@@ -228,9 +252,6 @@ bool fs_is_readable(std::string_view path)
 
   return (s.permissions() & (owner_read | group_read | others_read)) != none;
 
-#elif defined(_MSC_VER)
-// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/access-s-waccess-s
-  return !_access_s(path.data(), 4);
 #else
   return !access(path.data(), R_OK);
 #endif

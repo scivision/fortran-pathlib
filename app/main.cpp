@@ -132,6 +132,7 @@ static bool one_arg(std::string_view fun, std::string_view a1)
     {"type", [](std::string_view a1) { return fs_filesystem_type(a1); }},
     {"is_reserved", [](std::string_view a1) { return fs_is_reserved(a1); }},
     {"is_safe", [](std::string_view a1) { return fs_is_safe_name(a1); }},
+    {"is_appexec", [](std::string_view a1) { return fs_is_appexec_alias(a1); }},
     {"long", [](std::string_view a1) { return fs_longname(a1); }},
     {"short", [](std::string_view a1) { return fs_shortname(a1); }},
     {"touch", [](std::string_view a1) { return "touch " + std::string(a1) + " " + std::to_string(fs_touch(a1)); }},

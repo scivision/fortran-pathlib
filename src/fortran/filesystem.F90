@@ -13,6 +13,7 @@ public :: get_homedir, get_profile_dir, user_config_dir, get_username, hostname,
 public :: normal, expanduser, as_posix, &
 is_absolute, is_char_device, is_fifo, is_case_sensitive, is_dir, is_file, is_exe, &
 is_prefix, is_subdir, &
+is_appexec_alias, &
 is_readable, is_writable, is_reserved, &
 is_empty, &
 is_symlink, read_symlink, create_symlink, &
@@ -361,6 +362,11 @@ integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
 
 logical(c_bool) function fs_is_absolute(path) bind(C)
+import
+character(kind=C_CHAR), intent(in) :: path(*)
+end function
+
+logical(C_BOOL) function fs_is_appexec_alias(path) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: path(*)
 end function
@@ -843,36 +849,44 @@ r = fs_space_capacity(trim(path) // C_NULL_CHAR)
 end function
 
 
-logical function is_absolute(path)
+logical function is_absolute(path) result(r)
 !! is path absolute
 !! do NOT expanduser() to be consistent with Python etc. filesystem
 character(*), intent(in) :: path
 
-is_absolute = fs_is_absolute(trim(path) // C_NULL_CHAR)
+r = fs_is_absolute(trim(path) // C_NULL_CHAR)
 end function
 
 
-logical function is_char_device(path)
+logical function is_appexec_alias(path) result(r)
+!! is path a Windows App executable alias
+character(*), intent(in) :: path
+
+r = fs_is_appexec_alias(trim(path) // C_NULL_CHAR)
+end function
+
+
+logical function is_char_device(path) result(r)
 !! is path a character device like /dev/null
 character(*), intent(in) :: path
 
-is_char_device = fs_is_char_device(trim(path) // C_NULL_CHAR)
+r = fs_is_char_device(trim(path) // C_NULL_CHAR)
 end function
 
 
-logical function is_fifo(path)
+logical function is_fifo(path) result(r)
 !! is path a FIFO (named pipe)
 character(*), intent(in) :: path
 
-is_fifo = fs_is_fifo(trim(path) // C_NULL_CHAR)
+r = fs_is_fifo(trim(path) // C_NULL_CHAR)
 end function
 
 
-logical function is_case_sensitive(path)
+logical function is_case_sensitive(path) result (r)
 !! is filesystem case sensitive
 character(*), intent(in) :: path
 
-is_case_sensitive = fs_is_case_sensitive(trim(path) // C_NULL_CHAR)
+r = fs_is_case_sensitive(trim(path) // C_NULL_CHAR)
 end function
 
 
@@ -893,19 +907,19 @@ is_exe = fs_is_exe(trim(path) // C_NULL_CHAR)
 end function
 
 
-logical function is_readable(path)
+logical function is_readable(path) result(r)
 !! is "path" readable?
 character(*), intent(in) :: path
 
-is_readable = fs_is_readable(trim(path) // C_NULL_CHAR)
+r = fs_is_readable(trim(path) // C_NULL_CHAR)
 end function
 
 
-logical function is_writable(path)
+logical function is_writable(path) result(r)
 !! is "path" writable?
 character(*), intent(in) :: path
 
-is_writable = fs_is_writable(trim(path) // C_NULL_CHAR)
+r = fs_is_writable(trim(path) // C_NULL_CHAR)
 end function
 
 
@@ -918,21 +932,21 @@ is_file = fs_is_file(trim(path) // C_NULL_CHAR)
 end function
 
 
-logical function is_reserved(path)
+logical function is_reserved(path) result(r)
 !! .true.: "path" is a reserved name on this filesystem
 character(*), intent(in) :: path
 
-is_reserved = fs_is_reserved(trim(path) // C_NULL_CHAR)
+r = fs_is_reserved(trim(path) // C_NULL_CHAR)
 end function
 
 
-logical function is_symlink(path)
+logical function is_symlink(path) result(r)
 !! .true.: "path" is a symbolic link
 !! .false.: "path" is not a symbolic link, or does not exist,
 !!           or platform/drive not capable of symlinks
 character(*), intent(in) :: path
 
-is_symlink = fs_is_symlink(trim(path) // C_NULL_CHAR)
+r = fs_is_symlink(trim(path) // C_NULL_CHAR)
 end function
 
 

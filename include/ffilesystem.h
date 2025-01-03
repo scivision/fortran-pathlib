@@ -145,7 +145,7 @@ std::string fs_trim(std::string r);
 
 std::string fs_stem(std::string_view);
 
-bool fs_is_absolute(std::string_view path);
+bool fs_is_absolute(std::string_view);
 bool fs_is_symlink(std::string_view);
 bool fs_create_symlink(std::string_view, std::string_view);
 
@@ -153,7 +153,7 @@ bool fs_set_permissions(std::string_view, int, int, int);
 
 bool fs_copy_file(std::string_view, std::string_view, bool);
 
-bool fs_exists(std::string_view path);
+bool fs_exists(std::string_view);
 bool fs_is_file(std::string_view);
 
 bool fs_is_exe(std::string_view);
@@ -163,8 +163,8 @@ bool fs_is_writable(std::string_view);
 
 bool fs_stdin_tty();
 
-std::string fs_root(std::string_view path);
-std::string fs_root_name(std::string_view path);
+std::string fs_root(std::string_view);
+std::string fs_root_name(std::string_view);
 
 std::uintmax_t fs_space_available(std::string_view);
 std::uintmax_t fs_space_capacity(std::string_view);
@@ -188,15 +188,16 @@ bool fs_set_cwd(std::string_view);
 std::string fs_get_tempdir();
 std::string fs_get_cwd();
 
-std::string fs_win32_final_path(std::string_view path);
-std::string fs_win32_full_name(std::string_view path);
+std::string fs_win32_final_path(std::string_view);
+std::string fs_win32_full_name(std::string_view);
+bool fs_is_appexec_alias(std::string_view);
 
 std::string fs_filesystem_type(std::string_view);
 
 std::string fs_libcxx();
 std::string fs_libc();
 
-int fs_st_mode(std::string_view path);
+int fs_st_mode(std::string_view);
 
 // ---------------------------------------------------------------------------
 
@@ -259,6 +260,7 @@ bool fs_has_statx();
 bool fs_is_empty(const char*);
 
 bool fs_is_safe_name(const char*);
+bool fs_is_appexec_alias(const char*);
 
 size_t fs_as_posix(const char*, char*, const size_t);
 
