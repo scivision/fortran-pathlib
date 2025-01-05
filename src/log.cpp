@@ -55,6 +55,16 @@ void fs_print_error(std::string_view path, std::string_view fname, const std::er
   std::cerr << std::endl;
 }
 
+
+void fs_print_error(std::string_view path1, std::string_view path2, std::string_view fname)
+{
+  std::cerr << "ERROR: Ffilesystem:" << fname << "(" << path1 <<  ", " << path2 << ")  ";
+
+  fs_emit_error();
+
+  std::cerr << std::endl;
+}
+
 void fs_print_error(std::string_view path1, std::string_view path2, std::string_view fname, const std::error_code& ec)
 {
   std::cerr << "ERROR: Ffilesystem:" << fname << "(" << path1 <<  ", " << path2 << ")  ";

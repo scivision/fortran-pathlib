@@ -29,7 +29,7 @@
 #include <windows.h>
 #elif defined(__APPLE__) && defined(__MACH__)
 #include <copyfile.h>
-#elif defined(__linux__) || defined(BSD)
+#elif defined(__linux__) || defined(BSD) || defined(__CYGWIN__)
 #include <sys/types.h>  // off_t
 #include <sys/stat.h>
 #include <unistd.h>
@@ -140,7 +140,7 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
       // value should not be zero because we tell the file size in "len"
       close(rid);
       close(wid);
-      fs_print_error("copy_file", source, dest);
+      fs_print_error(source, dest, "copy_file");
       return false;
     }
     remaining -= bytes;
@@ -156,7 +156,7 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
 
 #endif
 
-  fs_print_error("copy_file", source, dest, ec);
+  fs_print_error(source, dest, "copy_file", ec);
   return false;
 
 }

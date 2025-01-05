@@ -81,6 +81,7 @@ std::string::size_type fs_str2char(std::string_view, char*, const std::string::s
 
 void fs_print_error(std::string_view, std::string_view);
 void fs_print_error(std::string_view, std::string_view, const std::error_code&);
+void fs_print_error(std::string_view, std::string_view, std::string_view);
 void fs_print_error(std::string_view, std::string_view, std::string_view, const std::error_code&);
 
 
