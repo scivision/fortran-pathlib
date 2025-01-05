@@ -60,6 +60,51 @@ typedef struct _REPARSE_DATA_BUFFER
 #endif
 
 
+#if defined(_WIN32)
+static bool fs_win32_get_reparse_buffer(std::string_view path, std::byte* buffer)
+{
+
+// this function is adapted from
+// https://gitlab.kitware.com/utils/kwsys/-/blob/master/SystemTools.cxx
+// that has a BSD 3-clause license
+
+  const DWORD attr = GetFileAttributesA(path.data());
+// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesa
+
+// https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants
+  if (attr == INVALID_FILE_ATTRIBUTES || !(attr & FILE_ATTRIBUTE_REPARSE_POINT))
+    return false;
+
+  // Using 0 instead of GENERIC_READ as it allows reading of file attributes
+  // even if we do not have permission to read the file itself
+
+  // A reparse point may be an execution alias (Windows Store app), which
+  // is similar to a symlink but it cannot be opened as a regular file.
+  // We must look at the reparse point data explicitly.
+
+  // FILE_ATTRIBUTE_REPARSE_POINT means:
+  // * a file or directory that has an associated reparse point, or
+  // * a file that is a symbolic link.
+  HANDLE h = CreateFileA(
+    path.data(), 0, 0, nullptr, OPEN_EXISTING,
+    FILE_FLAG_OPEN_REPARSE_POINT | FILE_FLAG_BACKUP_SEMANTICS, nullptr);
+
+  if (h == INVALID_HANDLE_VALUE)
+    return false;
+
+  DWORD bytesReturned = 0;
+
+  BOOL ok = DeviceIoControl(h, FSCTL_GET_REPARSE_POINT, nullptr, 0, buffer,
+                        MAXIMUM_REPARSE_DATA_BUFFER_SIZE, &bytesReturned,
+                        nullptr);
+
+  CloseHandle(h);
+
+  return ok;
+}
+#endif
+
+
 bool fs_is_appexec_alias(
 #if __has_cpp_attribute(maybe_unused)
   [[maybe_unused]]
@@ -78,33 +123,9 @@ bool fs_is_appexec_alias(
 // that has a BSD 3-clause license
 
 #if defined(_WIN32)
-
-  const DWORD attr = GetFileAttributesA(path.data());
-  if (attr == INVALID_FILE_ATTRIBUTES || !(attr & FILE_ATTRIBUTE_REPARSE_POINT))
-    return false;
-
-  // Using 0 instead of GENERIC_READ as it allows reading of file attributes
-  // even if we do not have permission to read the file itself
-
-  // A reparse point may be an execution alias (Windows Store app), which
-  // is similar to a symlink but it cannot be opened as a regular file.
-  // We must look at the reparse point data explicitly.
-  HANDLE h = CreateFileA(
-    path.data(), 0, 0, nullptr, OPEN_EXISTING,
-    FILE_FLAG_OPEN_REPARSE_POINT | FILE_FLAG_BACKUP_SEMANTICS, nullptr);
-
-  if (h == INVALID_HANDLE_VALUE)
-    return false;
-
   std::byte buffer[MAXIMUM_REPARSE_DATA_BUFFER_SIZE];
-  DWORD bytesReturned = 0;
 
-  BOOL ok = DeviceIoControl(h, FSCTL_GET_REPARSE_POINT, nullptr, 0, buffer,
-                        MAXIMUM_REPARSE_DATA_BUFFER_SIZE, &bytesReturned,
-                        nullptr);
-
-  CloseHandle(h);
-  if (!ok)
+  if (!fs_win32_get_reparse_buffer(path, buffer))
     return false;
 
   PREPARSE_DATA_BUFFER data =
@@ -134,32 +155,10 @@ bool fs_win32_is_symlink(
 // that has a BSD 3-clause license
 
 #if defined(_WIN32)
-// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesa
-  const DWORD attr = GetFileAttributesA(path.data());
-
-// https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants
-  if (attr == INVALID_FILE_ATTRIBUTES || !(attr & FILE_ATTRIBUTE_REPARSE_POINT))
-    return false;
-
-  // FILE_ATTRIBUTE_REPARSE_POINT means:
-  // * a file or directory that has an associated reparse point, or
-  // * a file that is a symbolic link.
-  HANDLE hFile = CreateFileA(
-    path.data(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING,
-    FILE_FLAG_OPEN_REPARSE_POINT | FILE_FLAG_BACKUP_SEMANTICS, nullptr);
-  if (hFile == INVALID_HANDLE_VALUE)
-    return false;
-
   std::byte buffer[MAXIMUM_REPARSE_DATA_BUFFER_SIZE];
-  DWORD bytesReturned = 0;
-  BOOL ok = DeviceIoControl(hFile, FSCTL_GET_REPARSE_POINT, nullptr, 0, buffer,
-                        MAXIMUM_REPARSE_DATA_BUFFER_SIZE, &bytesReturned,
-                        nullptr);
-  CloseHandle(hFile);
-
   // Since FILE_ATTRIBUTE_REPARSE_POINT is set this file must be
   // a symbolic link if it is not a reparse point.
-  if (!ok)
+  if (!fs_win32_get_reparse_buffer(path, buffer))
     return GetLastError() == ERROR_NOT_A_REPARSE_POINT;
 
   ULONG reparseTag =
