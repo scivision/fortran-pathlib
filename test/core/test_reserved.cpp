@@ -28,6 +28,9 @@ int main(){
 
     std::cout << "Begin test_reserved\n";
 
+    if (fs_is_reserved("."))
+      err("is_reserved(.) should be false");
+
     r = fs_normal(ref);
     if (r != ref)
       err("normal");

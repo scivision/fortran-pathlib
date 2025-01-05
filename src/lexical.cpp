@@ -31,25 +31,23 @@ fs_is_reserved(std::string_view path)
   if(!fs_is_windows())
     return false;
 
-  const std::string filename = fs_file_name(path);
+  const std::string n = fs_file_name(path);
 
-  if(filename.empty())
+  if(n.empty() || n == ".")
     return false;
 
-  if(filename.back() == '.' || filename.back() == ' ')
+  if(n.back() == '.' || n.back() == ' ')
     return true;
 
   // return true if filename contains any of :*?"<>| or ends with a space or period
   // https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file
 
-  if(filename.find_first_of(R"(<>:"/\|?*)") != std::string::npos)
+  if(n.find_first_of(R"(<>:"/\|?*)") != std::string::npos)
     return true;
 
   // don't detect ASCII control characters as reserved, since multi-byte characters may falsely trip that check
 
-  if(fs_trace) std::cout << "TRACE: fs_is_reserved: check stem" << filename << "\n";
-
-  std::string s = fs_stem(filename);
+  std::string s = fs_stem(n);
 
   if(size_t L = s.length();
       L < 3 || L > 4)
