@@ -1,8 +1,8 @@
 t_exe_cpp = executable('exe_cpp', 'test_exe.cpp', link_with: filesystem, include_directories: [inc, '..'])
 test('exe_cpp', t_exe_cpp, suite: 'cpp')
 
-t_which_cpp = executable('which_cpp', 'test_which.cpp', link_with: filesystem, include_directories: [inc, '..])
-test('which_cpp', t_which_cpp, suite: 'cpp')
+t_which_cpp = executable('which_cpp', 'test_which.cpp', link_with: filesystem, include_directories: [inc, '..'])
+test('which_cpp', t_which_cpp, suite: 'cpp', workdir: meson.current_build_dir())
 
 
 test('NoPathWhich_cpp', t_which_cpp,
