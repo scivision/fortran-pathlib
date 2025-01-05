@@ -438,7 +438,7 @@ exists("my/file.txt")
 
 ---
 
-Does file exist (or a symbolic link to an existing file).
+is "path" a file or a symbolic link to an existing file.
 Like Python pathlib.Path.is_file(), even if the file does not have read permission,
 it still may exist.
 
@@ -454,6 +454,20 @@ Is the path a special character device (like a terminal or /dev/null)?
 p%is_char_device()
 ! of
 is_char_device("/dev/null")
+```
+
+Is the path a FIFO (named pipe)?
+
+```fortran
+is_fifo("my/pipe")
+```
+
+Is the path a Windows App Execution Alias?
+
+```fortran
+s1 = which("bash.exe")
+
+is_appexec_alias(s1)
 ```
 
 On Windows, is the path a reserved name (like "nul" on Windows)?
