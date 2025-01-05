@@ -148,7 +148,7 @@ fs_is_fifo(std::string_view path)
   CloseHandle(h);
   return type == FILE_TYPE_PIPE;
 #else
-  return fs_st_mode(path) & S_IFIFO;
+  return S_ISFIFO(fs_st_mode(path));
 #endif
 }
 
@@ -174,8 +174,7 @@ bool fs_is_char_device(std::string_view path)
   return std::filesystem::is_character_file(path, ec) && !ec;
 #else
   // Windows: https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/fstat-fstat32-fstat64-fstati64-fstat32i64-fstat64i32
-  return fs_st_mode(path) & S_IFCHR;
-  // S_ISCHR not available with MSVC
+  return S_ISCHR(fs_st_mode(path));
 #endif
 }
 
