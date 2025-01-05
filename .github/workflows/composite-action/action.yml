@@ -25,7 +25,6 @@ runs:
       -Dffilesystem_cpp:BOOL=${{ matrix.cpp }}
       -DBUILD_SHARED_LIBS:BOOL=${{ matrix.shared }}
       -DCMAKE_CXX_STANDARD=${{ matrix.cpp-std }}
-      --log-level=VERBOSE
 
   - name: log if fail
     shell: bash

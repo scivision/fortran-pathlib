@@ -8,7 +8,8 @@
   "cacheVariables": {
     "CMAKE_COMPILE_WARNING_AS_ERROR": true,
     "CMAKE_LINK_WARNING_AS_ERROR": true,
-    "ffilesystem_fallback": false
+    "ffilesystem_fallback": false,
+    "CMAKE_MESSAGE_LOG_LEVEL": "VERBOSE"
   }
 },
 {

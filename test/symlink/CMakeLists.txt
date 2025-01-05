@@ -8,7 +8,7 @@ file(CREATE_LINK ${test_symlink_dir} ${test_symlink_dir2} SYMBOLIC)
 
 set(test_symlink_file ${test_symlink_dir2}/${_s_file}.link)
 file(CREATE_LINK ${test_symlink_dir2}/${_s_file} ${test_symlink_file} SYMBOLIC)
-message(VERBOSE "CMake test link file ${test_symlink_file2}")
+message(VERBOSE "CMake test link file ${test_symlink_file}")
 
 
 add_executable(test_is_symlink_cpp test_is_symlink.cpp)
@@ -47,7 +47,7 @@ SKIP_RETURN_CODE 77
 
 foreach(t IN ITEMS is_symlink_fortran symlink_fortran)
   target_link_libraries(test_${t} PRIVATE ffilesystem)
-  target_compile_options(test_${t} PRIVATE ${${PROJECT_NAME}_fortran_test_flags})
+  target_compile_options(test_${t} PRIVATE ${ffilesystem_fortran_test_flags})
   set_property(TARGET test_${t} PROPERTY LINKER_LANGUAGE Fortran)
 endforeach()
 

@@ -48,9 +48,11 @@ if(NOT WIN32 AND NOT HAVE_CXX_FILESYSTEM)
   check_include_file("sys/statvfs.h" ffilesystem_HAVE_SYS_STATVFS)
 endif()
 
-set(${PROJECT_NAME}_fortran_test_flags
-  "$<$<AND:$<Fortran_COMPILER_ID:GNU>,$<VERSION_LESS:$<Fortran_COMPILER_VERSION>,13>>:-Wno-maybe-uninitialized>"
-)
+set(ffilesystem_fortran_test_flags)
+if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" AND CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 13)
+  set(ffilesystem_fortran_test_flags -Wno-maybe-uninitialized)
+endif()
+message(VERBOSE "${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION}: Fortran test flags: ${ffilesystem_fortran_test_flags}")
 
 foreach(t IN ITEMS core executable libpath symlink)
 
