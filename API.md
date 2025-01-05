@@ -603,7 +603,14 @@ character(:), allocatable :: which("myprog")
 ! or
 
 which("myprog", "/path/to/search")
+
+! or
+
+which("myprog", find_all=.true.)
 ```
+
+`find_all` if true returns all found executables in a list separated by the system path separator.
+Otherwise, the default false returns the first found executable.
 
 ---
 

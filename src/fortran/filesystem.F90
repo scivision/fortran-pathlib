@@ -470,9 +470,10 @@ character(kind=c_char), intent(out) :: result(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
 
-integer(C_SIZE_T) function fs_which(name, path, result, buffer_size) bind(C)
+integer(C_SIZE_T) function fs_which(name, path, find_all, result, buffer_size) bind(C)
 import
 character(kind=C_CHAR), intent(in) :: name(*), path(*)
+logical(C_BOOL), intent(in), value :: find_all
 character(kind=C_CHAR), intent(out) :: result(*)
 integer(C_SIZE_T), intent(in), value :: buffer_size
 end function
@@ -1249,17 +1250,22 @@ end if
 end subroutine
 
 
-function which(name, path) result(r)
+function which(name, path, find_all) result(r)
 !! find executable in PATH
 character(*), intent(in) :: name
 character(*), intent(in), optional :: path
+logical, intent(in), optional :: find_all
+logical(C_BOOL) :: a
 
 include "ifc0a.inc"
 
+a = .false.
+if(present(find_all)) a = find_all
+
 if(present(path)) then
-  N = fs_which(trim(name) // C_NULL_CHAR, trim(path) // C_NULL_CHAR, cbuf, N)
+  N = fs_which(trim(name) // C_NULL_CHAR, trim(path) // C_NULL_CHAR, a, cbuf, N)
 else
-  N = fs_which(trim(name) // C_NULL_CHAR, C_NULL_CHAR, cbuf, N)
+  N = fs_which(trim(name) // C_NULL_CHAR, C_NULL_CHAR, a, cbuf, N)
 end if
 
 include "ifc0b.inc"

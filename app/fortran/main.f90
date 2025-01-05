@@ -18,6 +18,10 @@ logical :: ok, done
 
 character, parameter :: delim = " "
 
+! avoid garbage init values
+arg1 = ""
+arg2 = ""
+
 if(is_admin()) write(stderr, '(a)') "WARNING: running as admin / sudo"
 
 print '(a)', "Backend: " // backend()
@@ -128,11 +132,7 @@ main : do
   case ("owner")
     print '(A,1x,A)', get_owner_name(arg1), get_owner_group(arg1)
   case ("which")
-    if (len_trim(arg2) == 0) then
-      print '(A)', which(arg1)
-    else
-      print '(A)', which(arg1, arg2)
-    end if
+    print '(A)', which(arg1, arg2, .true.)
   case ("canonical")
     print '(A)', canonical(arg1, .true., .false.)
   case ("weakly_canonical")
