@@ -3,6 +3,11 @@
 
 #include <iostream>
 
+#if defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+
 #include "ffilesystem.h"
 
 
@@ -11,6 +16,36 @@ std::string fs_which(std::string_view name, std::string_view path)
   // find an executable file "name" under each path in
   // environment variable PATH or "path" if specified
 
+  if (!path.empty() && !fs_is_dir(path)){
+    fs_print_error(path, "which: path is not a directory");
+    return {};
+  }
+
+#if defined(_WIN32)
+  // use SearchPathA, even though the generic method works.
+  // This is because SearchPathA uses registry preferences that the generic method ignores.
+
+  std::string r(fs_get_max_path(), '\0');
+  DWORD L;
+
+  // https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-searchpatha
+  if (path.empty())
+    L = SearchPathA(nullptr, name.data(), ".exe", r.length(), r.data(), nullptr);
+  else
+    L = SearchPathA(path.data(), name.data(), ".exe", r.length(), r.data(), nullptr);
+
+  if(L == 0 && GetLastError() == ERROR_FILE_NOT_FOUND)
+    return {};
+
+  if(L == 0 || L >= r.length()){
+    fs_print_error(name, "which");
+    return {};
+  }
+
+  r.resize(L);
+  return fs_as_posix(r);
+
+#else
   if (fs_is_exe(name))
     return fs_as_posix(name);
 
@@ -56,4 +91,5 @@ std::string fs_which(std::string_view name, std::string_view path)
   }
 
   return {};
+#endif
 }

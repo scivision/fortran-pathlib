@@ -32,8 +32,8 @@ if(fs_is_wsl() && fs_filesystem_type(cwd) == "v9fs"){
   std::exit(77);
 }
 
-std::string exe = "test_exe";
-std::string noexe = "test_noexe";
+std::string exe = "test_executable_cpp.exe";
+std::string noexe = "test_not_executable_cpp.exe";
 
 // Empty string
 if(fs_is_exe(""))
