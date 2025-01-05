@@ -13,7 +13,7 @@
 #include <cstdint> // uintmax_t
 
 // include even if <filesystem> is available
-#if defined(_MSC_VER)
+#if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <io.h> // _access_s
@@ -56,7 +56,7 @@ fs_st_mode(std::string_view path)
       statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT, STATX_MODE, &s) == 0)
     return s.stx_mode;
 #else
-
+// https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/stat-functions
   if(struct stat s;
       !stat(path.data(), &s))
     return s.st_mode;
@@ -93,13 +93,18 @@ fs_exists(std::string_view path)
 bool
 fs_is_dir(std::string_view path)
 {
+  // is path a directory or a symlink to a directory
 #if defined(HAVE_CXX_FILESYSTEM)
 // NOTE: Windows top-level drive "C:" needs a trailing slash "C:/"
   std::error_code ec;
   return std::filesystem::is_directory(path, ec) && !ec;
+#elif defined(_WIN32)
+// stat() & S_IFDIR works on Windows, but we use GetFileAttributesA for didactic reasons
+// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesa
+  const DWORD attr = GetFileAttributesA(path.data());
+  return attr != INVALID_FILE_ATTRIBUTES && (attr & FILE_ATTRIBUTE_DIRECTORY);
 #else
-  return fs_st_mode(path) & S_IFDIR;
-  // S_ISDIR not available with MSVC
+  return S_ISDIR(fs_st_mode(path));
 #endif
 }
 
@@ -108,6 +113,7 @@ bool
 fs_is_file(std::string_view path)
 {
   // is path a regular file or a symlink to a regular file.
+  // not a directory, device, or symlink to a directory.
 
   // MSVC / MinGW ::is_regular_file and stat() don't detect App Execution Aliases
   if(fs_is_appexec_alias(path))
@@ -137,7 +143,7 @@ fs_is_fifo(std::string_view path)
     fs_print_error(path, "is_fifo:CreateFile");
     return false;
   }
-
+// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype
   const DWORD type = GetFileType(h);
   CloseHandle(h);
   return type == FILE_TYPE_PIPE;

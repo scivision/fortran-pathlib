@@ -83,7 +83,7 @@ fs_is_safe_char(const char c)
   // unordered_set<char>  8us
   // set<char, std::less<>>  6us
   // vector<char> 0.3us so much faster!
-  // safe.find_first_of is same speed as vector<char> but more readable
+  // <string_view>.find_first_of is same speed as vector<char> but more readable
   static constexpr std::string_view safe = "_-.~@#$%^&()[]{}+=,!";
 
   return std::isalnum(c) || safe.find_first_of(c) != std::string::npos;
