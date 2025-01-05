@@ -102,25 +102,14 @@ main : do
   if (done) cycle
 
   i0 = i1 + 1
-  !> check for quoted argument
-  if (inp(i0:i0) == '"') then
-    i0 = i0 + 1
-    i1 = i0 + index(inp(i0:), '"')
-    if (i1 == 0) then
-      write(stderr, '(a)') "unterminated quoted argument"
-      cycle
-    end if
-    arg1 = inp(i0:i1-2)
-    i0 = i1 + 1
-  else
-    i1 = i0 + index(inp(i0:), delim)
-    if(i1 == 0) then
-      write(stderr, '(a)') "not enough arguments for " // trim(cmd)
-      cycle
-    end if
-    arg1 = inp(i0:i1-1)
-    i0 = i1
-  end if
+
+  i1 = i0 + index(inp(i0:), delim)
+  if(i1 /= 0) arg1 = inp(i0:i1-1)
+  i0 = i1
+
+  i1 = i0 + index(inp(i0:), delim)
+  if(i1 /= 0) arg2 = inp(i0:i1-1)
+
 
   done = .true.
   select case (cmd)
@@ -139,7 +128,11 @@ main : do
   case ("owner")
     print '(A,1x,A)', get_owner_name(arg1), get_owner_group(arg1)
   case ("which")
-    print '(A)', which(arg1)
+    if (len_trim(arg2) == 0) then
+      print '(A)', which(arg1)
+    else
+      print '(A)', which(arg1, arg2)
+    end if
   case ("canonical")
     print '(A)', canonical(arg1, .true., .false.)
   case ("weakly_canonical")
@@ -227,20 +220,6 @@ main : do
 
   if (done) cycle
 
-  !> check for quoted argument
-  if (inp(i0:i0) == '"') then
-    i0 = i0 + 1
-    i1 = i0 + index(inp(i0:), '"')
-    if (i1 == 0) then
-      write(stderr, '(a)') "unterminated quoted argument"
-      cycle
-    end if
-    arg2 = inp(i0:i1-2)
-  else
-    i1 = i0 + index(inp(i0:), delim)
-    if(i1 == 0) error stop "not enough arguments for " // trim(cmd)
-    arg2 = inp(i0:i1-1)
-  end if
 
   done = .true.
   select case (cmd)

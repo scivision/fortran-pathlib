@@ -92,7 +92,7 @@ bool fs_mkdir(std::string_view);
 bool fs_set_modtime(std::string_view, const bool = false);
 std::time_t fs_get_modtime(std::string_view);
 
-std::string fs_which(std::string_view);
+std::string fs_which(std::string_view, std::string_view = {});
 
 bool fs_is_reserved(std::string_view);
 bool fs_is_safe_name(std::string_view);
@@ -283,7 +283,7 @@ size_t fs_root_name(const char*, char*, const size_t);
 
 size_t fs_with_suffix(const char*, const char*, char*, const size_t);
 
-size_t fs_which(const char*, char*, const size_t);
+size_t fs_which(const char*, const char*, char*, const size_t);
 
 bool fs_is_symlink(const char*);
 bool fs_create_symlink(const char*, const char*);

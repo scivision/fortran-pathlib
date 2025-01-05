@@ -16,19 +16,7 @@ endforeach()
 
 add_test(NAME Cpp_which_noPath COMMAND test_which_cpp 1)
 
-if(NOT WIN32)
-# windows emits error 135 since it can't find DLL.
-if(CMAKE_VERSION VERSION_LESS 3.22)
-  set_property(TEST Cpp_which_noPath PROPERTY ENVIRONMENT "PATH=")
-else()
-  set_property(TEST Cpp_which_noPath PROPERTY ENVIRONMENT_MODIFICATION "PATH=unset:")
-endif()
-endif()
-
-set_tests_properties(Cpp_which_noPath PROPERTIES
-WILL_FAIL true
-LABELS "Cpp"
-)
+set_tests_properties(Cpp_which_noPath PROPERTIES LABELS "Cpp")
 
 
 

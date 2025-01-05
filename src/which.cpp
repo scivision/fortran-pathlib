@@ -6,8 +6,10 @@
 #include "ffilesystem.h"
 
 
-std::string fs_which(std::string_view name)
+std::string fs_which(std::string_view name, std::string_view path)
 {
+  // find an executable file "name" under each path in
+  // environment variable PATH or "path" if specified
 
   if (fs_is_exe(name))
     return fs_as_posix(name);
@@ -16,13 +18,16 @@ std::string fs_which(std::string_view name)
   if(fs_file_name(name).length() != name.length())
     return {};
 
-  std::string path = fs_getenv("PATH");
-  if(path.empty()){
-    fs_print_error("which: PATH environment variable not set", path);
+  std::string paths = path.empty() ? fs_getenv("PATH") : std::string(path);
+
+  if(paths.empty()){
+    fs_print_error(paths, "which: search path is empty");
     return {};
   }
 
-  if(fs_trace) std::cout << "TRACE:which: PATH: " << path << "\n";
+  paths = fs_as_posix(paths);
+
+  if(fs_trace) std::cout << "TRACE:which: search path: " << paths << "\n";
 
   std::string n(name);
   std::string r;
@@ -31,13 +36,13 @@ std::string fs_which(std::string_view name)
   std::string::size_type end;
 
   while (true) {
-    end = path.find(fs_pathsep(), start);
+    end = paths.find(fs_pathsep(), start);
 
-    std::string p = (end == std::string::npos)
-      ? path.substr(start)
-      : path.substr(start, end - start);
+    std::string dir = (end == std::string::npos)
+      ? paths.substr(start)
+      : paths.substr(start, end - start);
 
-    r = p + "/" + n;
+    r = dir + "/" + n;
 
     if (fs_trace) std::cout << "TRACE:which: is_file(" << r << ") " << fs_is_file(r) << " is_exe(" << r << ") " << fs_is_exe(r) << "\n";
 

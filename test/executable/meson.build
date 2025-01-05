@@ -4,14 +4,10 @@ test('exe_cpp', t_exe_cpp, suite: 'cpp')
 t_which_cpp = executable('which_cpp', 'test_which.cpp', link_with: filesystem, include_directories: [inc, '..])
 test('which_cpp', t_which_cpp, suite: 'cpp')
 
-env = environment()
-env.unset('PATH')
 
 test('NoPathWhich_cpp', t_which_cpp,
 suite: 'cpp',
-env: env,
 args: '1',
-should_fail: true,
 workdir: meson.current_build_dir()
 )
 

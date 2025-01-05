@@ -599,6 +599,10 @@ On Windows, security / virus scanners may block cmd.exe and similar under `%SYST
 
 ```fortran
 character(:), allocatable :: which("myprog")
+
+! or
+
+which("myprog", "/path/to/search")
 ```
 
 ---

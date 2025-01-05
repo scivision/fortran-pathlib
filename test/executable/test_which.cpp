@@ -9,12 +9,19 @@
 int main(int argc, char* argv[]) {
   int noenv = (argc > 1) ? std::stoi(argv[1]) : 0;
 
-  if (noenv)
-    fs_setenv("PATH", "");
-
   // Pick an executable name for test
   const std::string testExe = fs_is_windows() ? "cmake.exe" : "ls";
-  std::string found = fs_which(testExe);
+  std::string found;
+
+  if (noenv){
+    found = fs_which(testExe, "nowhere");
+    if (!found.empty())
+      err("which: unexpected path match " + found);
+    ok_msg("which noPath");
+    return EXIT_SUCCESS;
+  }
+
+  found = fs_which(testExe);
   if (found.empty())
     err("which: not found " + testExe);
 

@@ -325,8 +325,8 @@ size_t fs_to_winpath(const char* path, char* result, const size_t buffer_size){
 }
 
 
-size_t fs_which(const char* name, char* result, const size_t buffer_size){
-  return fs_str2char(fs_which(name), result, buffer_size);
+size_t fs_which(const char* name, const char* path, char* result, const size_t buffer_size){
+  return fs_str2char(fs_which(name, path), result, buffer_size);
 }
 
 std::string::size_type fs_with_suffix(const char* path, const char* new_suffix,
