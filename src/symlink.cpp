@@ -20,9 +20,8 @@
 #ifdef HAVE_CXX_FILESYSTEM
 #include <filesystem>
 #else
-// preferred import order for stat()
 #include <sys/types.h>
-#include <sys/stat.h>
+#include <sys/stat.h> // stat(), statx()
 
 #ifndef _WIN32
 #include <unistd.h> // readlink(), symlink()

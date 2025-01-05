@@ -18,9 +18,9 @@
 #endif
 #include <ctime>                // for time_t
 
-// preferred import order for stat() -- always include to avoid dev confusion
+// always include to avoid dev confusion
 #include <sys/types.h> // IWYU pragma: keep
-#include <sys/stat.h> // IWYU pragma: keep
+#include <sys/stat.h> // statx(), stat()
 
 #include <string_view>
 
@@ -33,7 +33,7 @@
 
 // standalone #if
 #if !defined(_WIN32)
-#include <fcntl.h> // utimensat, statx()
+#include <fcntl.h> // utimensat, AT_* constants
 #endif
 
 
