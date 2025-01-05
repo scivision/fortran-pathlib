@@ -44,6 +44,10 @@ end if
 
 print *, "OK: home dir = ", p1
 
+!> empty
+p2 = canonical("")
+if(p2 /= "") error stop "canonical('') not empty: " // p2
+
 ! -- relative dir
 p1 = canonical("~/..", .false., .true.)
 
@@ -53,6 +57,8 @@ if (L2 >= L1) then
   error stop
 end if
 print *, 'OK: canon_dir = ', p1
+
+if(is_cygwin()) stop "OK: Cygwin does not support canonicalize relative non-existing path"
 
 ! -- relative, non-existing file
 p2 = '~/../' // dummy
@@ -97,10 +103,6 @@ if (len_trim(p1) /= 0) then
   error stop
 end if
 endif
-
-!> empty
-p2 = canonical("")
-if(p2 /= "") error stop "canonical('') not empty: " // p2
 
 print *, 'OK: canon_file = ', p1
 

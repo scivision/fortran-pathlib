@@ -50,6 +50,11 @@ L2 = len_trim(p2)
 if (L2 >= L1) error stop "parent home " // p2
 print *, "OK: parent(resolve(~)) = ", p2
 
+!> empty
+if(resolve("") /= cwd) then
+  write(stderr,*) "resolve('') " // resolve("") // " /= " // cwd
+  error stop
+end if
 
 ! -- relative dir
 p1 = resolve("~/..")
@@ -59,6 +64,9 @@ if (L2 /= L3) then
   error stop
 end if
 print *, 'OK: canon_dir = ', p1
+
+if(is_cygwin()) stop "OK: Cygwin does not support canonicalize relative non-existing path"
+
 
 ! -- relative, non-existing file
 if(is_cygwin()) then
@@ -75,12 +83,6 @@ if (L3 - L2 /= L1) then
   write(stderr,*) 'ERROR relative file was not resolved: ' // p1
   error stop
 end if
-end if
-
-!> empty
-if(resolve("") /= cwd) then
-  write(stderr,*) "resolve('') " // resolve("") // " /= " // cwd
-  error stop
 end if
 
 !> not strict, not exist
