@@ -26,16 +26,13 @@
 
 #ifdef HAVE_CXX_FILESYSTEM
 #include <filesystem>
-#else
-#if defined(_WIN32)
+#elif defined(_WIN32)
 #include <sys/utime.h> // _utime
-#else
-#include <sys/time.h> // utimes
-#endif
 #endif
 
-#if defined(__linux__) && defined(USE_STATX)
-#include <fcntl.h>   // AT_* constants for statx()
+// standalone #if
+#if !defined(_WIN32)
+#include <fcntl.h> // utimensat, statx()
 #endif
 
 
@@ -97,7 +94,7 @@ bool fs_set_modtime(std::string_view path, const bool quiet)
     // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/utime-utime32-utime64-wutime-wutime32-wutime64
     _utime(path.data(), nullptr)
 #else
-    utimes(path.data(), nullptr)
+    utimensat(AT_FDCWD, path.data(), nullptr, 0)
 #endif
     == 0)
       return true;
