@@ -73,6 +73,12 @@ std::string fs_which(std::string_view name, std::string_view path)
   while (true) {
     end = paths.find(fs_pathsep(), start);
 
+    // avoid empty path
+    if (end != std::string::npos && end == start){
+      start = end + 1;
+      continue;
+    }
+
     std::string dir = (end == std::string::npos)
       ? paths.substr(start)
       : paths.substr(start, end - start);
