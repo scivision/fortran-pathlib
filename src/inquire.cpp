@@ -182,6 +182,7 @@ bool fs_is_char_device(std::string_view path)
 
 bool fs_is_exe(std::string_view path)
 {
+  // is path (file or directory or symlink) executable by the user
 
   if(fs_is_appexec_alias(path))
     return fs_is_readable(path);
@@ -189,7 +190,7 @@ bool fs_is_exe(std::string_view path)
 #if defined(HAVE_CXX_FILESYSTEM)
 
   // need reserved check for Windows
-  if(!fs_is_file(path) || fs_is_reserved(path))
+  if(fs_is_reserved(path))
     return false;
 
   // Windows MinGW bug with executable bit
@@ -213,18 +214,13 @@ bool fs_is_exe(std::string_view path)
 
   return (s.permissions() & (owner_exec | group_exec | others_exec)) != none;
 
-#else
-
-  return (fs_is_file(path) &&
-#if defined(_WIN32)
+#elif defined(_WIN32)
   // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/access-s-waccess-s
-  // in Windows, all readable files are executable. Do not use _S_IEXEC, it is not reliable.
-  fs_is_readable(path)
+  // on Windows, readable paths are executable.
+  // We don't use _S_IEXEC, as it is not reliable.
+  return fs_is_readable(path);
 #else
-  !access(path.data(), X_OK)
-#endif
-  );
-
+  return access(path.data(), X_OK) == 0;
 #endif
 }
 

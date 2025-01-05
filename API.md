@@ -502,8 +502,9 @@ same_file(path1, path2)
 
 ## file permissions
 
-Is file executable by the user. Even if the file does not have read permission,
-it still may be executable. False for directories.
+Is path (file or directory) executable by the user.
+For non-Windows systems, if the path does not have read permission, it still may be executable.
+On Windows, a readable path is considered executable.
 
 ```fortran
 !! logical

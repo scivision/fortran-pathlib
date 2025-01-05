@@ -19,17 +19,17 @@ subroutine test_not_exist()
 character(:), allocatable :: s1
 
 !> empty file
-if(is_file("")) error stop "ERROR:test_exe: is_file('') should be false"
-if(is_exe("")) error stop "ERROR:test_exe: is_exe('') should be false"
+if(is_file("")) error stop "FAILED:test_exe: is_file('') should be false"
+if(is_exe("")) error stop "FAILED:test_exe: is_exe('') should be false"
 
 s1 = get_permissions("")
-if(len_trim(s1) /= 0) error stop "ERROR:test_exe: get_permissions('') should be empty: " // s1
+if(len_trim(s1) /= 0) error stop "FAILED:test_exe: get_permissions('') should be empty: " // s1
 
 !> not exist file
 s1 = "not-exist-file"
-if (is_file(s1)) error stop "ERROR:test_exe: not-exist-file should not exist."
-if (is_exe(s1)) error stop "ERROR:test_exe: non-exist-file cannot be executable"
-if(len_trim(get_permissions(s1)) /= 0) error stop "ERROR:test_exe: get_permissions('not-exist') should be empty"
+if (is_file(s1)) error stop "FAILED:test_exe: not-exist-file should not exist."
+if (is_exe(s1)) error stop "FAILED:test_exe: non-exist-file cannot be executable"
+if(len_trim(get_permissions(s1)) /= 0) error stop "FAILED:test_exe: get_permissions('not-exist') should be empty"
 
 end subroutine test_not_exist
 
@@ -56,15 +56,15 @@ call touch(noexe)
 print '(a)', "set_permissions(" // trim(noexe) // ", executable=.false.)"
 call set_permissions(noexe, executable=.false.)
 
-if(is_exe(parent(exe))) then
-  write(stderr, '(a)') "ERROR:test_exe: directory" // parent(exe) // " should not be executable"
+if(.not. is_exe(parent(exe))) then
+  write(stderr, '(a)') "FAILED: test_exe(" // parent(exe) // ") directory should have executable permissions"
   error stop
 end if
 
 print '(a)', "permissions: " // trim(exe) // " = " // get_permissions(exe)
 
 if (.not. is_exe(exe)) then
-  write(stderr,'(a)') "ERROR:test_exe: " // trim(exe) // " is not executable."
+  write(stderr,'(a)') "FAILED:test_exe: " // trim(exe) // " is not executable."
   error stop
 end if
 
@@ -74,7 +74,7 @@ if (is_exe(noexe)) then
   if(is_windows()) then
     write(stderr,'(a)') "XFAIL:test_exe: " // trim(noexe) // " is executable on Windows."
   else
-    write(stderr,'(a)') "ERROR:test_exe: " // trim(noexe) // " is executable and should not be."
+    write(stderr,'(a)') "FAILED:test_exe: " // trim(noexe) // " is executable and should not be."
     error stop
   end if
 end if

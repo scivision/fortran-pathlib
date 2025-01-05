@@ -13,7 +13,7 @@
 
 static std::string fs_which_generic(std::string_view name, std::string_view path, const bool find_all)
 {
-  if (fs_is_exe(name))
+  if (fs_is_file(name) && fs_is_exe(name))
     return fs_as_posix(name);
 
   // relative directory component, but path was not a file
@@ -55,7 +55,7 @@ static std::string fs_which_generic(std::string_view name, std::string_view path
 
     if (fs_trace) std::cout << "TRACE:which(" << r << "): is_file " << fs_is_file(r) << " is_exe " << fs_is_exe(r) << "\n";
 
-    if (fs_is_exe(r)){
+    if (fs_is_file(r) && fs_is_exe(r)){
       if(find_all)
         t += r + fs_pathsep();
       else
