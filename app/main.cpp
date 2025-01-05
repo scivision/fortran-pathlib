@@ -136,6 +136,7 @@ static bool one_arg(std::string_view fun, std::string_view a1)
     {"long", [](std::string_view a1) { return fs_longname(a1); }},
     {"short", [](std::string_view a1) { return fs_shortname(a1); }},
     {"touch", [](std::string_view a1) { return "touch " + std::string(a1) + " " + std::to_string(fs_touch(a1)); }},
+    {"set_modtime", [](std::string_view a1) { return fs_set_modtime(a1); }},
     {"getenv", [](std::string_view a1) { return fs_getenv(a1); }},
     {"realpath", [](std::string_view a1) { return fs_realpath(a1); }},
     {"posix", [](std::string_view a1) { return fs_as_posix(a1); }},

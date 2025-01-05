@@ -27,7 +27,8 @@
 #ifdef HAVE_CXX_FILESYSTEM
 #include <filesystem>
 #elif defined(_WIN32)
-#include <sys/utime.h> // _utime
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 #endif
 
 // standalone #if
@@ -89,16 +90,23 @@ bool fs_set_modtime(std::string_view path, const bool quiet)
 
 #else
 
-  if (
-#ifdef _WIN32
-    // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/utime-utime32-utime64-wutime-wutime32-wutime64
-    _utime(path.data(), nullptr)
-#else
-    utimensat(AT_FDCWD, path.data(), nullptr, 0)
-#endif
-    == 0)
+#if defined(_WIN32)
+// https://learn.microsoft.com/en-us/windows/win32/SysInfo/changing-a-file-time-to-the-current-time
+  HANDLE h = CreateFileA(path.data(),
+                         FILE_WRITE_ATTRIBUTES, FILE_SHARE_WRITE, nullptr,
+                         OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
+  if (h){
+    FILETIME t;
+    GetSystemTimeAsFileTime(&t);
+    BOOL ok = SetFileTime(h, nullptr, nullptr, &t);
+    CloseHandle(h);
+    if (ok) FFS_LIKELY
       return true;
-
+  }
+#else
+  if (utimensat(AT_FDCWD, path.data(), nullptr, 0) == 0)  FFS_LIKELY
+    return true;
+#endif
 #endif
 
   if (!quiet) fs_print_error(path, "fs_set_modtime", ec);
