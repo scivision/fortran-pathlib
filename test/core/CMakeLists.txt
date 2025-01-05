@@ -88,6 +88,7 @@ filesize
 filesystem_type
 hard_link
 is_absolute
+is_appexec_alias
 is_char
 is_dir
 is_empty
@@ -193,7 +194,7 @@ if(NOT WIN32 AND NOT HAVE_CXX_FILESYSTEM)
 endif()
 
 
-set_tests_properties(Cpp_windows PROPERTIES
+set_tests_properties(Cpp_windows Cpp_is_appexec_alias PROPERTIES
 DISABLED $<NOT:$<OR:$<BOOL:${WIN32}>,$<BOOL:${CYGWIN}>>>
 LABELS "windows"
 )

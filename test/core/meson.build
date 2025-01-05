@@ -87,7 +87,7 @@ cpp_core = [
 ]
 
 if is_windows
-  cpp_core += 'windows'
+  cpp_core += ['is_appexec_alias','windows']
 endif
 
 foreach t : cpp_core
