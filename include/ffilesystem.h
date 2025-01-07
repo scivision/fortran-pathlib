@@ -42,163 +42,179 @@ std::optional<std::filesystem::file_time_type> fs_get_modtime_fs(std::string_vie
 
 #endif
 
-std::string fs_lexically_normal(std::string_view);
-std::string fs_make_preferred(std::string_view);
+std::string fs_absolute(std::string_view, const bool = true);
+std::string fs_absolute(std::string_view, std::string_view, const bool = true);
 
-std::string fs_to_narrow(std::wstring_view);
-std::wstring fs_to_wide(std::string_view);
+std::string fs_as_posix(std::string_view);
 
-bool fs_is_case_sensitive(std::string_view);
-std::string fs_generate_random_alphanumeric_string(const std::string::size_type);
-
-// C++ functions available without C++17 filesystem too
-bool fs_slash_first(std::string_view);
-
-std::string fs_with_suffix(std::string_view, std::string_view);
-
-std::string fs_parent(std::string_view);
-std::string fs_suffix(std::string_view);
-
-std::string fs_join(std::string_view, std::string_view);
+std::string fs_backend();
 
 std::string fs_canonical(std::string_view, const bool = false, const bool = true);
-std::string fs_resolve(std::string_view, const bool = false, const bool = true);
+
+std::string fs_compiler();
+
+bool fs_copy_file(std::string_view, std::string_view, bool);
+
+std::string fs_cpu_arch();
+
+bool fs_create_symlink(std::string_view, std::string_view);
+
+std::string fs_drop_slash(std::string_view);
 
 bool fs_equivalent(std::string_view, std::string_view);
 
-std::string fs_relative_to(std::string_view, std::string_view);
-std::string fs_proximate_to(std::string_view, std::string_view);
+bool fs_exists(std::string_view);
 
+std::string fs_exe_path();
+
+std::string fs_expanduser(std::string_view);
+
+std::string fs_file_name(std::string_view);
+
+std::uintmax_t fs_file_size(std::string_view);
+
+std::string fs_filesystem_type(std::string_view);
+
+std::string fs_generate_random_alphanumeric_string(const std::string::size_type);
+
+std::string fs_get_cwd();
+
+std::string fs_get_homedir();
+
+std::string fs_get_locale_name();
+
+std::time_t fs_get_modtime(std::string_view);
+
+std::string fs_get_owner_group(std::string_view);
+std::string fs_get_owner_name(std::string_view);
+
+std::string fs_get_permissions(std::string_view);
+
+std::string fs_get_profile_dir();
+
+std::string fs_get_shell();
+
+std::string fs_get_tempdir();
+
+std::string fs_get_terminal();
+
+std::string fs_get_username();
+
+std::string fs_getenv(std::string_view);
+
+std::uintmax_t fs_hard_link_count(std::string_view);
+
+std::string fs_hostname();
+
+bool fs_is_absolute(std::string_view);
+bool fs_is_appexec_alias(std::string_view);
+bool fs_is_case_sensitive(std::string_view);
+bool fs_is_char_device(std::string_view);
+bool fs_is_dir(std::string_view);
+bool fs_is_empty(std::string_view);
+bool fs_is_exe(std::string_view);
+bool fs_is_fifo(std::string_view);
+bool fs_is_file(std::string_view);
 bool fs_is_prefix(std::string_view, std::string_view);
+bool fs_is_readable(std::string_view);
+bool fs_is_reserved(std::string_view);
+bool fs_is_safe_name(std::string_view);
 bool fs_is_subdir(std::string_view, std::string_view);
+bool fs_is_symlink(std::string_view);
+bool fs_is_writable(std::string_view);
 
-std::vector<std::string> fs_split(std::string_view);
-std::vector<std::string> fs_normal_vector(std::string_view);
+std::string fs_join(std::string_view, std::string_view);
+
+std::string fs_lexically_normal(std::string_view);
+
+std::string fs_lib_path();
+
+std::string fs_libc();
+std::string fs_libcxx();
+
+std::string fs_longname(std::string_view);
+
+std::string fs_make_preferred(std::string_view);
+
+std::string::size_type fs_max_component(std::string_view);
+
+bool fs_mkdir(std::string_view);
+
+bool fs_non_ascii(std::string_view);
+
 std::string fs_normal(std::string_view);
-std::string fs_drop_slash(std::string_view);
+std::vector<std::string> fs_normal_vector(std::string_view);
 
-std::string::size_type fs_str2char(std::string_view, char*, const std::string::size_type);
+std::string fs_parent(std::string_view);
 
 void fs_print_error(std::string_view, std::string_view);
 void fs_print_error(std::string_view, std::string_view, const std::error_code&);
 void fs_print_error(std::string_view, std::string_view, std::string_view);
 void fs_print_error(std::string_view, std::string_view, std::string_view, const std::error_code&);
 
+std::string fs_proximate_to(std::string_view, std::string_view);
 
-std::string fs_absolute(std::string_view, const bool = true);
-std::string fs_absolute(std::string_view, std::string_view, const bool = true);
-
-bool fs_mkdir(std::string_view);
-
-bool fs_set_modtime(std::string_view, const bool = false);
-std::time_t fs_get_modtime(std::string_view);
-
-std::string fs_which(std::string_view, std::string_view = {}, const bool = false);
-
-bool fs_is_reserved(std::string_view);
-bool fs_is_safe_name(std::string_view);
-bool fs_non_ascii(std::string_view);
-
-std::string fs_longname(std::string_view);
-std::string fs_shortname(std::string_view);
-
-std::string fs_hostname();
-std::string fs_cpu_arch();
-
-std::string fs_compiler();
-
-std::string fs_getenv(std::string_view);
-
-
-std::string fs_get_owner_name(std::string_view);
-std::string fs_get_owner_group(std::string_view);
-
-
-std::string fs_to_cygpath(std::string_view);
-std::string fs_to_winpath(std::string_view);
-
-std::string fs_get_locale_name();
-std::string fs_get_shell();
-std::string fs_get_terminal();
-bool fs_setenv(std::string_view, std::string_view);
-
-std::string fs_get_homedir();
-std::string fs_get_profile_dir();
-std::string fs_user_config_dir();
-std::string fs_get_username();
-
-std::string fs_backend();
-
-std::string fs_expanduser(std::string_view);
-
-std::string fs_file_name(std::string_view);
-
-bool fs_touch(std::string_view);
-
-std::string::size_type fs_max_component(std::string_view);
-
-std::string fs_as_posix(std::string_view);
-std::string fs_lib_path();
-std::string fs_exe_path();
+std::string fs_read_symlink(std::string_view);
 
 std::string fs_realpath(std::string_view);
-std::string fs_trim(std::string r);
 
-std::string fs_stem(std::string_view);
+std::string fs_relative_to(std::string_view, std::string_view);
 
-bool fs_is_absolute(std::string_view);
+bool fs_remove(std::string_view);
 
-bool fs_is_symlink(std::string_view);
-bool fs_win32_is_symlink(std::string_view);
-bool fs_create_symlink(std::string_view, std::string_view);
+bool fs_rename(std::string_view, std::string_view);
 
-bool fs_set_permissions(std::string_view, int, int, int);
-
-bool fs_copy_file(std::string_view, std::string_view, bool);
-
-bool fs_exists(std::string_view);
-bool fs_is_file(std::string_view);
-
-bool fs_is_exe(std::string_view);
-bool fs_is_empty(std::string_view);
-bool fs_is_readable(std::string_view);
-bool fs_is_writable(std::string_view);
-
-bool fs_stdin_tty();
+std::string fs_resolve(std::string_view, const bool = false, const bool = true);
 
 std::string fs_root(std::string_view);
 std::string fs_root_name(std::string_view);
 
+bool fs_set_cwd(std::string_view);
+
+bool fs_set_modtime(std::string_view, const bool = false);
+
+bool fs_set_permissions(std::string_view, int, int, int);
+
+bool fs_setenv(std::string_view, std::string_view);
+
+std::string fs_shortname(std::string_view);
+
+bool fs_slash_first(std::string_view);
+
 std::uintmax_t fs_space_available(std::string_view);
 std::uintmax_t fs_space_capacity(std::string_view);
 
-std::string fs_read_symlink(std::string_view);
+std::vector<std::string> fs_split(std::string_view);
 
-std::string fs_get_permissions(std::string_view);
+bool fs_stdin_tty();
 
-bool fs_is_char_device(std::string_view);
-bool fs_is_fifo(std::string_view);
-bool fs_is_dir(std::string_view);
+std::string fs_stem(std::string_view);
 
-std::uintmax_t fs_file_size(std::string_view);
-std::uintmax_t fs_hard_link_count(std::string_view);
+std::string::size_type fs_str2char(std::string_view, char*, const std::string::size_type);
 
-bool fs_remove(std::string_view);
-bool fs_rename(std::string_view, std::string_view);
+std::string fs_suffix(std::string_view);
 
-bool fs_set_cwd(std::string_view);
+bool fs_touch(std::string_view);
 
-std::string fs_get_tempdir();
-std::string fs_get_cwd();
+std::string fs_to_cygpath(std::string_view);
+
+std::string fs_to_narrow(std::wstring_view);
+
+std::string fs_to_winpath(std::string_view);
+
+std::wstring fs_to_wide(std::string_view);
+
+std::string fs_trim(std::string r);
+
+std::string fs_user_config_dir();
+
+std::string fs_which(std::string_view, std::string_view = {}, const bool = false);
 
 std::string fs_win32_final_path(std::string_view);
 std::string fs_win32_full_name(std::string_view);
-bool fs_is_appexec_alias(std::string_view);
+bool fs_win32_is_symlink(std::string_view);
 
-std::string fs_filesystem_type(std::string_view);
-
-std::string fs_libcxx();
-std::string fs_libc();
+std::string fs_with_suffix(std::string_view, std::string_view);
 
 int fs_st_mode(std::string_view);
 
