@@ -28,10 +28,10 @@ Ffilesystem brings full filesystem functionality to Fortran.
 
 The language standards must be at least:
 
-* C++17 standard library [STL](./Readme_libstdc++.md)
+* C++17 standard library [STL](./Readme_cpp_stl.md)
 * (optional) Fortran 2003
 
-Ffilesystem works with popular C standard library implementations including:
+Ffilesystem works with popular C++ STL and C standard library implementations including:
 [glibc](https://sourceware.org/glibc/),
 [newlib](https://sourceware.org/newlib/),
 [musl](https://musl.libc.org/),
