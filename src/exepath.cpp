@@ -19,7 +19,8 @@
 #include <cstdint> // for uint32_t
 #include <mach-o/dyld.h> // _NSGetExecutablePath
 #elif defined(__linux__) || defined(__CYGWIN__)
-#include <unistd.h> // for readlink, size_t
+#include <unistd.h> // for readlink
+#include <sys/types.h> // for ssize_t
 #elif defined(BSD)
 #include <sys/sysctl.h> // sysctl
 #include <cstddef> // for size_t
@@ -32,40 +33,38 @@ std::string fs_exe_path()
   // https://stackoverflow.com/a/1024937
 
   std::string path(fs_get_max_path(), '\0');
+  std::size_t L=0;
 
 #if defined(_WIN32) || defined(__CYGWIN__)
  // https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
-  const size_t L = GetModuleFileNameA(nullptr, path.data(), static_cast<DWORD>(path.size()));
-  if(L > 0 && GetLastError() != ERROR_INSUFFICIENT_BUFFER) FFS_LIKELY
-  {
-    path.resize(L);
-    return fs_as_posix(path);
-  }
+  const DWORD M = GetModuleFileNameA(nullptr, path.data(), static_cast<DWORD>(path.size()));
+  if(M > 0 && GetLastError() != ERROR_INSUFFICIENT_BUFFER) FFS_LIKELY
+    L = static_cast<std::size_t>(M);
 #elif defined(__linux__)
   // https://man7.org/linux/man-pages/man2/readlink.2.html
-  const size_t L = readlink("/proc/self/exe", path.data(), path.size());
-  if(L)  FFS_LIKELY
-  {
-    path.resize(L);
-    return path;
-  }
+  const ssize_t M = readlink("/proc/self/exe", path.data(), path.size());
+  if(M > 0)  FFS_LIKELY
+    L = static_cast<std::size_t>(M);
 #elif defined(__APPLE__) && defined(__MACH__)
   // https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/dyld.3.html
-  uint32_t mp = static_cast<uint32_t>(path.size());
-
-  if(_NSGetExecutablePath(path.data(), &mp) == 0)  FFS_LIKELY
-    return fs_trim(path);
-  // "mp" doesn't have the string length of the path
+  uint32_t mp = 0;
+  // get buffer size first
+  if(_NSGetExecutablePath(nullptr, &mp) == -1 &&
+     _NSGetExecutablePath(path.data(), &mp) == 0)  FFS_LIKELY
+      L = static_cast<std::size_t>(mp-1);
 #elif defined(BSD)
   // https://man.freebsd.org/cgi/man.cgi?sysctl(3)
-  size_t L = path.size();
+  std::size_t M = path.size();
   const int mib[4] = {CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1};
-  if(sysctl(mib, 4, path.data(), &L, nullptr, 0) == 0)  FFS_LIKELY
+  if(sysctl(mib, 4, path.data(), &M, nullptr, 0) == 0)  FFS_LIKELY
+    L = M;
+#endif
+
+  if(L > 0)  FFS_LIKELY
   {
     path.resize(L);
     return path;
   }
-#endif
 
   fs_print_error("", "exepath");
   return {};
