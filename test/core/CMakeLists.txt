@@ -25,11 +25,16 @@ suffix
 with_suffix
 owner permissions
 copyfile mkdir touch
-cygwin windows
 )
 
 if(HAVE_F03TYPE)
   list(APPEND tests path_t)
+endif()
+
+if(CYGWIN)
+  list(APPEND tests cygwin windows)
+elseif(WIN32)
+  list(APPEND tests windows)
 endif()
 
 foreach(t IN LISTS tests)
@@ -88,7 +93,6 @@ filesize
 filesystem_type
 hard_link
 is_absolute
-is_appexec_alias
 is_char
 is_dir
 is_empty
@@ -116,8 +120,11 @@ suffix
 system
 touch
 with_suffix
-windows
 )
+
+if(WIN32)
+  list(APPEND cpp_tests windows is_appexec_alias)
+endif()
 
 foreach(t IN LISTS cpp_tests)
   add_executable(test_${t}_cpp test_${t}.cpp)
@@ -186,20 +193,6 @@ endif()
 
 if(NOT WIN32 AND NOT HAVE_CXX_FILESYSTEM)
   set_tests_properties(Cpp_filesize PROPERTIES DISABLED $<NOT:$<BOOL:${ffilesystem_HAVE_SYS_STATVFS}>>)
-endif()
-
-
-set_tests_properties(Cpp_windows Cpp_is_appexec_alias PROPERTIES
-DISABLED $<NOT:$<OR:$<BOOL:${WIN32}>,$<BOOL:${CYGWIN}>>>
-LABELS "windows"
-)
-if(HAVE_Fortran_FILESYSTEM)
-  set_tests_properties(Fortran_cygwin Fortran_windows PROPERTIES
-  DISABLED $<NOT:$<OR:$<BOOL:${WIN32}>,$<BOOL:${CYGWIN}>>>
-  LABELS "windows"
-  )
-
-  set_property(TEST Fortran_cygwin PROPERTY DISABLED $<NOT:$<BOOL:${CYGWIN}>>)
 endif()
 
 # --- fs_remove
