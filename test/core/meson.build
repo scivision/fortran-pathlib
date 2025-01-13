@@ -63,7 +63,6 @@ cpp_core = [
 'is_prefix',
 'is_subdir',
 'join',
-'locale',
 'mkdir',
 'owner',
 'normal',

@@ -74,6 +74,8 @@ comm_src = files(
 'src/windows.cpp'
 )
 
+locale_def = get_option('locale') ? '-Dffilesystem_locale' : []
+
 inc = include_directories('include')
 
 is_windows = host_machine.system() == 'windows'
@@ -172,7 +174,7 @@ sources: [fsrcs, comm_src],
 include_directories: [inc],
 install: true,
 c_args: [],
-cpp_args: [have_filesystem, chrono_def, dladdr_def, def_copy_file, def_statx, trace_def],
+cpp_args: [have_filesystem, chrono_def, dladdr_def, def_copy_file, def_statx, locale_def, trace_def],
 dependencies: [libwin, fs_lib, dl],
 )
 
@@ -195,7 +197,7 @@ endif
 endif
 
 if not meson.is_subproject()
-  foreach d : ['core', 'executable']
+  foreach d : ['core', 'executable', 'extra']
     subdir('test/' + d)
   endforeach
 

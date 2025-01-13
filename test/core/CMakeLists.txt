@@ -136,9 +136,9 @@ endforeach()
 target_compile_definitions(test_touch_cpp PRIVATE $<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>)
 
 
-foreach(t IN ITEMS empty locale)
+foreach(t IN ITEMS empty)
 
-  add_executable(test_${t}_cpp test_locale.cpp)
+  add_executable(test_${t}_cpp test_${t}.cpp)
   target_link_libraries(test_${t}_cpp PRIVATE ffilesystem)
   target_include_directories(test_${t}_cpp PRIVATE ..)
 
@@ -165,11 +165,6 @@ if(CMAKE_VERSION VERSION_LESS 3.22 OR "$ENV{CI}")
 else()
   set_tests_properties(Cpp_NoEnv ${_noenv} PROPERTIES ENVIRONMENT_MODIFICATION "HOME=unset:;USERPROFILE=unset:;TEMP=unset:;TMPDIR=unset:")
 endif()
-
-
-set_tests_properties(Cpp_locale PROPERTIES
-SKIP_REGULAR_EXPRESSION "locale\:\:facet\:\:\_S\_create\_c\_locale name not valid"
-)
 
 set_property(TEST Cpp_empty PROPERTY
 SKIP_REGULAR_EXPRESSION "not implemented;SIGABRT;[aA]bort;[sS]egmentation fault;segfault"

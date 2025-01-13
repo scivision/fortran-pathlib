@@ -126,9 +126,8 @@ target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_DLADDR}>>:HAVE_DLADDR>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_COPY_FILE_RANGE}>>:HAVE_COPY_FILE_RANGE>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_statx}>>:USE_STATX>"
+"$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_locale}>>:ffilesystem_locale>"
 )
-
-set_property(SOURCE src/locale.cpp PROPERTY COMPILE_OPTIONS $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wno-deprecated-declarations>)
 
 target_compile_features(ffilesystem PRIVATE cxx_std_${CMAKE_CXX_STANDARD} c_std_99)
 

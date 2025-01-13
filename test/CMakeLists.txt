@@ -57,7 +57,10 @@ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" AND CMAKE_Fortran_COMPILER_VERSION V
 endif()
 message(VERBOSE "${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION}: Fortran test flags: ${ffilesystem_fortran_test_flags}")
 
-foreach(t IN ITEMS core executable libpath symlink)
+foreach(t IN ITEMS core executable
+  extra
+  libpath symlink
+  )
 
 add_subdirectory(${t})
 
