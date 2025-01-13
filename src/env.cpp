@@ -62,7 +62,7 @@ bool fs_setenv(std::string_view name, std::string_view value)
 
 std::string fs_user_config_dir()
 {
-#ifdef _WIN32
+#if defined(_WIN32)
   PWSTR s = nullptr;
   std::string r;
   if(SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &s) == S_OK)  FFS_LIKELY

@@ -7,12 +7,7 @@
 #include "ffilesystem_test.h"
 
 
-int
-#ifdef _WIN32
-wmain(int argc, wchar_t* argv[])
-#else
-main(int argc, char* argv[])
-#endif
+int main(int argc, char* argv[])
 {
 
   if(argc < 2){
@@ -20,12 +15,7 @@ main(int argc, char* argv[])
     return EXIT_FAILURE;
   }
 
-  const std::string j =
-#ifdef _WIN32
-    fs_to_narrow(argv[1]);
-#else
-  argv[1];
-#endif
+  const std::string j = argv[1];
 
   std::cout << "Test file " << j << "\n";
 

@@ -204,7 +204,6 @@ set(t remove)
 add_executable(test_${t}_cpp test_${t}.cpp)
 target_link_libraries(test_${t}_cpp PRIVATE ffilesystem)
 target_include_directories(test_${t}_cpp PRIVATE ..)
-target_link_options(test_${t}_cpp PRIVATE $<$<BOOL:${MINGW}>:-municode>)
 
 add_test(NAME Cpp_${t} COMMAND test_${t}_cpp ${to_remove})
 set_tests_properties(Cpp_${t} PROPERTIES
