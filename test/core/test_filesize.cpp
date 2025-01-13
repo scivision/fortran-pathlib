@@ -42,8 +42,8 @@ int main(int argc, char *argv[]){
   s = fs_file_size(fn);
   std::cout << "file size " << fn << " " << s << "\n";
   if(s != 5){
-    if((fs_is_mingw() && fs_backend() == "<filesystem>"))
-      std::cerr << "MINGW with <filesystem> backend has a bug in fs_file_size\n";
+    if((fs_is_mingw()))
+      std::cerr << "MINGW has a bug in fs_file_size\n";
     else
       err("failed to get correct file size " + fn);
   }

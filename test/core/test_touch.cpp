@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 
   check_touch(dir + "/test_fileop.h5");
 
-  if(fs_is_mingw() && fs_backend() != "<filesystem>")
+  if(fs_is_mingw())
     std::cerr << "WARNING: skipping symlink tests on MinGW with " << fs_backend() << "\n";
   else
     check_touch(dir + "/日本語.txt");

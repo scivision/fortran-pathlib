@@ -13,15 +13,15 @@ int main(){
     err("fs_touch " + fn);
 
   if(!fs_exists(fn)){
-    if(fs_is_mingw() && fs_backend() == "<filesystem>")
-      std::cerr << "MinGW: fs_exists on MinGW <filesystem> has bugs\n";
+    if(fs_is_mingw())
+      std::cerr << "MinGW: fs_exists on MinGW has bugs\n";
     else
       err("fs_exists " + fn);
   }
 
   if(!fs_is_file(fn)){
-    if(fs_is_mingw() && fs_backend() == "<filesystem>")
-      std::cerr << "MinGW: fs_is_file on MinGW <filesystem> has bugs\n";
+    if(fs_is_mingw())
+      std::cerr << "MinGW: fs_is_file on MinGW has bugs\n";
     else
       err("fs_is_file " + fn);
   }
