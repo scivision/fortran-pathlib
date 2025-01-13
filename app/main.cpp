@@ -48,7 +48,7 @@ static bool no_arg(std::string_view fun){
     {"has_statx", fs_has_statx}
   };
 
-using fs_function = std::function<std::variant<std::string, bool, int, char, long, size_t>()>;
+using fs_function = std::function<std::variant<std::string, bool, int, char, long, std::size_t>()>;
 
 std::unordered_map<std::string_view, fs_function> fs_function_map = {
   {"backend", []() { return fs_backend(); }},
@@ -91,8 +91,8 @@ std::unordered_map<std::string_view, fs_function> fs_function_map = {
       std::cout << std::get<char>(result);
     else if (std::holds_alternative<long>(result))
       std::cout << std::get<long>(result);
-    else if (std::holds_alternative<size_t>(result))
-      std::cout << std::get<size_t>(result);
+    else if (std::holds_alternative<std::size_t>(result))
+      std::cout << std::get<std::size_t>(result);
     else
       ok = false;
 
@@ -113,7 +113,7 @@ static bool one_arg(std::string_view fun, std::string_view a1)
 
   std::error_code ec;
 
-  using fs_one_arg_function = std::function<std::variant<std::string, bool, size_t
+  using fs_one_arg_function = std::function<std::variant<std::string, bool, std::size_t
   #if uintmax_t != size_t
   , uintmax_t
   #endif
@@ -181,8 +181,8 @@ static bool one_arg(std::string_view fun, std::string_view a1)
       std::cout << std::get<std::string>(r);
     else if (std::holds_alternative<bool>(r))
       std::cout << std::get<bool>(r);
-    else if (std::holds_alternative<size_t>(r))
-      std::cout << std::get<size_t>(r);
+    else if (std::holds_alternative<std::size_t>(r))
+      std::cout << std::get<std::size_t>(r);
     else if (std::holds_alternative<uintmax_t>(r))
       std::cout << std::get<uintmax_t>(r);
     else

@@ -27,7 +27,9 @@
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#elif defined(__APPLE__) && defined(__MACH__)
+#elif defined(__APPLE__) && defined(__MACH__) && __has_include(<copyfile.h>)
+// macOS 10.12 or later
+#define HAVE_MACOS_COPYFILE
 #include <copyfile.h>
 #elif defined(__linux__) || defined(BSD) || defined(__CYGWIN__)
 #include <sys/types.h>  // off_t
@@ -61,7 +63,7 @@ bool fs_copy_file(std::string_view source, std::string_view dest, bool overwrite
   if(CopyFileA(source.data(), dest.data(), !overwrite) != 0)
     return true;
 
-#elif defined(__APPLE__) && defined(__MACH__)
+#elif defined(HAVE_MACOS_COPYFILE)
   /* copy-on-write file
   * based on kwSys:SystemTools:CloneFileContent
   * https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/copyfile.3.html

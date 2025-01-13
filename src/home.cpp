@@ -8,12 +8,9 @@
 
 // get_profile_dir
 #ifdef _WIN32
-#include <iostream>
 #define WIN32_LEAN_AND_MEAN
 #include <UserEnv.h> // GetUserProfileDirectoryA
 #include <Windows.h>
-#include <tlhelp32.h> // for CreateToolhelp32Snapshot
-#include <psapi.h>  // for EnumProcessModules
 #else
 #include <sys/types.h>  // IWYU pragma: keep
 #include <pwd.h>      // for getpwuid, passwd
@@ -23,9 +20,9 @@
 #include "ffilesystem.h"
 
 
-#ifndef _WIN32
-static struct passwd* fs_getpwuid()
+struct passwd* fs_getpwuid()
 {
+#if !defined(_WIN32)
   const uid_t eff_uid = geteuid();
 
   if(struct passwd *pw = getpwuid(eff_uid); pw) FFS_LIKELY
@@ -38,10 +35,10 @@ static struct passwd* fs_getpwuid()
     ""
 #endif
     , "getpwuid");
+#endif
 
   return {};
 }
-#endif
 
 
 std::string fs_get_homedir()
@@ -58,7 +55,7 @@ std::string fs_get_homedir()
 std::string fs_get_profile_dir()
 {
   // has no trailing slash
-  #ifdef _WIN32
+  #if defined(_WIN32)
   // https://learn.microsoft.com/en-us/windows/win32/api/userenv/nf-userenv-getuserprofiledirectorya
   std::string path(fs_get_max_path(), '\0');
   // works on MSYS2, MSVC, oneAPI
@@ -122,10 +119,10 @@ std::string fs_expanduser(std::string_view path)
 
 std::string fs_get_username()
 {
-#ifdef _WIN32
+#if defined(_WIN32)
   // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getusernamea
   std::string name(fs_get_max_path(), '\0');
-  auto L = static_cast<DWORD>(name.size());
+  DWORD L = static_cast<DWORD>(name.size());
   // Windows.h
   if(GetUserNameA(name.data(), &L) != 0){
     name.resize(L-1);
@@ -138,57 +135,5 @@ std::string fs_get_username()
 #endif
 
   fs_print_error("", "get_username");
-  return {};
-}
-
-
-std::string fs_get_shell()
-{
-#ifdef _WIN32
-    const HANDLE h = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-    // 0: current process
-    PROCESSENTRY32 pe;
-    ZeroMemory(&pe, sizeof(PROCESSENTRY32));
-    pe.dwSize = sizeof(PROCESSENTRY32);
-    HMODULE hMod;
-    DWORD cbNeeded;
-
-    std::string name(fs_get_max_path(), '\0');
-
-    if( Process32First(h, &pe)) {
-      const DWORD pid = GetCurrentProcessId();
-      do {
-        if (pe.th32ProcessID == pid) {
-          HANDLE hProcess = OpenProcess( PROCESS_QUERY_INFORMATION |
-                                PROCESS_VM_READ,
-                                FALSE, pe.th32ParentProcessID );
-          if ( EnumProcessModules( hProcess, &hMod, sizeof(hMod), &cbNeeded) ) {
-              const auto L = GetModuleBaseNameA( hProcess, hMod, name.data(), static_cast<DWORD>(name.size()) );
-              CloseHandle( hProcess );
-              if(L == 0)
-                goto err;
-
-              name.resize(L);
-              break;
-          }
-          CloseHandle( hProcess );
-if(fs_trace) std::cout << "TRACE: get_shell: " << name << " PID: " << pid << " PPID: " << pe.th32ParentProcessID << "\n";
-        }
-      } while( Process32Next(h, &pe));
-    }
-
-    CloseHandle(h);
-    return name;
-#else
-    const struct passwd *pw = fs_getpwuid();
-    if (pw)
-      return pw->pw_shell;
-#endif
-
-#if !defined(_MSC_VER) && __has_cpp_attribute(maybe_unused)
-[[maybe_unused]]
-#endif
-err:
-  fs_print_error("", "get_shell");
   return {};
 }

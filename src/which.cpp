@@ -99,9 +99,9 @@ std::string fs_which(std::string_view name, std::string_view path, const bool fi
 
   // https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-searchpatha
   if (path.empty())
-    L = SearchPathA(nullptr, name.data(), ".exe", r.length(), r.data(), nullptr);
+    L = SearchPathA(nullptr, name.data(), ".exe", static_cast<DWORD>(r.length()), r.data(), nullptr);
   else
-    L = SearchPathA(path.data(), name.data(), ".exe", r.length(), r.data(), nullptr);
+    L = SearchPathA(path.data(), name.data(), ".exe", static_cast<DWORD>(r.length()), r.data(), nullptr);
 
   if(L == 0 && GetLastError() == ERROR_FILE_NOT_FOUND)
     return {};

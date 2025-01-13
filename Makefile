@@ -55,7 +55,7 @@ COMM_SRCS = \
 	$(comdir)equivalent.cpp \
 	$(comdir)exepath.cpp \
 	$(comdir)env.cpp \
-	$(comdir)filesystem.cpp \
+	$(comdir)move.cpp \
 	$(comdir)lexical.cpp \
 	$(comdir)libpath.cpp \
 	$(comdir)limits.cpp \
@@ -73,6 +73,7 @@ COMM_SRCS = \
 	$(comdir)realpath.cpp \
 	$(comdir)relative.cpp \
 	$(comdir)resolve.cpp \
+	$(comdir)shell.cpp \
 	$(comdir)size.cpp \
 	$(comdir)space.cpp \
 	$(comdir)sysctl.cpp \

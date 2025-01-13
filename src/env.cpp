@@ -7,7 +7,7 @@
 #include <string>
 #include <string_view>
 
-#ifdef _WIN32
+#if defined(_WIN32)
 #include <algorithm> // std::replace
 #include <objbase.h> // IWYU pragma: keep
 // CoTaskMemFree
@@ -22,8 +22,8 @@ std::string fs_getenv(std::string_view name)
 {
   // don't emit error because sometimes we just check if envvar is defined
 
-  #ifdef _MSC_VER
-    size_t L;
+#if defined(_MSC_VER)
+    std::size_t L;
     getenv_s(&L, nullptr, 0, name.data());
     if (L == 0)
       return {};
@@ -31,12 +31,11 @@ std::string fs_getenv(std::string_view name)
     std::string buf(L, '\0');
     getenv_s(&L, &buf[0], L, name.data());
     buf.resize(L - 1); // remove the null terminator
-  #else
+#else
     auto buf = std::getenv(name.data());
     if(!buf)
       return {};
-  #endif
-
+#endif
 
   return buf;
 }

@@ -9,7 +9,7 @@
 #include <filesystem>
 #else
 #include <sys/types.h>
-#include <sys/stat.h> // permissions constants
+#include <sys/stat.h> // chmod, permissions constants
 #endif
 
 #ifdef _WIN32
@@ -146,13 +146,13 @@ std::string fs_get_permissions(std::string_view path)
   if ((p & others_exec) != none)
     r[8] = 'x';
 
-  return r;
 #else
 
-#ifdef _MSC_VER
   const int m = fs_st_mode(path);
   if(m == 0) FFS_UNLIKELY
     return {};
+
+#if defined(_MSC_VER)
   if (m & _S_IREAD)
     r[0] = 'r';
   if (m & _S_IWRITE)
@@ -160,9 +160,6 @@ std::string fs_get_permissions(std::string_view path)
   if (m & _S_IEXEC)
     r[2] = 'x';
 #else
-  const int m = fs_st_mode(path);
-  if(m == 0) FFS_UNLIKELY
-    return {};
   if (m & S_IRUSR)
     r[0] = 'r';
   if (m & S_IWUSR)
@@ -182,7 +179,8 @@ std::string fs_get_permissions(std::string_view path)
   if (m & S_IXOTH)
     r[8] = 'x';
 #endif
-  return r;
 
 #endif
+
+  return r;
 }

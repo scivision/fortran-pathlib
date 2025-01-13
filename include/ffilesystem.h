@@ -218,6 +218,7 @@ bool fs_win32_is_symlink(std::string_view);
 std::string fs_with_suffix(std::string_view, std::string_view);
 
 int fs_st_mode(std::string_view);
+struct passwd* fs_getpwuid();
 
 // ---------------------------------------------------------------------------
 

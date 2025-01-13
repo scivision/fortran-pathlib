@@ -47,7 +47,6 @@ std::time_t fs_get_modtime(std::string_view path)
   }
 #elif defined(STATX_MTIME) && defined(USE_STATX)
 // https://www.man7.org/linux/man-pages/man2/statx.2.html
-  if (fs_trace) std::cout << "TRACE: statx() get_modtime " << path << "\n";
   struct statx s;
 
   if( statx(AT_FDCWD, path.data(), AT_NO_AUTOMOUNT, STATX_MTIME, &s) == 0 ) FFS_LIKELY
@@ -88,15 +87,14 @@ bool fs_set_modtime(std::string_view path, const bool quiet)
     return true;
   // techinically IWYU <chrono> but that can break some compilers, and it works without the include.
 
-#else
-
-#if defined(_WIN32)
+#elif defined(_WIN32)
 // https://learn.microsoft.com/en-us/windows/win32/SysInfo/changing-a-file-time-to-the-current-time
   HANDLE h = CreateFileA(path.data(),
                          FILE_WRITE_ATTRIBUTES, FILE_SHARE_WRITE, nullptr,
                          OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
   if (h){
     FILETIME t;
+    // https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimeasfiletime
     GetSystemTimeAsFileTime(&t);
     BOOL ok = SetFileTime(h, nullptr, nullptr, &t);
     CloseHandle(h);
@@ -104,11 +102,15 @@ bool fs_set_modtime(std::string_view path, const bool quiet)
       return true;
   }
 #else
+  // utimensat available in macOS since 10.13
+  // https://github.com/python/cpython/issues/75782
+  // https://gitlab.kitware.com/cmake/cmake/-/issues/17101
   if (utimensat(AT_FDCWD, path.data(), nullptr, 0) == 0)  FFS_LIKELY
     return true;
 #endif
-#endif
 
-  if (!quiet) fs_print_error(path, "fs_set_modtime", ec);
+  if (!quiet)
+    fs_print_error(path, "fs_set_modtime", ec);
+
   return false;
 }
