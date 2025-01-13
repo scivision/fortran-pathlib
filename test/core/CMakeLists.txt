@@ -10,7 +10,6 @@ exepath
 expanduser
 filename
 filesize space
-filesystem_type
 is_dir
 is_empty
 is_subdir join
@@ -54,22 +53,12 @@ FIXTURES_SETUP ${t}
 
 endforeach()
 
-target_compile_options(test_filesystem_type_fortran PRIVATE
-$<$<COMPILE_LANG_AND_ID:Fortran,GNU>:-Wno-uninitialized>
-)
-
-set_tests_properties(Fortran_filesystem_type PROPERTIES
-DISABLED $<AND:$<BOOL:${LINUX}>,$<NOT:$<BOOL:${ffilesystem_HAVE_LINUX_MAGIC}>>>
-)
-
 set_tests_properties(Fortran_absolute PROPERTIES FIXTURES_REQUIRED "is_absolute;join")
 
 set_tests_properties(Fortran_resolve PROPERTIES
 FIXTURES_REQUIRED "absolute;canonical")
 
 set_tests_properties(Fortran_root PROPERTIES FIXTURES_REQUIRED is_absolute)
-
-set_tests_properties(Fortran_filesystem_type PROPERTIES FIXTURES_REQUIRED root)
 
 set_tests_properties(Fortran_canonical PROPERTIES FIXTURES_REQUIRED "expanduser")
 
@@ -90,7 +79,6 @@ exepath
 expanduser
 filename
 filesize
-filesystem_type
 hard_link
 is_absolute
 is_char

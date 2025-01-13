@@ -333,3 +333,10 @@ std::string::size_type fs_with_suffix(const char* path, const char* new_suffix,
                          char* result, const std::string::size_type buffer_size){
   return fs_str2char(fs_with_suffix(path, new_suffix), result, buffer_size);
 }
+
+#if !defined(ffilesystem_extra)
+  std::string fs_filesystem_type(std::string_view path){
+    fs_print_error(path, "fs_filesystem_type: not enabled");
+    return {};
+  }
+#endif

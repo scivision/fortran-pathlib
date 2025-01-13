@@ -374,8 +374,10 @@ std::cout << "Shell: " << fs_get_shell() << "\n";
 std::cout << "Homedir: " << fs_get_homedir() << "\n";
 
 // doesn't work usefully on Cygwin
+#if defined(ffilesystem_extra)
 if(!fs_is_cygwin())
   std::cout << "CWD filesystem Type: " << fs_filesystem_type(cwd) << "\n";
+#endif
 
 // commented out  because some systems (Cygwin) silently exit with error code 0 on std::locale("") call
 //std::cout << "Locale: " << fs_get_locale_name() << "\n";

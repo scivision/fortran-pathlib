@@ -51,7 +51,6 @@ comm_src = files(
 'src/extra/owner.cpp',
 'src/os.c',
 'src/parent.cpp',
-'src/extra/partition.cpp',
 'src/permissions.cpp',
 'src/platform.cpp',
 'src/pure.cpp',
@@ -74,6 +73,11 @@ comm_src = files(
 'src/windows.cpp'
 )
 
+if get_option('extra')
+  comm_src += files('src/extra/partition.cpp')
+endif
+
+extra_def = get_option('extra') ? '-Dffilesystem_extra' : []
 locale_def = get_option('locale') ? '-Dffilesystem_locale' : []
 
 inc = include_directories('include')
@@ -174,7 +178,8 @@ sources: [fsrcs, comm_src],
 include_directories: [inc],
 install: true,
 c_args: [],
-cpp_args: [have_filesystem, chrono_def, dladdr_def, def_copy_file, def_statx, locale_def, trace_def],
+cpp_args: [have_filesystem, chrono_def, dladdr_def,
+def_copy_file, def_statx, extra_def, locale_def, trace_def],
 dependencies: [libwin, fs_lib, dl],
 )
 
@@ -197,7 +202,12 @@ endif
 endif
 
 if not meson.is_subproject()
-  foreach d : ['core', 'executable', 'extra']
+  test_dirs = ['core', 'executable']
+  if get_option('extra')
+    test_dirs += ['extra']
+  endif
+
+  foreach d : test_dirs
     subdir('test/' + d)
   endforeach
 

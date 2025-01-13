@@ -1,4 +1,4 @@
-cpp_extra = []
+cpp_extra = ['filesystem_type']
 
 if get_option('locale')
   cpp_extra += ['locale']
@@ -12,3 +12,25 @@ foreach t : cpp_extra
     test(t + '_cpp', t_cpp, suite: ['cpp', 'extra'], workdir: meson.current_build_dir())
 
 endforeach
+
+
+if fortran
+
+fortran_extra = [
+'filesystem_type',
+]
+
+
+foreach t : fortran_extra
+
+tec = executable(t + '_fortran',
+    'test_' + t + '.f90',
+            link_with: filesystem, include_directories: inc)
+
+test(t + '_fortran', tec,
+      suite: ['fortran','extra'],
+      workdir: meson.current_build_dir())
+
+endforeach
+
+endif

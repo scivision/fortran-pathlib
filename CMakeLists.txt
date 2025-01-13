@@ -68,8 +68,7 @@ if(HAVE_Fortran_FILESYSTEM)
 
 endif()
 
-
-add_library(ffilesystem
+set(_src
 src/c.cpp
 src/absolute.cpp
 src/extra/case.cpp
@@ -93,7 +92,6 @@ src/normalize.cpp
 src/os.c
 src/extra/owner.cpp
 src/parent.cpp
-src/extra/partition.cpp
 src/permissions.cpp
 src/platform.cpp
 src/pure.cpp
@@ -114,8 +112,17 @@ src/extra/uname.cpp
 src/which.cpp
 src/windows.cpp
 src/extra/winsock.cpp
-$<$<TARGET_EXISTS:ffilesystem_Fortran>:$<TARGET_OBJECTS:ffilesystem_Fortran>>
 )
+
+if(ffilesystem_extra)
+  list(APPEND _src src/extra/partition.cpp)
+endif()
+
+if(TARGET ffilesystem_Fortran)
+  list(APPEND _src $<TARGET_OBJECTS:ffilesystem_Fortran>)
+endif()
+
+add_library(ffilesystem ${_src})
 
 target_include_directories(ffilesystem PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
@@ -127,6 +134,7 @@ target_compile_definitions(ffilesystem PRIVATE
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_HAVE_COPY_FILE_RANGE}>>:HAVE_COPY_FILE_RANGE>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_statx}>>:USE_STATX>"
 "$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_locale}>>:ffilesystem_locale>"
+"$<$<AND:$<COMPILE_LANGUAGE:CXX>,$<BOOL:${ffilesystem_extra}>>:ffilesystem_extra>"
 )
 
 target_compile_features(ffilesystem PRIVATE cxx_std_${CMAKE_CXX_STANDARD} c_std_99)
