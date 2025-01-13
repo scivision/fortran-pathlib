@@ -1,4 +1,4 @@
-cpp_extra = ['exepath', 'filesystem_type', 'hostname', 'shell', 'terminal']
+cpp_extra = ['exepath', 'filesystem_type', 'hostname', 'max_component', 'shell', 'terminal']
 
 if get_option('locale')
   cpp_extra += ['locale']

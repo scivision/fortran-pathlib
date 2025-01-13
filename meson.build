@@ -31,7 +31,6 @@ comm_src = files(
 'src/c.cpp',
 'src/absolute.cpp',
 'src/extra/compiler.cpp',
-'src/extra/component.cpp',
 'src/copy.cpp',
 'src/extra/cygwin.cpp',
 'src/equivalent.cpp',
@@ -67,6 +66,7 @@ comm_src = files(
 if get_option('extra')
   comm_src += files(
 'src/extra/case.cpp',
+'src/extra/component.cpp',
 'src/extra/exepath.cpp',
 'src/extra/libpath.cpp',
 'src/extra/partition.cpp',

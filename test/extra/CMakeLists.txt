@@ -1,6 +1,6 @@
 set_directory_properties(PROPERTIES LABELS "extra")
 
-set(extra_tests_cpp exepath filesystem_type hostname shell terminal)
+set(extra_tests_cpp exepath filesystem_type hostname max_component shell terminal)
 
 if(ffilesystem_locale)
   list(APPEND extra_tests_cpp locale)

@@ -165,7 +165,7 @@ bool fs_touch(const char* path)
   return fs_touch(std::string_view(path));
 }
 
-size_t fs_compiler(char* name, const size_t buffer_size)
+std::string::size_type fs_compiler(char* name, const size_t buffer_size)
 {
   return fs_str2char(fs_compiler(), name, buffer_size);
 }
@@ -394,6 +394,11 @@ std::string::size_type fs_with_suffix(const char* path, const char* new_suffix,
   std::string fs_lib_path(){
     fs_print_error("", "fs_libpath: not enabled");
     return {};
+  }
+
+  std::string::size_type fs_max_component(std::string_view path){
+    fs_print_error(path, "fs_max_component: not enabled");
+    return 0;
   }
 
   std::string fs_os_version(){

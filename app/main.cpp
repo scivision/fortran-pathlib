@@ -359,7 +359,6 @@ const std::string cwd = fs_get_cwd();
 
 std::cout << "Ffilesystem. Backend: " << fs_backend() << "\n";
 std::cout << "maximum path length: " << fs_get_max_path() << "\n";
-std::cout << "maximum path component length: " << fs_max_component(cwd) << "\n";
 std::cout << "current working directory (CWD): " << cwd << "\n";
 std::cout << "Compiler: " << fs_compiler() << "\n";
 std::cout << "Optimized: " << fs_is_optimized() << " Trace: " << fs_trace << "\n";
@@ -373,6 +372,7 @@ std::cout << "Homedir: " << fs_get_homedir() << "\n";
 // doesn't work usefully on Cygwin
 #if defined(ffilesystem_extra)
 
+std::cout << "maximum path component length: " << fs_max_component(cwd) << "\n";
 std::cout << "CPU arch: " << fs_cpu_arch() << "\n";
 std::cout << "Shell: " << fs_get_shell() << "\n";
 std::cout << "Hostname: " << fs_hostname() << "\n";

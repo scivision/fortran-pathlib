@@ -12,14 +12,6 @@ int main()
   std::size_t fail = 0;
 
   const auto max_path = fs_get_max_path();
-  const auto max_component = fs_max_component("/");
-  if(max_component < 1){
-    std::cerr << "FAILED: max_component: " << max_component << "\n";
-    fail++;
-  }
-  else
-    std::cout << "OK: max_component: " << max_component << "\n";
-
 
   std::string s = fs_compiler();
   if (s.empty()){

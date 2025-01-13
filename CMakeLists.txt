@@ -73,7 +73,6 @@ src/c.cpp
 src/absolute.cpp
 src/copy.cpp
 src/extra/compiler.cpp
-src/extra/component.cpp
 src/extra/cygwin.cpp
 src/equivalent.cpp
 src/env.cpp
@@ -108,6 +107,7 @@ src/windows.cpp
 if(ffilesystem_extra)
   list(APPEND _src
 src/extra/case.cpp
+src/extra/component.cpp
 src/extra/exepath.cpp
 src/extra/libpath.cpp
 src/extra/partition.cpp
