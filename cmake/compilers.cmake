@@ -113,11 +113,13 @@ if(LINUX)
   set(CMAKE_POSITION_INDEPENDENT_CODE true)
 endif()
 
-if(HAVE_Fortran_FILESYSTEM)
-  include(${CMAKE_CURRENT_LIST_DIR}/FortranCheck.cmake)
-  fortran_check()
-else()
-  unset(HAVE_F03TYPE CACHE)
+if(HAVE_Fortran_FILESYSTEM AND NOT DEFINED HAVE_F03TYPE)
+  if(ffilesystem_trace)
+    include(${CMAKE_CURRENT_LIST_DIR}/FortranCheck.cmake)
+    fortran_check()
+  else()
+    set(HAVE_F03TYPE true)
+  endif()
 endif()
 
 # --- END COMPILER CHECKS
