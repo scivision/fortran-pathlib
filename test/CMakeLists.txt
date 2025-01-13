@@ -1,5 +1,9 @@
 include(CheckIncludeFile)
 
+if(LINUX)
+  check_include_file("linux/magic.h" ffilesystem_HAVE_LINUX_MAGIC)
+endif()
+
 if(HAVE_CXX_FILESYSTEM)
   set(_regex "Backend: <filesystem>")
 else()
@@ -33,16 +37,15 @@ PASS_REGULAR_EXPRESSION ${_regex}
 
 add_test(NAME CppCLInoLeak
 COMMAND ${CMAKE_COMMAND} -Dexe:FILEPATH=$<TARGET_FILE:fs_cli> -P ${CMAKE_CURRENT_SOURCE_DIR}/stdin.cmake
+)
+
+set_tests_properties(CppCLInoLeak PROPERTIES
+DISABLED $<AND:$<BOOL:${LINUX}>,$<NOT:$<BOOL:${ffilesystem_HAVE_LINUX_MAGIC}>>>
 LABELS "Cpp"
 )
 
-
 endif()
 
-
-if(LINUX)
-  check_include_file("linux/magic.h" ffilesystem_HAVE_LINUX_MAGIC)
-endif()
 
 if(NOT WIN32 AND NOT HAVE_CXX_FILESYSTEM)
   check_include_file("sys/statvfs.h" ffilesystem_HAVE_SYS_STATVFS)
