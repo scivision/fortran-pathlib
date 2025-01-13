@@ -156,8 +156,9 @@ fs_is_fifo(std::string_view path)
 bool fs_is_char_device(std::string_view path)
 {
 // character device like /dev/null or CONIN$
-#if defined(_MSC_VER)
-  // currently broken in MSVC STL for <filesystem>
+
+#if defined(WIN32)
+// currently broken in MSVC STL and MinGW Clang ARM for <filesystem>
   HANDLE h =
     CreateFileA(path.data(), GENERIC_READ, FILE_SHARE_READ,
                 nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
@@ -165,7 +166,7 @@ bool fs_is_char_device(std::string_view path)
     fs_print_error(path, "is_char_device:CreateFile");
     return false;
   }
-
+  // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype
   const DWORD type = GetFileType(h);
   CloseHandle(h);
   return type == FILE_TYPE_CHAR;
