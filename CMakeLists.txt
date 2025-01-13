@@ -192,9 +192,9 @@ if(ffilesystem_cli)
   target_compile_definitions(fs_cli PRIVATE "$<$<BOOL:${HAVE_CXX_FILESYSTEM}>:HAVE_CXX_FILESYSTEM>")
   install(TARGETS fs_cli EXPORT ${PROJECT_NAME}-targets)
 
-  if(CMAKE_CXX_STANDARD LESS 20)
-    target_compile_features(fs_cli PRIVATE cxx_std_$<IF:$<IN_LIST:cxx_std_20,CMAKE_CXX_COMPILE_FEATURES>,20,${CMAKE_CXX_STANDARD}>)
-    target_compile_features(ffilesystem_bench PRIVATE cxx_std_$<IF:$<IN_LIST:cxx_std_20,CMAKE_CXX_COMPILE_FEATURES>,20,${CMAKE_CXX_STANDARD}>)
+  if(CMAKE_CXX_STANDARD LESS 20 AND "cxx_std_20" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
+    target_compile_features(fs_cli PRIVATE cxx_std_20)
+    target_compile_features(ffilesystem_bench PRIVATE cxx_std_20)
   endif()
 
   add_executable(libc_version app/libc.cpp)
