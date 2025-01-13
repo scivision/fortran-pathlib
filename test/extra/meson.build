@@ -1,4 +1,4 @@
-cpp_extra = ['filesystem_type']
+cpp_extra = ['exepath', 'filesystem_type', 'hostname', 'shell', 'terminal']
 
 if get_option('locale')
   cpp_extra += ['locale']
@@ -17,6 +17,7 @@ endforeach
 if fortran
 
 fortran_extra = [
+'exepath',
 'filesystem_type',
 ]
 

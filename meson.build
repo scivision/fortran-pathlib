@@ -30,19 +30,16 @@ fsrcs = fortran ? files('src/fortran/filesystem.F90') : []
 comm_src = files(
 'src/c.cpp',
 'src/absolute.cpp',
-'src/extra/case.cpp',
 'src/extra/compiler.cpp',
 'src/extra/component.cpp',
 'src/copy.cpp',
 'src/extra/cygwin.cpp',
 'src/equivalent.cpp',
-'src/extra/exepath.cpp',
 'src/env.cpp',
 'src/move.cpp',
 'src/home.cpp',
 'src/inquire.cpp',
 'src/lexical.cpp',
-'src/extra/libpath.cpp',
 'src/limits.cpp',
 'src/extra/locale.cpp',
 'src/log.cpp',
@@ -54,27 +51,32 @@ comm_src = files(
 'src/permissions.cpp',
 'src/platform.cpp',
 'src/pure.cpp',
-'src/extra/random.cpp',
 'src/realpath.cpp',
 'src/relative.cpp',
 'src/resolve.cpp',
-'src/extra/shell.cpp',
 'src/size.cpp',
 'src/space.cpp',
-'src/extra/sysctl.cpp',
 'src/symlink.cpp',
 'src/tempdir.cpp',
 'src/time.cpp',
 'src/touch.cpp',
-'src/extra/uid.cpp',
-'src/extra/uname.cpp',
 'src/which.cpp',
-'src/extra/winsock.cpp',
 'src/windows.cpp'
 )
 
 if get_option('extra')
-  comm_src += files('src/extra/partition.cpp')
+  comm_src += files(
+'src/extra/case.cpp',
+'src/extra/exepath.cpp',
+'src/extra/libpath.cpp',
+'src/extra/partition.cpp',
+'src/extra/random.cpp',
+'src/extra/shell.cpp',
+'src/extra/sysctl.cpp',
+'src/extra/uid.cpp',
+'src/extra/uname.cpp',
+'src/extra/winsock.cpp',
+)
 endif
 
 extra_def = get_option('extra') ? '-Dffilesystem_extra' : []

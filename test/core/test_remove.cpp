@@ -19,10 +19,8 @@ int main(int argc, char* argv[])
 
   std::cout << "Test file " << j << "\n";
 
-  if(!fs_is_file(j)){
-    std::cerr << "is_file(" << j << ") should be true for existing regular file\n";
-    return 77;
-  }
+  if(!fs_is_file(j))
+    skip("is_file(" + j + ") should be true for existing regular file");
 
   if(!fs_remove(j)){
     if(fs_exists(j))

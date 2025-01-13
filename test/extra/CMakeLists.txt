@@ -1,6 +1,6 @@
 set_directory_properties(PROPERTIES LABELS "extra")
 
-set(extra_tests_cpp filesystem_type)
+set(extra_tests_cpp exepath filesystem_type hostname shell terminal)
 
 if(ffilesystem_locale)
   list(APPEND extra_tests_cpp locale)
@@ -31,10 +31,17 @@ SKIP_REGULAR_EXPRESSION "locale\:\:facet\:\:\_S\_create\_c\_locale name not vali
 
 endif()
 
+# TARGET_FILE_NAME to allow for macOS possible non-canonical result
+# and symlinked / special filesystems like WSL
+set_tests_properties(Cpp_exepath PROPERTIES PASS_REGULAR_EXPRESSION $<TARGET_FILE_NAME:test_exepath_cpp>)
+
+
+# --------- Fortran
+
 
 if(HAVE_Fortran_FILESYSTEM)
 
-set(extra_tests_fortran filesystem_type)
+set(extra_tests_fortran exepath filesystem_type)
 
 
 foreach(t IN LISTS extra_tests_fortran)
@@ -61,6 +68,11 @@ $<$<COMPILE_LANG_AND_ID:Fortran,GNU>:-Wno-uninitialized>
 set_tests_properties(Fortran_filesystem_type PROPERTIES
 DISABLED $<AND:$<BOOL:${LINUX}>,$<NOT:$<BOOL:${ffilesystem_HAVE_LINUX_MAGIC}>>>
 )
+
+# TARGET_FILE_NAME to allow for macOS possible non-canonical result
+# and symlinked / special filesystems like WSL
+set_tests_properties(Fortran_exepath PROPERTIES PASS_REGULAR_EXPRESSION $<TARGET_FILE_NAME:test_exepath_fortran>)
+
 
 
 endif()

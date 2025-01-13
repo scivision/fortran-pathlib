@@ -8,7 +8,7 @@
 // geteuid, pid_t
 #endif
 
- #include <cstdio> // fileno
+#include <cstdio> // fileno
 
 #include <string>
 

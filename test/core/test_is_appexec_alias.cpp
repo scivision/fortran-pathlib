@@ -11,10 +11,8 @@
 int main(int argc, char* argv[])
 {
 
-if (!fs_is_windows()) {
-  std::cerr << "This test is only for Windows\n";
-  return 77;
-}
+if (!fs_is_windows())
+  skip("This test is only for Windows");
 
 std::string path;
 // not string_view, it garbles on some platforms
@@ -31,10 +29,8 @@ else {
 
   std::cout << "which: " << s << "\n";
 
-  if(path.empty()){
-    std::cerr << "didn't find any App Execution Alias to test, skipping\n";
-    return 77;
-  }
+  if(path.empty())
+    skip("didn't find any App Execution Alias to test");
 }
 
 std::cout << "Testing fs_is_appexec_alias(" << path << ")\n";

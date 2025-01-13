@@ -47,7 +47,6 @@ cpp_core = [
 'copyfile',
 'env',
 'equivalent',
-'exepath',
 'expanduser',
 'filename',
 'filesize',
@@ -84,7 +83,7 @@ cpp_core = [
 ]
 
 if is_windows
-  cpp_core += ['is_appexec_alias','windows']
+  cpp_core += ['is_appexec_alias', 'windows']
 endif
 
 foreach t : cpp_core

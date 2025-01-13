@@ -57,9 +57,9 @@ if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" AND CMAKE_Fortran_COMPILER_VERSION V
 endif()
 message(VERBOSE "${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION}: Fortran test flags: ${ffilesystem_fortran_test_flags}")
 
-set(test_dirs core executable libpath symlink)
+set(test_dirs core executable symlink)
 if(ffilesystem_extra)
-  list(APPEND test_dirs extra)
+  list(APPEND test_dirs extra libpath)
 endif()
 
 foreach(t IN LISTS test_dirs)

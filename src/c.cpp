@@ -335,8 +335,79 @@ std::string::size_type fs_with_suffix(const char* path, const char* new_suffix,
 }
 
 #if !defined(ffilesystem_extra)
+
+  std::string fs_cpu_arch(){
+    fs_print_error("", "fs_cpu_arch: not enabled");
+    return {};
+  }
+
+  std::string fs_exe_path(){
+    fs_print_error("", "fs_exepath: not enabled");
+    return {};
+  }
+
   std::string fs_filesystem_type(std::string_view path){
     fs_print_error(path, "fs_filesystem_type: not enabled");
+    return {};
+  }
+
+  std::string fs_generate_random_alphanumeric_string(const std::string::size_type n){
+    fs_print_error(std::to_string(n), "fs_generate_random_alphanumeric_string: not enabled");
+    return {};
+  }
+
+  int fs_getpid(){
+    fs_print_error("", "fs_getpid: not enabled");
+    return -1;
+  }
+
+  std::string fs_get_shell(){
+    fs_print_error("", "fs_get_shell: not enabled");
+    return {};
+  }
+
+  std::string fs_hostname(){
+    fs_print_error("", "fs_hostname: not enabled");
+    return {};
+  }
+
+  bool fs_is_admin(){
+    fs_print_error("", "fs_is_admin: not enabled");
+    return false;
+  }
+
+  bool fs_is_case_sensitive(std::string_view path){
+    fs_print_error(path, "fs_is_case_sensitive: not enabled");
+    return false;
+  }
+
+  bool fs_is_rosetta(){
+    fs_print_error("", "fs_is_rosetta: not enabled");
+    return false;
+  }
+
+  int fs_is_wsl(){
+    fs_print_error("", "fs_is_wsl: not enabled");
+    return -1;
+  }
+
+  std::string fs_lib_path(){
+    fs_print_error("", "fs_libpath: not enabled");
+    return {};
+  }
+
+  std::string fs_os_version(){
+    fs_print_error("", "fs_os_version: not enabled");
+    return {};
+  }
+
+  bool fs_stdin_tty(){
+    fs_print_error("", "fs_stdin_tty: not enabled");
+    return false;
+  }
+
+  std::string fs_get_terminal(){
+    fs_print_error("", "fs_get_terminal: not enabled");
     return {};
   }
 #endif

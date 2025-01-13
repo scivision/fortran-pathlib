@@ -71,18 +71,15 @@ endif()
 set(_src
 src/c.cpp
 src/absolute.cpp
-src/extra/case.cpp
 src/copy.cpp
 src/extra/compiler.cpp
 src/extra/component.cpp
 src/extra/cygwin.cpp
 src/equivalent.cpp
-src/extra/exepath.cpp
 src/env.cpp
 src/home.cpp
 src/inquire.cpp
 src/lexical.cpp
-src/extra/libpath.cpp
 src/limits.cpp
 src/extra/locale.cpp
 src/log.cpp
@@ -95,27 +92,32 @@ src/parent.cpp
 src/permissions.cpp
 src/platform.cpp
 src/pure.cpp
-src/extra/random.cpp
 src/realpath.cpp
 src/relative.cpp
 src/resolve.cpp
-src/extra/shell.cpp
 src/size.cpp
 src/space.cpp
-src/extra/sysctl.cpp
 src/symlink.cpp
 src/tempdir.cpp
 src/touch.cpp
 src/time.cpp
-src/extra/uid.cpp
-src/extra/uname.cpp
 src/which.cpp
 src/windows.cpp
-src/extra/winsock.cpp
 )
 
 if(ffilesystem_extra)
-  list(APPEND _src src/extra/partition.cpp)
+  list(APPEND _src
+src/extra/case.cpp
+src/extra/exepath.cpp
+src/extra/libpath.cpp
+src/extra/partition.cpp
+src/extra/random.cpp
+src/extra/shell.cpp
+src/extra/sysctl.cpp
+src/extra/uid.cpp
+src/extra/uname.cpp
+src/extra/winsock.cpp
+  )
 endif()
 
 if(TARGET ffilesystem_Fortran)
@@ -197,7 +199,10 @@ if(ffilesystem_cli)
 
   add_executable(fs_cli app/main.cpp)
   target_link_libraries(fs_cli PRIVATE ffilesystem)
-  target_compile_definitions(fs_cli PRIVATE "$<$<BOOL:${HAVE_CXX_FILESYSTEM}>:HAVE_CXX_FILESYSTEM>")
+  target_compile_definitions(fs_cli PRIVATE
+  "$<$<BOOL:${HAVE_CXX_FILESYSTEM}>:HAVE_CXX_FILESYSTEM>"
+  "$<$<BOOL:${ffilesystem_extra}>:ffilesystem_extra>"
+  )
   install(TARGETS fs_cli EXPORT ${PROJECT_NAME}-targets)
 
   if(CMAKE_CXX_STANDARD LESS 20 AND "cxx_std_20" IN_LIST CMAKE_CXX_COMPILE_FEATURES)

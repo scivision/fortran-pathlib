@@ -2,7 +2,7 @@
 #define _DEFAULT_SOURCE
 #endif
 
-#ifdef _WIN32
+#if defined(_WIN32)
 #include <winsock2.h>
 #else
 #include <unistd.h>
@@ -11,6 +11,7 @@
 #include <string>
 
 #include "ffilesystem.h"
+
 
 std::string fs_hostname()
 {

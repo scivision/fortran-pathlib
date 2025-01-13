@@ -6,7 +6,6 @@ set(tests is_absolute absolute
 canonical realpath
 env
 equivalent
-exepath
 expanduser
 filename
 filesize space
@@ -62,10 +61,6 @@ set_tests_properties(Fortran_root PROPERTIES FIXTURES_REQUIRED is_absolute)
 
 set_tests_properties(Fortran_canonical PROPERTIES FIXTURES_REQUIRED "expanduser")
 
-# TARGET_FILE_NAME to allow for macOS possible non-canonical result
-# and symlinked / special filesystems like WSL
-set_tests_properties(Fortran_exepath PROPERTIES PASS_REGULAR_EXPRESSION $<TARGET_FILE_NAME:test_exepath_fortran>)
-
 endif()
 
 
@@ -75,7 +70,6 @@ canonical
 copyfile
 env
 equivalent
-exepath
 expanduser
 filename
 filesize
@@ -166,10 +160,6 @@ SKIP_REGULAR_EXPRESSION "not implemented;SIGABRT;[aA]bort;[sS]egmentation fault;
 )
 
 set_tests_properties(Cpp_mkdir PROPERTIES FIXTURES_REQUIRED root)
-
-# TARGET_FILE_NAME to allow for macOS possible non-canonical result
-# and symlinked / special filesystems like WSL
-set_tests_properties(Cpp_exepath PROPERTIES PASS_REGULAR_EXPRESSION $<TARGET_FILE_NAME:test_exepath_cpp>)
 
 if(HAVE_Fortran_FILESYSTEM)
 

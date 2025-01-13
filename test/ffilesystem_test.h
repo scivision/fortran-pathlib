@@ -21,6 +21,13 @@ void err(std::string_view m){
 }
 
 
+[[noreturn]]
+void skip(std::string_view m){
+  std::cout << "SKIP: " << m << " backend: " << fs_backend() << "\n";
+  std::exit(77);
+}
+
+
 void ok_msg(std::string_view m){
   std::cout << "OK: " << m << " backend: " << fs_backend() << "\n";
 }

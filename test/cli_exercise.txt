@@ -1,4 +1,3 @@
-random 8
 with_suffix a.b .c
 parent a/b
 suffix a.txt
@@ -19,12 +18,9 @@ modtime .
 which cmake
 is_reserved NUL
 is_safe asdf
-hostname
-arch
 compiler
 getenv HOME
 owner .
-shell
 homedir
 username
 backend
