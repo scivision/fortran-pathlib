@@ -15,7 +15,12 @@ endif()
 
 # --- compiler standard setting -- need if(NOT) in case CMAKE_CXX_STANDARD is set but blank.
 if(NOT CMAKE_CXX_STANDARD OR CMAKE_CXX_STANDARD LESS 17)
-  set(CMAKE_CXX_STANDARD 17)
+  if(WIN32)
+    # we assume Windows has modern compilers by default
+    set(CMAKE_CXX_STANDARD 20)
+  else()
+    set(CMAKE_CXX_STANDARD 17)
+  endif()
 endif()
 
 if(NOT MSVC AND NOT DEFINED ffilesystem_stdcpp_version)
