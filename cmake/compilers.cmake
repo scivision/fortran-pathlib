@@ -85,15 +85,20 @@ endif()
 
 if(HAVE_CXX_FILESYSTEM)
 
-include(${CMAKE_CURRENT_LIST_DIR}/FScheck.cmake)
-fs_check()
+if(ffilesystem_trace)
+  # this is not on by default because it gave a false negative on some Cray systems
+  # while bypassing it let all of Ffilesystem work.
+  include(${CMAKE_CURRENT_LIST_DIR}/FScheck.cmake)
+  fs_check()
+
+endif()
 
 elseif(UNIX AND NOT APPLE)
 
   set(CMAKE_REQUIRED_DEFINITIONS -D_GNU_SOURCE)
   check_symbol_exists(copy_file_range "unistd.h" ffilesystem_HAVE_COPY_FILE_RANGE)
 
-endif(HAVE_CXX_FILESYSTEM)
+endif()
 
 if(ffilesystem_cpp AND NOT ffilesystem_fallback AND NOT HAVE_CXX_FILESYSTEM)
   message(FATAL_ERROR "C++ filesystem not available. To fallback to plain C++:
