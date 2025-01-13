@@ -55,13 +55,14 @@ COMM_SRCS = \
 	$(comdir)equivalent.cpp \
 	$(comdir)exepath.cpp \
 	$(comdir)env.cpp \
-	$(comdir)move.cpp \
+	$(comdir)lang.cpp \
 	$(comdir)lexical.cpp \
 	$(comdir)libpath.cpp \
 	$(comdir)limits.cpp \
 	$(comdir)locale.cpp \
 	$(comdir)log.cpp \
 	$(comdir)mkdir.cpp \
+	$(comdir)move.cpp \
 	$(comdir)normalize.cpp \
 	$(comdir)owner.cpp \
 	$(comdir)os.c \

@@ -78,6 +78,7 @@ src/equivalent.cpp
 src/env.cpp
 src/home.cpp
 src/inquire.cpp
+src/lang.cpp
 src/lexical.cpp
 src/limits.cpp
 src/extra/locale.cpp
