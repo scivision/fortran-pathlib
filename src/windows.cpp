@@ -289,3 +289,53 @@ std::string fs_shortname(std::string_view in)
   return std::string(in);
 #endif
 }
+
+
+std::string fs_win32_to_narrow(
+#if __has_cpp_attribute(maybe_unused)
+[[maybe_unused]]
+#endif
+  std::wstring_view w)
+{
+
+#if defined(_WIN32)
+  int L = WideCharToMultiByte(CP_UTF8, 0, w.data(), -1, nullptr, 0, nullptr, nullptr);
+  if (L > 0) {
+    std::string buf(L, '\0');
+    L = WideCharToMultiByte(CP_UTF8, 0, w.data(), -1, buf.data(), L, nullptr, nullptr);
+
+    if(L > 0){
+      buf.resize(L-1);
+      return buf;
+    }
+  }
+#endif
+
+  fs_print_error("", "fs_win32_to_narrow");
+  return {};
+}
+
+
+std::wstring fs_win32_to_wide(
+#if __has_cpp_attribute(maybe_unused)
+[[maybe_unused]]
+#endif
+  std::string_view n)
+{
+#if defined(_WIN32)
+  // https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar
+  int L = MultiByteToWideChar(CP_UTF8, 0, n.data(), -1, nullptr, 0);
+  if (L > 0) {
+    std::wstring buf(L, L'\0');
+    L = MultiByteToWideChar(CP_UTF8, 0, n.data(), -1, buf.data(), L);
+
+    if(L > 0){
+      buf.resize(L-1);
+      return buf;
+    }
+  }
+#endif
+
+  fs_print_error("", "fs_win32_to_wide");
+  return {};
+}

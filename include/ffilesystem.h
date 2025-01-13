@@ -213,6 +213,8 @@ std::string fs_which(std::string_view, std::string_view = {}, const bool = false
 
 std::string fs_win32_final_path(std::string_view);
 std::string fs_win32_full_name(std::string_view);
+std::string fs_win32_to_narrow(std::wstring_view);
+std::wstring fs_win32_to_wide(std::string_view);
 bool fs_win32_is_symlink(std::string_view);
 
 std::string fs_with_suffix(std::string_view, std::string_view);
