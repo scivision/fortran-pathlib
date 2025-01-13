@@ -25,7 +25,7 @@ std::string fs_lib_path()
 
   std::string path(fs_get_max_path(), '\0');
 
-  const size_t L = GetModuleFileNameA(GetModuleHandleA(FS_DLL_NAME), path.data(), static_cast<DWORD>(path.size()));
+  const DWORD L = GetModuleFileNameA(GetModuleHandleA(FS_DLL_NAME), path.data(), static_cast<DWORD>(path.size()));
   if(L > 0 && GetLastError() != ERROR_INSUFFICIENT_BUFFER)  FFS_LIKELY
   {
     path.resize(L);
