@@ -49,7 +49,14 @@ if(!fs_is_file(read))
 
 // for Ffilesystem, even non-readable files "exist" and are "is_file"
 fs_touch(noread);
-fs_set_permissions(noread, -1, 0, 0);
+if(!fs_set_permissions(noread, -1, 0, 0))
+  err("set_permissions('" + noread + "') failed");
+
+if(!fs_exists(noread))
+    err(noread + " should exist");
+
+if(!fs_is_file(noread))
+    err(noread + " should be a file");
 
 p = fs_get_permissions(noread);
 if(p.empty())
@@ -57,40 +64,20 @@ if(p.empty())
 
 std::cout << "Permissions for " << noread << ": " << p << "\n";
 
-#ifdef __cpp_lib_string_contains
-if(!p.contains("r")
-#else
-if(p.find("r") == std::string::npos
-#endif
-  && fs_is_readable(noread)){
-if(!fs_exists(noread))
-    err(noread + " should exist");
+if (p[0] != '-'){
+  if (!fs_is_windows())
+    err(noread + " should not have owner read get_permissions()");
 
-if(!fs_is_file(noread))
-    err(noread + " should be a file");
+  std::cerr << "Windows no-read permissions settings don't always work\n";
 }
 
 
 // writable
 if(!fs_is_file(nowrite))
   fs_touch(nowrite);
-fs_set_permissions(nowrite, 0, -1, 0);
 
-p = fs_get_permissions(nowrite);
-if(p.empty())
-    err("get_permissions('" + nowrite + "') failed");
-std::cout << "Permissions for " << nowrite << " " << p << "\n";
-
-#ifdef __cpp_lib_string_contains
-if(!p.contains("w")
-#else
-if(p.find("w") == std::string::npos
-#endif
-  && fs_is_writable(nowrite)){
-    std::cerr << "ERROR:  " << nowrite << " should not be writable\n";
-    if(!fs_is_windows())
-      return EXIT_FAILURE;
-}
+if(!fs_set_permissions(nowrite, 0, -1, 0))
+  err("set_permissions('" + nowrite + "') failed");
 
 if(!fs_exists(nowrite))
   err(nowrite + " should exist");
@@ -98,6 +85,19 @@ if(!fs_exists(nowrite))
 if(!fs_is_file(nowrite))
   err(nowrite + " should be a file");
 
+p = fs_get_permissions(nowrite);
+if(p.empty())
+    err("get_permissions('" + nowrite + "') failed");
+
+std::cout << "Permissions for " << nowrite << " " << p << "\n";
+
+if(p[1] != '-'){
+  // MSVC with <filesystem>, but we'll skip all windows
+  if (!fs_is_windows())
+    err(nowrite + " should not have owner write get_permissions()");
+
+  std::cerr << "Windows no-write permissions settings don't always work\n";
+}
 ok_msg("permissions C++");
 
 return EXIT_SUCCESS;

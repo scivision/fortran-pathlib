@@ -4,6 +4,8 @@
 
 #if defined(__APPLE__) && defined(__MACH__)
 #include <sys/syslimits.h>
+#elif defined(_WIN32)
+#include <cstdlib> // for _MAX_PATH
 #endif
 
 #if __has_include(<limits.h>)
@@ -23,10 +25,10 @@ fs_get_max_path()
 #if defined(PATH_MAX)
   // POSIX
   m = PATH_MAX;
-#elif defined (_MAX_PATH)
-  // Windows
+#elif defined(_MAX_PATH)
+  // https://learn.microsoft.com/en-us/cpp/c-runtime-library/path-field-limits
   m = _MAX_PATH;
-#elif defined (_POSIX_PATH_MAX)
+#elif defined(_POSIX_PATH_MAX)
   m = _POSIX_PATH_MAX;
 #endif
   // arbitrary absolute maximum
