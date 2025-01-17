@@ -79,14 +79,21 @@ fs_normal(std::string_view path)
 
 
 std::string
-fs_drop_slash(std::string_view sv)
+fs_drop_slash(std::string_view in)
 {
   // drop all trailing "/" and duplicated internal "/"
-  std::string s(sv);
-  while(s.length() > 1 && (s.back() == '/' || (fs_is_windows() && s.back() == '\\')))
-    s.pop_back();
+  std::string s = fs_as_posix(in);
+
+  if(!fs_is_windows() || (s.length() != 3 || s != fs_root(s))){
+    while(s.length() > 1 && s.back() == '/')
+      s.pop_back();
+  }
+
+  if(fs_trace > 1) std::cout << "TRACE:drop_slash(" << in << "): removed trailing slash: " << s << std::endl;
 
   s.erase(std::unique(s.begin(), s.end(), [](char a, char b){ return a == '/' && b == '/'; }), s.end());
+
+  if(fs_trace > 1) std::cout << "TRACE:drop_slash(" << in << "): removed duplicated internal slashes: " << s << std::endl;
 
   return s;
 }
@@ -118,9 +125,9 @@ fs_split(std::string_view path)
   std::string::size_type start = 0;
   std::string::size_type end;
 
-  while (true) {
+  while (start < p.length()) {
     end = p.find('/', start);
-    if(fs_trace) std::cout << "TRACE: split " << start << " " << end << " " << path << " " << p.substr(start, end-start) << "\n";
+    if(fs_trace) std::cout << "TRACE:split(" << path << "): " << start << " " << end << " " << p.substr(start, end-start) << "\n";
 
     // last component
     if (end == std::string::npos){
@@ -134,6 +141,8 @@ fs_split(std::string_view path)
 
     start = end + 1;
   }
+
+  if (fs_trace) std::cout << "TRACE:split(" << path << "): number of parts: " << parts.size() << "\n";
 
   return parts;
 }

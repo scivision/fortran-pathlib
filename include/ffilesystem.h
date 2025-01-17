@@ -3,11 +3,11 @@
 
 #ifdef __cplusplus
 
-constexpr bool fs_trace =
+constexpr int fs_trace =
 #ifdef FS_TRACE
-  true;
+  1;
 #else
-  false;
+  0;
 #endif
 
 #if !defined(__has_cpp_attribute)

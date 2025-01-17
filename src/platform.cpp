@@ -68,7 +68,7 @@ std::string fs_get_cwd()
   if(GetCurrentDirectoryA(L, r.data()) == L-1)  FFS_LIKELY
   {
     r.resize(L-1);
-    return fs_drop_slash(fs_as_posix(r));
+    return fs_drop_slash(r);
   }
 #else
 // unistd.h https://www.man7.org/linux/man-pages/man3/getcwd.3.html

@@ -46,7 +46,7 @@ std::string fs_get_homedir()
   // has no trailing slash
   if(std::string home = fs_getenv(fs_is_windows() ? "USERPROFILE" : "HOME");
       !home.empty())  FFS_LIKELY
-    return fs_drop_slash(fs_as_posix(home));
+    return fs_drop_slash(home);
 
   return fs_get_profile_dir();
 }
@@ -69,7 +69,7 @@ std::string fs_get_profile_dir()
 
   if (ok){
     path.resize(N-1);
-    return fs_drop_slash(fs_as_posix(path));
+    return fs_drop_slash(path);
   }
 #else
   const struct passwd *pw = fs_getpwuid();
