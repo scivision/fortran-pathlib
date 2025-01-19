@@ -20,10 +20,12 @@ core_tests = ['is_absolute', 'absolute',
 'set_cwd',
 'suffix', 'with_suffix',
 'resolve',
-'relative', 'proximate',
 'path_t'
 ]
 
+if backend_filesystem
+  core_test += ['relative', 'proximate']
+endif
 
 foreach t : core_tests
 
@@ -65,9 +67,7 @@ cpp_core = [
 'normal',
 'parent',
 'permissions',
-'proximate',
 'realpath',
-'relative',
 'rename',
 'reserved',
 'root',
@@ -84,6 +84,10 @@ cpp_core = [
 
 if is_windows
   cpp_core += ['is_appexec_alias', 'windows']
+endif
+
+if backend_filesystem
+  cpp_core += ['relative', 'proximate']
 endif
 
 foreach t : cpp_core

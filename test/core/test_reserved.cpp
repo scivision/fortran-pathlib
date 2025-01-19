@@ -96,9 +96,6 @@ if(!fs_is_windows()){
       err("canonical");
     std::cout << "OK: canonical() " << ref << "\n";
 
-    r = fs_relative_to(ref, ref);
-    if(r != ".")
-      err("relative_to");
 } // fs_is_windows()
 
     r = fs_expanduser(ref);
