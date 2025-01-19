@@ -22,12 +22,12 @@ std::string fs_realpath(std::string_view path)
   // not well-defined for non-existing path--may return empty string.
 
 #ifdef _WIN32
-  return fs_exists(path) ? fs_win32_final_path(path) : fs_win32_full_name(path);
+  return fs_win32_final_path(path);
 #else
   std::string r(fs_get_max_path(), '\0');
-  const char* t = realpath(path.data(), r.data());
-  if(!t && errno != ENOENT && errno != EACCES)  FFS_UNLIKELY
-    fs_print_error(path, "realpath");
+
+  if(!realpath(path.data(), r.data()))
+    return {};
 
   return fs_trim(r);
 #endif

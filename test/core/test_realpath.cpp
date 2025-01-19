@@ -26,14 +26,13 @@ if (r != cwd){
 } else
   std::cout << "fs_realpath(.) " << r << "\n";
 
-const std::string name = "not-exist-realpath";
-const std::string not_exist = cwd + "/" + name;
-const std::string rt = fs_realpath(name);
-if(rt != not_exist)
-  std::cout << "realpath() may return empty string for non-existing file\n";
+const std::string name = "not-exist-realpath/b/c";
+if (!fs_realpath(name).empty())
+  err("fs_realpath(" + name + ")  should be empty");
 
-std::cout << "fs_realpath(test) " << rt << "\n";
+std::cout << "fs_realpath(" << name << ") is empty as expected\n";
 
+// one level up
 const std::string p = fs_realpath("..");
 if (p.length() >= r.length()){
   std::cerr << "FAILED: fs_realpath(..) " << p << " >= " << r << "\n";

@@ -50,7 +50,17 @@ fs_canonical(
 
 #else
 
-  return fs_realpath(ex);
+  std::string c = fs_realpath(ex);
+  if (!c.empty())
+    return c;
+
+  if (strict){
+    fs_print_error(path, "canonical");
+    return {};
+  }
+
+  // weakly canonicalize
+  return fs_normal(ex);
 
 #endif
 }

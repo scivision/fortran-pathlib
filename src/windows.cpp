@@ -218,10 +218,8 @@ std::string fs_win32_final_path(std::string_view path)
   // FILE_FLAG_BACKUP_SEMANTICS required to open a directory
   HANDLE h = CreateFileA(path.data(), GENERIC_READ, FILE_SHARE_READ, nullptr,
               OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
-  if(h == INVALID_HANDLE_VALUE){
-    fs_print_error(path, "win32_final_path:CreateFile");
+  if(h == INVALID_HANDLE_VALUE)
     return {};
-  }
 
   std::string r(fs_get_max_path(), '\0');
 
