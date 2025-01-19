@@ -77,14 +77,15 @@ std::string fs_os_version()
 // get operating system version
 #ifdef HAVE_UTSNAME
   if (struct utsname buf;
-       uname(&buf) == 0)
-    return buf.version;
+    uname(&buf) == 0)
+
+  return buf.version;
 #elif defined(_WIN32)
-    OSVERSIONINFO osvi;
-    ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
-    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    if(GetVersionEx(&osvi))
-      return std::to_string(osvi.dwMajorVersion) + '.' + std::to_string(osvi.dwMinorVersion) + '.' + std::to_string(osvi.dwBuildNumber);
+  OSVERSIONINFOA osvi;
+  ZeroMemory(&osvi, sizeof(OSVERSIONINFOA));
+  osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOA);
+  if(GetVersionExA(&osvi))
+    return std::to_string(osvi.dwMajorVersion) + '.' + std::to_string(osvi.dwMinorVersion) + '.' + std::to_string(osvi.dwBuildNumber);
 #endif
 
   fs_print_error("", "fs_os_version");
