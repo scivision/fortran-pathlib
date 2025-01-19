@@ -61,6 +61,8 @@ set_tests_properties(Fortran_root PROPERTIES FIXTURES_REQUIRED is_absolute)
 
 set_tests_properties(Fortran_canonical PROPERTIES FIXTURES_REQUIRED "expanduser")
 
+set_tests_properties(Fortran_relative Fortran_proximate PROPERTIES DISABLED $<NOT:$<BOOL:${HAVE_CXX_FILESYSTEM}>>)
+
 endif()
 
 
@@ -123,6 +125,8 @@ foreach(t IN LISTS cpp_tests)
 endforeach()
 
 target_compile_definitions(test_touch_cpp PRIVATE $<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>)
+
+set_tests_properties(Cpp_relative Cpp_proximate PROPERTIES DISABLED $<NOT:$<BOOL:${HAVE_CXX_FILESYSTEM}>>)
 
 
 foreach(t IN ITEMS empty)

@@ -25,37 +25,40 @@ tests = {{"", "", "."},
     {"a/b", "a/b/", "."},
     {"a/b/", "a/b", "."},
     {"a/b", "a", ".."},
-    {"a/b", "a/", "../"},
-    {"a", "a/hi/", "hi/"},
-    {"a", "a/hi/.", "hi/."},
-    {"a", "a/hi/..", "hi/.."},
+    {"a/b", "a/", ".."},
+    {"a", "a/b/", "b"},
+    {"a", "a/b/.", "b"},
+    {"a", "a/b/..", "."},
     {"a/b/c/d", "a/b", "../.."},
-    {"a/b/c/d", "a/b/", "../../"},
-    {"./this/one", "./this/two", "../two"},
+    {"a/b/c/d", "a/b/", "../.."},
+    {"./a/b", "./a/c", "../c"},
 };
 
 std::vector<std::tuple<std::string_view, std::string_view, std::string_view>> tos;
 
 if(fs_is_windows()){
 tos = {
-    {"c:/", "c:/a/b", "a/b"},
-    {"c:/a/b", "c:/a/b", "."},
-    {"c:/a/b", "c:/a", ".."},
-    {"c:/a", "d:/a", "d:/a"}
+    {"C:/", "C:/a/b", "a/b"},
+    {"C:/a/b", "C:/a/b", "."},
+    {"C:/a/b", "C:/a", ".."},
+    {"C:/a", "D:/a", "D:/a"}
 };
+// NOTE: on Windows, if a path is real, finalPath is used, which makes drive letters upper case.
+
 } else {
 tos = {
-    {"", "/", "/"},
-    {"/", "", ""},
+    {"", "a", "a"},
     {"/", "/", "."},
     {"Hello", "Hello", "."},
     {"Hello", "Hello/", "."},
     {"/dev/null", "/dev/null", "."},
-    {"/a/b", "c", "c"},
-    {"c", "/a/b", "/a/b"},
-    {"/this/one", "/this/two", "../two"}
+    {"a/b", "c", "../../c"},
+    {"c", "a/b", "../a/b"},
+    {"a/b", "a/c", "../c"}
 };
 }
+// NOTE: use relative non-existing paths, as on macOS AppleClang, the <filesystem> gives incorrect results on non-existing absolute paths,
+// Which don't make sense anyway.
 
 std::move(tos.begin(), tos.end(), std::back_inserter(tests));
 

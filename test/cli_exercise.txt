@@ -5,8 +5,6 @@ join a b
 canonical .
 resolve .
 same . .
-relative a/b a
-proximate a/b c
 is_prefix a/b a
 is_subdir a/b a
 split a/b/c

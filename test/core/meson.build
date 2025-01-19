@@ -7,7 +7,7 @@ env.unset('TEMP')
 
 if fortran
 
-core_tests = ['is_absolute', 'absolute',
+fortran_core = ['is_absolute', 'absolute',
 'canonical', 'realpath',
 'equivalent',
 'expanduser',
@@ -20,12 +20,14 @@ core_tests = ['is_absolute', 'absolute',
 'set_cwd',
 'suffix', 'with_suffix',
 'resolve',
-'relative', 'proximate',
 'path_t'
 ]
 
+if backend_filesystem
+  fortran_core += ['relative', 'proximate']
+endif
 
-foreach t : core_tests
+foreach t : fortran_core
 
 tec = executable(t + '_fortran', 'test_' + t + '.f90', link_with: filesystem, include_directories: inc)
 
@@ -65,9 +67,7 @@ cpp_core = [
 'normal',
 'parent',
 'permissions',
-'proximate',
 'realpath',
-'relative',
 'rename',
 'reserved',
 'root',
@@ -84,6 +84,10 @@ cpp_core = [
 
 if is_windows
   cpp_core += ['is_appexec_alias', 'windows']
+endif
+
+if backend_filesystem
+  cpp_core += ['relative', 'proximate']
 endif
 
 foreach t : cpp_core

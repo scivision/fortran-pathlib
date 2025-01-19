@@ -154,19 +154,6 @@ if (p1%path() /= "a/c") error stop "ERROR:test: normal"
 p1 = path_t("a/b/c")
 if (p1%parent() /= "a/b") error stop "ERROR:test: parent"
 
-!> proximate
-if(is_windows()) then
-  p1 = path_t("X:/a/b")
-else
-  p1 = path_t("/a/b")
-end if
-s1 = p1%proximate_to("c")
-if (s1 /= "c") error stop "ERROR:test: proximate_to: " // s1
-
-!> relative
-s1 = p1%relative_to("c")
-if (s1 /= "") error stop "ERROR:test: relative_to: " //s1
-
 !> root
 p1 = path_t("/c/b")
 s1 = "/"
