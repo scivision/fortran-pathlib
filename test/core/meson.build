@@ -7,7 +7,7 @@ env.unset('TEMP')
 
 if fortran
 
-core_tests = ['is_absolute', 'absolute',
+fortran_core = ['is_absolute', 'absolute',
 'canonical', 'realpath',
 'equivalent',
 'expanduser',
@@ -24,10 +24,10 @@ core_tests = ['is_absolute', 'absolute',
 ]
 
 if backend_filesystem
-  core_test += ['relative', 'proximate']
+  fortran_core += ['relative', 'proximate']
 endif
 
-foreach t : core_tests
+foreach t : fortran_core
 
 tec = executable(t + '_fortran', 'test_' + t + '.f90', link_with: filesystem, include_directories: inc)
 
